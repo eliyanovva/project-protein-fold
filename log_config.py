@@ -1,6 +1,12 @@
 import logging
 import sys
+import os
 
+# Create logging directory
+if not os.path.exists('./logs'):
+    os.makedirs('./logs')
+
+    
 logging.basicConfig(
     #filename='logs/script.log', 
     encoding='utf-8', 
