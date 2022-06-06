@@ -16,7 +16,7 @@ import log_config
 """
 ATOM_DICT = {'C':0, 'O':1, 'N':2, 'S':3}
 # MAKE SURE TO USE THE COMPLETE PATH TO THE PDB FILE
-PDB_FILE_NAME = '/home/users/tep18/AF-Q6IEV9-F1-model_v2.pdb'
+PDB_FILE_NAME = 'AF-Q6IEV9-F1-model_v2.pdb'
 
 def extract_PDB_coordinates_atoms(pdb_file_name, grid_size=700):
     """This function extracts 3D coordinates of each atom from the PDB file and
