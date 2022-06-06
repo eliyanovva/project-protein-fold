@@ -60,49 +60,27 @@ def extract_PDB_coordinates_atoms(pdb_file_name, grid_size=700):
     
     return protein_grid
 
-def create_populate_grid(pdb_data, grid_size=1500, granularity=0.05):
-    """TODO: Figure out if you want to use pandas at all for this.
-    The default size of the grid is 60 x 60 x 60 with granularity of 0.5 A.
-    The order of layers is C - O - N - S.
+
+def visualize_grid(protein_grid, atom_layer):
+    """This function visualizes a single atom layer of the 4D grid and outputs it to a PNG file.
+
     Args:
-        pdb_df (pandas.DataFrame): A dataframe object containing the coordinates,
-        atom types, and confidence scores for each atom in a PDB file.
+        protein_grid (np.array): 4D grid of atom locations
+        atom_layer (char): specifies whether the carbon, oxygen, nitrogen, or sulphur layer
+            should be graphed.
+        TODO: ensure that atom_layer is a correct value
     """
-    pass
-    #protein_grid = np.zeros((4, grid_size, grid_size, grid_size))
-    #for atom in pdb_data:
-    #    protein_grid[pdb_data[0]][pdb_data[1]][pdb_data[2]][pdb_data[3]] = pdb_data[4]
-    # 
-    #return protein_grid
-
-
-def visualize_grid(protein_grid, atom_layer, grid_size=700):
     fig = plt.figure(figsize=(8, 6), dpi=80)
     ax = fig.add_subplot(211, projection='3d')
-    # x_vals = np.arange(0, grid_size)
-    # y_vals = np.arange(0, grid_size)
     z, x, y = protein_grid[ATOM_DICT[atom_layer]].nonzero()
     ax.scatter(x, y, z, alpha=1, marker='.', s=2)
     ax.grid(True)
     ax.set_title('All ' + atom_layer + ' atoms')
     plt.savefig('aa_grid_' + atom_layer + '.png')
         
-
-
-pdb_file_name = '/home/users/tep18/AF-Q6IEV9-F1-model_v2.pdb'
-coordinates_data = extract_PDB_coordinates_atoms(pdb_file_name)
-
-print(coordinates_data)
-
-#protein_grid = create_populate_grid(coordinates_data)
+coordinates_data = extract_PDB_coordinates_atoms(PDB_FILE_NAME)
 
 visualize_grid(coordinates_data, 'C')
 visualize_grid(coordinates_data, 'O')
 visualize_grid(coordinates_data, 'S')
 visualize_grid(coordinates_data, 'N')
-
-#x = np.linspace(0, 20, 100)
-#plt.plot(x, np.sin(x))
-#plt.savefig('test_fig.png')
-
-#create_populate_grid(data_df)
