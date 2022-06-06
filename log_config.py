@@ -1,3 +1,13 @@
 import logging
+import sys
 
-logging.basicConfig(filename='script.log', encoding='utf-8', level=logging.DEBUG, format='%(asctime)s %(message)s')
+logging.basicConfig(
+    #filename='logs/script.log', 
+    encoding='utf-8', 
+    level=logging.INFO, 
+    format='%(asctime)s %(message)s',
+    handlers=[
+        logging.FileHandler("logs/script.log"),
+        logging.StreamHandler(sys.stdout)
+    ]
+)

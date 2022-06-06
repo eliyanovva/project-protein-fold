@@ -16,7 +16,7 @@ import log_config
 """
 ATOM_DICT = {'C':0, 'O':1, 'N':2, 'S':3}
 # MAKE SURE TO USE THE COMPLETE PATH TO THE PDB FILE
-PDB_FILE_NAME = 'AF-Q6IEV9-F1-model_v2.pdb'
+PDB_FILE_NAME = 'pdb_data_files/AF-Q6IEV9-F1-model_v2.pdb'
 
 def extract_PDB_coordinates_atoms(pdb_file_name, grid_size=700):
     """This function extracts 3D coordinates of each atom from the PDB file and
@@ -76,7 +76,7 @@ def visualize_grid(protein_grid, atom_layer):
     ax.scatter(x, y, z, alpha=1, marker='.', s=2)
     ax.grid(True)
     ax.set_title('All ' + atom_layer + ' atoms')
-    plt.savefig('aa_grid_' + atom_layer + '.png')
+    plt.savefig('visuals/aa_grid_' + atom_layer + '.png')
         
 coordinates_data = extract_PDB_coordinates_atoms(PDB_FILE_NAME)
 
