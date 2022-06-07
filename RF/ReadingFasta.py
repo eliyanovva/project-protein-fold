@@ -17,7 +17,7 @@ seqs = []
 Globals.initialize()
 
 #Read fasta file
-fasta = open("/home/users/sml96/bin/ProteinFoldRF/outputDb_ss.fasta")
+fasta = open("/home/users/sml96/bin/ProteinFoldRF/fafsas_1/combined.fasta")
 i = 0
 j = 0
 for line in fasta:
