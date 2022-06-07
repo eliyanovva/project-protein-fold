@@ -13,6 +13,9 @@ class Seq:
 #Initialize sequence array
 seqs = []
 
+#Initialize Set of Features
+Globals.initialize()
+
 #Read fasta file
 fasta = open("/home/users/sml96/bin/ProteinFoldRF/outputDb_ss.fasta")
 i = 0
@@ -26,11 +29,9 @@ for line in fasta:
         sequence = line.replace('\n','')
         seqs[i-1].sequence = sequence
         seqs[i-1].dictionary = featurize(sequence)
-    j +=1
-    
+    j += 1
 
-        # At the moment, the code prints different dictionaries for each fasta sequence. 
-        #TODO: Retain different dictionaries for each sequence in separate variables that contain the same keyset.
-        # I will probably need to create a class so I can have sequence objects with dictionaries that get updated by the function.
-        # The challenge will be keeping the keyset as small as it can be while making sure all of the sequences can use the same keyset.
- 
+#This prints all of the k-mers identified in the sequences
+print(Globals.features)
+
+#TODO: For each sequence, assign a value to each feature
