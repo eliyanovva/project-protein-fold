@@ -32,6 +32,7 @@ for line in fasta:
     j += 1
 
 #This prints all of the k-mers identified in the sequences
-print(Globals.features)
+#print(Globals.features)
 
+print(len(Globals.features))
 #TODO: For each sequence, assign a value to each feature
