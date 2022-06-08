@@ -1,5 +1,6 @@
 # Import featurize function
 from Kmerizing import *
+import Globals
 
 #Creating sequence class
 class Seq:
@@ -49,4 +50,4 @@ for seq in Globals.seqs:
 #print(Globals.matrix)
 
 #Prints protein names
-#print(Globals.seqs)
+print(Globals.seqs)
