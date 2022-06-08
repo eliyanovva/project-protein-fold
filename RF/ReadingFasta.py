@@ -14,40 +14,46 @@ class Seq:
 #Initialize Set of Features
 Globals.initialize()
 
-#Read fasta file
-fasta = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
-i = 0
-j = 0
-for line in fasta:
-    if line[0] == '>':
-        name = line.replace('\n','')
-        Globals.seqs.append(Seq(name, '', featurize('',5)))
-        i += 1
-    else:
-        sequence = line.replace('\n','')
-        Globals.seqs[i-1].sequence = Globals.seqs[i-1].sequence + sequence
-        Globals.seqs[i-1].dictionary = featurize(Globals.seqs[i-1].sequence,5)
-    j += 1
+def makematrix(fasta, seqvar, feat, mat):
+    i = 0
+    j = 0
+    for line in fasta:
+        if line[0] == '>':
+            name = line.replace('\n','')
+            seqvar.append(Seq(name, '', featurize('',5,feat)))
+            i += 1
+        else:
+            sequence = line.replace('\n','')
+            seqvar[i-1].sequence = seqvar[i-1].sequence + sequence
+            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,5,feat)
+        j += 1
 
-#This prints all of the k-mers identified in the sequences
-#print(Globals.features)
+    #This prints all of the k-mers identified in the sequences
+    #print(Globals.features)
 
-#This prints the number of k-mers identified in all of the sequences
-#print(len(Globals.features))
+    #This prints the number of k-mers identified in all of the sequences
+    #print(len(Globals.features))
 
-#This prints number of sequences
-#print(len(Globals.seqs))
+    #This prints number of sequences
+    #print(len(Globals.seq))
 
-for seq in Globals.seqs:
-    newseq = []
-    for kmer in Globals.features:
-        if kmer not in seq.dictionary:
-               seq.dictionary[kmer] = 0
-        newseq.append(seq.dictionary.get(kmer))
-    Globals.matrix.append(newseq)
+    for seq in seqvar:
+        newseq = []
+        for kmer in feat:
+            if kmer not in seq.dictionary:
+                seq.dictionary[kmer] = 0
+            newseq.append(seq.dictionary.get(kmer))
+        mat.append(newseq)
 
-#Prints a matrix with columns corresponding to k-mers and rows corresponding to proteins
-#print(Globals.matrix)
+    #Prints a matrix with columns corresponding to k-mers and rows corresponding to proteins
+    #print(Globals.matrix)
 
-#Prints protein names
+    #Prints protein names
+    #print(Globals.seq)
+
+# Read fasta file
+fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
+# Make the matrix
+makematrix(fasta1, Globals.seqs, Globals.features, Globals.matrix)
+# View output
 print(Globals.seqs)
