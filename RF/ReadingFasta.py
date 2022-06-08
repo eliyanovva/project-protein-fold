@@ -51,9 +51,4 @@ for seq in seqs:
 #Prints a matrix with columns corresponding to k-mers and rows corresponding to proteins
 #print(matrix)
 
-#These should be the same
-print(len(Globals.features))
-print(len(matrix[0]))
-#These should be the same
-print(len(seqs))
-print(len(matrix))
+
