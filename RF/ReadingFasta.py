@@ -17,7 +17,7 @@ seqs = []
 Globals.initialize()
 
 #Read fasta file
-fasta = open("/home/users/sml96/bin/ProteinFoldRF/fafsas_1/combined.fasta")
+fasta = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
 i = 0
 j = 0
 for line in fasta:
@@ -34,5 +34,23 @@ for line in fasta:
 #This prints all of the k-mers identified in the sequences
 #print(Globals.features)
 
-print(len(Globals.features))
-#TODO: For each sequence, assign a value to each feature
+#This prints the number of k-mers identified in all of the sequences
+#print(len(Globals.features))
+
+#This prints number of sequences
+#print(len(seqs))
+
+#Create input matrix to RF model
+matrix = []
+for seq in seqs:
+    newseq = []
+    for kmer in Globals.features:
+        if kmer not in seq.dictionary:
+               seq.dictionary[kmer] = 0
+        newseq.append(seq.dictionary.get(kmer))
+    matrix.append(newseq)
+
+#Prints a matrix with columns corresponding to k-mers and rows corresponding to proteins
+#print(matrix)
+
+
