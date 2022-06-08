@@ -17,7 +17,7 @@ seqs = []
 Globals.initialize()
 
 #Read fasta file
-fasta = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/AAsequences_categorized.fasta")
+fasta = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
 i = 0
 j = 0
 for line in fasta:
