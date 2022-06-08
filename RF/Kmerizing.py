@@ -3,10 +3,10 @@ import Globals
 
 Globals.initialize()
 
-def featurize(seq):
+def featurize(seq,k):
      s = Sequence(seq)
      dict = {}
-     for kmer in s.iter_kmers(5, overlap=True):
+     for kmer in s.iter_kmers(k, overlap=True):
           key = str(kmer)
           if key not in dict:
                dict[key] = 0
