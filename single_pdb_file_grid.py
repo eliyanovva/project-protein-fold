@@ -35,7 +35,7 @@ parser.add_argument(
     )
 args = parser.parse_args()
 
-def extract_PDB_coordinates_atoms(pdb_file_name=PDB_FILE_NAME, grid_size=700, shift=30):
+def extract_PDB_coordinates_atoms(pdb_file_name=PDB_FILE_NAME, grid_size=500, shift=30):
     """This function extracts 3D coordinates of each atom from the PDB file and
     populates the 4D grid, where grid[0] is the carbon layer, 
 
@@ -54,7 +54,7 @@ def extract_PDB_coordinates_atoms(pdb_file_name=PDB_FILE_NAME, grid_size=700, sh
         
         pdb_lines = pdb_file.readlines()
         protein_grid = np.zeros((4, grid_size, grid_size, grid_size))
-    
+        shift_y, shift_x, shift_z = 0,0,0
         for line in pdb_lines:
             line = line.strip()
             if line[0:4] == 'ATOM' and line[-1] != 'H':
@@ -68,12 +68,14 @@ def extract_PDB_coordinates_atoms(pdb_file_name=PDB_FILE_NAME, grid_size=700, sh
                     numerical_data[2], # z_coordinate
                     numerical_data[4]] # confidence score
                 )
-                shift = min(shift, entry[1], entry[2], entry[3])
+                shift_x = min(shift_x, entry[1])
+                shift_y = min(shift_y, entry[2])
+                shift_z = min(shift_z, entry[3])
                 #log.debug('The following point entry has been added to the grid: ' + str(entry))
                 protein_grid[int(entry[0])] \
-                [int((entry[1] - shift)*1000//100)] \
-                [int((entry[2] - shift)*1000//100)] \
-                [int((entry[3] - shift)*1000//100)] = entry[4]
+                [int((entry[1] - shift_x)*1000//200)] \
+                [int((entry[2] - shift_y)*1000//200)] \
+                [int((entry[3] - shift_z)*1000//200)] = entry[4]
     log.info('Extraction completed! ')
     
     return protein_grid
@@ -121,4 +123,4 @@ with open('pdb_data_files/file_names.txt') as file_names:
 #        visualize_grid(coordinates_data, 'O')
 #        visualize_grid(coordinates_data, 'S')
 #        visualize_grid(coordinates_data, 'N')
-        break
+#        break

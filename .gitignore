@@ -1,2 +1,8 @@
 # All logging files
 *.log
+
+# All pdb files
+*.pdb
+
+# ALl npy files
+*.npy
