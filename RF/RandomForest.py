@@ -1,4 +1,3 @@
-from pyexpat import features
 #Code adapted from: https://www.datacamp.com/tutorial/random-forests-classifier-python 
 
 #imports
