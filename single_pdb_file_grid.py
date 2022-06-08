@@ -5,7 +5,10 @@ grid containing 3D grids for the locations of all Carbon, Oxygen, Nitrogen, and 
 import numpy as np
 import matplotlib.pyplot as plt
 import logging as log
+import argparse
+
 import log_config
+
 
 """
     TODO: Remove this part later.
@@ -13,12 +16,25 @@ import log_config
     -> Decided to use only numpy, without pandas because iteration over pandas
     is not a good practice.
     -> numpy can work only with integer indices
+    -> pass data folder as a parameter to this script
+    -> move argparse setting to a separate file, just like logging
+    -> current issue - the PDB grid is too big and too slowly processed
 """
 ATOM_DICT = {'C':0, 'O':1, 'N':2, 'S':3}
 # MAKE SURE TO USE THE COMPLETE PATH TO THE PDB FILE
 PDB_FILE_NAME = 'pdb_data_files/AF-Q6IEV9-F1-model_v2.pdb'
 
-def extract_PDB_coordinates_atoms(pdb_file_name, grid_size=700):
+
+### Arguments parsing part
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    'file_name',
+     help='Complete path of the PDB file to be converted to a grid',
+     type=str
+    )
+args = parser.parse_args()
+
+def extract_PDB_coordinates_atoms(pdb_file_name=PDB_FILE_NAME, grid_size=700):
     """This function extracts 3D coordinates of each atom from the PDB file and
     populates the 4D grid, where grid[0] is the carbon layer, 
 
@@ -60,6 +76,10 @@ def extract_PDB_coordinates_atoms(pdb_file_name, grid_size=700):
     
     return protein_grid
 
+def get_protein_name_from_path(file_path):
+    left_index = file_path.rfind('/') + 1
+    right_index = file_path.find('-model')
+    return file_path[left_index : right_index]
 
 def visualize_grid(protein_grid, atom_layer):
     """This function visualizes a single atom layer of the 4D grid and outputs it to a PNG file.
@@ -78,9 +98,20 @@ def visualize_grid(protein_grid, atom_layer):
     ax.set_title('All ' + atom_layer + ' atoms')
     plt.savefig('visuals/aa_grid_' + atom_layer + '.png')
         
-coordinates_data = extract_PDB_coordinates_atoms(PDB_FILE_NAME)
+coordinates_data = extract_PDB_coordinates_atoms(args.file_name)
+protein_name = get_protein_name_from_path(args.file_name)
 
-visualize_grid(coordinates_data, 'C')
-visualize_grid(coordinates_data, 'O')
-visualize_grid(coordinates_data, 'S')
-visualize_grid(coordinates_data, 'N')
+log.info('got here!')
+flat_grid = np.ndarray.ravel(coordinates_data)
+log.info('Your grid was flattenned to a 1D vector!')
+np.save('pdb_data_files/one_dim_grids/' + protein_name + '_grid', flat_grid)
+log.info('A flattened 1D version of your grid has been saved!')
+
+# How to unload np array from the files:
+#arr = np.load('pdb_data_files/one_dim_grids/AF-Q6IEV9-F1_grid.npy')
+#log.info('1d array has been loaded.')
+
+#visualize_grid(coordinates_data, 'C')
+#visualize_grid(coordinates_data, 'O')
+#visualize_grid(coordinates_data, 'S')
+#visualize_grid(coordinates_data, 'N')
