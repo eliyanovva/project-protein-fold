@@ -2,6 +2,7 @@
 grid containing 3D grids for the locations of all Carbon, Oxygen, Nitrogen, and Sulphur atoms.
 """
 
+from pkg_resources import require
 import numpy as np
 import matplotlib.pyplot as plt
 import logging as log
@@ -28,13 +29,13 @@ PDB_FILE_NAME = 'pdb_data_files/AF-Q6IEV9-F1-model_v2.pdb'
 ### Arguments parsing part
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    'file_name',
+    '-file_name',
      help='Complete path of the PDB file to be converted to a grid',
      type=str
     )
 args = parser.parse_args()
 
-def extract_PDB_coordinates_atoms(pdb_file_name=PDB_FILE_NAME, grid_size=700):
+def extract_PDB_coordinates_atoms(pdb_file_name=PDB_FILE_NAME, grid_size=700, shift=30):
     """This function extracts 3D coordinates of each atom from the PDB file and
     populates the 4D grid, where grid[0] is the carbon layer, 
 
@@ -67,11 +68,12 @@ def extract_PDB_coordinates_atoms(pdb_file_name=PDB_FILE_NAME, grid_size=700):
                     numerical_data[2], # z_coordinate
                     numerical_data[4]] # confidence score
                 )
+                shift = min(shift, entry[1], entry[2], entry[3])
                 #log.debug('The following point entry has been added to the grid: ' + str(entry))
                 protein_grid[int(entry[0])] \
-                [int(entry[1]*1000//100)] \
-                [int(entry[2]*1000//100)] \
-                [int(entry[3]*1000//100)] = entry[4]
+                [int((entry[1] - shift)*1000//100)] \
+                [int((entry[2] - shift)*1000//100)] \
+                [int((entry[3] - shift)*1000//100)] = entry[4]
     log.info('Extraction completed! ')
     
     return protein_grid
@@ -97,21 +99,26 @@ def visualize_grid(protein_grid, atom_layer):
     ax.grid(True)
     ax.set_title('All ' + atom_layer + ' atoms')
     plt.savefig('visuals/aa_grid_' + atom_layer + '.png')
-        
-coordinates_data = extract_PDB_coordinates_atoms(args.file_name)
-protein_name = get_protein_name_from_path(args.file_name)
 
-log.info('got here!')
-flat_grid = np.ndarray.ravel(coordinates_data)
-log.info('Your grid was flattenned to a 1D vector!')
-np.save('pdb_data_files/one_dim_grids/' + protein_name + '_grid', flat_grid)
-log.info('A flattened 1D version of your grid has been saved!')
+
+with open('pdb_data_files/file_names.txt') as file_names:
+    names = file_names.readlines()
+    for name in names:
+        complete_file_name = 'pdb_data_files/' + name[0:-1]
+        coordinates_data = extract_PDB_coordinates_atoms(complete_file_name)
+        protein_name = get_protein_name_from_path(complete_file_name)
+        log.info('got here!')
+        flat_grid = np.ndarray.ravel(coordinates_data)
+        log.info('Your grid was flattenned to a 1D vector!')
+        np.save('pdb_data_files/one_dim_grids/' + protein_name + '_grid', flat_grid)
+        log.info('A flattened 1D version of your grid has been saved!')
 
 # How to unload np array from the files:
 #arr = np.load('pdb_data_files/one_dim_grids/AF-Q6IEV9-F1_grid.npy')
 #log.info('1d array has been loaded.')
 
-#visualize_grid(coordinates_data, 'C')
-#visualize_grid(coordinates_data, 'O')
-#visualize_grid(coordinates_data, 'S')
-#visualize_grid(coordinates_data, 'N')
+#        visualize_grid(coordinates_data, 'C')
+#        visualize_grid(coordinates_data, 'O')
+#        visualize_grid(coordinates_data, 'S')
+#        visualize_grid(coordinates_data, 'N')
+        break
