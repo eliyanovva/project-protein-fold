@@ -40,14 +40,20 @@ for line in fasta:
 
 #Create input matrix to RF model
 matrix = []
-for kmer in Globals.features:
-    newkmer = []
-    for seq in seqs:
+for seq in seqs:
+    newseq = []
+    for kmer in Globals.features:
         if kmer not in seq.dictionary:
                seq.dictionary[kmer] = 0
-        newkmer.append(seq.dictionary.get(kmer))
-    matrix.append(newkmer)
+        newseq.append(seq.dictionary.get(kmer))
+    matrix.append(newseq)
 
 #Prints a matrix with columns corresponding to k-mers and rows corresponding to proteins
 #print(matrix)
 
+#These should be the same
+print(len(Globals.features))
+print(len(matrix[0]))
+#These should be the same
+print(len(seqs))
+print(len(matrix))
