@@ -36,7 +36,9 @@ for line in fasta:
 
 #This prints the number of k-mers identified in all of the sequences
 #print(len(Globals.features))
-#TODO: For each sequence, assign a value to each feature
+
+#This prints number of sequences
+#print(len(seqs))
 
 #Create input matrix to RF model
 matrix = []
