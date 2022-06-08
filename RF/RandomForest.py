@@ -21,7 +21,12 @@ def train(features, labels):
 
     #Form predictions
     y_pred=clf.predict(X_test)
+    print(y_pred)
+    print(y_test)
 
     #Print accuracy of the model
-    print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+    print("Accuracy:",metrics.r2_score(y_test, y_pred))
 
+dummyX = [[2,2,2,2],[3,3,3,3],[4,4,4,4],[5,5,5,5],[6,6,6,6],[7,7,7,7],[8,8,8,8],[9,9,9,9],[10,10,10,10],[1,1,1,1]]
+dummyY = [2,3,4,5,6,7,8,9,10,1]
+train(dummyX, dummyY)
