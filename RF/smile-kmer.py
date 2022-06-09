@@ -94,3 +94,19 @@ def ligand_kmer_count(ligands, k):
             lig_dict[kster] = freq_dict[kster]
         ligand_counts[lig] = lig_dict
     return ligand_counts
+
+def check_ligand_distinct(ligands, k):
+    num_ligands = len(ligands)
+    freq_mat = []
+    ligand_counts = ligand_kmer_count(ligands, k)
+    for lig in ligand_counts:
+        row = ''
+        freqs = ligand_counts[lig]
+        for kmer in freqs:
+            row += str(freqs[kmer])
+        freq_mat.append(row)
+    unique_mat = set(freq_mat)
+    if len(unique_mat) == num_ligands:
+        print('Ligands are distinct')
+    else:
+        print('Ligands are not distinct')
