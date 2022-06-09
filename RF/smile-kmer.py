@@ -1,20 +1,12 @@
-
-def smile_kmer(smile, k):
-    #Option 1 ~  Characters are:
-    #atoms in the background
-    #the entirety of any side chains
-    #double bonds
-    dict = {}
-
-
-    letters = []    #list that stores the sectioned off 'letters' of the str smile
+def form_letters(smile):
+    letters = []  # list that stores the sectioned off 'letters' of the str smile
     for i in range(0, len(smile)):
         letters.append(0)
-    a_index = 0     #index of the latest atom
-    s_index = 0     #index of the starting point of the latest side chain
-    e_index = 0     #index of the ending point of the latest side chain
-    mid_index = 0   #index of the latest side chain that picks up again after a nested side chain
-    sides = 0       #current number of nested side chains
+    a_index = 0  # index of the latest atom
+    s_index = 0  # index of the starting point of the latest side chain
+    e_index = 0  # index of the ending point of the latest side chain
+    mid_index = 0  # index of the latest side chain that picks up again after a nested side chain
+    sides = 0  # current number of nested side chains
 
     for i in range(0, len(smile)):
         if smile[i] == "(":         #a new side chain has begun
@@ -62,6 +54,14 @@ def smile_kmer(smile, k):
     c = letters.count(0)
     for i in range(0, c):
         letters.remove(0)
+
+def smile_kmer(smile, k):
+    #Option 1 ~  Characters are:
+    #atoms in the background
+    #the entirety of any side chains
+    #double bonds
+    dict = {}
+    letters = form_letters(smile)
 
     for i in range(0, len(letters) - k + 1):
         k_ster = ""
