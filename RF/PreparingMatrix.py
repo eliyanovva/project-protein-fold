@@ -24,3 +24,8 @@ expanded_matrix = expand(protein_matrix, 39)
 #Check for proper expansion
 #print(len(protein_matrix))
 #print(len(expanded_matrix))
+
+#Allow access of the expanded matrix in another script
+def access_matrix():
+    global intermediate_matrix
+    intermediate_matrix = expanded_matrix
