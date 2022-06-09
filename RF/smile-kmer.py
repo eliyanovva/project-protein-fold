@@ -55,23 +55,36 @@ def form_letters(smile):
     for i in range(0, c):
         letters.remove(0)
 
-def smile_kmer(smile, k):
-    #Option 1 ~  Characters are:
-    #atoms in the background
-    #the entirety of any side chains
-    #double bonds
-    dict = {}
+def smile_list(smile, k):
+    kmer_list = []
     letters = form_letters(smile)
 
     for i in range(0, len(letters) - k + 1):
         k_ster = ""
         for j in range(k):
             k_ster += letters[i+j]
-        if k_ster not in dict:
-            dict[k_ster] = 0
-        dict[k_ster] += 1
+        if kmer_list.count(k_ster) == 0:
+            kmer_list.append(k_ster)
 
-    return dict
+    return kmer_list
+
+def smile_dict(smile, k):
+    #Option 1 ~  Characters are:
+    #atoms in the background
+    #the entirety of any side chains
+    #double bonds
+    kmer_dict = {}
+    letters = form_letters(smile)
+
+    for i in range(0, len(letters) - k + 1):
+        k_ster = ""
+        for j in range(k):
+            k_ster += letters[i+j]
+        if k_ster not in kmer_dict:
+            kmer_dict[k_ster] = 0
+        kmer_dict[k_ster] += 1
+
+    return kmer_dict
 
 def find_total_kmers(ligands, k):
     kmers = []
