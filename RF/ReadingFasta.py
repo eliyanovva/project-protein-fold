@@ -10,6 +10,9 @@ class Seq:
         self.dictionary = dictionary
     def __repr__(self):
         return self.name
+    def __eq__(self, other):
+        return self.name == other.name
+
 
 #Initialize Set of Features
 Globals.initialize()
@@ -43,7 +46,7 @@ fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/cat
 # Make the matrix
 makematrix(fasta1, Globals.categorized_seqs, Globals.categorized_features, Globals.categorized_matrix)
 # View output
-#print(Globals.categorized_seqs)
+print(Globals.categorized_seqs)
 #print(Globals.categorized_features)
 #print(Globals.categorized_matrix)
 
@@ -53,7 +56,7 @@ fasta2 = open("/home/users/sml96/bin/project-protein-fold/foldseek-master/foldse
 # Make the matrix
 makematrix(fasta2, Globals.di_seqs, Globals.di_features, Globals.di_matrix)
 # View output
-#print(Globals.di_seqs)
+print(Globals.di_seqs)
 #print(Globals.di_features)
 #print(Globals.di_matrix)
 
@@ -71,4 +74,10 @@ def import_variables():
     global structure_matrix
     structure_matrix = Globals.di_matrix
 
-
+i = 0
+for element in Globals.categorized_seqs:
+    if element != Globals.di_seqs[i]:
+        print("not same")
+        print(element)
+        i+=1
+    i +=1
