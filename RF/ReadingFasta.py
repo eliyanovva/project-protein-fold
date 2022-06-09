@@ -29,10 +29,10 @@ def makematrix(fasta, seqvar, feat, mat):
         j += 1
 
     #This prints all of the k-mers identified in the sequences
-    #print(Globals.features)
+    #print(Globals.categorized_features)
 
     #This prints the number of k-mers identified in all of the sequences
-    #print(len(Globals.features))
+    #print(len(Globals.categorized_features))
 
     #This prints number of sequences
     #print(len(Globals.seq))
@@ -46,14 +46,43 @@ def makematrix(fasta, seqvar, feat, mat):
         mat.append(newseq)
 
     #Prints a matrix with columns corresponding to k-mers and rows corresponding to proteins
-    #print(Globals.matrix)
+    #print(Globals.categorized_matrix)
 
     #Prints protein names
-    #print(Globals.seq)
+    #print(Globals.categorized_seqs)
 
+#Creating output for categorized amino acids
 # Read fasta file
 fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
 # Make the matrix
-makematrix(fasta1, Globals.seqs, Globals.features, Globals.matrix)
+makematrix(fasta1, Globals.categorized_seqs, Globals.categorized_features, Globals.categorized_matrix)
 # View output
-print(Globals.seqs)
+#print(Globals.categorized_seqs)
+#print(Globals.categorized_features)
+#print(Globals.categorized_matrix)
+
+#Creating output for 3Di sequences
+# Read fasta file
+fasta2 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/mouse.fasta") #TODO insert path to 3Di sequences here
+# Make the matrix
+makematrix(fasta2, Globals.di_seqs, Globals.di_features, Globals.di_matrix)
+# View output
+#print(Globals.di_seqs)
+#print(Globals.di_features)
+#print(Globals.di_matrix)
+
+def import_variables():
+    global sequence_seqs
+    sequence_seqs = Globals.categorized_seqs
+    global sequence_features 
+    sequence_features = Globals.categorized_features
+    global sequence_matrix
+    sequence_matrix = Globals.categorized_matrix
+    global structure_seqs
+    structure_seqs = Globals.di_seqs
+    global structure_features 
+    structure_features = Globals.di_features
+    global structure_matrix
+    structure_matrix = Globals.di_matrix
+
+
