@@ -73,6 +73,15 @@ def smile_kmer(smile, k):
 
     return dict
 
+def find_total_kmers(ligands, k):
+    kmers = []
+    for lig in ligands:
+        k_list = smile_list(ligands[lig], k)
+        for kmer in k_list:
+            if kmers.count(kmer) == 0:
+                kmers.append(kmer)
+    return kmers
+
 def ligand_kmer_count(ligands, k):
     ligand_counts = {}
     for lig in ligands:
