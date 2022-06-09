@@ -20,6 +20,7 @@ def makematrix(fasta, seqvar, feat, mat):
     for line in fasta:
         if line[0] == '>':
             name = line.replace('\n','')
+            name = name.replace('>', '')
             seqvar.append(Seq(name, '', featurize('',5,feat)))
             i += 1
         else:
@@ -28,15 +29,6 @@ def makematrix(fasta, seqvar, feat, mat):
             seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,5,feat)
         j += 1
 
-    #This prints all of the k-mers identified in the sequences
-    #print(Globals.categorized_features)
-
-    #This prints the number of k-mers identified in all of the sequences
-    #print(len(Globals.categorized_features))
-
-    #This prints number of sequences
-    #print(len(Globals.seq))
-
     for seq in seqvar:
         newseq = []
         for kmer in feat:
@@ -44,12 +36,6 @@ def makematrix(fasta, seqvar, feat, mat):
                 seq.dictionary[kmer] = 0
             newseq.append(seq.dictionary.get(kmer))
         mat.append(newseq)
-
-    #Prints a matrix with columns corresponding to k-mers and rows corresponding to proteins
-    #print(Globals.categorized_matrix)
-
-    #Prints protein names
-    #print(Globals.categorized_seqs)
 
 #Creating output for categorized amino acids
 # Read fasta file
@@ -63,7 +49,7 @@ makematrix(fasta1, Globals.categorized_seqs, Globals.categorized_features, Globa
 
 #Creating output for 3Di sequences
 # Read fasta file
-fasta2 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/mouse.fasta") #TODO insert path to 3Di sequences here
+fasta2 = open("/home/users/sml96/bin/project-protein-fold/foldseek-master/foldseek/foldseek/outputDb_ss.fasta") 
 # Make the matrix
 makematrix(fasta2, Globals.di_seqs, Globals.di_features, Globals.di_matrix)
 # View output
