@@ -123,3 +123,11 @@ def check_ligand_distinct(ligands, k):
         print('Ligands are distinct')
     else:
         print('Ligands are not distinct')
+        
+def ligand_matrix(ligands, k, num_proteins):
+    ligand_counts = ligand_kmer_count(ligands, k)
+    freq_mat = []
+    for i in range(num_proteins):
+        for lig in ligand_counts:
+            freq_mat.append((ligand_counts[lig].values()))
+    return np.matrix(freq_mat)
