@@ -1,6 +1,7 @@
 # Import featurize function
 from Kmerizing import *
 import Globals
+import numpy as np
 
 #Creating sequence class
 class Seq:
@@ -38,7 +39,7 @@ def makematrix(fasta, seqvar, feat, mat):
             if kmer not in seq.dictionary:
                 seq.dictionary[kmer] = 0
             newseq.append(seq.dictionary.get(kmer))
-        mat.append(newseq)
+        mat.append(np.array(newseq))
 
 #Creating output for categorized amino acids
 # Read fasta file
@@ -46,7 +47,7 @@ fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/cat
 # Make the matrix
 makematrix(fasta1, Globals.categorized_seqs, Globals.categorized_features, Globals.categorized_matrix)
 # View output
-print(Globals.categorized_seqs)
+#print(Globals.categorized_seqs)
 #print(Globals.categorized_features)
 #print(Globals.categorized_matrix)
 
@@ -56,9 +57,9 @@ fasta2 = open("/home/users/sml96/bin/project-protein-fold/foldseek-master/foldse
 # Make the matrix
 makematrix(fasta2, Globals.di_seqs, Globals.di_features, Globals.di_matrix)
 # View output
-print(Globals.di_seqs)
+#print(Globals.di_seqs)
 #print(Globals.di_features)
-#print(Globals.di_matrix)
+#print(np.array(Globals.di_matrix))
 
 def import_variables():
     global sequence_seqs
@@ -74,10 +75,11 @@ def import_variables():
     global structure_matrix
     structure_matrix = Globals.di_matrix
 
-i = 0
+#Check whether categorized and 3di sequences contain all the same proteins in the same order
+"""i = 0
 for element in Globals.categorized_seqs:
     if element != Globals.di_seqs[i]:
         print("not same")
         print(element)
         i+=1
-    i +=1
+    i +=1"""
