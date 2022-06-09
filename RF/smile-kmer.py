@@ -4,8 +4,9 @@ def smile_kmer(smile, k):
     #atoms in the background
     #the entirety of any side chains
     #double bonds
-
     dict = {}
+
+
     letters = []    #list that stores the sectioned off 'letters' of the str smile
     for i in range(0, len(smile)):
         letters.append(0)
@@ -69,3 +70,11 @@ def smile_kmer(smile, k):
         if k_ster not in dict:
             dict[k_ster] = 0
         dict[k_ster] += 1
+
+    return dict
+
+def ligand_kmer_count(ligands, k):
+    ligand_counts = {}
+    for lig in ligands:
+        ligand_counts[lig] = smile_kmer(ligands[lig], k)
+    return ligand_counts
