@@ -84,6 +84,13 @@ def find_total_kmers(ligands, k):
 
 def ligand_kmer_count(ligands, k):
     ligand_counts = {}
+    total_kmers = find_total_kmers(ligands, k)
     for lig in ligands:
-        ligand_counts[lig] = smile_kmer(ligands[lig], k)
+        lig_dict = {}
+        for kmer in total_kmers:
+            lig_dict[kmer] = 0
+        freq_dict = smile_dict(ligands[lig], k)
+        for kster in freq_dict:
+            lig_dict[kster] = freq_dict[kster]
+        ligand_counts[lig] = lig_dict
     return ligand_counts
