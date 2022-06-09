@@ -1,0 +1,9 @@
+from moleculekit.molecule import Molecule
+from moleculekit.tools.voxeldescriptors import getVoxelDescriptors, viewVoxelFeatures
+from moleculekit.tools.atomtyper import prepareProteinForAtomtyping
+from moleculekit.smallmol.smallmol import SmallMol
+from moleculekit.home import home
+import os
+
+prot = Molecule(os.path('pdb_data_files/AF-Q8VGS3-F1-model_v2.pdb'))
+lig = 
