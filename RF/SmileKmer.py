@@ -27,8 +27,8 @@ def ligand_matrix(ligands, k, num_proteins):
     freq_mat = []
     for i in range(num_proteins):
         for lig in ligand_counts:
-            freq_mat.append(np.array(ligand_counts[lig].values()))
-            print(np.array(ligand_counts[lig].values()))
+            freq_mat.append(list(ligand_counts[lig].values()))
+            print(list(ligand_counts[lig].values()))
    
     return np.matrix(freq_mat)
 
