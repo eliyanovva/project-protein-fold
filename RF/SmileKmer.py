@@ -165,3 +165,7 @@ def ligand_matrix(ligands, k, num_proteins):
         for lig in ligand_counts:
             freq_mat.append((ligand_counts[lig].values()))
     return np.matrix(freq_mat)
+
+def importmatrix():
+    global ligmat
+    ligmat = ligand_matrix(ligand_dict, 5, 232)

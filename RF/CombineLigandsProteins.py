@@ -6,4 +6,5 @@ import SmileKmer
 PreparingMatrix.access_matrix()
 proteins_matrix = PreparingMatrix.intermediate_matrix
 
-print(ligand_matrix())
+SmileKmer.importmatrix()
+print(SmileKmer.ligmat)
