@@ -9,8 +9,11 @@ import os
 os.chdir('/home/users/jvs15/project-protein-fold')
 
 prot = Molecule('pdb_data_files/AF-Q8VGS3-F1-model_v2.pdb')
-prot = prepareProteinForAtomtyping(prot)
 
-prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, buffer=1)
+ligand = SmallMol('moleculekit/mol_files/Prenylacetate.mol2', force_reading=True)
+
+#prot = prepareProteinForAtomtyping(prot)
+
+#prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, buffer=1)
 
 
