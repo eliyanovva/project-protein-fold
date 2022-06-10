@@ -39,4 +39,4 @@ def access_matrix():
 
 def access_dictionary():
     global dictionary
-    dictionary = access_dictionary
+    dictionary = protdict
