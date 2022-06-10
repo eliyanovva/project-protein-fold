@@ -1,6 +1,7 @@
 import PreparingMatrix
 import SmileKmer
 import numpy as np
+import ReadingFasta
 
 #Ligand Dictionary
 ligand_dict = {'2hepatanone': 'CCCCCC(=O)C','2hexanone': 'CCCCC(=O)C','3methyl1butanethiol': 'CC(C)CCS',
@@ -22,16 +23,28 @@ proteins_matrix = PreparingMatrix.intermediate_matrix
 #Import ligands matrix
 SmileKmer.importmatrix(ligand_dict, 3, 232)
 ligand_matrix = SmileKmer.ligmat
-print(ligand_matrix)
+#print(ligand_matrix)
 
 #Import dictionary
 PreparingMatrix.access_dictionary()
 logFC_dict = PreparingMatrix.dictionary
+print(logFC_dict['A0A1D5RLR5'])
+#print(logFC_dict)
 
 #Concatenate protein and ligand matrices
-print(len(proteins_matrix))
-print(len(proteins_matrix[0]))
-print(len(ligand_matrix))
-print(len(ligand_matrix[0]))
+#print(len(proteins_matrix))
+#print(len(proteins_matrix[0]))
+#print(len(ligand_matrix))
+#print(len(ligand_matrix[0]))
 final_matrix = np.concatenate((proteins_matrix, ligand_matrix), axis = 1)
 #print(final_matrix)
+
+#Create logFC vector
+ReadingFasta.import_variables()
+proteins = ReadingFasta.sequence_seqs
+logFC = []
+for protein in proteins:
+    for ligand in list(ligand_dict.keys()):
+        logFC.append(logFC_dict[protein.name][ligand])
+
+print(logFC)
