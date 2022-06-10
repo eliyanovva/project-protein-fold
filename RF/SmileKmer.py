@@ -12,14 +12,19 @@ ligand_dict = {'2hepatanone': 'CCCCCC(=O)C','2hexanone': 'CCCCC(=O)C','3methyl1b
 'androstenone': 'CC12CCC3C(C1CC=C2)CCC4C3(CCC(=O)C4)C','ebFarnesene': 'CC(=CCCC(=CCCC(=C)C=C)C)C','2proplythietane': 'CCCC1CCS1',
 'citral': 'CC(=CCCC(=CC=O)C)C','cyclopentanethiol': 'C1CCC(C1)S','e2butene1thiol': 'CC=CCS','isovalericAcid': 'CC(C)CC(=O)O'}
         
- #importmatrix: initializes the matrix of ligand features as a global variable
+ #importmatrix: initializes the global variable ligmat to be a matrix of ligand features
+#Input: dict ligand_dict ~ 
+#       int k ~ 
+#       int num_proteins ~ 
+#Output:ligmat ~ a matrix of ligand features 
 def importmatrix(ligand_dict, k, num_proteins):
     global ligmat
     ligmat = ligand_matrix(ligand_dict, k, num_proteins)
 
+#ligand_matrix: initializes a matrix of ligand features
 def ligand_matrix(ligands, k, num_proteins):
     ligand_counts = ligand_kmer_count(ligands, k)
-    freq_mat = []
+    freq_mat = [k * num_proteins]
     for i in range(num_proteins):
         for lig in ligand_counts:
             freq_mat.append((ligand_counts[lig].values()))
