@@ -1,6 +1,6 @@
 import numpy as np
 
-ligand_dict = {'2hepatanone': 'CCCCCC(=O)C','2hexanone': 'CCCCC(=O)C','3methyl1butanethiol': 'CC(C)CCS',
+ligand_dict = {'2heptanone': 'CCCCCC(=O)C','2hexanone': 'CCCCC(=O)C','3methyl1butanethiol': 'CC(C)CCS',
 'acetophenone': 'CC(=O)C1=CC=CC=C1','aPinene': 'CC1=CCC2CC1C2(C)C','bCaryophyllene': 'CC1=CCCC(=C)C2CC(C2CC1)(C)C',
 'bDamascone': 'CC=CC(=O)C1=C(CCCC1(C)C)C','Benzaldehyde': 'C1=CC=C(C=C1)C=O','bIonone': 'CC1=C(C(CCC1)(C)C)C=CC(=O)C',
 'butyricAcid': 'CCCC(=O)O','citronellol': 'CC(CCC=C(C)C)CCO','diacetyl': 'CC(=O)C(=O)C','dimethylSulfide': 'CSC',
