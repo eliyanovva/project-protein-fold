@@ -55,26 +55,79 @@ def form_letters(smile):
     for i in range(0, c):
         letters.remove(0)
 
-def smile_kmer(smile, k):
-    #Option 1 ~  Characters are:
-    #atoms in the background
-    #the entirety of any side chains
-    #double bonds
-    dict = {}
+def smile_list(smile, k):
+    kmer_list = []
     letters = form_letters(smile)
 
     for i in range(0, len(letters) - k + 1):
         k_ster = ""
         for j in range(k):
             k_ster += letters[i+j]
-        if k_ster not in dict:
-            dict[k_ster] = 0
-        dict[k_ster] += 1
+        if kmer_list.count(k_ster) == 0:
+            kmer_list.append(k_ster)
 
-    return dict
+    return kmer_list
+
+def smile_dict(smile, k):
+    #Option 1 ~  Characters are:
+    #atoms in the background
+    #the entirety of any side chains
+    #double bonds
+    kmer_dict = {}
+    letters = form_letters(smile)
+
+    for i in range(0, len(letters) - k + 1):
+        k_ster = ""
+        for j in range(k):
+            k_ster += letters[i+j]
+        if k_ster not in kmer_dict:
+            kmer_dict[k_ster] = 0
+        kmer_dict[k_ster] += 1
+
+    return kmer_dict
+
+def find_total_kmers(ligands, k):
+    kmers = []
+    for lig in ligands:
+        k_list = smile_list(ligands[lig], k)
+        for kmer in k_list:
+            if kmers.count(kmer) == 0:
+                kmers.append(kmer)
+    return kmers
 
 def ligand_kmer_count(ligands, k):
     ligand_counts = {}
+    total_kmers = find_total_kmers(ligands, k)
     for lig in ligands:
-        ligand_counts[lig] = smile_kmer(ligands[lig], k)
+        lig_dict = {}
+        for kmer in total_kmers:
+            lig_dict[kmer] = 0
+        freq_dict = smile_dict(ligands[lig], k)
+        for kster in freq_dict:
+            lig_dict[kster] = freq_dict[kster]
+        ligand_counts[lig] = lig_dict
     return ligand_counts
+
+def check_ligand_distinct(ligands, k):
+    num_ligands = len(ligands)
+    freq_mat = []
+    ligand_counts = ligand_kmer_count(ligands, k)
+    for lig in ligand_counts:
+        row = ''
+        freqs = ligand_counts[lig]
+        for kmer in freqs:
+            row += str(freqs[kmer])
+        freq_mat.append(row)
+    unique_mat = set(freq_mat)
+    if len(unique_mat) == num_ligands:
+        print('Ligands are distinct')
+    else:
+        print('Ligands are not distinct')
+        
+def ligand_matrix(ligands, k, num_proteins):
+    ligand_counts = ligand_kmer_count(ligands, k)
+    freq_mat = []
+    for i in range(num_proteins):
+        for lig in ligand_counts:
+            freq_mat.append((ligand_counts[lig].values()))
+    return np.matrix(freq_mat)
