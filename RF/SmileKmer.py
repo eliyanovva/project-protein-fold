@@ -24,7 +24,7 @@ def importmatrix(ligand_dict, k, num_proteins):
 #ligand_matrix: initializes a matrix of ligand features
 def ligand_matrix(ligands, k, num_proteins):
     ligand_counts = ligand_kmer_count(ligands, k)
-    freq_mat = [k * num_proteins]
+    freq_mat = np.array([k * num_proteins])
     for i in range(num_proteins):
         for lig in ligand_counts:
             freq_mat.append((ligand_counts[lig].values()))
