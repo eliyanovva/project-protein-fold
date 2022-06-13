@@ -1,28 +1,65 @@
 import numpy as np
 
-ligand_dict = {'2heptanone': 'CCCCCC(=O)C','2hexanone': 'CCCCC(=O)C','3methyl1butanethiol': 'CC(C)CCS',
-'acetophenone': 'CC(=O)C1=CC=CC=C1','aPinene': 'CC1=CCC2CC1C2(C)C','bCaryophyllene': 'CC1=CCCC(=C)C2CC(C2CC1)(C)C',
-'bDamascone': 'CC=CC(=O)C1=C(CCCC1(C)C)C','Benzaldehyde': 'C1=CC=C(C=C1)C=O','bIonone': 'CC1=C(C(CCC1)(C)C)C=CC(=O)C',
-'butyricAcid': 'CCCC(=O)O','citronellol': 'CC(CCC=C(C)C)CCO','diacetyl': 'CC(=O)C(=O)C','dimethylSulfide': 'CSC',
-'dimethyltrisulfide': 'CSSSC','ethylButyrate': 'CCCC(=O)OCC','ethylTiglate': 'CCOC(=O)C(=CC)C','geranoil': 'CC(=CCCC(=CCO)C)C',
-'guaiacol': 'COC1=CC=CC=C1O','heptanal': 'CCCCCCC=O','heptanoicAcid': 'CCCCCCC(=O)O','hexylTiglate': 'CCCCCCOC(=O)C(=CC)C',
-'indole': 'C1=CC=C2C(=C1)C=CN2','isoamyl acetate': 'CC(C)CCOC(=O)C','isopropyl tiglate': 'CC=C(C)C(=O)OC(C)C',
-'linalool': 'CC(=CCCC(C)(C=C)O)C','methylSalicylate': 'COC(=O)C1=CC=CC=C1O','Octanal': 'CCCCCCCC=O','paraCresol': 'CC1=CC=C(C=C1)O',
-'propionicAcid': 'CCC(=O)O','pyridine': 'C1=CC=NC=C1','tbm': 'CC(C)(C)S','transCinnamaldehyde': 'C1=CC=C(C=C1)C=CC=O',
-'androstenone': 'CC12CCC3C(C1CC=C2)CCC4C3(CCC(=O)C4)C','ebFarnesene': 'CC(=CCCC(=CCCC(=C)C=C)C)C','2proplythietane': 'CCCC1CCS1',
-'citral': 'CC(=CCCC(=CC=O)C)C','cyclopentanethiol': 'C1CCC(C1)S','e2butene1thiol': 'CC=CCS','isovalericAcid': 'CC(C)CC(=O)O'}
+#dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
+ligand_dict = {"pS6_DE_1p_citronellol.csv":'CC(CCC=C(C)C)CCO',
+"pS6_DE_1p_isoamyl acetate.csv":'CC(C)CCOC(=O)C',
+"pS6_DE_1p_ethylTiglate.csv":'CCOC(=O)C(=CC)C',
+"pS6_DE_1p_bIonone.csv":'CC1=C(C(CCC1)(C)C)C=CC(=O)C',
+"pS6_DE_1p_butyricAcid.csv":'CCCC(=O)O',
+"pS6_DE_1p_paraCresol.csv":'CC1=CC=C(C=C1)O',
+"pS6_DE_1p_bCaryophyllene.csv":'CC1=CCCC(=C)C2CC(C2CC1)(C)C',
+"pS6_DE_p1_isovalericAcid.csv":'CC(C)CC(=O)O',
+"pS6_DE_1p_Octanal.csv":'CCCCCCCC=O',
+"pS6_DE_1p_heptanal.csv":'CCCCCCC=O',
+"pS6_DE_1p_tbm.csv":'CC(C)(C)S',
+"pS6_DE_1p_bDamascone.csv":'CC=CC(=O)C1=C(CCCC1(C)C)C',
+"pS6_DE_1p_pyridine.csv":'C1=CC=NC=C1',
+"pS6_DE_1p_propionicAcid.csv":'CCC(=O)O',
+"pS6_DE_1p_methylSalicylate.csv":'COC(=O)C1=CC=CC=C1O',
+"pS6_DE_p01_e2butene1thiol.csv":'CC=CCS',
+"pS6_DE_1p_3methyl1butanethiol.csv":'CC(C)CCS',
+"pS6_DE_1p_ethylButyrate.csv":'CCCC(=O)OCC',
+"pS6_DE_1p_hexylTiglate.csv":'CCCCCCOC(=O)C(=CC)C',
+"pS6_DE_1p_indole.csv":'C1=CC=C2C(=C1)C=CN2',
+"pS6_DE_500mM_2proplythietane.csv":'CCCC1CCS1',
+"pS6_DE_1p_dimethylSulfide.csv":'CSC',
+"pS6_DE_1p_2heptanone.csv":'CCCCCC(=O)C',
+"pS6_DE_p01_cyclopentanethiol.csv":'C1CCC(C1)S',
+"pS6_DE_1p_dimethyltrisulfide.csv":'CSSSC',
+"pS6_DE_1p_guaiacol.csv":'COC1=CC=CC=C1O',
+"pS6_DE_1p_Benzaldehyde.csv":'C1=CC=C(C=C1)C=O',
+"pS6_DE_p01_citral.csv":'CC(=CCCC(=CC=O)C)C',
+"pS6_DE_3mM_androstenone.csv":'CC12CCC3C(C1CC=C2)CCC4C3(CCC(=O)C4)C',
+"pS6_DE_100p_ebFarnesene.csv":'CC(=CCCC(=CCCC(=C)C=C)C)C',
+"pS6_DE_1p_acetophenone.csv":'CC(=O)C1=CC=CC=C1',
+"pS6_DE_1p_transCinnamaldehyde.csv":'C1=CC=C(C=C1)C=CC=O',
+"pS6_DE_1p_linalool.csv":'CC(=CCCC(C)(C=C)O)C',
+"pS6_DE_1p_2hexanone.csv":'CCCCC(=O)C',
+"pS6_DE_1p_isopropyl tiglate.csv":'CC=C(C)C(=O)OC(C)C',
+"pS6_DE_1p_aPinene.csv":'CC1=CCC2CC1C2(C)C',
+"pS6_DE_1p_diacetyl.csv":'CC(=O)C(=O)C',
+"pS6_DE_1p_geranoil.csv":'CC(=CCCC(=CCO)C)C',
+"pS6_DE_1p_heptanoicAcid.csv":'CCCCCCC(=O)O'}
         
- #importmatrix: initializes the global variable ligmat to be a matrix of ligand features
-#Input: dict ligand_dict ~ 
-#       int k ~ 
-#       int num_proteins ~ 
+#importmatrix: initializes the global variable ligmat to be a matrix of ligand features
+#Input: dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
+#       int k ~ determines the length of the k-mers
+#       int num_proteins ~ the number of protein types used in the dataset
 #Output:ligmat ~ a matrix of ligand features 
 def importmatrix(ligand_dict, k, num_proteins):
     global ligmat
     ligmat = ligand_matrix(ligand_dict, k, num_proteins)
 
 #ligand_matrix: initializes a matrix of ligand features
-def ligand_matrix(ligands, k, num_proteins):
+#Input: dict ligand_dict
+#       int k
+#       int num_proteins
+#Output: ligmat ~ a matrix of ligand features 
+        #each column refers to a k-mer from the SMILE formulas
+        #for a dataset with n ligands, rows 1:n each refer to a different ligand
+        #data values represent how many times a given k-mer of length k occurs in a ligand's SMILE formula
+        #for a dataset with m proteins, rows 1:n of the matrix will be duplicated m times
+def ligand_matrix(ligand_dict, k, num_proteins):
     ligand_counts = ligand_kmer_count(ligands, k)
     freq_mat = []
     for i in range(num_proteins):
@@ -30,7 +67,11 @@ def ligand_matrix(ligands, k, num_proteins):
             freq_mat.append(np.array(list(ligand_counts[lig].values())))
     return np.array(freq_mat)
 
-def ligand_kmer_count(ligands, k):
+#Input: dict ligand_dict
+#       int k
+#Output: dict ligand_counts ~ key = ligand name, value = dict lig_dict:
+#                                                               key = k-mer name, value = # of times the k-mer occurs in the ligand
+def ligand_kmer_count(ligand_dict, k):
     ligand_counts = {}
     total_kmers = find_total_kmers(ligands, k)
     for lig in ligands:
@@ -43,7 +84,11 @@ def ligand_kmer_count(ligands, k):
         ligand_counts[lig] = lig_dict
     return ligand_counts
 
-def find_total_kmers(ligands, k):
+
+#Input: dict ligand_dict
+#       int k
+#Output: list kmers ~ list of all k-mers of length k that can be found out of all the ligands in ligand_dict
+def find_total_kmers(ligand_dict, k):
     kmers = []
     for lig in ligands:
         k_list = smile_list(ligands[lig], k)
@@ -53,10 +98,6 @@ def find_total_kmers(ligands, k):
     return kmers
 
 def smile_dict(smile, k):
-    #Option 1 ~  Characters are:
-    #atoms in the background
-    #the entirety of any side chains
-    #double bonds
     kmer_dict = {}
     letters = form_letters(smile)
 
@@ -83,7 +124,13 @@ def smile_list(smile, k):
             
     return kmer_list
         
-def form_letters(smile):
+#Input: str smile = a SMILE formula for a given ligand
+#Output: list letters = a list of substrings of smile; each substring is a partitioned 'letter' of smile that can be used to form k-mers
+def form_letters(smile):        
+        # Letters are: 
+        # ~ atoms in the backbone
+        # ~ any bond that isn't a single bond
+        # ~ all atoms within a side chain
     letters = []  # list that stores the sectioned off 'letters' of the str smile
     for i in range(0, len(smile)):
         letters.append(0)
