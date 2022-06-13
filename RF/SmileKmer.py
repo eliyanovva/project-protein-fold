@@ -1,5 +1,6 @@
 import numpy as np
 
+#dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
 ligand_dict = {"pS6_DE_1p_citronellol.csv":'CC(CCC=C(C)C)CCO',
 "pS6_DE_1p_isoamyl acetate.csv":'CC(C)CCOC(=O)C',
 "pS6_DE_1p_ethylTiglate.csv":'CCOC(=O)C(=CC)C',
@@ -40,17 +41,25 @@ ligand_dict = {"pS6_DE_1p_citronellol.csv":'CC(CCC=C(C)C)CCO',
 "pS6_DE_1p_geranoil.csv":'CC(=CCCC(=CCO)C)C',
 "pS6_DE_1p_heptanoicAcid.csv":'CCCCCCC(=O)O'}
         
- #importmatrix: initializes the global variable ligmat to be a matrix of ligand features
-#Input: dict ligand_dict ~ 
-#       int k ~ 
-#       int num_proteins ~ 
+#importmatrix: initializes the global variable ligmat to be a matrix of ligand features
+#Input: dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
+#       int k ~ determines the length of the k-mers
+#       int num_proteins ~ the number of protein types used in the dataset
 #Output:ligmat ~ a matrix of ligand features 
 def importmatrix(ligand_dict, k, num_proteins):
     global ligmat
     ligmat = ligand_matrix(ligand_dict, k, num_proteins)
 
 #ligand_matrix: initializes a matrix of ligand features
-def ligand_matrix(ligands, k, num_proteins):
+#Input: dict ligand_dict
+#       int k
+#       int num_proteins
+#Output: ligmat ~ a matrix of ligand features 
+        #each column refers to a k-mer from the SMILE formulas
+        #for a dataset with n ligands, rows 1:n each refer to a different ligand
+        #data values represent how many times a given k-mer of length k occurs in a ligand's SMILE formula
+        #for a dataset with m proteins, rows 1:n of the matrix will be duplicated m times
+def ligand_matrix(ligand_dict, k, num_proteins):
     ligand_counts = ligand_kmer_count(ligands, k)
     freq_mat = []
     for i in range(num_proteins):
@@ -58,7 +67,10 @@ def ligand_matrix(ligands, k, num_proteins):
             freq_mat.append(np.array(list(ligand_counts[lig].values())))
     return np.array(freq_mat)
 
-def ligand_kmer_count(ligands, k):
+#Input: dict ligand_dict
+#       int k
+#Output: dict ligand_counts
+def ligand_kmer_count(ligand_dict, k):
     ligand_counts = {}
     total_kmers = find_total_kmers(ligands, k)
     for lig in ligands:
@@ -71,7 +83,11 @@ def ligand_kmer_count(ligands, k):
         ligand_counts[lig] = lig_dict
     return ligand_counts
 
-def find_total_kmers(ligands, k):
+
+#Input: dict ligand_dict
+#       int k
+#Output: list kmers ~ list of all k-mers of length k that can be found out of all the ligands in ligand_dict
+def find_total_kmers(ligand_dict, k):
     kmers = []
     for lig in ligands:
         k_list = smile_list(ligands[lig], k)
@@ -81,10 +97,6 @@ def find_total_kmers(ligands, k):
     return kmers
 
 def smile_dict(smile, k):
-    #Option 1 ~  Characters are:
-    #atoms in the background
-    #the entirety of any side chains
-    #double bonds
     kmer_dict = {}
     letters = form_letters(smile)
 
@@ -111,7 +123,13 @@ def smile_list(smile, k):
             
     return kmer_list
         
-def form_letters(smile):
+#Input: str smile = a SMILE formula for a given ligand
+#Output: list letters = a list of substrings of smile; each substring is a partitioned 'letter' of smile that can be used to form k-mers
+def form_letters(smile):        
+        # Letters are: 
+        # ~ atoms in the backbone
+        # ~ any bond that isn't a single bond
+        # ~ all atoms within a side chain
     letters = []  # list that stores the sectioned off 'letters' of the str smile
     for i in range(0, len(smile)):
         letters.append(0)
