@@ -27,7 +27,7 @@ ligand_matrix = SmileKmer.ligmat
 #Import dictionary
 PreparingMatrix.access_dictionary()
 logFC_dict = PreparingMatrix.dictionary
-print(logFC_dict)
+#print(logFC_dict)
 
 #Concatenate protein and ligand matrices
 #print(len(proteins_matrix))
@@ -37,12 +37,18 @@ print(logFC_dict)
 final_matrix = np.concatenate((proteins_matrix, ligand_matrix), axis = 1)
 #print(final_matrix)
 
+print(logFC_dict['Q8VET1']['pS6_DE_1p_citronellol.csv'])
 #Create logFC vector
 ReadingFasta.import_variables()
 proteins = ReadingFasta.sequence_seqs
 logFC = []
+print(logFC_dict['A2ATG2']['pS6_DE_1p_citronellol.csv'])
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
-        logFC.append(logFC_dict[protein.name][ligand])
+        if (ligand == 'pS6_DE_1p_citronellol.csv'):
+            print(logFC_dict[str(protein.name)][ligand])
+            print(protein)
+        logFC.append(logFC_dict[str(protein.name)][ligand])
 
 print(logFC)
+
