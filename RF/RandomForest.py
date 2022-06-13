@@ -4,6 +4,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn import metrics
+import CombineLigandsProteins
 
 def train(features, labels):
     #define features and labels
@@ -27,6 +28,8 @@ def train(features, labels):
     #Print accuracy of the model
     print("Accuracy:",metrics.r2_score(y_test, y_pred))
 
-dummyX = [[2,2,2,2],[3,3,3,3],[4,4,4,4],[5,5,5,5],[6,6,6,6],[7,7,7,7],[8,8,8,8],[9,9,9,9],[10,10,10,10],[1,1,1,1]]
-dummyY = [2,3,4,5,6,7,8,9,10,1]
-train(dummyX, dummyY)
+
+CombineLigandsProteins.import_final()
+testX = CombineLigandsProteins.X
+testY = CombineLigandsProteins.Y
+train(testX, testY)

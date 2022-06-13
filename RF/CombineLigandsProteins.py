@@ -1,3 +1,4 @@
+from tkinter import Y
 import PreparingMatrix
 import SmileKmer
 import numpy as np
@@ -20,7 +21,7 @@ PreparingMatrix.access_matrix()
 proteins_matrix = PreparingMatrix.intermediate_matrix
 
 #Import ligands matrix
-SmileKmer.importmatrix(ligand_dict, 3, 231)
+SmileKmer.importmatrix(ligand_dict, 3, 29)
 ligand_matrix = SmileKmer.ligmat
 #print(ligand_matrix)
 
@@ -37,18 +38,28 @@ logFC_dict = PreparingMatrix.dictionary
 final_matrix = np.concatenate((proteins_matrix, ligand_matrix), axis = 1)
 #print(final_matrix)
 
-print(logFC_dict['Q8VET1']['pS6_DE_1p_citronellol.csv'])
 #Create logFC vector
 ReadingFasta.import_variables()
 proteins = ReadingFasta.sequence_seqs
 logFC = []
-print(logFC_dict['A2ATG2']['pS6_DE_1p_citronellol.csv'])
+for protein in proteins:
+    if protein.name == 'L7N1Z5':
+        break
+    for ligand in list(ligand_dict.keys()):
+        logFC.append(logFC_dict[str(protein.name)][ligand])
+print(len(final_matrix))
+print(len(logFC))
+
+"""#logFC vector
+ReadingFasta.import_variables()
+proteins = ReadingFasta.sequence_seqs
+logFC = []
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
-        if (ligand == 'pS6_DE_1p_citronellol.csv'):
-            print(logFC_dict[str(protein.name)][ligand])
-            print(protein)
-        logFC.append(logFC_dict[str(protein.name)][ligand])
+        logFC.append(logFC_dict[frozenset([protein.name,ligand])])"""
 
-print(logFC)
-
+def import_final():
+    global X
+    X = final_matrix
+    global Y
+    Y = logFC

@@ -16,24 +16,24 @@ for i in range (0, 35476, 2):
         protdict[str(df.loc[i][0])] = {}    
     ligdict = protdict[str(df.loc[i][0])]
     ligdict[str(df.loc[i][1])] = str(df.loc[i+1][1])
-    """if (str(df.loc[i][0]) == 'Q8VEZ3'):
-        print(ligdict)
-        print(protdict[str(df.loc[i][0])])
-        print(str(df.loc[i][0]))"""
     protdict[str(df.loc[i][0])] = ligdict
-    """if (str(df.loc[i][0]) == 'Q8VEZ3'):
-        print(protdict[str(df.loc[i][0])])"""
-
-"""i = 0
-while i < 35477:
-    if (df.loc[i][0] == 'Q8VEZ3'):
-        print(i)
-    i += 2"""
 
 
 #See dictionary
 """print(protdict.keys())
 print(protdict['Q8VEZ3'])"""
+
+"""
+#Trying a different dictionary
+import pandas as pd
+
+file = open('/home/users/sml96/bin/project-protein-fold/olfr_de/uniprot_ligand_logfc.csv')
+reader = pd.read_csv(file, header = None)
+protdict = {}
+for i in range(0, 35477, 2):
+    protdict[frozenset(reader.loc[i])] = reader.loc[i+1][1]
+"""
+
 
 #Concatenate AA and 3Di sequences
 protein_matrix = np.concatenate((np.array(ReadingFasta.sequence_matrix), np.array(ReadingFasta.structure_matrix)) , axis = 1)
@@ -42,7 +42,8 @@ protein_matrix = np.concatenate((np.array(ReadingFasta.sequence_matrix), np.arra
 def expand(matrix, ligand_count):
     return np.repeat(matrix, repeats = ligand_count, axis = 0)
 
-expanded_matrix = expand(protein_matrix, 39)
+cut_matrix = protein_matrix[0:29]
+expanded_matrix = expand(cut_matrix, 39)
 
 #Check for proper expansion
 #print(len(protein_matrix))
