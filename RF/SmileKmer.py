@@ -69,7 +69,8 @@ def ligand_matrix(ligand_dict, k, num_proteins):
 
 #Input: dict ligand_dict
 #       int k
-#Output: dict ligand_counts
+#Output: dict ligand_counts ~ key = ligand name, value = dict lig_dict:
+#                                                               key = k-mer name, value = # of times the k-mer occurs in the ligand
 def ligand_kmer_count(ligand_dict, k):
     ligand_counts = {}
     total_kmers = find_total_kmers(ligands, k)
