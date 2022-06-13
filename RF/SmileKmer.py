@@ -2,7 +2,7 @@ import numpy as np
 
 #dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
 ligand_dict = {"pS6_DE_1p_citronellol.csv":'CC(CCC=C(C)C)CCO',
-"pS6_DE_1p_isoamyl acetate.csv":'CC(C)CCOC(=O)C',
+"pS6_DE_1p_isoamylAcetate.csv":'CC(C)CCOC(=O)C',
 "pS6_DE_1p_ethylTiglate.csv":'CCOC(=O)C(=CC)C',
 "pS6_DE_1p_bIonone.csv":'CC1=C(C(CCC1)(C)C)C=CC(=O)C',
 "pS6_DE_1p_butyricAcid.csv":'CCCC(=O)O',
@@ -21,7 +21,7 @@ ligand_dict = {"pS6_DE_1p_citronellol.csv":'CC(CCC=C(C)C)CCO',
 "pS6_DE_1p_ethylButyrate.csv":'CCCC(=O)OCC',
 "pS6_DE_1p_hexylTiglate.csv":'CCCCCCOC(=O)C(=CC)C',
 "pS6_DE_1p_indole.csv":'C1=CC=C2C(=C1)C=CN2',
-"pS6_DE_500mM_2proplythietane.csv":'CCCC1CCS1',
+"pS6_DE_500mM_2propylthietane.csv":'CCCC1CCS1',
 "pS6_DE_1p_dimethylSulfide.csv":'CSC',
 "pS6_DE_1p_2heptanone.csv":'CCCCCC(=O)C',
 "pS6_DE_p01_cyclopentanethiol.csv":'C1CCC(C1)S',
@@ -35,7 +35,7 @@ ligand_dict = {"pS6_DE_1p_citronellol.csv":'CC(CCC=C(C)C)CCO',
 "pS6_DE_1p_transCinnamaldehyde.csv":'C1=CC=C(C=C1)C=CC=O',
 "pS6_DE_1p_linalool.csv":'CC(=CCCC(C)(C=C)O)C',
 "pS6_DE_1p_2hexanone.csv":'CCCCC(=O)C',
-"pS6_DE_1p_isopropyl tiglate.csv":'CC=C(C)C(=O)OC(C)C',
+"pS6_DE_1p_isopropylTiglate.csv":'CC=C(C)C(=O)OC(C)C',
 "pS6_DE_1p_aPinene.csv":'CC1=CCC2CC1C2(C)C',
 "pS6_DE_1p_diacetyl.csv":'CC(=O)C(=O)C',
 "pS6_DE_1p_geranoil.csv":'CC(=CCCC(=CCO)C)C',
@@ -60,7 +60,7 @@ def importmatrix(ligand_dict, k, num_proteins):
         #data values represent how many times a given k-mer of length k occurs in a ligand's SMILE formula
         #for a dataset with m proteins, rows 1:n of the matrix will be duplicated m times
 def ligand_matrix(ligand_dict, k, num_proteins):
-    ligand_counts = ligand_kmer_count(ligands, k)
+    ligand_counts = ligand_kmer_count(ligand_dict, k)
     freq_mat = []
     for i in range(num_proteins):
         for lig in ligand_counts:
@@ -73,12 +73,12 @@ def ligand_matrix(ligand_dict, k, num_proteins):
 #                                                               key = k-mer name, value = # of times the k-mer occurs in the ligand
 def ligand_kmer_count(ligand_dict, k):
     ligand_counts = {}
-    total_kmers = find_total_kmers(ligands, k)
-    for lig in ligands:
+    total_kmers = find_total_kmers(ligand_dict, k)
+    for lig in ligand_dict:
         lig_dict = {}
         for kmer in total_kmers:
             lig_dict[kmer] = 0
-        freq_dict = smile_dict(ligands[lig], k)
+        freq_dict = smile_dict(ligand_dict[lig], k)
         for kster in freq_dict:
             lig_dict[kster] = freq_dict[kster]
         ligand_counts[lig] = lig_dict
@@ -90,8 +90,8 @@ def ligand_kmer_count(ligand_dict, k):
 #Output: list kmers ~ list of all k-mers of length k that can be found out of all the ligands in ligand_dict
 def find_total_kmers(ligand_dict, k):
     kmers = []
-    for lig in ligands:
-        k_list = smile_list(ligands[lig], k)
+    for lig in ligand_dict:
+        k_list = smile_list(ligand_dict[lig], k)
         for kmer in k_list:
             if kmers.count(kmer) == 0:
                 kmers.append(kmer)
