@@ -1,6 +1,6 @@
 import json
 import logging as log
-import log_config
+#import log_config
 
 with open ('mouse_genes_ensembl_uniprot.json', 'r') as fp:
     GENE_DICT = json.load(fp)
