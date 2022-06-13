@@ -17,7 +17,7 @@ for i in range(0, 35477, 2):
     ligdict[df.loc[i][1]] = df.loc[i+1][1]
 
 #See dictionary
-#print(protdict)
+print(protdict.keys())
 
 #Concatenate AA and 3Di sequences
 protein_matrix = np.concatenate((np.array(ReadingFasta.sequence_matrix), np.array(ReadingFasta.structure_matrix)) , axis = 1)

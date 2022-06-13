@@ -21,15 +21,14 @@ PreparingMatrix.access_matrix()
 proteins_matrix = PreparingMatrix.intermediate_matrix
 
 #Import ligands matrix
-SmileKmer.importmatrix(ligand_dict, 3, 232)
+SmileKmer.importmatrix(ligand_dict, 3, 231)
 ligand_matrix = SmileKmer.ligmat
 #print(ligand_matrix)
 
 #Import dictionary
 PreparingMatrix.access_dictionary()
 logFC_dict = PreparingMatrix.dictionary
-print(logFC_dict['A0A1D5RLR5'])
-#print(logFC_dict)
+print(logFC_dict)
 
 #Concatenate protein and ligand matrices
 #print(len(proteins_matrix))
