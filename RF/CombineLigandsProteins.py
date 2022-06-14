@@ -46,9 +46,9 @@ for protein in proteins:
     if protein.name == 'L7N1Z5':
         break
     for ligand in list(ligand_dict.keys()):
-        logFC.append(logFC_dict[str(protein.name)][ligand])
-print(len(final_matrix))
-print(len(logFC))
+        logFC.append(float(logFC_dict[str(protein.name)][ligand]))
+#print(len(final_matrix))
+#print(len(logFC))
 
 """#logFC vector
 ReadingFasta.import_variables()
