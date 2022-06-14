@@ -43,7 +43,7 @@ def expand(matrix, ligand_count):
     return np.repeat(matrix, repeats = ligand_count, axis = 0)
 
 cut_matrix = protein_matrix[0:29]
-expanded_matrix = expand(cut_matrix, 39)
+expanded_matrix = expand(cut_matrix, 38)
 
 #Check for proper expansion
 #print(len(protein_matrix))

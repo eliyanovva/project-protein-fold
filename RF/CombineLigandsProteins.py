@@ -21,7 +21,7 @@ PreparingMatrix.access_matrix()
 proteins_matrix = PreparingMatrix.intermediate_matrix
 
 #Import ligands matrix
-SmileKmer.importmatrix(ligand_dict, 3, 29)
+SmileKmer.importmatrix(ligand_dict, 5, 29)
 ligand_matrix = SmileKmer.ligmat
 #print(ligand_matrix)
 
@@ -43,7 +43,7 @@ ReadingFasta.import_variables()
 proteins = ReadingFasta.sequence_seqs
 logFC = []
 for protein in proteins:
-    if protein.name == 'L7N1Z5':
+    if protein.name == 'A0A1L1SRP1':
         break
     for ligand in list(ligand_dict.keys()):
         logFC.append(float(logFC_dict[str(protein.name)][ligand]))
