@@ -1,0 +1,3 @@
+ATOMS_COUNT = 3000
+MOL_ATOMS_COUNT = 70
+ATOM_DICT = {'C':0, 'O':1, 'N':2, 'S':3}
