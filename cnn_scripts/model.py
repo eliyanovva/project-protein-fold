@@ -6,29 +6,35 @@ from moleculekit.home import home
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import os
+import pickle
 
-tut_data = home(dataDir='/usr/project/csplus2/dietrich/datafiles/mouse')
+x_data = pickle.load(open('x_data.txt', 'rb'))
 
-prot = Molecule(os.path.join(tut_data, 'AF-Q8VGS7-F1-model_v2.pdb.gz'))
-prot = prepareProteinForAtomtyping(prot)
+y_data = pickle.load(open('y_data.txt', 'rb'))
 
-prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, buffer=1)
+#def transform(prot_vox): #reshapes to (nchannels, d, h, w)
+    #return prot_vox.transpose().reshape([nchannels, prot_N[0], prot_N[1], prot_N[2]])
 
-nchannels = prot_vox.shape[1]
-
-prot_vox_t = prot_vox.transpose().reshape([1, nchannels, prot_N[0], prot_N[1], prot_N[2]])
-prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
-
-def transform(prot_vox): #reshapes to (nchannels, d, h, w)
-    return prot_vox.transpose().reshape([nchannels, prot_N[0], prot_N[1], prot_N[2]])
+class ProtDataset(Dataset):
+    def __init__(self):
+        self.x = torch.from_numpy(x_data)
+        self.y = torch.from_numpy(y_data)
+        self.n_samples = len(x_data)
+    
+    def __getitem__(self, index):
+        return self.x[index], self.y[index]
+    
+    def __len__(self):
+        return self.n_samples
 
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
         self.conv1 = nn.Sequential(
-            nn.Conv3d(nchannels, 32, 5),  # (in_channels, out_channels, kernel_size)
+            nn.Conv3d(8, 32, 5),  # (in_channels, out_channels, kernel_size)
             nn.ReLU(inplace=True),
             nn.MaxPool3d(3),
             nn.ReLU(inplace=True),
@@ -49,9 +55,7 @@ class Model(nn.Module):
        x = self.fc(x)
        return x
 
-transform(prot_vox)
 
 model = Model()
-results = model.forward(prot_vox_t)
-print(results.shape)
-print(nchannels)
+dataset = ProtDataset()
+print(y_data)
