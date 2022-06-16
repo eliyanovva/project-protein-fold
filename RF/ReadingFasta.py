@@ -25,12 +25,12 @@ def makematrix(fasta, seqvar, feat, mat):
         if line[0] == '>':
             name = line.replace('\n','')
             name = name.replace('>', '')
-            seqvar.append(Seq(name, '', featurize('',5,feat)))
+            seqvar.append(Seq(name, '', featurize('',6,feat)))
             i += 1
         else:
             sequence = line.replace('\n','')
             seqvar[i-1].sequence = seqvar[i-1].sequence + sequence
-            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,5,feat)
+            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,6,feat)
         j += 1
 
     for seq in seqvar:

@@ -32,6 +32,7 @@ logFC_byID = {}
 pVal_byID = {}
 cit_logFC = {}
 cit_pVal = {}
+cit_corrected = {}
 
 for id in acc_ids:
            logFC_byID[id] = {}
@@ -44,7 +45,8 @@ def cit_labels():
                       name = fas_df.loc[id]['receptor']
                       cit_logFC[id] = (cit_df.loc[name]['logFC'])
                       cit_pVal[id] = (cit_df.loc[name]['PValue'])
-           return cit_logFC, cit_pVal
+                      cit_corrected[id] = (cit_df.loc[name]['logFC']*cit_df.loc[name]['No1']*cit_df.loc[name]['No2']*cit_df.loc[name]['No3']/3)
+           return cit_logFC, cit_pVal, cit_corrected
 
 def labels():
            for csv in csvs:

@@ -12,7 +12,7 @@ def train(features, labels):
     y = labels #logFC
 
     #split into training and test set
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3) # 70% training and 30% test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1) # 90% training and 10% test
 
     #Create a Gaussian Regression
     clf=RandomForestRegressor(n_estimators=100)
@@ -32,4 +32,4 @@ def train(features, labels):
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
-train(testX, testY)
+#train(testX, testY)

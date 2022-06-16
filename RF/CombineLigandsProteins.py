@@ -9,7 +9,7 @@ import labels
 import SMILE
 
 ligand_dict = SMILE.create_ligand_dict()
-cit_logFC, cit_pval = labels.cit_labels()
+cit_logFC, cit_pval, cit_corrected = labels.cit_labels()
 logFC, pVal = labels.labels()
 
 
@@ -18,6 +18,8 @@ def exportdicts():
     citlog = cit_logFC
     global citp
     citp = cit_pval
+    global citcor
+    citcor = cit_corrected
     global logdic
     logdic = logFC
     global pdic
@@ -41,7 +43,7 @@ proteins = ReadingFasta.sequence_seqs
 logFCmat = []
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
-        logFCmat.append(float(pVal[str(protein.name)][ligand]))
+        logFCmat.append(float(logFC[str(protein.name)][ligand]))
 
 
 def import_final():
