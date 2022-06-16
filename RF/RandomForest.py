@@ -32,4 +32,4 @@ def train(features, labels):
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
-train(testX, testY)
+#train(testX, testY)

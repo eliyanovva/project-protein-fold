@@ -1,6 +1,7 @@
 import PreparingMatrix
 import CombineLigandsProteins
 import ReadingFasta
+import RandomForest
 
 PreparingMatrix.export()
 protmat = PreparingMatrix.proteins
@@ -16,5 +17,6 @@ pmat = []
 for protein in proteins:
     logmat.append(logFC[protein.name])
     pmat.append(p[protein.name])
-print(logmat)
-print(pmat)
+
+RandomForest.train(protmat, logmat)
+RandomForest.train(protmat, pmat)
