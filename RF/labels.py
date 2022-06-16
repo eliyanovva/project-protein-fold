@@ -25,3 +25,21 @@ csvs = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_
         'pS6_DE_1p_guaiacol.csv', 'pS6_DE_1p_Benzaldehyde.csv', 'pS6_DE_p01_citral.csv', 'pS6_DE_3mM_androstenone.csv', 'pS6_DE_100p_ebFarnesene.csv', 
         'pS6_DE_1p_acetophenone.csv', 'pS6_DE_1p_transCinnamaldehyde.csv', 'pS6_DE_1p_linalool.csv', 'pS6_DE_1p_2hexanone.csv', 'pS6_DE_1p_isopropylTiglate.csv',
         'pS6_DE_1p_aPinene.csv', 'pS6_DE_1p_diacetyl.csv', 'pS6_DE_1p_geranoil.csv', 'pS6_DE_1p_heptanoicAcid.csv']
+
+logFC_byID = {}
+pVal_byID = {}
+cit_logFC = {}
+cit_pVal = {}
+
+for id in acc_ids:
+           logFC_byID[id] = {}
+           pVal_byID[id] = {}
+           
+def cit_labels():
+           cit_df = pd.read_csv('olfr_de_copy1/olfr_de/pS6_DE_1p_citronellol.csv', index_col='name')
+           
+           for id in acc_ids:
+                      name = fas_df.loc[id]['receptor']
+                      cit_logFC[id] = (cit_df.loc[name]['logFC'])
+                      cit_pVal[id] = (cit_df.loc[name]['PValue'])
+           return cit_logFC, cit_pVal
