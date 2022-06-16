@@ -41,7 +41,7 @@ proteins = ReadingFasta.sequence_seqs
 logFCmat = []
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
-        logFCmat.append(float(logFC[str(protein.name)][ligand]))
+        logFCmat.append(float(pVal[str(protein.name)][ligand]))
 
 
 def import_final():
