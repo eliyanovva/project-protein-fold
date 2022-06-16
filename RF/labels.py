@@ -43,3 +43,14 @@ def cit_labels():
                       cit_logFC[id] = (cit_df.loc[name]['logFC'])
                       cit_pVal[id] = (cit_df.loc[name]['PValue'])
            return cit_logFC, cit_pVal
+
+def labels():
+           for csv in csvs:
+                      file_name = 'olfr_de_copy1/'+csv
+                      curr_df = pd.read_csv(file_name, index_col='name')
+
+                      for id in acc_ids:
+                                 name = fas_df.loc[id]['receptor']
+                                 logFC_byID[id][csv] = (curr_df.loc[name]['logFC'])
+                                 pVal_byID[id][csv] = (curr_df.loc[name]['PValue'])
+           return logFC_byID, pVal_byID
