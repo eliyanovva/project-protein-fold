@@ -26,6 +26,8 @@ csvs = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_
         'pS6_DE_1p_acetophenone.csv', 'pS6_DE_1p_transCinnamaldehyde.csv', 'pS6_DE_1p_linalool.csv', 'pS6_DE_1p_2hexanone.csv', 'pS6_DE_1p_isopropylTiglate.csv',
         'pS6_DE_1p_aPinene.csv', 'pS6_DE_1p_diacetyl.csv', 'pS6_DE_1p_geranoil.csv', 'pS6_DE_1p_heptanoicAcid.csv']
 
+fas_df = pd.read_csv('fasta_list.csv', index_col='accession number')
+
 logFC_byID = {}
 pVal_byID = {}
 cit_logFC = {}
@@ -43,3 +45,14 @@ def cit_labels():
                       cit_logFC[id] = (cit_df.loc[name]['logFC'])
                       cit_pVal[id] = (cit_df.loc[name]['PValue'])
            return cit_logFC, cit_pVal
+
+def labels():
+           for csv in csvs:
+                      file_name = 'olfr_de_copy1/olfr_de/'+csv
+                      curr_df = pd.read_csv(file_name, index_col='name')
+
+                      for id in acc_ids:
+                                 name = fas_df.loc[id]['receptor']
+                                 logFC_byID[id][csv] = (curr_df.loc[name]['logFC'])
+                                 pVal_byID[id][csv] = (curr_df.loc[name]['PValue'])
+           return logFC_byID, pVal_byID
