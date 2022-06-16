@@ -17,5 +17,10 @@ prot = prepareProteinForAtomtyping(prot)
 prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, voxelsize=0.5, buffer=1)
 lig_vox, lig_centers, lig_N = getVoxelDescriptors(ligand, voxelsize=0.5, buffer=1)
 
+"""
+prot.view(guessBonds=False)
+viewVoxelFeatures(prot_vox, prot_centers, prot_N)
 
-
+slig.view(guessBonds=False)
+viewVoxelFeatures(lig_vox, lig_centers, lig_N)
+"""
