@@ -34,7 +34,6 @@ for i in range(0, 35477, 2):
     protdict[frozenset(reader.loc[i])] = reader.loc[i+1][1]
 """
 
-
 #Concatenate AA and 3Di sequences
 protein_matrix = np.concatenate((np.array(ReadingFasta.sequence_matrix), np.array(ReadingFasta.structure_matrix)) , axis = 1)
 def export():
@@ -44,8 +43,7 @@ def export():
 def expand(matrix, ligand_count):
     return np.repeat(matrix, repeats = ligand_count, axis = 0)
 
-cut_matrix = protein_matrix[0:29]
-expanded_matrix = expand(cut_matrix, 38)
+expanded_matrix = expand(protein_matrix, 38)
 
 #Check for proper expansion
 #print(len(protein_matrix))

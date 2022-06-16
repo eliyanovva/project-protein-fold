@@ -1,11 +1,9 @@
-from tkinter import Y
-
-from cv2 import log
+#Protein is A0A1L1SQF6
 import PreparingMatrix
-import SmileKmer
-import numpy as np
+import CombineLigandsProteins
 import ReadingFasta
-import labels
+import RandomForest
+import SmileKmer
 
 ligand_dict = {"pS6_DE_1p_citronellol.csv":'CC(CCC=C(C)C)CCO', "pS6_DE_1p_isoamylAcetate.csv":'CC(C)CCOC(=O)C', "pS6_DE_1p_ethylTiglate.csv":'CCOC(=O)C(=CC)C',
 "pS6_DE_1p_bIonone.csv":'CC1=C(C(CCC1)(C)C)C=CC(=O)C', "pS6_DE_1p_butyricAcid.csv":'CCCC(=O)O', "pS6_DE_1p_paraCresol.csv":'CC1=CC=C(C=C1)O', "pS6_DE_1p_bCaryophyllene.csv":'CC1=CCCC(=C)C2CC(C2CC1)(C)C',
@@ -18,43 +16,18 @@ ligand_dict = {"pS6_DE_1p_citronellol.csv":'CC(CCC=C(C)C)CCO', "pS6_DE_1p_isoamy
 "pS6_DE_1p_transCinnamaldehyde.csv":'C1=CC=C(C=C1)C=CC=O', "pS6_DE_1p_linalool.csv":'CC(=CCCC(C)(C=C)O)C', "pS6_DE_1p_2hexanone.csv":'CCCCC(=O)C', "pS6_DE_1p_isopropylTiglate.csv":'CC=C(C)C(=O)OC(C)C',
 "pS6_DE_1p_aPinene.csv":'CC1=CCC2CC1C2(C)C', "pS6_DE_1p_diacetyl.csv":'CC(=O)C(=O)C', "pS6_DE_1p_geranoil.csv":'CC(=CCCC(=CCO)C)C', "pS6_DE_1p_heptanoicAcid.csv":'CCCCCCC(=O)O'}
 
-cit_logFC, cit_pval = labels.cit_labels()
-logFC, pVal = labels.labels()
-
-
-def exportdicts():
-    global citlog  
-    citlog = cit_logFC
-    global citp
-    citp = cit_pval
-    global logdic
-    logdic = logFC
-    global pdic
-    pdic = pVal
-
-#Import proteins matrix
-PreparingMatrix.access_matrix()
-proteins_matrix = PreparingMatrix.intermediate_matrix
-
-#Import ligands matrix
-SmileKmer.importmatrix(ligand_dict, 5, 230)
+SmileKmer.importmatrix(ligand_dict, 5, 1)
 ligand_matrix = SmileKmer.ligmat
 
-#Concatenate protein and ligand matrices
-final_matrix = np.concatenate((proteins_matrix, ligand_matrix), axis = 1)
+CombineLigandsProteins.exportdicts()
+logFC = CombineLigandsProteins.logdic
+p = CombineLigandsProteins.pdic
 
+logmat = []
+pmat = []
+for ligand in list(logFC['A0A1L1SQF6'].keys()):
+    logmat.append(logFC['A0A1L1SQF6'][ligand])
+    pmat.append(p['A0A1L1SQF6'][ligand])
 
-#Create logFC vector
-ReadingFasta.import_variables()
-proteins = ReadingFasta.sequence_seqs
-logFCmat = []
-for protein in proteins:
-    for ligand in list(ligand_dict.keys()):
-        logFCmat.append(float(logFC[str(protein.name)][ligand]))
-
-
-def import_final():
-    global X
-    X = final_matrix
-    global Y
-    Y = logFCmat
+RandomForest.train(ligand_matrix, logmat)
+RandomForest.train(ligand_matrix, pmat)

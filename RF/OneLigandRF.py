@@ -6,9 +6,9 @@ import RandomForest
 PreparingMatrix.export()
 protmat = PreparingMatrix.proteins
 
-CombineLigandsProteins.importdict()
-logFC = CombineLigandsProteins.logFCdict
-p = CombineLigandsProteins.pdict
+CombineLigandsProteins.exportdicts()
+logFC = CombineLigandsProteins.citlog
+p = CombineLigandsProteins.citp
 
 ReadingFasta.import_variables()
 proteins = ReadingFasta.sequence_seqs
