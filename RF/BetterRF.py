@@ -27,8 +27,8 @@ def train(features, labels):
     print(model.get_params().keys())
 
     #Cross validate
-    FACTOR = 5
-    MAX_RESOURCE_DIVISOR = 4
+    FACTOR = 10
+    MAX_RESOURCE_DIVISOR = 10
     # Number of trees in random forest
     n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)]
     # Number of features to consider at every split
