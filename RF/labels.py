@@ -55,3 +55,45 @@ def labels():
                                  logFC_byID[id][csv] = (curr_df.loc[name]['logFC'])
                                  pVal_byID[id][csv] = (curr_df.loc[name]['PValue'])
            return logFC_byID, pVal_byID
+
+def classified_logFC():
+    logFC_byID, pVal_byID = labels()
+
+    classified = {}
+    for id in logFC_byID:
+        classified[id] = {}
+        for csv in csvs:
+            if logFC_byID[id][csv] < .5:
+                classified[id][csv] = 0
+            else:
+                classified[id][csv] = 1
+
+    return classified
+
+def classified_pVal():
+    logFC_byID, pVal_byID = labels()
+
+    classified = {}
+    for id in pVal_byID:
+        classified[id] = {}
+        for csv in csvs:
+            if pVal_byID[id][csv] > .05:
+                classified[id][csv] = 0
+            else:
+                classified[id][csv] = 1
+
+    return classified
+
+def classified_logFC_pVal():
+    logFC_byID, pVal_byID = labels()
+
+    classified = {}
+    for id in pVal_byID:
+        classified[id] = {}
+        for csv in csvs:
+            if (logFC_byID[id][csv] >= .5) & (pVal_byID[id][csv] <= .05):
+                classified[id][csv] = 1
+            else:
+                classified[id][csv] = 0
+
+    return classified
