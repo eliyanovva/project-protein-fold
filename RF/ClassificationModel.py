@@ -26,7 +26,7 @@ def train(features, labels):
     print(y_test)
 
     #Print accuracy of the model
-    print("Accuracy:",metrics.r2_score(y_test, y_pred))
+    print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
 
 
 Resample.resampled_matrices()
