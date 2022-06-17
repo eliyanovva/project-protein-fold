@@ -43,15 +43,10 @@ final_matrix = np.concatenate((proteins_matrix, ligand_matrix), axis = 1)
 ReadingFasta.import_variables()
 proteins = ReadingFasta.sequence_seqs
 logFCmat = []
-i = 0
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
         logFCmat.append(float(classified[str(protein.name)][ligand]))
-        i+=1
-        if (float(classified[str(protein.name)][ligand]) == 1.0):
-            np.concatenate((final_matrix, np.reshape(final_matrix[i], (1,-1))), axis = 0)
-            proteins.append(protein)
-print(logFCmat[230:])
+
 
 
 def import_final():
