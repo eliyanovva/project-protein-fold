@@ -2,7 +2,7 @@
 *.log
 
 # All pdb files
-*.pdb
+#*.pdb
 
 # ALl npy files
 *.npy
