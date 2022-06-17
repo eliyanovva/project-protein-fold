@@ -23,7 +23,7 @@ def importmatrix(ligand_dict, k, num_proteins):
         #data values represent how many times a given k-mer of length k occurs in a ligand's SMILE formula
         #for a dataset with m proteins, rows 1:n of the matrix will be duplicated m times
 def ligand_matrix(ligand_dict, k, num_proteins):
-    ligand_counts = ligand_kmer_count(ligand_dict, k)
+    ligand_counts = find_kmer_counts(ligand_dict, k)
     freq_mat = []
     for i in range(num_proteins):
         for lig in ligand_counts:
@@ -34,59 +34,31 @@ def ligand_matrix(ligand_dict, k, num_proteins):
 #       int k
 #Output: dict ligand_counts ~ key = ligand name, value = dict lig_dict:
 #                                                               key = k-mer name, value = # of times the k-mer occurs in the ligand
-def ligand_kmer_count(ligand_dict, k):
-    ligand_counts = {}
-    total_kmers = find_total_kmers(ligand_dict, k)
+def find_kmer_counts(ligand_dict, k):
+    all_kmers = []
+    kmers_byligand = {}
+    kmer_counts = {}
     for lig in ligand_dict:
-        lig_dict = {}
+        lig_kmers = []
+        letters = form_letters(ligand_dict[lig])
+        print(letters)
+        for i in range(0, len(letters) - k + 1):
+            kmer = ""
+            for j in range(k):
+                kmer += letters[i+j]
+            all_kmers.append(kmer)
+            lig_kmers.append(kmer)
+        kmers_byligand[lig] = lig_kmers
+
+    total_kmers = np.unique(np.array(all_kmers))
+
+    for lig in ligand_dict:
+        kmer_counts[lig] = {}
         for kmer in total_kmers:
-            lig_dict[kmer] = 0
-        freq_dict = smile_dict(ligand_dict[lig], k)
-        for kster in freq_dict:
-            lig_dict[kster] = freq_dict[kster]
-        ligand_counts[lig] = lig_dict
-    return ligand_counts
+            kmer_counts[lig][kmer] = kmers_byligand[lig].count(kmer)
 
+    return kmer_counts
 
-#Input: dict ligand_dict
-#       int k
-#Output: list kmers ~ list of all k-mers of length k that can be found out of all the ligands in ligand_dict
-def find_total_kmers(ligand_dict, k):
-    kmers = []
-    for lig in ligand_dict:
-        k_list = smile_list(ligand_dict[lig], k)
-        for kmer in k_list:
-            if kmers.count(kmer) == 0:
-                kmers.append(kmer)
-    return kmers
-
-def smile_dict(smile, k):
-    kmer_dict = {}
-    letters = form_letters(smile)
-
-    for i in range(0, len(letters) - k + 1):
-        k_ster = ""
-        for j in range(k):
-            k_ster += letters[i+j]
-        if k_ster not in kmer_dict:
-            kmer_dict[k_ster] = 0
-        kmer_dict[k_ster] += 1
-
-    return kmer_dict
-
-def smile_list(smile, k):
-    kmer_list = []
-    letters = form_letters(smile)
-
-    for i in range(0, len(letters) - k + 1):
-        k_ster = ""
-        for j in range(k):
-            k_ster += letters[i+j]
-        if kmer_list.count(k_ster) == 0:
-            kmer_list.append(k_ster)
-            
-    return kmer_list
-        
 #Input: str smile = a SMILE formula for a given ligand
 #Output: list letters = a list of substrings of smile; each substring is a partitioned 'letter' of smile that can be used to form k-mers
 def form_letters(smile):        
@@ -162,19 +134,3 @@ def form_letters(smile):
             letters[j] = curr[:ind_2]
 
     return letters
-
-def check_ligand_distinct(ligands, k):
-    num_ligands = len(ligands)
-    freq_mat = []
-    ligand_counts = ligand_kmer_count(ligands, k)
-    for lig in ligand_counts:
-        row = ''
-        freqs = ligand_counts[lig]
-        for kmer in freqs:
-            row += str(freqs[kmer])
-        freq_mat.append(row)
-    unique_mat = set(freq_mat)
-    if len(unique_mat) == num_ligands:
-        print('Ligands are distinct')
-    else:
-        print('Ligands are not distinct')
