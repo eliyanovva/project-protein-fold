@@ -63,16 +63,30 @@ def classified_pVal():
 
     return classified
 
-def classified_logFC_pVal():
-    logFC_byID, pVal_byID = labels()
-
+def classified_logFC_pVal(logFC_byID, pVal_byID):
     classified = {}
+    i = 0
+    pos_counts_id = {}
+    neg_counts_id = {}
+
+    """
+    for csv in csvs:
+        pos_counts_lig[csv] = 0
+        neg_counts_lig[csv] = 0
+    """
+
     for id in pVal_byID:
+        id_counts = 0
         classified[id] = {}
         for csv in csvs:
             if (logFC_byID[id][csv] >= .5) & (pVal_byID[id][csv] <= .05):
                 classified[id][csv] = 1
+                id_counts += 1
+                #pos_counts_lig[csv] += 1
             else:
                 classified[id][csv] = 0
+                #neg_counts_lig[csv] += 1
+            i += 1
+        pos_counts_id[id] = id_counts
 
-    return classified
+    return classified, pos_counts_id, neg_counts_id
