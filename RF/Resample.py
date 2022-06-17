@@ -16,7 +16,13 @@ testY = CombineLigandsProteins.Y
 
 
 X_res, y_res = ros.fit_resample(testX, testY)
-   
+
+def resampled_matrices():
+    global input
+    input = X_res
+    global output
+    output = y_res
+
 X_res = pd.DataFrame(X_res)
 Y_res = pd.DataFrame(y_res)
    
@@ -27,3 +33,5 @@ print('Class 0        :', round(Y_res[0].value_counts()[0]
    
 print('Class 1:', round(Y_res[0].value_counts()[1]
                 /len(Y_res) * 100, 2), '% of the dataset')
+
+

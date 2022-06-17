@@ -4,7 +4,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
-import CombineLigandsProteins
+import Resample
 
 def train(features, labels):
     #define features and labels
@@ -29,7 +29,7 @@ def train(features, labels):
     print("Accuracy:",metrics.r2_score(y_test, y_pred))
 
 
-CombineLigandsProteins.import_final()
-testX = CombineLigandsProteins.X
-testY = CombineLigandsProteins.Y
+Resample.resampled_matrices()
+testX = Resample.input
+testY = Resample.output
 train(testX, testY)
