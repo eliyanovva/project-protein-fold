@@ -41,7 +41,6 @@ def find_kmer_counts(ligand_dict, k):
     for lig in ligand_dict:
         lig_kmers = []
         letters = form_letters(ligand_dict[lig])
-        print(letters)
         for i in range(0, len(letters) - k + 1):
             kmer = ""
             for j in range(k):

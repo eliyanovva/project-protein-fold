@@ -5,6 +5,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 import Resample
+Resample.resampled_matrices()
+testX = Resample.input
+testY = Resample.output
 
 def train(features, labels):
     #define features and labels
@@ -22,14 +25,8 @@ def train(features, labels):
 
     #Form predictions
     y_pred=clf.predict(X_test)
-    print(y_pred)
-    print(y_test)
 
     #Print accuracy of the model
-    print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
+    #print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
 
-
-Resample.resampled_matrices()
-testX = Resample.input
-testY = Resample.output
 train(testX, testY)

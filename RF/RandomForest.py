@@ -22,11 +22,9 @@ def train(features, labels):
 
     #Form predictions
     y_pred=clf.predict(X_test)
-    print(y_pred)
-    print(y_test)
 
     #Print accuracy of the model
-    print("Accuracy:",metrics.r2_score(y_test, y_pred))
+    #print("Accuracy:",metrics.r2_score(y_test, y_pred))
 
 
 CombineLigandsProteins.import_final()
