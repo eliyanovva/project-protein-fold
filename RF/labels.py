@@ -83,6 +83,7 @@ def classified_logFC_pVal(logFC_byID, pVal_byID):
         pos = 0
         neg = 0
         classified[id] = {}
+        print(logFC_byID)
         for csv in csvs:
             if (logFC_byID[id][csv] >= .5) & (pVal_byID[id][csv] <= .05):
                 classified[id][csv] = 1
