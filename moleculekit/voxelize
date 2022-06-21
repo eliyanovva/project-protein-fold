@@ -4,7 +4,14 @@ from moleculekit.tools.atomtyper import prepareProteinForAtomtyping
 from moleculekit.smallmol.smallmol import SmallMol
 from moleculekit.home import home
 import os
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+from torch.utils.data import Dataset, DataLoader, random_split
+import re
 
+# https://rosenfelder.ai/multi-input-neural-network-pytorch/
 
 os.chdir('/home/users/jvs15/project-protein-fold')
 
@@ -17,10 +24,52 @@ prot = prepareProteinForAtomtyping(prot)
 prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, voxelsize=0.5, buffer=1)
 lig_vox, lig_centers, lig_N = getVoxelDescriptors(ligand, voxelsize=0.5, buffer=1)
 
-"""
-prot.view(guessBonds=False)
-viewVoxelFeatures(prot_vox, prot_centers, prot_N)
+print(prot_vox.shape, lig_vox.shape)
 
-slig.view(guessBonds=False)
-viewVoxelFeatures(lig_vox, lig_centers, lig_N)
-"""
+nchannels = prot_vox.shape[1]
+
+prot_vox_t = prot_vox.transpose().reshape([1, nchannels, prot_N[0], prot_N[1], prot_N[2]])
+prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
+
+lig_vox_t = lig_vox.transpose().reshape([1, nchannels, lig_N[0], lig_N[1], lig_N[2]])
+lig_vox_t = torch.tensor(lig_vox_t.astype(np.float32))
+
+
+class Model(nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+        self.conv1 = nn.Conv3d(nchannels, 20, 5)  # (in_channels, out_channels, kernel_size)
+        self.conv2 = nn.Conv3d(20, 20, 5)
+
+    def forward(self, x):
+       x = F.relu(self.conv1(x))
+       return F.relu(self.conv2(x))
+
+class Pair(Dataset):
+    """Protein Ligand Pair dataset"""
+
+    def __init__(self, prot_dir, lig_structure_dir, lig_fc_dir, mart_dir):
+        self.prot_dir = prot_dir
+        self.lig_dir = lig_structure_dir
+        self.lig_fc_dir = lig_fc_dir
+        de = pd.read_csv(lig_fc_dir)
+        mart = pd.read_csv(mart_dir, sep='\t')
+        # find start and stop indices in prot string corresponding to UniProt accession
+        a, b = prot_dir.find('AF-'), prot_dir.find('-F1')
+        uniprot = prot_dir[a+3, b]
+        # Need mapping from gene symbol to Uniprot accession, tabulated
+        ens_id = mart.loc[mart['Entry'] == uniprot]
+
+    # Add other functions for class as needed
+    
+        # nchannels = prot_vox.shape[1]
+        # prot_vox_t = prot_vox.transpose().reshape([1, nchannels, prot_N[0], prot_N[1], prot_N[2]])
+        # prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
+
+        # nchannels = lig_vox.shape[1]
+        # lig_vox_t = lig_vox.transpose().reshape([1, nchannels, lig_N[0], lig_N[1], lig_N[2]])
+        # lig_vox_t = torch.tensor(lig_vox_t.astype(np.float32))
+
+model = Model()
+results = model.forward(lig_vox_t)
+print(results.shape)
