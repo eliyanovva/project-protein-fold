@@ -23,7 +23,7 @@ for id in acc_ids:
            pVal_byID[id] = {}
            
 def cit_labels():
-           cit_df = pd.read_csv('olfr_de_copy1/olfr_de/pS6_DE_1p_citronellol.csv', index_col='name')
+           cit_df = pd.read_csv('olfr_de_copy1/olfr_de/pS6_DE_1p_citronellol.csv', index_col='ensembl_gene_id')
            
            for id in acc_ids:
                       name = fas_df.loc[id]['ensembl_gene_id']
