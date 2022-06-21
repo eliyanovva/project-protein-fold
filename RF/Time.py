@@ -13,14 +13,13 @@ from sklearn.preprocessing import StandardScaler
 from imblearn.under_sampling import RandomUnderSampler, TomekLinks
 from imblearn.over_sampling import RandomOverSampler, SMOTE
 import CombineLigandsProteins
-
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
-
 """
 
 mycode = """
+
 def train(features, labels):
     #define features and labels
     X = features #Globals.features (kmers)
