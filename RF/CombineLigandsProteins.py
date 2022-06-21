@@ -7,12 +7,20 @@ import numpy as np
 import ReadingFasta
 import labels
 import SMILE
+import Globals
 import Filtering
 
 ligand_dict = SMILE.create_ligand_dict()
 cit_logFC, cit_pval = labels.cit_labels()
+
 logFC, pVal = labels.labels()
 classified, pos_counts, neg_counts = labels.classified_logFC_pVal(logFC, pVal)
+
+def import_labels():
+    global positives
+    positives = pos_counts
+    global negatives
+    negatives = neg_counts
 
 def exportdicts():
     global citlog
@@ -29,8 +37,32 @@ def exportdicts():
     class_dict = classified
 
 #Import proteins matrix
-PreparingMatrix.access_matrix()
-proteins_matrix = PreparingMatrix.intermediate_matrix
+#PreparingMatrix.access_matrix()
+#proteins_matrix = PreparingMatrix.intermediate_matrix
+
+#Creating output for categorized amino acids
+#Read fasta file
+fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
+#Create kmer frequency dictionary
+seqvar1, features1 = ReadingFasta.make_seqvar(fasta1, Globals.categorized_seqs, Globals.categorized_features)
+#Remove insignificant kmers
+filter_feat = Filtering.richness_protein(features1, seqvar1, pos_counts, neg_counts)
+# Make the matrix
+AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, Globals.categorized_matrix)
+
+#Creating output for 3Di sequences
+# Read fasta file
+fasta2 = open("/home/users/sml96/bin/project-protein-fold/foldseek-master/foldseek/foldseek/outputDb_ss.fasta")
+#Create kmer frequency dictionary
+seqvar2, features2 = ReadingFasta.make_seqvar(fasta2, Globals.di_seqs, Globals.di_features)
+#Remove insignificant kmers
+filter_feat2 = Filtering.richness_protein(features2, seqvar2, pos_counts, neg_counts)
+# Make the matrix
+Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat, Globals.di_matrix)
+
+intermed_matrix = np.concatenate((np.array(AA_mat), np.array(Di_mat)) , axis = 1)
+ligand_count = 38
+proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 
 #Import ligands matrix
 SmileKmer.importmatrix(ligand_dict, 5, 230)
@@ -46,10 +78,6 @@ logFCmat = []
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
         logFCmat.append(float(classified[str(protein.name)][ligand]))
-
-freq_dict = {}
-kmers = []
-#Filtering.richness_ligand(kmers, freq_dict, pos_counts, neg_counts)
 
 def import_final():
     global X

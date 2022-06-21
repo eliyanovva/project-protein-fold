@@ -45,7 +45,7 @@ def richness_ligand(kmers, freq_dict, pos_counts, neg_counts):
     return freq_dict
 """
 
-def richness_protein(kmers, freq_dict, pos_counts, neg_counts):
+def richness_protein(kmers, seqvar, pos_counts, neg_counts):
     pos_counts_by_kmer = {}
     neg_counts_by_kmer = {}
     for kmer in kmers:
@@ -55,9 +55,11 @@ def richness_protein(kmers, freq_dict, pos_counts, neg_counts):
     total_pos = sum(list(pos_counts.values()))
     total_neg = sum(list(neg_counts.values()))
 
-    for kmer in kmers:
-        for id in freq_dict:
-            if (pos_counts[id] > 0) & (freq_dict[id][kmer] > 0):
+    for seq in seqvar:
+        id = seq.name
+        freq_dict = seq.dictionary
+        for kmer in kmers:
+            if (pos_counts[id] > 0) & (freq_dict[kmer] > 0):
                 pos_counts_by_kmer[kmer] += pos_counts[id]
                 neg_counts_by_kmer[kmer] += neg_counts[id]
 
@@ -74,16 +76,11 @@ def richness_protein(kmers, freq_dict, pos_counts, neg_counts):
         else:
             richness[kmer] = pos_counts_by_kmer[kmer] / neg_counts_by_kmer[kmer]
 
-    kmer_to_remove = []
     for kmer in kmers:
         if (richness[kmer] > .8) & (richness[kmer] < 1.2):
-            kmer_to_remove.append(kmer)
+            kmers.remove(kmer)
 
-    for id in freq_dict:
-        for kmer in kmer_to_remove:
-            freq_dict[id].pop(kmer)
-
-    return freq_dict
+    return kmers
 
 
 """
