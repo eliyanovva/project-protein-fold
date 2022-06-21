@@ -4,7 +4,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import HalvingRandomSearchCV
 from imblearn.over_sampling import RandomOverSampler
 from sklearn.model_selection import train_test_split
 import CombineLigandsProteins
@@ -32,7 +32,7 @@ param_grid = {'n_estimators': n_estimators,
 #Define model
 model = RandomForestClassifier()
 #Define random grid
-grid = RandomizedSearchCV(estimator = model, param_distributions = param_grid, cv = 10, verbose = 2, n_jobs = -1)
+grid = HalvingRandomSearchCV(estimator = model, param_distributions = param_grid, verbose = 2, n_jobs = -1)
 
 #Import data
 CombineLigandsProteins.import_final()

@@ -1,8 +1,6 @@
 #Code adapted from: https://www.datacamp.com/tutorial/random-forests-classifier-python 
 
 import timeit
-
-mysetup = """
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
@@ -16,9 +14,6 @@ import CombineLigandsProteins
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
-"""
-
-mycode = """
 
 def train(features, labels):
     #define features and labels
@@ -45,8 +40,7 @@ def train(features, labels):
     #print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
 
     train(testX, testY)
-"""
-print ("The time of execution of above program is :",
-       timeit.timeit(setup = mysetup,
-                    stmt = mycode,
-                    number = 10))
+
+timeit
+t = timeit.timeit(lambda: train(testX, testY), number = 10)
+print(t)
