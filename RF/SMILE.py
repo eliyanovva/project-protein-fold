@@ -51,10 +51,16 @@ def create_protein_list():
                'Q8VGB4', 'Q7TRU6', 'Q8VF78', 'Q8VGU9', 'Q8VGU8', 'Q8VGU7', 'E9Q3K2', 'Q8VGU3', 'Q8VF72', 'Q7TS51', 'E9Q0Q2', 'Q8VGM3', 'Q7TRJ1', 'Q0VEL5']
     """
     acc_ids = []
-    fr = open("allseqs.fasta")
+    fr = open("allseqs.fasta", "r")
     lines = fr.readlines()
+    fw = open("new_accessions.txt", "w")
     for line in lines:
         if line[0] == ">":
             acc_ids.append(line[1:-1])
+            fw.write(str(line[1:-1]) + ", ")
+    fr.close()
+    fw.close()
+
     return acc_ids
+
 
