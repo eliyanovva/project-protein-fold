@@ -29,6 +29,7 @@ def cit_labels():
            return cit_logFC, cit_pVal
 
 #returns vectors of the logFC and p-values
+#key: protein id, value: dict (key: ligand file name, value: data label)
 def labels():
            for csv in csvs:
                       file_name = 'olfr_de_copy1/olfr_de/'+csv
@@ -70,7 +71,7 @@ def classified_pVal(logFC_byID, pVal_byID):
 
     return classified
 
-def classified_logFC_pVal():
+def classified_logFC_pVal(logFC_byID, pVal_byID):
     classified = {}
     i = 0
     pos_counts = {} #key: protein id, value: number of positive protein interactions

@@ -1,5 +1,7 @@
 import SMILE
 
+acc_list = SMILE.create_protein_list()
+
 def richness_ligand(kmers, freq_dict, pos_counts, neg_counts):
     pos_counts_by_kmer = {}
     neg_counts_by_kmer = {}
@@ -40,7 +42,7 @@ def richness_ligand(kmers, freq_dict, pos_counts, neg_counts):
 
     return freq_dict
 
-def richness_protein(kmers, freq_dict, pos_counts, neg_counts):
+def richness_protein(kmers, pos_counts, neg_counts):
     pos_counts_by_kmer = {}
     neg_counts_by_kmer = {}
     for kmer in kmers:
