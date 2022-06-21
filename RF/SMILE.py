@@ -32,6 +32,7 @@ def create_ligand_list():
     return ligands
 
 def create_protein_list():
+    """
     acc_ids = ['Q8VET1', 'Q8VFR3', 'Q8VGZ7', 'Q8VG59', 'Q8VF91', 'Q8VGD7', 'Q8VGC8', 'Q8VFM9', 'A2AVB5', 'L7N1X3', 'Q8VEZ3', 'A0A1L1SQF6', 'Q8VGC7', 'Q8VGC6',
                'A0A1D5RLR5', 'Q7TQV4', 'Q7TQV7', 'Q8VH21', 'Q8VFZ6', 'Q8VFZ2', 'Q9EQ90', 'Q8VGJ3', 'E9Q840', 'Q8VGJ7', 'Q8VGJ5', 'Q9R0K2', 'Q60881', 'Q8VFU6',
                'E9PYP4', 'Q8VFU9', 'Q8VG27', 'E9Q1P0', 'Q7TS48', 'Q8VH10', 'Q8VGM2', 'L7N1Y6', 'Q7TQU8', 'Q8VES9', 'Q8VGS0', 'Q8VGS3', 'Q7TRH8', 'Q8VGS7',
@@ -48,6 +49,12 @@ def create_protein_list():
                'Q8VGE3', 'Q8VGE1', 'E9Q546', 'Q8VFX4', 'Q8VGT2', 'E9Q545', 'Q8VGT4', 'Q8VFX2', 'Q7TRA7', 'K7N609', 'Q9JHB2', 'E9Q549', 'Q7TRT9', 'Q9EQA6', 'Q9EPG2',
                'E9PWU0', 'E9Q985', 'Q2M2Q2', 'Q8VG42', 'Q8VG49', 'Q8VF43', 'Q7TRE6', 'Q8VFG4', 'Q7TRB0', 'Q8VGB9', 'Q7TR59', 'E9Q413', 'Q8VGB3', 'Q8VFJ5', 'Q7TRB9',
                'Q8VGB4', 'Q7TRU6', 'Q8VF78', 'Q8VGU9', 'Q8VGU8', 'Q8VGU7', 'E9Q3K2', 'Q8VGU3', 'Q8VF72', 'Q7TS51', 'E9Q0Q2', 'Q8VGM3', 'Q7TRJ1', 'Q0VEL5']
-
+    """
+    acc_ids = []
+    fr = open("allseqs.fasta")
+    lines = fr.readlines()
+    for line in lines:
+        if line[0] == ">":
+            acc_ids.append(line[1:-1])
     return acc_ids
 
