@@ -1,4 +1,5 @@
 import pandas as pd
+import SMILE
 
 acc_ids = SMILE.create_protein_list()
 csvs = SMILE.create_ligand_list()
@@ -63,7 +64,7 @@ def classified_pVal():
 
     return classified
 
-def classified_logFC_pVal(logFC_byID, pVal_byID):
+def classified_logFC_pVal():
     classified = {}
     i = 0
     pos_counts_id = {}
