@@ -63,11 +63,7 @@ def makematrix(fasta, seqvar, feat, mat):
             seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,7,feat)
         j += 1
 
-<<<<<<< HEAD
-        #print(seqvar)
-=======
 #seq.dictionary is the kmer frequency dict for each protein
->>>>>>> f278b24d14e46803190da7ed136c5e0f8ac02482
 
     for seq in seqvar:
         newseq = []
