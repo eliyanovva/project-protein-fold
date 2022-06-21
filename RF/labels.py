@@ -95,3 +95,61 @@ def classified_logFC_pVal(logFC_byID, pVal_byID):
         pos_counts_id[id] = id_counts
 
     return classified, pos_counts_id, neg_counts_id
+
+#cutoff for p-Val: > .05
+#cutoff for logFC: < .5
+#1 = yes, 0 = no
+
+def classified_logFC(logFC_byID, pVal_byID):
+    classified = np.zeros_like(np.arange(num_proteins * num_ligands))
+    i = 0
+    for id in logFC_byID:
+        for csv in csvs:
+            if logFC_byID[id][csv] < .5:
+                classified[i] = 0
+            else:
+                classified[i] = 1
+            i += 1
+
+    return classified
+
+def classified_pVal(logFC_byID, pVal_byID):
+    classified = np.zeros_like(np.arange(num_proteins * num_ligands))
+    i = 0
+    for id in pVal_byID:
+        for csv in csvs:
+            if pVal_byID[id][csv] > .05:
+                classified[i] = 0
+            else:
+                classified[i] = 1
+            i += 1
+
+    return classified
+
+def classified_logFC_pVal(logFC_byID, pVal_byID):
+    classified = {}
+    i = 0
+    pos_counts_id = {}
+    neg_counts_id = {}
+
+    """
+    for csv in csvs:
+        pos_counts_lig[csv] = 0
+        neg_counts_lig[csv] = 0
+    """
+
+    for id in pVal_byID:
+        id_counts = 0
+        classified[id] = {}
+        for csv in csvs:
+            if (logFC_byID[id][csv] >= .5) & (pVal_byID[id][csv] <= .05):
+                classified[id][csv] = 1
+                id_counts += 1
+                #pos_counts_lig[csv] += 1
+            else:
+                classified[id][csv] = 0
+                #neg_counts_lig[csv] += 1
+            i += 1
+        pos_counts_id[id] = id_counts
+
+    return classified, pos_counts_id, neg_counts_id
