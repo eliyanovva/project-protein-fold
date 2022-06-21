@@ -34,6 +34,8 @@ def makematrix(fasta, seqvar, feat, mat):
             seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,7,feat)
         j += 1
 
+        print(seqvar)
+
     for seq in seqvar:
         newseq = []
         for kmer in feat:
