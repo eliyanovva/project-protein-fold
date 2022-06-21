@@ -49,7 +49,7 @@ for protein in proteins:
 
 freq_dict = {}
 kmers = []
-Filtering.richness_filter(kmers, freq_dict, pos_counts, neg_counts)
+Filtering.richness_ligand(kmers, freq_dict, pos_counts, neg_counts)
 
 def import_final():
     global X
