@@ -19,8 +19,8 @@ def exportdicts():
     citlog = cit_logFC
     global citp
     citp = cit_pval
-    global citcor
-    citcor = cit_corrected
+    #global citcor
+    #citcor = cit_corrected
     global logdic
     logdic = logFC
     global pdic
