@@ -34,7 +34,7 @@ def makematrix(fasta, seqvar, feat, mat):
             seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,7,feat)
         j += 1
 
-        print(seqvar)
+        #print(seqvar)
 
     for seq in seqvar:
         newseq = []
@@ -46,7 +46,7 @@ def makematrix(fasta, seqvar, feat, mat):
 
 #Creating output for categorized amino acids
 # Read fasta file
-fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
+fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/allsequences.fasta")
 #Remove insignificant kmers
 
 #Filtering.richness_protein(Globals.categorized_features)
@@ -61,13 +61,16 @@ makematrix(fasta1, Globals.categorized_seqs, Globals.categorized_features, Globa
 
 #Creating output for 3Di sequences
 # Read fasta file
-fasta2 = open("/home/users/sml96/bin/project-protein-fold/foldseek-master/foldseek/foldseek/outputDb_ss.fasta") 
+fasta2 = open("/home/users/sml96/bin/project-protein-fold/3DiSequences/fullset_ss.fasta") 
 # Make the matrix
 makematrix(fasta2, Globals.di_seqs, Globals.di_features, Globals.di_matrix)
 # View output
 #print(Globals.di_seqs)
 #print(Globals.di_features)
 #print(np.array(Globals.di_matrix))
+
+print(len(Globals.di_seqs))
+print(len(Globals.categorized_seqs))
 
 def import_variables():
     global sequence_seqs
