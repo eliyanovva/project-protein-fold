@@ -13,7 +13,7 @@ df = pd.read_csv('/home/users/sml96/bin/project-protein-fold/olfr_de/uniprot_lig
 
 for i in range (0, 35476, 2):
     if str(df.loc[i][0]) not in protdict:
-        protdict[str(df.loc[i][0])] = {}    
+        protdict[str(df.loc[i][0])] = {}
     ligdict = protdict[str(df.loc[i][0])]
     ligdict[str(df.loc[i][1])] = str(df.loc[i+1][1])
     protdict[str(df.loc[i][0])] = ligdict
