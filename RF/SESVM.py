@@ -75,10 +75,13 @@ def SESVM(pos_set, neg_set):
     parts = create_partitions(pos_set, neg_set, M)
     for set in parts:
         print(set)
-    #for m in range(M):
+    for m in range(int(M)):
         #use GridSearchCV to optimize rbf hyperparameters???
         #C: decreasing C => more regulation, decrease C if there's a lot of noise
         #gamma
+        #features = np.concatenate(pos_set, parts[m])
+        labels = np.append(np.repeat(1, len(pos_set)), np.repeat(0, len(pos_set)))
+        print(labels)
         #theta = svm.SVC(kernel='rbf')
 
 SESVM(p, n)
