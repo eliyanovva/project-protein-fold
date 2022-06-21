@@ -10,7 +10,7 @@ import SMILE
 import Filtering
 
 ligand_dict = SMILE.create_ligand_dict()
-cit_logFC, cit_pval, cit_corrected = labels.cit_labels()
+cit_logFC, cit_pval = labels.cit_labels()
 logFC, pVal = labels.labels()
 classified, pos_counts, neg_counts = labels.classified_logFC_pVal(logFC, pVal)
 
