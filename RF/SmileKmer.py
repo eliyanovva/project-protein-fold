@@ -1,8 +1,6 @@
 import numpy as np
 import SMILE
-
-#dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
-ligand_dict = SMILE.create_ligand_dict()
+import labels
 
 #importmatrix: initializes the global variable ligmat to be a matrix of ligand features
 #Input: dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
@@ -11,7 +9,7 @@ ligand_dict = SMILE.create_ligand_dict()
 #Output:ligmat ~ a matrix of ligand features 
 def importmatrix(ligand_dict, k, num_proteins):
     global ligmat
-    ligmat = ligand_matrix(ligand_dict, k, num_proteins)
+    kmers, ligmat = ligand_matrix(ligand_dict, k, num_proteins)
 
 #ligand_matrix: initializes a matrix of ligand features
 #Input: dict ligand_dict
@@ -23,7 +21,7 @@ def importmatrix(ligand_dict, k, num_proteins):
         #data values represent how many times a given k-mer of length k occurs in a ligand's SMILE formula
         #for a dataset with m proteins, rows 1:n of the matrix will be duplicated m times
 def ligand_matrix(ligand_dict, k, num_proteins):
-    ligand_counts = find_kmer_counts(ligand_dict, k)
+    kmers, ligand_counts = find_kmer_counts(ligand_dict, k)
     freq_mat = []
     for i in range(num_proteins):
         for lig in ligand_counts:
@@ -56,7 +54,7 @@ def find_kmer_counts(ligand_dict, k):
         for kmer in total_kmers:
             kmer_counts[lig][kmer] = kmers_byligand[lig].count(kmer)
 
-    return kmer_counts
+    return total_kmers, kmer_counts
 
 #Input: str smile = a SMILE formula for a given ligand
 #Output: list letters = a list of substrings of smile; each substring is a partitioned 'letter' of smile that can be used to form k-mers
@@ -68,22 +66,22 @@ def form_letters(smile):
     letters = []  # list that stores the sectioned off 'letters' of the str smile
     for i in range(0, len(smile)):
         letters.append(0)
-    a_index = 0  # index of the latest atom
-    s_index = 0  # index of the starting point of the latest side chain
-    e_index = 0  # index of the ending point of the latest side chain
-    mid_index = 0  # index of the latest side chain that picks up again after a nested side chain
-    sides = 0  # current number of nested side chains
+    a_index = 0                             # index of the latest atom
+    s_index = 0                             # index of the starting point of the latest side chain
+    e_index = 0                             # index of the ending point of the latest side chain
+    mid_index = 0                           # index of the latest side chain that picks up again after a nested side chain
+    sides = 0                               # current number of nested side chains
 
     for i in range(0, len(smile)):
-        if smile[i] == "(":         #a new side chain has begun
+        if smile[i] == "(":                 #a new side chain has begun
             s_index = i
             e_index = i + 2
             letters[i] = "("
             sides += 1
-        elif smile[i] == ")":       #a side chain has terminated
+        elif smile[i] == ")":               #a side chain has terminated
             e_index = i
             sides -= 1
-            if s_index > mid_index:     #the current side wasn't nested in other side chains
+            if s_index > mid_index:         #the current side wasn't nested in other side chains
                 orig = letters[s_index]
                 letters[s_index] = orig + ")"
             else:
@@ -102,18 +100,18 @@ def form_letters(smile):
                 letters[a_index] = orig + str(smile[i])
         else:
             a_index = i
-            if a_index < e_index:               #current atom is part of a non-nested side chain
+            if a_index < e_index:           #current atom is part of a non-nested side chain
                 orig = letters[s_index]
                 letters[s_index] = orig + smile[i]
                 e_index += 1
-            elif sides > 0:                     #current atom is following a nested side chain
+            elif sides > 0:                 #current atom is following a nested side chain
                 if smile[i-1] == ")":
                     letters[i] = (smile[i])
                     mid_index = i
                 else:
                     orig = letters[mid_index]
                     letters[mid_index] = orig + smile[i]
-            else:                               #current atom is part of the backbone
+            else:                           #current atom is part of the backbone
                 letters[i] = (smile[i])
 
     #remove indices from letters that were not used
