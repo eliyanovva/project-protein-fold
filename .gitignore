@@ -4,5 +4,14 @@
 # All pdb files
 #*.pdb
 
+# All smiles files
+*.smiles
+
 # ALl npy files
 *.npy
+
+# All python cache files
+*.pyc
+
+# Local scripts which are used for manual usage
+separate_fasta_script.py
