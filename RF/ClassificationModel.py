@@ -27,6 +27,6 @@ def train(features, labels):
     y_pred=clf.predict(X_test)
 
     #Print accuracy of the model
-    #print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
+    print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
 
 train(testX, testY)

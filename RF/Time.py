@@ -3,19 +3,24 @@
 import timeit
 
 mysetup = """
-#imports
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
-import Resample
-Resample.resampled_matrices()
-testX = Resample.input
-testY = Resample.output
+import pandas as pd
+import numpy as np
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
+from imblearn.under_sampling import RandomUnderSampler, TomekLinks
+from imblearn.over_sampling import RandomOverSampler, SMOTE
+import CombineLigandsProteins
+
+CombineLigandsProteins.import_final()
+testX = CombineLigandsProteins.X
+testY = CombineLigandsProteins.Y
 
 """
 
 mycode = """
-
 def train(features, labels):
     #define features and labels
     X = features #Globals.features (kmers)
@@ -24,11 +29,15 @@ def train(features, labels):
     #split into training and test set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1) # 90% training and 10% test
 
+    ros = RandomOverSampler(random_state = 42)
+
+    X_res, y_res = ros.fit_resample(X_train, y_train)
+
     #Create a Gaussian Regression
     clf=RandomForestClassifier(n_estimators=100)
 
     #Train the model
-    clf.fit(X_train,y_train)
+    clf.fit(X_res,y_res)
 
     #Form predictions
     y_pred=clf.predict(X_test)
@@ -36,9 +45,9 @@ def train(features, labels):
     #Print accuracy of the model
     #print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
 
-train(testX, testY)
+    train(testX, testY)
 """
 print ("The time of execution of above program is :",
-       Time.timeit(setup = mysetup,
+       timeit.timeit(setup = mysetup,
                     stmt = mycode,
                     number = 10))
