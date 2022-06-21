@@ -14,4 +14,4 @@
 *.pyc
 
 # Local scripts which are used for manual usage
-separate_fasta_script.py
+*_local.*
