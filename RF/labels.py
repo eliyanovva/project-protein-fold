@@ -8,7 +8,7 @@ csvs = SMILE.create_ligand_list()
 #acc_ids = ["P1", "P2", "P3"]
 #csvs = ["L1", "L2", "L3"]
 
-fas_df = pd.read_csv('fasta_list.csv', index_col='accession number')
+fas_df = pd.read_csv('uniprot-ensemble.csv', index_col='accession number')
 
 num_proteins = len(acc_ids)
 num_ligands = len(csvs)
@@ -26,7 +26,7 @@ def cit_labels():
            cit_df = pd.read_csv('olfr_de_copy1/olfr_de/pS6_DE_1p_citronellol.csv', index_col='name')
            
            for id in acc_ids:
-                      name = fas_df.loc[id]['receptor']
+                      name = fas_df.loc[id]['ensembl_gene_id']
                       cit_logFC[id] = (cit_df.loc[name]['logFC'])
                       cit_pVal[id] = (cit_df.loc[name]['PValue'])
            return cit_logFC, cit_pVal
@@ -39,9 +39,9 @@ def labels():
                       curr_df = pd.read_csv(file_name, index_col='name')
 
                       for id in acc_ids:
-                                 name = fas_df.loc[id]['receptor']
-                                 logFC_byID[id][csv] = (curr_df.loc[name]['logFC'])
-                                 pVal_byID[id][csv] = (curr_df.loc[name]['PValue'])
+                                 ensem_id = fas_df.loc[id]['ensembl_gene_id']
+                                 logFC_byID[id][csv] = (curr_df.loc[ensem_id]['logFC'])
+                                 pVal_byID[id][csv] = (curr_df.loc[ensem_id]['PValue'])
            return logFC_byID, pVal_byID
 
 #cutoff for p-Val: > .05
