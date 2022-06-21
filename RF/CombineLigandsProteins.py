@@ -40,7 +40,7 @@ def exportdicts():
 
 #Creating output for categorized amino acids
 #Read fasta file
-fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/allsequences.fasta")
+fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
 #Create kmer frequency dictionary
 seqvar1, features1 = ReadingFasta.make_seqvar(fasta1, Globals.categorized_seqs, Globals.categorized_features)
 #Remove insignificant kmers
@@ -50,7 +50,7 @@ AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, Globals.categorized_matri
 
 #Creating output for 3Di sequences
 # Read fasta file
-fasta2 = open("/home/users/sml96/bin/project-protein-fold/3DiSequences/fullset_ss.fasta")
+fasta2 = open("/home/users/sml96/bin/project-protein-fold/3DiSequences/outputDb_ss.fasta")
 #Create kmer frequency dictionary
 seqvar2, features2 = ReadingFasta.make_seqvar(fasta2, Globals.di_seqs, Globals.di_features)
 #Remove insignificant kmers
