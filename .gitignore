@@ -4,5 +4,11 @@
 # All pdb files
 #*.pdb
 
+# All smiles files
+*.smiles
+
 # ALl npy files
 *.npy
+
+# All python cache files
+*.pyc
