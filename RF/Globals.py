@@ -15,4 +15,3 @@ def initialize():
     di_seqs = []
     global di_matrix
     di_matrix = []
-

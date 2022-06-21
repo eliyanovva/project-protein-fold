@@ -1,0 +1,63 @@
+Chemical Name,Name on Sheet,CID,CAS,SMILES
+benzaldehyde,Benzaldehdye,240,100-52-7,C1=CC=C(C=C1)C=O
+butyric acid,butyricAcid,264,107-92-6,CCCC(=O)O
+octanal,Octanal,454,124-13-0,CCCCCCCC=O
+guaiacol,guaiacol,460,8021-39-4,COC1=CC=CC=C1O
+"2,3-butanedione",diacetyl,650,431-03-8,CC(=O)C(=O)C
+indole,indole,798,120-72-9,C1=CC=C2C(=C1)C=CN2
+propionic acid,propionicAcid,1032,79-09-4,CCC(=O)O
+pyridine,pyridine,1049,110-86-1,C1=CC=NC=C1
+dimethyl sulfide,dimethylSulfide,1068,75-18-3,CSC
+p-Cresol,paraCresol,2879,106-44-5,CC1=CC=C(C=C1)O
+methyl salicylate,methylSalicylate,4133,119-36-8,COC(=O)C1=CC=CC=C1O
+2-phenylethanol,2phenylAlcohol,6054,60-12-8,C1=CC=C(C=C1)CCO
+2-methyl-2-propanethiol,tbm,6387,75-66-1,CC(C)(C)S
+linalool,linalool,6549,78-70-6,CC(=CCCC(C)(C=C)O)C
+alpha-Pinene,aPinene,6654,80-56-8,CC1=CCC2CC1C2(C)C
+acetophenone,acetophenone,7410,98-86-2,CC(=O)C1=CC=CC=C1
+ethyl butyrate,ethylButyrate,7762,105-54-4,CCCC(=O)OCC
+2-heptanone,2heptanone,8051,110-43-0,CCCCCC(=O)C
+heptanoic acid,heptanoicAcid,8094,111-14-8,CCCCCCC(=O)O
+heptanal,heptanal,8130,111-71-7,CCCCCCC=O
+4-methyl acetophenone,4methylAC,8500,122-00-9,CC1=CC=C(C=C1)C(=O)C
+citronellol,citronellol,8842,106-22-9,CC(CCC=C(C)C)CCO
+isovaleric acid,isovalericAcid,10430,503-74-2,CC(C)CC(=O)O
+3-methyl-1-butanethiol,3methyl1butanethiol,10925,541-31-1,CC(C)CCS
+2-hexanone,2hexanone,11583,591-78-6,CCCCC(=O)C
+cyclopentanethiol,cyclopentanethiol,15510,1679-07-8,C1CCC(C1)S
+2-methyl-2-thiazoline,2m2t,16867,2346-00-1,CC1=NCCS1
+dimethyl trisulfide,dimethyltrisulfide,19310,3658-80-8,CSSSC
+2-ethyl-3-methyl pyrazine,23emp,27457,15707-23-0,CCC1=NC=CN=C1C
+p-anisaldehyde,anisaldehyde,31244,123-11-5,COC1=CC=C(C=C1)C=O
+"2,5-dimethylpyrazine",25dmp,31252,123-32-0,CC1=CN=C(C=N1)C
+isoamyl acetate,isoamylacetate,31276,123-92-2,CC(C)CCOC(=O)C
+2-propylthietane,2propylthietane,155529,70678-49-8,CCCC1CCS1
+cinnamaldehyde,transCinnamaldehyde,637511,104-55-2,C1=CC=C(C=C1)/C=C/C=O
+hexyl tiglate,hexylTiglate,637523,16930-96-4,CCCCCCOC(=O)/C(=C/C)/C
+geraniol,geranoil,637566,106-24-1,CC(=CCC/C(=C/CO)/C)C
+citral,citral,638011,5392-40-5,CC(=CCC/C(=C/C=O)/C)C
+beta-Ionone,bIonone,638014,14901-07-6,CC1=C(C(CCC1)(C)C)/C=C/C(=O)C
+ethyl tiglate,ethylTiglate,5281163,5837-78-5,CCOC(=O)/C(=C/C)/C
+beta-Caryophyllene,bCaryophyllene,5281515,87-44-5,C/C/1=C\CCC(=C)[C@H]2CC([C@@H]2CC1)(C)C
+beta-Farnesene,ebFarnesene,5281517,18794-84-8,CC(=CCC/C(=C/CCC(=C)C=C)/C)C
+isopropyl tiglate,isopropylTiglate,5367745,1733-25-1,C/C=C(\C)/C(=O)OC(C)C
+(E)-beta-Damascone,bDamascone,5374527,23726-91-2,C/C=C/C(=O)C1=C(CCCC1(C)C)C
+(E)-2-butene-1-thiol,e2butene1thiol,6433451,58688-79-2,C/C=C/CS
+5alpha-Androst-16-en-3-one,androstenone,6852393,18339-16-7,C[C@]12CC[C@H]3[C@H]([C@@H]1CC=C2)CC[C@@H]4[C@@]3(CCC(=O)C4)C
+,2hac,,,
+,2m2p,,,
+,CPD,,,
+,dhb,,,
+,MTMT,,,
+,n2octanol,,,
+,nCarvone,,,
+,nDihydrocarveol,,,
+,nMenthol,,,
+,ntmt,,,
+,p2octanol,,,
+,pCarvone,,,
+,pDihydrocarveol,,,
+,pLimonene,,,
+,pMenthol,,,
+,sbt,,,
+,tmt,,,
