@@ -1,7 +1,6 @@
 from tkinter import Y
 
 from cv2 import log
-import PreparingMatrix
 import SmileKmer
 import numpy as np
 import ReadingFasta
@@ -42,7 +41,7 @@ def exportdicts():
 
 #Creating output for categorized amino acids
 #Read fasta file
-fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
+fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/allsequences.fasta")
 #Create kmer frequency dictionary
 seqvar1, features1 = ReadingFasta.make_seqvar(fasta1, Globals.categorized_seqs, Globals.categorized_features)
 #Remove insignificant kmers
@@ -52,7 +51,7 @@ AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, Globals.categorized_matri
 
 #Creating output for 3Di sequences
 # Read fasta file
-fasta2 = open("/home/users/sml96/bin/project-protein-fold/foldseek-master/foldseek/foldseek/outputDb_ss.fasta")
+fasta2 = open("/home/users/sml96/bin/project-protein-fold/3DiSequences/fullset_ss.fasta")
 #Create kmer frequency dictionary
 seqvar2, features2 = ReadingFasta.make_seqvar(fasta2, Globals.di_seqs, Globals.di_features)
 #Remove insignificant kmers
@@ -60,7 +59,7 @@ filter_feat2 = Filtering.richness_protein(features2, seqvar2, pos_counts, neg_co
 # Make the matrix
 Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat, Globals.di_matrix)
 
-intermed_matrix = np.concatenate((np.array(AA_mat), np.array(Di_mat)) , axis = 1)
+intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
 ligand_count = 38
 proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 

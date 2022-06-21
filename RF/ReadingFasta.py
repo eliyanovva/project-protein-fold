@@ -75,30 +75,24 @@ def makematrix(fasta, seqvar, feat, mat):
 """
 
 #Creating output for categorized amino acids
-# Read fasta file
-fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/allsequences.fasta")
 #Remove insignificant kmers
 
 # Make the matrix
-makematrix(fasta1, Globals.categorized_seqs, Globals.categorized_features, Globals.categorized_matrix)
+#makematrix(Globals.categorized_seqs, Globals.categorized_features, Globals.categorized_matrix)
 # View output
 #print(Globals.categorized_seqs)
 #print(Globals.categorized_features)
 #print(Globals.categorized_matrix)
 
 #Creating output for 3Di sequences
-# Read fasta file
-fasta2 = open("/home/users/sml96/bin/project-protein-fold/3DiSequences/fullset_ss.fasta") 
 # Make the matrix
-makematrix(fasta2, Globals.di_seqs, Globals.di_features, Globals.di_matrix)
+#makematrix(Globals.di_seqs, Globals.di_features, Globals.di_matrix)
 # View output
 #print(Globals.di_seqs)
 #print(Globals.di_features)
 #print(np.array(Globals.di_matrix))
 
-print(len(Globals.di_seqs))
-print(len(Globals.categorized_seqs))
-
+"""
 def import_variables():
     global sequence_seqs
     sequence_seqs = Globals.categorized_seqs
@@ -111,7 +105,7 @@ def import_variables():
     global structure_features 
     structure_features = Globals.di_features
     global structure_matrix
-    structure_matrix = Globals.di_matrix
+    structure_matrix = Globals.di_matrix"""
 
 #Check whether categorized and 3di sequences contain all the same proteins in the same order
 """i = 0

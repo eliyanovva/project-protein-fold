@@ -9,3 +9,5 @@ from sklearn.ensemble import RandomForestClassifier
 n_estimators = [int(x) for x in np.linspace(10, 100, 10)]
 #Features considered at each split
 max_features = ['auto', 'sqrt']
+#Number of levels in each tree
+max_depth = [int(x) for x in np.linspace(2, 10, 2)]

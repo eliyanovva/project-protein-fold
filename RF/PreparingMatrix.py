@@ -35,7 +35,7 @@ for i in range(0, 35477, 2):
 """
 
 #Concatenate AA and 3Di sequences
-protein_matrix = np.concatenate((np.array(ReadingFasta.sequence_matrix), np.array(ReadingFasta.structure_matrix)) , axis = 1)
+protein_matrix = np.concatenate((np.array(ReadingFasta.sequence_matrix, dtype = np.uint8), np.array(ReadingFasta.structure_matrix, dtype = np.uint8)) , axis = 1)
 def export():
     global proteins
     proteins = protein_matrix
