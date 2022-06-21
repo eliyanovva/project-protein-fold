@@ -14,6 +14,7 @@ pVal_byID = {}
 cit_logFC = {}
 cit_pVal = {}
 
+#id = accession number of a given protein
 for id in acc_ids:
            logFC_byID[id] = {}
            pVal_byID[id] = {}
@@ -27,6 +28,7 @@ def cit_labels():
                       cit_pVal[id] = (cit_df.loc[name]['PValue'])
            return cit_logFC, cit_pVal
 
+#returns vectors of the logFC and p-values
 def labels():
            for csv in csvs:
                       file_name = 'olfr_de_copy1/olfr_de/'+csv
@@ -71,14 +73,8 @@ def classified_pVal(logFC_byID, pVal_byID):
 def classified_logFC_pVal():
     classified = {}
     i = 0
-    pos_counts_id = {}
-    neg_counts_id = {}
-
-    """
-    for csv in csvs:
-        pos_counts_lig[csv] = 0
-        neg_counts_lig[csv] = 0
-    """
+    pos_counts = {} #key: protein id, value: number of positive protein interactions
+    neg_counts = {} #key: protein id, value: number of negative protein interactions
 
     for id in pVal_byID:
         id_counts = 0
@@ -87,11 +83,9 @@ def classified_logFC_pVal():
             if (logFC_byID[id][csv] >= .5) & (pVal_byID[id][csv] <= .05):
                 classified[id][csv] = 1
                 id_counts += 1
-                #pos_counts_lig[csv] += 1
             else:
                 classified[id][csv] = 0
-                #neg_counts_lig[csv] += 1
             i += 1
-        pos_counts_id[id] = id_counts
+        pos_counts[id] = id_counts
 
-    return classified, pos_counts_id, neg_counts_id
+    return classified, pos_counts, neg_counts

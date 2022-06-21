@@ -1,20 +1,20 @@
 import SMILE
 
-def richness_ligand(kmers, freq_dict, pos_counts_lig, neg_counts_lig):
+def richness_ligand(kmers, freq_dict, pos_counts, neg_counts):
     pos_counts_by_kmer = {}
     neg_counts_by_kmer = {}
     for kmer in kmers:
         pos_counts_by_kmer[kmer] = 0
         neg_counts_by_kmer[kmer] = 0
 
-    total_pos = sum(list(pos_counts_lig.values()))
-    total_neg = sum(list(neg_counts_lig.values()))
+    total_pos = sum(list(pos_counts.values()))
+    total_neg = sum(list(neg_counts.values()))
 
     for kmer in kmers:
         for lig in freq_dict:
-            if (pos_counts_lig[lig] > 0) & (freq_dict[lig][kmer] > 0):
-                pos_counts_by_kmer[kmer] += pos_counts_lig[lig]
-                neg_counts_by_kmer[kmer] += neg_counts_lig[lig]
+            if (pos_counts[lig] > 0) & (freq_dict[lig][kmer] > 0):
+                pos_counts_by_kmer[kmer] += pos_counts[lig]
+                neg_counts_by_kmer[kmer] += neg_counts[lig]
 
     for kmer in kmers:
         orig_pos = pos_counts_by_kmer[kmer]
@@ -40,21 +40,21 @@ def richness_ligand(kmers, freq_dict, pos_counts_lig, neg_counts_lig):
 
     return freq_dict
 
-def richness_protein(kmers, freq_dict, pos_counts_lig, neg_counts_lig):
+def richness_protein(kmers, freq_dict, pos_counts, neg_counts):
     pos_counts_by_kmer = {}
     neg_counts_by_kmer = {}
     for kmer in kmers:
         pos_counts_by_kmer[kmer] = 0
         neg_counts_by_kmer[kmer] = 0
 
-    total_pos = sum(list(pos_counts_lig.values()))
-    total_neg = sum(list(neg_counts_lig.values()))
+    total_pos = sum(list(pos_counts.values()))
+    total_neg = sum(list(neg_counts.values()))
 
     for kmer in kmers:
         for lig in freq_dict:
-            if (pos_counts_lig[lig] > 0) & (freq_dict[lig][kmer] > 0):
-                pos_counts_by_kmer[kmer] += pos_counts_lig[lig]
-                neg_counts_by_kmer[kmer] += neg_counts_lig[lig]
+            if (pos_counts[lig] > 0) & (freq_dict[lig][kmer] > 0):
+                pos_counts_by_kmer[kmer] += pos_counts[lig]
+                neg_counts_by_kmer[kmer] += neg_counts[lig]
 
     for kmer in kmers:
         orig_pos = pos_counts_by_kmer[kmer]

@@ -2,6 +2,7 @@
 from Kmerizing import *
 import Globals
 import numpy as np
+import Filtering
 
 #Creating sequence class
 class Seq:
@@ -44,6 +45,9 @@ def makematrix(fasta, seqvar, feat, mat):
 #Creating output for categorized amino acids
 # Read fasta file
 fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/categorized.fasta")
+#Remove insignificant kmers
+Filtering.richness_protein(Globals.categorized_features)
+Filtering.richness_protein(Globals.di_features)
 # Make the matrix
 makematrix(fasta1, Globals.categorized_seqs, Globals.categorized_features, Globals.categorized_matrix)
 # View output
