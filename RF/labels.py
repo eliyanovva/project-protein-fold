@@ -36,7 +36,7 @@ def cit_labels():
 def labels():
            for csv in csvs:
                       file_name = 'olfr_de_copy1/olfr_de/'+csv
-                      curr_df = pd.read_csv(file_name, index_col='name')
+                      curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
 
                       for id in acc_ids:
                                  ensem_id = fas_df.loc[id]['ensembl_gene_id']
