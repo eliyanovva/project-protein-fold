@@ -2,8 +2,11 @@ import pandas as pd
 import numpy as np
 import SMILE
 
-acc_ids = SMILE.create_protein_list()
-csvs = SMILE.create_ligand_list()
+#acc_ids = SMILE.create_protein_list()
+#csvs = SMILE.create_ligand_list()
+
+acc_ids = ["P1", "P2", "P3"]
+csvs = ["L1", "L2", "L3"]
 
 fas_df = pd.read_csv('fasta_list.csv', index_col='accession number')
 
@@ -45,7 +48,7 @@ def labels():
 #cutoff for logFC: < .5
 #1 = yes, 0 = no
 
-def classified_logFC(logFC_byID, pVal_byID):
+def classified_logFC(logFC_byID):
     classified = np.zeros_like(np.arange(num_proteins * num_ligands))
     i = 0
     for id in logFC_byID:
@@ -58,7 +61,7 @@ def classified_logFC(logFC_byID, pVal_byID):
 
     return classified
 
-def classified_pVal(logFC_byID, pVal_byID):
+def classified_pVal(pVal_byID):
     classified = np.zeros_like(np.arange(num_proteins * num_ligands))
     i = 0
     for id in pVal_byID:
@@ -73,20 +76,26 @@ def classified_pVal(logFC_byID, pVal_byID):
 
 def classified_logFC_pVal(logFC_byID, pVal_byID):
     classified = {}
-    i = 0
     pos_counts = {} #key: protein id, value: number of positive protein interactions
     neg_counts = {} #key: protein id, value: number of negative protein interactions
 
     for id in pVal_byID:
-        id_counts = 0
+        pos = 0
+        neg = 0
         classified[id] = {}
         for csv in csvs:
             if (logFC_byID[id][csv] >= .5) & (pVal_byID[id][csv] <= .05):
                 classified[id][csv] = 1
-                id_counts += 1
+                pos += 1
             else:
                 classified[id][csv] = 0
-            i += 1
-        pos_counts[id] = id_counts
+                neg += 1
+        pos_counts[id] = pos
+        neg_counts[id] = neg
 
     return classified, pos_counts, neg_counts
+
+logFC_byID = {"P1": {"L1": .8, "L2": .7, "L3": .6}, "P2": {"L1": .7, "L2": .2, "L3": .6}, "P3": {"L1": .3, "L2": .4, "L3": .6}}
+pVal_byID = {"P1": {"L1": .01, "L2": .04, "L3": .02}, "P2": {"L1": .01, "L2": .01, "L3": .01}, "P3": {"L1": .02, "L2": .1, "L3": .02}}
+
+print classified_logFC_pVal(logFC_byID, pVal_byID)
