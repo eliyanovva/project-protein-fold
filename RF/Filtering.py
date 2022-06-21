@@ -58,6 +58,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
     for seq in seqvar:
         id = seq.name
         freq_dict = seq.dictionary
+        print(freq_dict)
         for kmer in kmers:
             if (pos_counts[id] > 0) & (freq_dict[kmer] > 0):
                 pos_counts_by_kmer[kmer] += pos_counts[id]
