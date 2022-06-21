@@ -8,6 +8,8 @@ from moleculekit.smallmol.smallmol import SmallMol
 from moleculekit.home import home
 import os
 from os.path import exists
+import torch
+import gzip
 
 file = pd.read_csv('./pS6_DE_1p_2e3mp.csv')
 mapping = pickle.load(open('ens_to_uniprot.txt', 'rb'))
@@ -15,16 +17,22 @@ mapping = pickle.load(open('ens_to_uniprot.txt', 'rb'))
 x_data = []
 y_data = []
 
-datapath = home(dataDir='/usr/project/csplus2/dietrich/datafiles/mouse')
-
+datapath = home(dataDir='/home/users/bmp40/mouse')
+box = [20, 20, 20]
+cent = [10, 10, 10]
 #print(file.logFC)
-#for i in range(len(file.ensembl_gene_id)):
-for i in range(20):
+for i in range(len(file.ensembl_gene_id)):
+#for i in range(100):
     if file.ensembl_gene_id[i] in mapping:
-        if (exists(os.path.join(datapath,
-         'AF-' + mapping[file.ensembl_gene_id[i]] + '-F1-model_v2.pdb.gz'))):
-            x_data.append(prepareProteinForAtomtyping(Molecule(os.path.join(datapath,
-            'AF-' + mapping[file.ensembl_gene_id[i]] + '-F1-model_v2.pdb.gz'))))
+        path = os.path.join(datapath,
+         'AF-' + mapping[file.ensembl_gene_id[i]] + '-F1-model_v2.pdb')
+        if (not exists(path)):
+            os.system('gunzip --keep ' + path + '.gz')
+            if (exists(path)):
+                x_data.append(prepareProteinForAtomtyping(Molecule(os.path.join(datapath, 'AF-' + mapping[file.ensembl_gene_id[i]] + '-F1-model_v2.pdb'))))
+                y_data.append(file.logFC[i])
+        else:
+            x_data.append(prepareProteinForAtomtyping(Molecule(os.path.join(datapath, 'AF-' + mapping[file.ensembl_gene_id[i]] + '-F1-model_v2.pdb'))))
             y_data.append(file.logFC[i])
 #print(file.ensembl_gene_id)
 
@@ -33,16 +41,24 @@ y_min = min(y_data)
 y_max = max(y_data)
 for i in range(len(y_data)):
     y_data[i] = round((y_data[i] - y_min)/(y_max - y_min))
+    print(y_data[i])
 
-x_np = np.array([], np.float64)
+prot_vox, prot_centers, prot_N = getVoxelDescriptors(x_data[0], boxsize=box, center=cent)
+print(prot_vox.shape[1])
+dim1 = prot_N[0]
+dim2 = prot_N[1]
+dim3 = prot_N[2]
 
 for i in range(len(x_data)):
-    prot_vox, prot_centers, prot_N = getVoxelDescriptors(x_data[i], buffer=1)
+    prot_vox, prot_centers, prot_N = getVoxelDescriptors(x_data[i], boxsize=box, center=cent)
+    print(prot_vox)
     nchannels = prot_vox.shape[1]
-    np.append(x_np, np.asarray(prot_vox.transpose().reshape([nchannels, prot_N[0], prot_N[1], prot_N[2]])))
+    x_data[i] = prot_vox.transpose().reshape([nchannels, prot_N[0], prot_N[1], prot_N[2]])
+    print(prot_N[0], prot_N[1], prot_N[2])
 
 #x_data = np.asarray(x_data)
-y_data = np.asarray(y_data)
-pickle.dump(x_np, open('x_data.txt', 'wb'))
-pickle.dump(y_data, open('y_data.txt', 'wb'))
-
+#print(x_data)
+y_np = np.asarray(y_data)
+x_np = np.asarray(x_data)
+np.save('x_data', x_np)
+np.save('y_data', y_np)
