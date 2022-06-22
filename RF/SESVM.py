@@ -5,6 +5,7 @@ from sklearn import svm
 from sklearn.metrics import accuracy_score
 import random
 import numpy as np
+import CombineLigandsProteins
 
 #N+ = positive training set
 #N- = negative training set
