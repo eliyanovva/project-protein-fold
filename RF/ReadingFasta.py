@@ -1,6 +1,5 @@
 # Import featurize function
 from Kmerizing import *
-import Globals
 import numpy as np
 
 #Creating sequence class
@@ -16,7 +15,14 @@ class Seq:
 
 
 #Initialize Set of Features
-Globals.initialize()
+#categorized variables
+categorized_features = set()
+categorized_seqs = []
+categorized_matrix = []
+#3Di variables
+di_features = set()
+di_seqs = []
+di_matrix = []
 
 def make_seqvar(fasta, seqvar, feat):
     i = 0

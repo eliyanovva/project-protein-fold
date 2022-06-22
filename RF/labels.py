@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
-import SMILE
+import Globals
 
-acc_ids = SMILE.create_protein_list()
-csvs = SMILE.create_ligand_list()
+acc_ids = Globals.initialize_protein_list()
+csvs = Globals.initialize_ligand_list()
 
 #acc_ids = ["P1", "P2", "P3"]
 #csvs = ["L1", "L2", "L3"]

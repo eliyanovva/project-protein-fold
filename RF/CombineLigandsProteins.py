@@ -3,11 +3,10 @@ import SmileKmer
 import numpy as np
 import ReadingFasta
 import labels
-import SMILE
 import Globals
 import Filtering
 
-ligand_dict = SMILE.create_ligand_dict()
+ligand_dict = Globals.initialize_ligand_dict()
 #cit_logFC, cit_pval = labels.cit_labels()
 
 logFC, pVal = labels.labels()

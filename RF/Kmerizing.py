@@ -1,7 +1,4 @@
 from skbio import Sequence
-import Globals
-
-Globals.initialize()
 
 def featurize(seq,k,feat):
      s = Sequence(seq)
