@@ -62,5 +62,3 @@ def create_protein_list():
     fw.close()
 
     return acc_ids
-
-

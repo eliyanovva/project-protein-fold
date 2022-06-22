@@ -8,7 +8,7 @@ csvs = SMILE.create_ligand_list()
 #acc_ids = ["P1", "P2", "P3"]
 #csvs = ["L1", "L2", "L3"]
 
-fas_df = pd.read_csv('uniprot-ensemble.csv', index_col='accession number')
+fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
 
 num_proteins = len(acc_ids)
 num_ligands = len(csvs)
@@ -34,16 +34,13 @@ def cit_labels():
 #returns vectors of the logFC and p-values
 #key: protein id, value: dict (key: ligand file name, value: data label)
 def labels():
-    print(acc_ids)
     for csv in csvs:
         file_name = 'olfr_de_copy1/olfr_de/'+csv
         curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
 
         for id in acc_ids:
             ensem_id = fas_df.loc[id]['ensembl_gene_id']
-            print(ensem_id)
             logFC_byID[id][csv] = (curr_df.loc[ensem_id]['logFC'])
-            print(curr_df.loc[ensem_id]['logFC'])
             pVal_byID[id][csv] = (curr_df.loc[ensem_id]['PValue'])
     return logFC_byID, pVal_byID
 
@@ -100,3 +97,5 @@ def classified_logFC_pVal(logFC_byID, pVal_byID):
 
 #logFC_byID = {"P1": {"L1": .8, "L2": .7, "L3": .6}, "P2": {"L1": .7, "L2": .2, "L3": .6}, "P3": {"L1": .3, "L2": .4, "L3": .6}}
 #pVal_byID = {"P1": {"L1": .01, "L2": .04, "L3": .02}, "P2": {"L1": .01, "L2": .01, "L3": .01}, "P3": {"L1": .02, "L2": .1, "L3": .02}}
+
+print(labels())
