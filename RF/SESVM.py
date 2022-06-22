@@ -116,8 +116,6 @@ def SESVM(N, Y, T, P_X, P_Y):
         opt_theta.fit(max_feat, labels)
         p = opt_theta.predict(P_X)
         predictions.append(p)
-        print(p)
-    print()
     return(predictions)
 
 def MV(predictions):
@@ -139,6 +137,7 @@ def MV(predictions):
             mv_prediction.append(0)
         else:
             mv_prediction.append(1)
-    print(mv_prediction)
+    return mv_prediction
 
-MV(SESVM(X, Y, 9, P_X, P_Y))
+mv_prediction = MV(SESVM(X, Y, 9, P_X, P_Y))
+print("Accuracy: " + str(accuracy_score(P_Y, mv_prediction)))
