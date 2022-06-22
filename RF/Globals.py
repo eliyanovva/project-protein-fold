@@ -1,9 +1,12 @@
-import numpy as np 
-
 import pandas as pd
 
 ligand_dict = {}
 df = pd.read_csv('ligand_SMILEs.csv')
+
+files = df['ligand file'].tolist()
+smiles = df['SMILE'].tolist()
+for i in range(len(files)):
+    ligand_dict[files[i]] = smiles[i]
 
 def initialize_ligand_dict():
     files = df['ligand file'].tolist()
@@ -14,22 +17,26 @@ def initialize_ligand_dict():
     return ligand_dict
 
 def initialize_ligand_list():
-    ligands = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_ethylTiglate.csv', 'pS6_DE_1p_bIonone.csv', 'pS6_DE_1p_butyricAcid.csv',
-        'pS6_DE_1p_paraCresol.csv', 'pS6_DE_1p_bCaryophyllene.csv', 'pS6_DE_p1_isovalericAcid.csv', 'pS6_DE_1p_Octanal.csv', 'pS6_DE_1p_heptanal.csv',
-        'pS6_DE_1p_tbm.csv', 'pS6_DE_1p_bDamascone.csv', 'pS6_DE_1p_pyridine.csv', 'pS6_DE_1p_propionicAcid.csv', 'pS6_DE_1p_methylSalicylate.csv',
-        'pS6_DE_p01_e2butene1thiol.csv', 'pS6_DE_1p_3methyl1butanethiol.csv', 'pS6_DE_1p_ethylButyrate.csv', 'pS6_DE_1p_hexylTiglate.csv', 'pS6_DE_1p_indole.csv',
-        'pS6_DE_500mM_2propylthietane.csv', 'pS6_DE_1p_2heptanone.csv', 'pS6_DE_p01_cyclopentanethiol.csv', 'pS6_DE_1p_dimethyltrisulfide.csv',
-        'pS6_DE_1p_guaiacol.csv', 'pS6_DE_1p_Benzaldehyde.csv', 'pS6_DE_p01_citral.csv', 'pS6_DE_3mM_androstenone.csv', 'pS6_DE_100p_ebFarnesene.csv',
-        'pS6_DE_1p_acetophenone.csv', 'pS6_DE_1p_transCinnamaldehyde.csv', 'pS6_DE_1p_linalool.csv', 'pS6_DE_1p_2hexanone.csv', 'pS6_DE_1p_isopropylTiglate.csv',
-        'pS6_DE_1p_aPinene.csv', 'pS6_DE_1p_diacetyl.csv', 'pS6_DE_1p_geranoil.csv', 'pS6_DE_1p_heptanoicAcid.csv']
-
-
-    #ligands = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_ethylTiglate.csv']
-
+    ligands = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_ethylTiglate.csv',
+               'pS6_DE_1p_bIonone.csv', 'pS6_DE_1p_butyricAcid.csv',
+               'pS6_DE_1p_paraCresol.csv', 'pS6_DE_1p_bCaryophyllene.csv', 'pS6_DE_p1_isovalericAcid.csv',
+               'pS6_DE_1p_Octanal.csv', 'pS6_DE_1p_heptanal.csv',
+               'pS6_DE_1p_tbm.csv', 'pS6_DE_1p_bDamascone.csv', 'pS6_DE_1p_pyridine.csv', 'pS6_DE_1p_propionicAcid.csv',
+               'pS6_DE_1p_methylSalicylate.csv',
+               'pS6_DE_p01_e2butene1thiol.csv', 'pS6_DE_1p_3methyl1butanethiol.csv', 'pS6_DE_1p_ethylButyrate.csv',
+               'pS6_DE_1p_hexylTiglate.csv', 'pS6_DE_1p_indole.csv',
+               'pS6_DE_500mM_2propylthietane.csv', 'pS6_DE_1p_2heptanone.csv', 'pS6_DE_p01_cyclopentanethiol.csv',
+               'pS6_DE_1p_dimethyltrisulfide.csv',
+               'pS6_DE_1p_guaiacol.csv', 'pS6_DE_1p_Benzaldehyde.csv', 'pS6_DE_p01_citral.csv',
+               'pS6_DE_3mM_androstenone.csv', 'pS6_DE_100p_ebFarnesene.csv',
+               'pS6_DE_1p_acetophenone.csv', 'pS6_DE_1p_transCinnamaldehyde.csv', 'pS6_DE_1p_linalool.csv',
+               'pS6_DE_1p_2hexanone.csv', 'pS6_DE_1p_isopropylTiglate.csv',
+               'pS6_DE_1p_aPinene.csv', 'pS6_DE_1p_diacetyl.csv', 'pS6_DE_1p_geranoil.csv',
+               'pS6_DE_1p_heptanoicAcid.csv']
     return ligands
 
 def initialize_protein_list():
-    """
+   
     acc_ids = ['Q8VET1', 'Q8VFR3', 'Q8VGZ7', 'Q8VG59', 'Q8VF91', 'Q8VGD7', 'Q8VGC8', 'Q8VFM9', 'A2AVB5', 'L7N1X3', 'Q8VEZ3', 'A0A1L1SQF6', 'Q8VGC7', 'Q8VGC6',
                'A0A1D5RLR5', 'Q7TQV4', 'Q7TQV7', 'Q8VH21', 'Q8VFZ6', 'Q8VFZ2', 'Q9EQ90', 'Q8VGJ3', 'E9Q840', 'Q8VGJ7', 'Q8VGJ5', 'Q9R0K2', 'Q60881', 'Q8VFU6',
                'E9PYP4', 'Q8VFU9', 'Q8VG27', 'E9Q1P0', 'Q7TS48', 'Q8VH10', 'Q8VGM2', 'L7N1Y6', 'Q7TQU8', 'Q8VES9', 'Q8VGS0', 'Q8VGS3', 'Q7TRH8', 'Q8VGS7',
@@ -46,7 +53,7 @@ def initialize_protein_list():
                'Q8VGE3', 'Q8VGE1', 'E9Q546', 'Q8VFX4', 'Q8VGT2', 'E9Q545', 'Q8VGT4', 'Q8VFX2', 'Q7TRA7', 'K7N609', 'Q9JHB2', 'E9Q549', 'Q7TRT9', 'Q9EQA6', 'Q9EPG2',
                'E9PWU0', 'E9Q985', 'Q2M2Q2', 'Q8VG42', 'Q8VG49', 'Q8VF43', 'Q7TRE6', 'Q8VFG4', 'Q7TRB0', 'Q8VGB9', 'Q7TR59', 'E9Q413', 'Q8VGB3', 'Q8VFJ5', 'Q7TRB9',
                'Q8VGB4', 'Q7TRU6', 'Q8VF78', 'Q8VGU9', 'Q8VGU8', 'Q8VGU7', 'E9Q3K2', 'Q8VGU3', 'Q8VF72', 'Q7TS51', 'E9Q0Q2', 'Q8VGM3', 'Q7TRJ1', 'Q0VEL5']
-    """
+    
     acc_ids = []
     fr = open("allseqs.fasta", "r")
     lines = fr.readlines()
@@ -57,6 +64,6 @@ def initialize_protein_list():
             fw.write(str(line[1:-1]) + "\n")
     fr.close()
     fw.close()
-
+    
     return acc_ids
 

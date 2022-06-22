@@ -1,4 +1,3 @@
-
 import SmileKmer
 import numpy as np
 import ReadingFasta
@@ -7,7 +6,6 @@ import Globals
 import Filtering
 
 ligand_dict = Globals.initialize_ligand_dict()
-#cit_logFC, cit_pval = labels.cit_labels()
 
 logFC, pVal = labels.labels()
 classified, pos_counts, neg_counts = labels.classified_logFC_pVal(logFC, pVal)
