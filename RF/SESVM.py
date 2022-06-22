@@ -34,6 +34,9 @@ X = [[1, 1, 1], [2, 1, 1], [3, 1, 1], [4, 1, 1], [5, 1, 1], [6, 1, 1], [7, 1, 1]
      [8, 1, 1], [9, 1, 1], [10, 1, 1], [11, 1, 1], [12, 1, 1], [13, 1, 1], [14, 1, 1]]
 Y = [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0]
 
+P_X = [[1, 2, 2], [2, 2, 2], [3, 2, 2]]
+P_Y = [0, 1, 0]
+
 def seperate_sets(N, Y):
     pos_set = []
     neg_set = []
@@ -67,34 +70,51 @@ def create_partitions(pos_set, neg_set, M):
     return partitions
 
 
-def SESVM(N, Y):
+def SESVM(N, Y, T, P_X, P_Y):
     pos_set, neg_set = seperate_sets(N, Y)
     M = np.ceil(float(len(neg_set)) / float(len(pos_set)))
-    parts = create_partitions(pos_set, neg_set, M)
-    labels = np.append(np.repeat(1, len(pos_set)), np.repeat(0, len(pos_set)))
+    predictions = []
 
-    all_thetas = []
-    accuracies = []
+    for i in range(T):
+        neg_copy = []
+        for item in neg_set:
+            neg_copy.append(item)
 
-    for m in range(int(M)):
-        #use GridSearchCV to optimize rbf hyperparameters???
-        #C: decreasing C => more regulation, decrease C if there's a lot of noise
-        #gamma
-        features = np.concatenate((pos_set, parts[m]), axis=0)
-        theta = svm.SVC(kernel='rbf')
-        t = theta.fit(features, labels)
-        all_thetas.append(t)
-        a = accuracy_score(Y, theta.predict(N))
-        accuracies.append(a)
+        parts = create_partitions(pos_set, neg_copy, M)
+        labels = np.append(np.repeat(1, len(pos_set)), np.repeat(0, len(pos_set)))
 
-    max_accuracy = 0
-    max_index = 0
+        all_features = []
+        accuracies = []
 
-    for m in range(int(M)):
-        if accuracies[m] > max_accuracy:
-            max_accuracy = accuracies[m]
-            max_index = m
+        for m in range(int(M)):
+            #use GridSearchCV to optimize rbf hyperparameters???
+            #C: decreasing C => more regulation, decrease C if there's a lot of noise
+            #gamma
+            features = np.concatenate((pos_set, parts[m]), axis=0)
+            theta = svm.SVC(kernel='rbf')
+            theta.fit(features, labels)
+            all_features.append(features)
+            p = theta.predict(N)
+            a = accuracy_score(Y, p)
+            accuracies.append(a)
 
-    max_theta = all_thetas[max_index]
+        max_accuracy = 0
+        max_index = 0
 
-SESVM(X, Y)
+        for m in range(int(M)):
+            if accuracies[m] > max_accuracy:
+                max_accuracy = accuracies[m]
+                max_index = m
+
+
+        opt_theta = svm.SVC(kernel='rbf')
+        max_feat = all_features[max_index]
+        opt_theta.fit(max_feat, labels)
+        p = opt_theta.predict(P_X)
+        predictions.append(p)
+        #print(p)
+
+    for p in predictions:
+        print(p)
+
+SESVM(X, Y, 3, P_X, P_Y)
