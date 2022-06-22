@@ -71,6 +71,8 @@ logFCmat = []
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
         logFCmat.append(float(classified[str(protein.name)][ligand]))
+print(len(final_matrix))
+print(len(final_matrix[0]))
 
 def import_final():
     global X
