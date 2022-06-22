@@ -63,7 +63,7 @@ SmileKmer.importmatrix(ligand_dict, 5, 1084)
 ligand_matrix = SmileKmer.ligmat
 
 #Concatenate protein and ligand matrices
-final_matrix = np.concatenate((proteins_matrix, ligand_matrix), axis = 1)
+final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)
 
 #Create logFC vector
 ReadingFasta.import_variables()
