@@ -2,6 +2,7 @@
 #random documentation from https://www.geeksforgeeks.org/random-numbers-in-python/
 
 from sklearn import svm
+from sklearn.metrics import accuracy_score
 import random
 import numpy as np
 
@@ -71,11 +72,29 @@ def SESVM(N, Y):
     M = np.ceil(float(len(neg_set)) / float(len(pos_set)))
     parts = create_partitions(pos_set, neg_set, M)
     labels = np.append(np.repeat(1, len(pos_set)), np.repeat(0, len(pos_set)))
-    
+
+    all_thetas = []
+    accuracies = []
+
     for m in range(int(M)):
         #use GridSearchCV to optimize rbf hyperparameters???
         #C: decreasing C => more regulation, decrease C if there's a lot of noise
         #gamma
         features = np.concatenate((pos_set, parts[m]), axis=0)
         theta = svm.SVC(kernel='rbf')
-        theta.fit(features, labels)
+        t = theta.fit(features, labels)
+        all_thetas.append(t)
+        a = accuracy_score(Y, theta.predict(N))
+        accuracies.append(a)
+
+    max_accuracy = 0
+    max_index = 0
+
+    for m in range(int(M)):
+        if accuracies[m] > max_accuracy:
+            max_accuracy = accuracies[m]
+            max_index = m
+
+    max_theta = all_thetas[max_index]
+
+SESVM(X, Y)
