@@ -1,5 +1,5 @@
 import numpy as np
-import math
+import os
 import constants
 import logging as log
 import log_config
@@ -24,28 +24,23 @@ class BGFDataFile:
                 for bond in data:
                     adjacency_matrix[int(bond[0])][int(bond[1])] = bond[2]    
         log.info('Initiated saving of adjacency matrix')
-        np.save('pdb_adjacency_data/' + self.protein_name + '_adj_mat', adjacency_matrix)
+        np.save(os.path.join('pdb_adjacency_data/', self.protein_name + '_adj_mat'), adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
 
 
     def getFeatureMatrix(self):
         # current number of features - 5: atom type, coordinates, confidence score
-        log.info('Initiated creation of PDB Feature matrix for protein ' + self.protein_name)
-        feature_matrix = np.zeros((self.atom_count, 5))
-        pdb_features = self.__getFeaturesFromPDB()
+        log.info('Initiated creation of BGF Feature matrix for protein ' + self.protein_name)
+        feature_matrix = np.zeros((self.atom_count, constants.PROTEIN_FEATURES_COUNT), dtype='float')
+        with open(self.bgf_filename, 'r') as bgf_file:
+            bgf_file_features = bgf_file.readlines()[5: 5 + self.atom_count]
         for i in range(self.atom_count):
-            for j in range(5):
-                feature_matrix[i][j] = pdb_features[i][j]
+            atom_data = self.__getDataFromHetAtmLine(bgf_file_features[i])
+            for j in range(1, constants.PROTEIN_FEATURES_COUNT + 1):
+                feature_matrix[i][j-1] = atom_data[j]
         log.info('Initiated saving of feature matrix')
-        np.save('pdb_features_data/' + self.protein_name + '_feat_mat', feature_matrix)
+        np.save(os.path.join('pdb_features_data/', self.protein_name + '_feat_mat'), feature_matrix)
         log.info('The features matrix has been saved!')
-
-
-    def __getFeaturesFromPDB(self):
-        pdb_data = self.__getPDBFileAtomData()
-        data_stripped_rows = np.delete(pdb_data, np.s_[self.atom_count:], 0)
-        data_stripped_cols = np.delete(data_stripped_rows, np.s_[self.atom_count:], 1)
-        return data_stripped_cols        
 
 
     def __setProteinName(self):
@@ -72,20 +67,11 @@ class BGFDataFile:
                     self.bond_count += 1
 
 
-    def __distanceBetweenTwoAtoms(self, coordinates_A, coordinates_B):
-        distance = math.sqrt(
-            (coordinates_A[0] - coordinates_B[0])**2 + \
-            (coordinates_A[1] - coordinates_B[1])**2 + \
-            (coordinates_A[2] - coordinates_B[2])**2
-        )
-        return distance
-
-
     def __getDataFromHetAtmLine(self, data_line):
         data_line = data_line.strip().split()
         data_line = [
-            float(data_line[1]), # atom count
-            constants.ATOM_DICT[data_line[2][0]], # atom type
+            int(data_line[1]), # atom count
+            (constants.ATOM_DICT[data_line[2][0]]), # atom type
             int(data_line[-3]), # max number of covalent bonds
             int(data_line[-2]), # number of lone pairs
             float(data_line[-1])  # atomic charge
@@ -111,38 +97,8 @@ class BGFDataFile:
         return data_line
 
 
-    def __getPDBFileAtomData(self):
-        log.info('Started data extraction from ', self.pdb_filename)
-        data = np.zeros((constants.ATOMS_COUNT, 5))
-        self.__setProteinName()
-        with open(self.pdb_filename) as file:
-            log.info('PDB file has been succesfully opened')
-            pdb_lines = file.readlines()
-            data_index = 0
-            for line in pdb_lines:
-                numerical_data = self.__getDataFromFileLine(line)
-                # TODO: ugly fix for the strip here, fix it later
-                atom_type = line.strip()[-1]
-                if len(numerical_data) > 0:
-                    self.atom_count += 1
-                    entry = np.array(
-                        [
-                            constants.ATOM_DICT[atom_type], # atom type (C, O, N, S)
-                            numerical_data[0], # x coordinate
-                            numerical_data[1], # y_coordinate
-                            numerical_data[2], # z_coordinate
-                            numerical_data[4]  # confidence score
-                        ]
-                    )
-                    data[data_index] = entry
-                    data_index += 1
-        log.info('Data has been succesfully generated')
-        return data
-
-
-log.info('log test')
 m_class = BGFDataFile('/home/users/tep18/new_ppp/project-protein-fold/bgf_files/AF-Q0VAX9-F1-model_v2.bgf')
-m_class.getAdjacencyMatrix()
+m_class.getFeatureMatrix()
 
 #a = np.load('/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/mol_adjacency_data/C11H22O_adj_mat.npy')
 #print(a)

@@ -1,5 +1,4 @@
-from tkinter import Y
-from cv2 import log
+
 import SmileKmer
 import numpy as np
 import ReadingFasta

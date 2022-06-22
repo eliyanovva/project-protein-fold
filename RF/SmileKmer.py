@@ -4,24 +4,16 @@ import SMILE
 #dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
 ligand_dict = SMILE.create_ligand_dict()
 
-#importmatrix: initializes the global variable ligmat to be a matrix of ligand features
-#Input: dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
-#       int k ~ determines the length of the k-mers
-#       int num_proteins ~ the number of protein types used in the dataset
+#initializes the global variable ligmat to be a matrix of ligand features
+#dict ligand_dict ~ key = ligand name, value = SMILE formula
+#int k ~ determines the length of the k-mers
+#int num_proteins ~ the number of protein types used in the dataset
 #Output:ligmat ~ a matrix of ligand features 
 def importmatrix(ligand_dict, k, num_proteins):
     global ligmat
     ligmat = ligand_matrix(ligand_dict, k, num_proteins)
 
 #ligand_matrix: initializes a matrix of ligand features
-#Input: dict ligand_dict
-#       int k
-#       int num_proteins
-#Output: ligmat ~ a matrix of ligand features 
-        #each column refers to a k-mer from the SMILE formulas
-        #for a dataset with n ligands, rows 1:n each refer to a different ligand
-        #data values represent how many times a given k-mer of length k occurs in a ligand's SMILE formula
-        #for a dataset with m proteins, rows 1:n of the matrix will be duplicated m times
 def ligand_matrix(ligand_dict, k, num_proteins):
     ligand_counts = ligand_kmer_count(ligand_dict, k)
     freq_mat = []
@@ -30,10 +22,7 @@ def ligand_matrix(ligand_dict, k, num_proteins):
             freq_mat.append(np.array(list(ligand_counts[lig].values())))
     return np.array(freq_mat)
 
-#Input: dict ligand_dict
-#       int k
-#Output: dict ligand_counts ~ key = ligand name, value = dict lig_dict:
-#                                                               key = k-mer name, value = # of times the k-mer occurs in the ligand
+#create a dictionary of the frequency counts for all kmers
 def ligand_kmer_count(ligand_dict, k):
     ligand_counts = {}
     total_kmers = find_total_kmers(ligand_dict, k)
@@ -48,9 +37,7 @@ def ligand_kmer_count(ligand_dict, k):
     return ligand_counts
 
 
-#Input: dict ligand_dict
-#       int k
-#Output: list kmers ~ list of all k-mers of length k that can be found out of all the ligands in ligand_dict
+#create a list of all kmers that can be found in the ligands
 def find_total_kmers(ligand_dict, k):
     kmers = []
     for lig in ligand_dict:

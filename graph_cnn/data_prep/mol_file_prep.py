@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import os
 import constants
 import logging as log
 import log_config
@@ -25,7 +26,7 @@ class MolDataFile:
             adjacency_matrix[bond_data[i][0] - 1][bond_data[i][1] - 1] = bond_data[i][2]
         
         log.info('Initiated saving of adjacency matrix')
-        file_name = 'mol_adjacency_data/' + self.compound_name + '_adj_mat'
+        file_name = os.path.join('mol_adjacency_data/', self.compound_name + '_adj_mat')
         np.save(file_name, adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
 

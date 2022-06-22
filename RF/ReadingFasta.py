@@ -2,8 +2,6 @@
 from Kmerizing import *
 import Globals
 import numpy as np
-import Filtering
-import labels
 
 #Creating sequence class
 class Seq:
