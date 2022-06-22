@@ -97,5 +97,3 @@ def classified_logFC_pVal(logFC_byID, pVal_byID):
 
 #logFC_byID = {"P1": {"L1": .8, "L2": .7, "L3": .6}, "P2": {"L1": .7, "L2": .2, "L3": .6}, "P3": {"L1": .3, "L2": .4, "L3": .6}}
 #pVal_byID = {"P1": {"L1": .01, "L2": .04, "L3": .02}, "P2": {"L1": .01, "L2": .01, "L3": .01}, "P3": {"L1": .02, "L2": .1, "L3": .02}}
-
-print(labels())
