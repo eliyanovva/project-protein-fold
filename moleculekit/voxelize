@@ -90,9 +90,9 @@ class Model(nn.Module):
        prot = F.relu(self.conv1(prot))
        prot = F.relu(self.conv2(prot))
 
-        lig = F.relu(self.conv1(lig))
+       lig = F.relu(self.conv1(lig))
 
-       return
+       return prot, lig
 
 
 
