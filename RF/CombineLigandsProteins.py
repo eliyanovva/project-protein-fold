@@ -38,10 +38,10 @@ fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/ful
 #Create kmer frequency dictionary
 seqvar1, features1 = ReadingFasta.make_seqvar(fasta1, Globals.categorized_seqs, Globals.categorized_features)
 #Remove insignificant kmers
-#filter_feat = Filtering.richness_protein(features1, seqvar1, pos_counts, neg_counts)
+filter_feat = Filtering.richness_protein(features1, seqvar1, pos_counts, neg_counts)
 # Make the matrix
-#AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, Globals.categorized_matrix)
-AA_mat = ReadingFasta.makematrix(seqvar1, features1, Globals.categorized_matrix)
+AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, Globals.categorized_matrix)
+#AA_mat = ReadingFasta.makematrix(seqvar1, features1, Globals.categorized_matrix)
 
 #Creating output for 3Di sequences
 # Read fasta file
@@ -49,10 +49,10 @@ fasta2 = open("/home/users/sml96/bin/project-protein-fold/3DiSequences/fullset_s
 #Create kmer frequency dictionary
 seqvar2, features2 = ReadingFasta.make_seqvar(fasta2, Globals.di_seqs, Globals.di_features)
 #Remove insignificant kmers
-#filter_feat2 = Filtering.richness_protein(features2, seqvar2, pos_counts, neg_counts)
+filter_feat2 = Filtering.richness_protein(features2, seqvar2, pos_counts, neg_counts)
 # Make the matrix
-#Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, Globals.di_matrix)
-Di_mat = ReadingFasta.makematrix(seqvar2, features2, Globals.di_matrix)
+Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, Globals.di_matrix)
+#Di_mat = ReadingFasta.makematrix(seqvar2, features2, Globals.di_matrix)
 
 intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
 ligand_count = 38
