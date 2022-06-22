@@ -53,12 +53,14 @@ def create_protein_list():
     acc_ids = []
     fr = open("allseqs.fasta", "r")
     lines = fr.readlines()
-    fw = open("new_accessions.txt", "w")
+    fw = open("../AminoAcidSequences/new_accessions.txt", "w")
     for line in lines:
         if line[0] == ">":
             acc_ids.append(line[1:-1])
-            fw.write(str(line[1:-1]) + ", ")
+            fw.write(str(line[1:-1]) + "\n")
     fr.close()
     fw.close()
 
     return acc_ids
+
+create_protein_list()
