@@ -30,11 +30,16 @@ P^* = MV(P*_1, P*2, ..., P*_T)
 #X = features
 #Y = labels
 
-X = [[1, 1, 1], [2, 1, 1], [3, 1, 1], [4, 1, 1], [5, 1, 1], [6, 1, 1], [7, 1, 1],
-     [8, 1, 1], [9, 1, 1], [10, 1, 1], [11, 1, 1], [12, 1, 1], [13, 1, 1], [14, 1, 1]]
-Y = [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0]
+"""will be positive if:
+    1st: geq than 6
+    2nd: leq than 5
+    3rd: quotient of 1st and 2nd
+"""
 
-P_X = [[1, 2, 2], [2, 2, 2], [3, 2, 2]]
+X = [[8, 4, 2], [7, 6, 3], [8, 5, 3], [9, 3, 3], [5, 2, 3], [4, 3, 7], [8, 3, 1], [7, 2, 9], [3, 5, 6], [1, 4, 2], [8, 3, 2], [8, 6, 1]]
+Y = [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+#2-3 pos in X, 1 pos in P_X
+P_X = [[5, 4, 1], [10, 5, 2], [8, 4, 1]]
 P_Y = [0, 1, 0]
 
 def seperate_sets(N, Y):
@@ -106,15 +111,34 @@ def SESVM(N, Y, T, P_X, P_Y):
                 max_accuracy = accuracies[m]
                 max_index = m
 
-
         opt_theta = svm.SVC(kernel='rbf')
         max_feat = all_features[max_index]
         opt_theta.fit(max_feat, labels)
         p = opt_theta.predict(P_X)
         predictions.append(p)
-        #print(p)
-
-    for p in predictions:
         print(p)
+    print()
+    return(predictions)
 
-SESVM(X, Y, 3, P_X, P_Y)
+def MV(predictions):
+    aggregate = []
+    p = predictions[0]
+    for i in range(len(p)):
+        aggregate.append([0, 0])
+
+    for i in range(len(predictions)):
+        for j in range(len(p)):
+            if predictions[i][j] == 0:
+                aggregate[j][0] += 1
+            else:
+                aggregate[j][1] += 1
+
+    mv_prediction = []
+    for i in range(len(p)):
+        if aggregate[i][0] >= aggregate[i][1]:
+            mv_prediction.append(0)
+        else:
+            mv_prediction.append(1)
+    print(mv_prediction)
+
+MV(SESVM(X, Y, 9, P_X, P_Y))
