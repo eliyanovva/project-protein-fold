@@ -23,4 +23,3 @@ def featurize(seq,k,feat):
                feat.add(kmer)
           dict[kmer] += 1
      return dict
-

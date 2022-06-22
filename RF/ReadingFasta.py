@@ -13,17 +13,6 @@ class Seq:
     def __eq__(self, other):
         return self.name == other.name
 
-
-#Initialize Set of Features
-#categorized variables
-categorized_features = set()
-categorized_seqs = []
-categorized_matrix = []
-#3Di variables
-di_features = set()
-di_seqs = []
-di_matrix = []
-
 def make_seqvar(fasta, seqvar, feat):
     i = 0
     j = 0

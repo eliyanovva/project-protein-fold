@@ -3,6 +3,7 @@
 
 from sklearn import svm
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
 import random
 import numpy as np
 import CombineLigandsProteins
@@ -37,11 +38,12 @@ P^* = MV(P*_1, P*2, ..., P*_T)
     3rd: quotient of 1st and 2nd
 """
 
-X = [[8, 4, 2], [7, 6, 3], [8, 5, 3], [9, 3, 3], [5, 2, 3], [4, 3, 7], [8, 3, 1], [7, 2, 9], [3, 5, 6], [1, 4, 2], [8, 3, 2], [8, 6, 1]]
-Y = [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
-#2-3 pos in X, 1 pos in P_X
-P_X = [[5, 4, 1], [10, 5, 2], [8, 4, 1]]
-P_Y = [0, 1, 0]
+CombineLigandsProteins.import_final()
+
+X = CombineLigandsProteins.final_matrix
+Y = CombineLigandsProteins.logFCmat
+
+N, P, Y_n, Y_p = train_test_split(X, Y, test_size=.1)
 
 def seperate_sets(N, Y):
     pos_set = []
@@ -75,6 +77,12 @@ def create_partitions(pos_set, neg_set, M):
         partitions.append(n_set)
     return partitions
 
+"""
+    k1  k2  k3  k4  k5
+P1  
+P2
+P3
+"""
 
 def SESVM(N, Y, T, P_X, P_Y):
     pos_set, neg_set = seperate_sets(N, Y)
@@ -140,5 +148,13 @@ def MV(predictions):
             mv_prediction.append(1)
     return mv_prediction
 
-mv_prediction = MV(SESVM(X, Y, 9, P_X, P_Y))
-print("Accuracy: " + str(accuracy_score(P_Y, mv_prediction)))
+mv_prediction = MV(SESVM(N, Y_n, 9, P, Y_p))
+print("Accuracy: " + str(accuracy_score(Y_p, mv_prediction)))
+
+def MV_weighted(accuracies):
+    print()
+
+#research other ligand fingerprints
+#what's causing the low accuracy?
+#use cross-validation with undersampling?
+#use just cross-validation?
