@@ -33,17 +33,15 @@ X = [[1, 1, 1], [2, 1, 1], [3, 1, 1], [4, 1, 1], [5, 1, 1], [6, 1, 1], [7, 1, 1]
      [8, 1, 1], [9, 1, 1], [10, 1, 1], [11, 1, 1], [12, 1, 1], [13, 1, 1], [14, 1, 1]]
 Y = [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0]
 
-def seperate_sets(features, labels):
+def seperate_sets(N, Y):
     pos_set = []
     neg_set = []
-    for i in range(len(labels)):
-        if labels[i] == 0:
-            neg_set.append(features[i])
+    for i in range(len(Y)):
+        if Y[i] == 0:
+            neg_set.append(N[i])
         else:
-            pos_set.append(features[i])
+            pos_set.append(N[i])
     return pos_set, neg_set
-
-p, n = seperate_sets(X, Y)
 
 def create_partitions(pos_set, neg_set, M):
     partitions = []
@@ -68,10 +66,12 @@ def create_partitions(pos_set, neg_set, M):
     return partitions
 
 
-def SESVM(pos_set, neg_set):
+def SESVM(N, Y):
+    pos_set, neg_set = seperate_sets(N, Y)
     M = np.ceil(float(len(neg_set)) / float(len(pos_set)))
     parts = create_partitions(pos_set, neg_set, M)
     labels = np.append(np.repeat(1, len(pos_set)), np.repeat(0, len(pos_set)))
+    
     for m in range(int(M)):
         #use GridSearchCV to optimize rbf hyperparameters???
         #C: decreasing C => more regulation, decrease C if there's a lot of noise
@@ -79,5 +79,3 @@ def SESVM(pos_set, neg_set):
         features = np.concatenate((pos_set, parts[m]), axis=0)
         theta = svm.SVC(kernel='rbf')
         theta.fit(features, labels)
-
-SESVM(p, n)
