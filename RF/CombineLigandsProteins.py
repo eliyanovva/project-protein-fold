@@ -34,7 +34,7 @@ def exportdicts():
 
 #Creating output for categorized amino acids
 #Read fasta file
-fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/allsequences.fasta")
+fasta1 = open("/home/users/sml96/bin/project-protein-fold/AminoAcidSequences/fully_categorized.fasta")
 #Create kmer frequency dictionary
 seqvar1, features1 = ReadingFasta.make_seqvar(fasta1, Globals.categorized_seqs, Globals.categorized_features)
 #Remove insignificant kmers
@@ -66,8 +66,7 @@ ligand_matrix = SmileKmer.ligmat
 final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)
 
 #Create logFC vector
-ReadingFasta.import_variables()
-proteins = ReadingFasta.sequence_seqs
+proteins = seqvar1
 logFCmat = []
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
