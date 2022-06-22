@@ -35,7 +35,7 @@ for filename in os.listdir('olfr_de'):
         if isinstance(smile, str):
             mol = openbabel.OBMol()
             obConversion.ReadString(mol, smile)
-            #mol.AddHydrogens()
+            mol.AddHydrogens()
             print(chem)
             gen3d.Do(mol, "--best")
             outmol = obConversion.WriteString(mol)
