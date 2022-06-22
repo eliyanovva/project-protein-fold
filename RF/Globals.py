@@ -60,5 +60,3 @@ def initialize_protein_list():
 
     return acc_ids
 
-create_protein_list()
-
