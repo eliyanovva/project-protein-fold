@@ -64,12 +64,8 @@ intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(D
 ligand_count = 38
 proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 
-
-print(len(AA_mat))
-print(len(AA_mat[0]))
-
-print(len(Di_mat))
-print(len(Di_mat[0]))
+for i in range(10):
+    print(intermed_matrix[i])
 
 #Import ligands matrix
 SmileKmer.importmatrix(ligand_dict, 5, 1084)

@@ -51,3 +51,5 @@ def classified_logFC_pVal(logFC_byID, pVal_byID):
         neg_counts[id] = neg
 
     return classified, pos_counts, neg_counts
+
+#pos_counts[id] = num. of pos interactions that protein id has
