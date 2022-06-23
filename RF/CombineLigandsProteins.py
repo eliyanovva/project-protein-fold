@@ -83,6 +83,30 @@ for protein in proteins:
     for ligand in list(ligand_dict.keys()):
         logFCmat.append(float(classified[str(protein.name)][ligand]))
 
+print(len(final_matrix))
+
+#Retain only the unique entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
+def uniquematrix(matrix):
+    rowCount = len(matrix)
+    if rowCount == 0:
+        return
+    columnCount = len(matrix[0])
+    if columnCount == 0:
+        return
+    unique = {}
+    ret = []
+    for row in matrix:
+        rowkey =  tuple(row)
+        if rowkey not in unique:
+            unique[rowkey] = True
+            ret.append(row)
+    return np.array(ret)
+
+cutdown = uniquematrix(final_matrix)
+
+print(len(cutdown))
+
+
 def import_final():
     global X
     X = final_matrix
