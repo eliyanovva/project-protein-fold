@@ -10,4 +10,8 @@ The model input includes amino acid sequence, protein tertiary structure (repres
 
 ## ProteinFold GCN
 
+## References
 
+Donald Adjeroh, Maen Allaga, Jun Tan, Jie Lin, Yue Jiang, Ahmed Abbasi, and Xiaobo Zhou. 2017. String-Based Models for Predicting RNA-Protein Interaction. In Proceedings of the 8th ACM International Conference on Bioinformatics, Computational Biology,and Health Informatics (ACM-BCB '17). Association for Computing Machinery, New York, NY, USA, 661–666. https://doi.org/10.1145/3107411.3107508
+
+van Kempen M, Kim S, Tumescheit C, Mirdita M, Söding J, and Steinegger M. Foldseek: fast and accurate protein structure search. bioRxiv, doi:10.1101/2022.02.07.479398 (2022)
