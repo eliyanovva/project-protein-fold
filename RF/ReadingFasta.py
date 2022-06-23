@@ -1,6 +1,5 @@
 # Import featurize function
 from Kmerizing import *
-import Globals
 import numpy as np
 
 #Creating sequence class
@@ -13,10 +12,6 @@ class Seq:
         return self.name
     def __eq__(self, other):
         return self.name == other.name
-
-
-#Initialize Set of Features
-Globals.initialize()
 
 def make_seqvar(fasta, seqvar, feat):
     i = 0

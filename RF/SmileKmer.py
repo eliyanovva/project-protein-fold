@@ -1,8 +1,8 @@
 import numpy as np
-import SMILE
+import Globals
 
 #dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
-ligand_dict = SMILE.create_ligand_dict()
+ligand_dict = Globals.initialize_ligand_dict()
 
 #initializes the global variable ligmat to be a matrix of ligand features
 #dict ligand_dict ~ key = ligand name, value = SMILE formula
