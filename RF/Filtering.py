@@ -71,6 +71,7 @@ def featurize(seq, k, feat):
         dict[kmer] += 1
     return dict
 
+"""
 kmers = set()
 proteins = ['P1', 'P2', 'P3']
 seqs = ['aaabbdabb', 'bbdabaaa', 'acaaadabb']
@@ -88,3 +89,4 @@ for i in range(len(proteins)):
     seqvar.append(sv)
 
 print(richness_protein(kmers, seqvar, {"P1": 2, 'P2': 1, 'P3': 1}, {"P1": 5, 'P2': 6, 'P3': 6}))
+"""
