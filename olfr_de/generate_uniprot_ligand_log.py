@@ -1,6 +1,8 @@
+#Utilizes the dictionary, "mouse_genes_ensembl_uniprot.json" (accession:ENSEMBL) to create a csv 
+#which matches accession number and ligand to logFC. This is stored in the file "uniprot_ligand_logfc.csv".
+
 import json
 import logging as log
-#import log_config
 
 with open ('mouse_genes_ensembl_uniprot.json', 'r') as fp:
     GENE_DICT = json.load(fp)
