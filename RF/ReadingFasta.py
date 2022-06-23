@@ -20,12 +20,12 @@ def make_seqvar(fasta, seqvar, feat):
         if line[0] == '>':
             name = line.replace('\n','')
             name = name.replace('>', '')
-            seqvar.append(Seq(name, '', featurize('',10,feat)))
+            seqvar.append(Seq(name, '', featurize('',7,feat)))
             i += 1
         else:
             sequence = line.replace('\n','')
             seqvar[i-1].sequence = seqvar[i-1].sequence + sequence
-            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,10,feat)
+            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,7,feat)
         j += 1
 
     return seqvar, feat

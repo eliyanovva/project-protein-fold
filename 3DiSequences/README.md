@@ -1,3 +1,5 @@
+## 3Di Sequences
+
 The file "fullset_ss.fasta" contains sequences for every protein in the dataset which describe the tertiary interactions of each amino acid. 
 
 These sequences were created by conversion of the pdb files of each protein (contained in pdb_data_files) into the 3Di sequences utilized by the protein structure blast software, [Foldseek](https://github.com/steineggerlab/foldseek). 

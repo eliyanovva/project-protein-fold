@@ -1,3 +1,5 @@
+## Amino Acid Sequences 
+
 This folder contains amino acid sequences for all proteins in the dataset. 
 
 The folder, "new_mapping_mouse", contains separate fasta files for each protein, and these files are concatenated in allsequences.fasta. 
