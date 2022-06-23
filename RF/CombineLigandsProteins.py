@@ -85,7 +85,7 @@ for protein in proteins:
 
 print(len(final_matrix))
 
-#Retain only the unique entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
+#Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
 def uniquematrix(matrix):
     rowCount = len(matrix)
     if rowCount == 0:
@@ -94,18 +94,16 @@ def uniquematrix(matrix):
     if columnCount == 0:
         return
     unique = {}
-    ret = []
+    ret = 0
     for row in matrix:
-        rowkey =  tuple(row)
+        rowkey =  " ".join(["%s"] * columnCount) % tuple(row)
         if rowkey not in unique:
             unique[rowkey] = True
-            ret.append(row)
-    return np.array(ret)
+        else:
+            ret += 1
+    return ret
 
-cutdown = uniquematrix(final_matrix)
-
-print(len(cutdown))
-
+print(uniquematrix(final_matrix))
 
 def import_final():
     global X
