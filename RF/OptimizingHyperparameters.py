@@ -11,30 +11,27 @@ from sklearn.model_selection import train_test_split
 import CombineLigandsProteins
 
 #Number of trees in the forest
-n_estimators = [np.linspace(60, 80, 1)]
-#Criterion
-criterion = ['gini', 'entropy', 'log_loss']
+n_estimators = [int(x) for x in np.linspace(start = 10, stop = 1000, num = 100)]
 #Features considered at each split
 max_features = ['log2', 'sqrt', None]
 #Number of levels in each tree
-max_depth = [np.linspace(10, 20, 5), None]
+max_depth = [None]
 #Samples required to split a node
-min_samples_split = [np.linspace(2, 70, 2)]
+min_samples_split = [int(x) for x in np.linspace(start = 10, stop = 1000, num = 100)]
 #Minimum samples at each leaf
-min_samples_leaf = [np.linspace(1, 5, 1)]
+min_samples_leaf = [int(x) for x in np.linspace(start = 1, stop = 100, num = 100)]
 #Method of selecting samples for each tree
 bootstrap = [True]
 #Best-first
-max_leaf_nodes = [np.linspace(10, 100, 10), None]
+max_leaf_nodes = [None]
 #Should it split?
-min_impurity_decrease = [np.linspace(0, 5, .5)]
+min_impurity_decrease = [int(x) for x in np.linspace(start = 0, stop = 5, num = 5)]
 #Estimate generalization score
 oob_score = [True, False]
 #Samples
-max_samples = [np.linspace(.5, 5, .5), None]
+max_samples = [None]
 
 param_grid = {'n_estimators': n_estimators,
-                'criterion' : criterion,
                 'max_features' : max_features,
                 'max_depth' : max_depth,
                 'min_samples_split' : min_samples_split,
