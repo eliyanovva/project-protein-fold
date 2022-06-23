@@ -1,7 +1,7 @@
 import pandas as pd
 
 ligand_dict = {}
-df = pd.read_csv('ligand_SMILEs.csv')
+df = pd.read_csv('../Ligands_withSMILE/ligand_SMILEs.csv')
 
 files = df['ligand file'].tolist()
 smiles = df['SMILE'].tolist()
