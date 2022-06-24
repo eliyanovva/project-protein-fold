@@ -106,6 +106,8 @@ def uniquematrix(matrix):
 print(uniquematrix(final_matrix))
 
 def import_final():
+    global AA
+    AA = AA_mat
     global X
     X = final_matrix
     global Y
