@@ -25,8 +25,8 @@ for id in acc_ids:
 def labels():
     for csv in csvs:
         file_name = 'olfr_de_copy1/olfr_de/'+csv
-        #curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
-        curr_df = pd.read_csv(file_name, index_col='name')
+        curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
+        #curr_df = pd.read_csv(file_name, index_col='name')
 
         for id in acc_ids:
 
