@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import Globals
 
 acc_ids = Globals.initialize_protein_list()
