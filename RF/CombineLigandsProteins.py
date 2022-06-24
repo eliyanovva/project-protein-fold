@@ -110,7 +110,7 @@ def uniquematrix(matrix):
             ret += 1
     return ret
 
-print(uniquematrix(final_matrix))
+#print(uniquematrix(final_matrix))
 
 def import_final():
     #For No3Di.py

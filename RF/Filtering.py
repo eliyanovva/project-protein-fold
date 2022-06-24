@@ -46,7 +46,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
 
     ret = []
     for kmer in kmers:
-        if (richness[kmer] < .125) | (richness[kmer] > 8):
+        if (richness[kmer] < .25) | (richness[kmer] > 4):
             ret.append(kmer)
 
     return ret
