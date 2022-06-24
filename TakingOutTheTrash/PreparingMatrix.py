@@ -1,5 +1,3 @@
-from cmath import nan
-from sklearn.decomposition import DictionaryLearning
 import ReadingFasta
 import pandas as pd
 import numpy as np

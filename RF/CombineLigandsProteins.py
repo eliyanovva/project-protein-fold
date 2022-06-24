@@ -113,8 +113,17 @@ def uniquematrix(matrix):
 print(uniquematrix(final_matrix))
 
 def import_final():
+    #For No3Di.py
     global AA
     AA = AA_mat
+    #For One LigandRF.py
+    global proteins
+    proteins = seqvar1
+    global dictionary
+    dictionary = classified
+    global protmat
+    protmat = intermed_matrix
+    #For Regular Trials
     global X
     X = final_matrix
     global Y

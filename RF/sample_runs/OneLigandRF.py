@@ -1,23 +1,19 @@
-import PreparingMatrix
+#This script tests the model on only one ligand with all proteins.
+
+import sys
+sys.path.append('../../project-protein-fold/RF/')
 import CombineLigandsProteins
-import ReadingFasta
-import RandomForest
+import FixedClassificationModel
 
-PreparingMatrix.export()
-protmat = PreparingMatrix.proteins
+#Import protein matrix
+CombineLigandsProteins.import_final()
+protmat = CombineLigandsProteins.protmat
 
-CombineLigandsProteins.exportdicts()
-logFC = CombineLigandsProteins.citlog
-p = CombineLigandsProteins.citp
-cor = CombineLigandsProteins.citcor
-
-ReadingFasta.import_variables()
-proteins = ReadingFasta.sequence_seqs
-logmat = []
-pmat = []
+#Create logFC vector
+proteins = CombineLigandsProteins.proteins
+classified = CombineLigandsProteins.dictionary
+logFCmat = []
 for protein in proteins:
-    logmat.append(cor[protein.name])
-    pmat.append(p[protein.name])
+    logFCmat.append(float(classified[str(protein.name)]['citronellol']))
 
-RandomForest.train(protmat, logmat)
-RandomForest.train(protmat, pmat)
+FixedClassificationModel.train(protmat, logFCmat)
