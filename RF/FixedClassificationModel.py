@@ -1,16 +1,11 @@
+#This script is a Classification Random Forest Model with Over Sampling
 #Code adapted from: https://www.datacamp.com/tutorial/random-forests-classifier-python 
 
 #imports
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
-import pandas as pd
-import numpy as np
-import seaborn as sns
-from sklearn.preprocessing import StandardScaler
-from imblearn.under_sampling import RandomUnderSampler, TomekLinks
-from imblearn.over_sampling import RandomOverSampler, SMOTE
-import CombineLigandsProteins
+from imblearn.over_sampling import RandomOverSampler
 
 def train(features, labels):
     #define features and labels
@@ -36,7 +31,3 @@ def train(features, labels):
     #Print accuracy of the model
     print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
 
-CombineLigandsProteins.import_final()
-testX = CombineLigandsProteins.X
-testY = CombineLigandsProteins.Y
-train(testX, testY)
