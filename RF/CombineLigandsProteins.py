@@ -41,6 +41,7 @@ di_matrix = []
 #Creating output for categorized amino acids
 #Read fasta file
 fasta1 = open("../AminoAcidSequences/fully_categorized.fasta")
+#fasta1 = open("../AminoAcidSequences/categorized.fasta")
 #Create kmer frequency dictionary
 seqvar1, features1 = ReadingFasta.make_seqvar(fasta1, categorized_seqs, categorized_features)
 #Remove insignificant kmers
@@ -52,6 +53,7 @@ AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, categorized_matrix)
 #Creating output for 3Di sequences
 # Read fasta file
 fasta2 = open("../3DiSequences/fullset_ss.fasta")
+#fasta2 = open("../3DiSequences/outputDb_ss.fasta")
 #Create kmer frequency dictionary
 seqvar2, features2 = ReadingFasta.make_seqvar(fasta2, di_seqs, di_features)
 #Remove insignificant kmers
@@ -64,11 +66,16 @@ intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(D
 ligand_count = 38
 proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 
-for i in range(10):
-    print(intermed_matrix[i])
+print(len(AA_mat))
+print(len(AA_mat[0]))
+print(len(Di_mat))
+print(len(Di_mat[0]))
+
+
 
 #Import ligands matrix
 SmileKmer.importmatrix(ligand_dict, 5, 1084)
+#SmileKmer.importmatrix(ligand_dict, 5, 230)
 ligand_matrix = SmileKmer.ligmat
 
 print("Num. Ligand kmers: " + str(len(ligand_matrix[0])))
