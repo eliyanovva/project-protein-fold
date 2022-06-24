@@ -1,4 +1,5 @@
-#based on algorithm description from https://dl.acm.org/doi/pdf/10.1145/3307339.3342141
+#This script implements a Selective Ensemble Support Vector Machine algorithm
+# based on descriptions from https://dl.acm.org/doi/pdf/10.1145/3307339.3342141
 #random documentation from https://www.geeksforgeeks.org/random-numbers-in-python/
 
 from sklearn import svm
@@ -15,7 +16,7 @@ import CombineLigandsProteins
 """
 For T iterations:
     randomly partition N- into M
-    (assume N- can be paritioned into M sets without overlapping)
+    (assume N- can be partitioned into M sets without overlapping)
     M = |N-| / |N+| rounded up
     for m in [1, M]:
         S_m = {N+, N-_m}
@@ -32,12 +33,6 @@ P^* = MV(P*_1, P*2, ..., P*_T)
 #X = features
 #Y = labels
 
-"""will be positive if:
-    1st: geq than 6
-    2nd: leq than 5
-    3rd: quotient of 1st and 2nd
-"""
-
 CombineLigandsProteins.import_final()
 
 X = CombineLigandsProteins.final_matrix
@@ -45,16 +40,19 @@ Y = CombineLigandsProteins.logFCmat
 
 N, P, Y_n, Y_p = train_test_split(X, Y, test_size=.1)
 
+# separate a test set into positive and negative observations
 def seperate_sets(N, Y):
     pos_set = []
     neg_set = []
     for i in range(len(Y)):
-        if Y[i] == 0:
+        if Y[i] == 0:           #indicates a negative label
             neg_set.append(N[i])
         else:
             pos_set.append(N[i])
     return pos_set, neg_set
 
+#partition the negative observations into M sets
+#each paritioned set should be the same size of the set of positive observations
 def create_partitions(pos_set, neg_set, M):
     partitions = []
     part_len = len(pos_set)
@@ -105,14 +103,14 @@ def SESVM(N, Y, T, P_X, P_Y):
             a = accuracy_score(Y, p)
             accuracies.append(a)
 
+        #out of the M training sets, find the most accurate classifier
         max_accuracy = 0
         max_index = 0
-
         for m in range(int(M)):
             if accuracies[m] > max_accuracy:
                 max_accuracy = accuracies[m]
                 max_index = m
-
+        #retrain a classifer based on the optimal training set, and use it to predict against the test set P
         opt_theta = svm.SVC(kernel='rbf')
         max_feat = all_features[max_index]
         opt_theta.fit(max_feat, labels)
@@ -120,6 +118,8 @@ def SESVM(N, Y, T, P_X, P_Y):
         predictions.append(p)
     return(predictions)
 
+#Majority Voting algorithm
+#Out of T predictions vectors, it will select the most frequent prediction for each sample
 def MV(predictions):
     aggregate = []
     p = predictions[0]
@@ -146,8 +146,3 @@ print("Accuracy: " + str(accuracy_score(Y_p, mv_prediction)))
 
 def MV_weighted(accuracies):
     print()
-
-#research other ligand fingerprints
-#what's causing the low accuracy?
-#use cross-validation with undersampling?
-#use just cross-validation?
