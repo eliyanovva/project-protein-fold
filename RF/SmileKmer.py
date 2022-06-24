@@ -136,7 +136,8 @@ def form_letters(smile):
     c = letters.count(0)
     for i in range(0, c):
         letters.remove(0)
-        
+
+    """
     for j in range(len(letters)):
         curr = letters[j]
         ind_1 = curr.find("(")
@@ -147,7 +148,7 @@ def form_letters(smile):
             letters[j] = curr[ind_1 + 1:]
         elif ind_2 != -1:
             letters[j] = curr[:ind_2]
-
+    """
     return letters
 
 def check_ligand_distinct(ligands, k):

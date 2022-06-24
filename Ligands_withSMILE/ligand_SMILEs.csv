@@ -24,7 +24,7 @@ pS6_DE_1p_2heptanone.csv,CCCCCC(=O)C
 pS6_DE_p01_cyclopentanethiol.csv,C1CCC(C1)S
 pS6_DE_1p_dimethyltrisulfide.csv,CSSSC
 pS6_DE_1p_guaiacol.csv,COc1ccccc1O
-pS6_DE_1p_Benzaldehyde.csv,c1ccc(cc1)C=O
+pS6_DE_1p_Benzaldehyde.csv,O=Cc1ccccc1
 pS6_DE_p01_citral.csv,CC(=CCCC(=CC=O)C)C
 pS6_DE_3mM_androstenone.csv,CC12CCC3C(C1CC=C2)CCC4C3(CCC(=O)C4)C
 pS6_DE_100p_ebFarnesene.csv,CC(=CCCC(=CCCC(=C)C=C)C)C
