@@ -45,7 +45,7 @@ Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, di_matrix)
 #Concatenate AA and 3Di matrices
 intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
 #Expand the protein matrix to account for the ligands
-ligand_count = 38
+ligand_count = 39
 proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 
 #Import dictionary matching ligands to SMILES String
