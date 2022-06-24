@@ -5,8 +5,8 @@ import Globals
 acc_ids = Globals.initialize_protein_list()
 csvs = Globals.initialize_ligand_list()
 
-#fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
-fas_df = pd.read_csv('fasta_list.csv', index_col='accession number')
+fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
+#fas_df = pd.read_csv('fasta_list.csv', index_col='accession number')
 
 num_proteins = len(acc_ids)
 num_ligands = len(csvs)
@@ -25,8 +25,8 @@ for id in acc_ids:
 def labels():
     for csv in csvs:
         file_name = 'olfr_de_copy1/olfr_de/'+csv
-        #curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
-        curr_df = pd.read_csv(file_name, index_col='name')
+        curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
+        #curr_df = pd.read_csv(file_name, index_col='name')
 
         for id in acc_ids:
 
