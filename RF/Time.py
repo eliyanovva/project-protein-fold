@@ -3,13 +3,7 @@
 import timeit
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn import metrics
-import pandas as pd
-import numpy as np
-import seaborn as sns
-from sklearn.preprocessing import StandardScaler
-from imblearn.under_sampling import RandomUnderSampler, TomekLinks
-from imblearn.over_sampling import RandomOverSampler, SMOTE
+from imblearn.over_sampling import RandomOverSampler
 import CombineLigandsProteins
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
@@ -36,11 +30,5 @@ def train(features, labels):
     #Form predictions
     y_pred=clf.predict(X_test)
 
-    #Print accuracy of the model
-    #print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
-
-    train(testX, testY)
-
-timeit
 t = timeit.timeit(lambda: train(testX, testY), number = 10)
 print(t)

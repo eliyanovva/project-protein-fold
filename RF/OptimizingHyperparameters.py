@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.experimental import enable_halving_search_cv
 from sklearn.model_selection import HalvingRandomSearchCV
-from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import RandomOverSampler
 from sklearn.model_selection import train_test_split
 import CombineLigandsProteins
 
@@ -58,7 +58,7 @@ testY = CombineLigandsProteins.Y
 X_train, X_test, y_train, y_test = train_test_split(testX, testY, test_size=0.1) # 90% training and 10% test
 
 #Oversample
-ros = RandomUnderSampler(random_state = 42)
+ros = RandomOverSampler(random_state = 42)
 X_res, y_res = ros.fit_resample(X_train, y_train)
 
 #Train the model (performing cross validation)
