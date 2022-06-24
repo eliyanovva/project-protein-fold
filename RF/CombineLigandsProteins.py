@@ -1,5 +1,6 @@
 #This script creates the protein matrix and ligand matrix to train and test the Random Forest Algorithm
 
+#Imports
 import SmileKmer
 import numpy as np
 import ReadingFasta
@@ -7,24 +8,11 @@ import labels
 import Globals
 import Filtering
 
+#Create classification dictionary
 logFC, pVal = labels.labels()
 classified, pos_counts, neg_counts = labels.classified_logFC_pVal(logFC, pVal)
 
-def import_labels():
-    global positives
-    positives = pos_counts
-    global negatives
-    negatives = neg_counts
-
-def exportdicts():
-    global logdic
-    logdic = logFC
-    global pdic
-    pdic = pVal
-    global class_dict
-    class_dict = classified
-
-#Initialize Set of Features
+#Initialize Variables
 #categorized variables
 categorized_features = set()
 categorized_seqs = []
@@ -108,7 +96,7 @@ def import_final():
     dictionary = classified
     global protmat
     protmat = intermed_matrix
-    #For Regular Trials
+    #For TrainandTest.py
     global X
     X = final_matrix
     global Y
