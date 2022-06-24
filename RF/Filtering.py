@@ -33,12 +33,6 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
                 pos_counts_by_kmer[kmer] += pos_counts[id] * freq_dict[kmer]
                 neg_counts_by_kmer[kmer] += neg_counts[id] * freq_dict[kmer]
 
-    print(total_pos)
-    print(total_neg)
-
-    print(pos_counts_by_kmer)
-    print(neg_counts_by_kmer)
-
     for kmer in kmers:
         pos_prop_by_kmer[kmer] = float(pos_counts_by_kmer[kmer]) / float(total_pos)
         neg_prop_by_kmer[kmer] = float(neg_counts_by_kmer[kmer]) / float(total_neg)
@@ -46,16 +40,15 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
     richness = {}
     for kmer in kmers:
         if neg_counts_by_kmer[kmer] == 0:
-            richness[kmer] = 10
+            richness[kmer] = 100000
         else:
             richness[kmer] = pos_prop_by_kmer[kmer] / neg_prop_by_kmer[kmer]
 
-    print(richness)
-
     ret = []
     for kmer in kmers:
-        if (richness[kmer] < .75) | (richness[kmer] > 1.25):
+        if (richness[kmer] < .25) | (richness[kmer] > 4):
             ret.append(kmer)
+
     return ret
 
 def featurize(seq, k, feat):

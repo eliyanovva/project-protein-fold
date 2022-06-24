@@ -77,13 +77,6 @@ def create_partitions(pos_set, neg_set, M):
         partitions.append(n_set)
     return partitions
 
-"""
-    k1  k2  k3  k4  k5
-P1  
-P2
-P3
-"""
-
 def SESVM(N, Y, T, P_X, P_Y):
     pos_set, neg_set = seperate_sets(N, Y)
     M = np.ceil(float(len(neg_set)) / float(len(pos_set)))

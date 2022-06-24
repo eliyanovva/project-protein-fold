@@ -13,7 +13,6 @@ def featurize(seq,k,feat):
 """
 def featurize(seq,k,feat):
      dict = {}
-
      for i in range(0, len(seq) - k + 1):
           kmer = ""
           for j in range(k):

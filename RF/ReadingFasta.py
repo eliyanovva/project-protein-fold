@@ -33,11 +33,29 @@ def make_seqvar(fasta, seqvar, feat):
 def makematrix(seqvar, feat, mat):
     for seq in seqvar:
         newseq = []
+
+        #newseqs = []
+        #newseq_counts = list(np.repeat(0, len(seqvar)))
+
         for kmer in feat:
             if kmer not in seq.dictionary:
                 seq.dictionary[kmer] = 0
             newseq.append(seq.dictionary.get(kmer))
+        #if newseqs.count(newseq) == 0:
+        #    newseqs.append(newseq)
+        #ind = newseqs.index(newseq)
+        #newseq_counts[ind] += 1
         mat.append(np.array(newseq))
+
+    #empty_counts = newseq_counts.count(0)
+    #print(empty_counts)
+
+    #for i in range(empty_counts):
+    #    newseq_counts.remove(0)
+
+    #print(len(newseq_counts))
+    #print(newseq_counts)
+
     return mat
 
 """
