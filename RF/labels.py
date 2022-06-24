@@ -5,8 +5,8 @@ import Globals
 acc_ids = Globals.initialize_protein_list()
 csvs = Globals.initialize_ligand_list()
 
-#fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
-fas_df = pd.read_csv('fasta_list.csv', index_col='accession number')
+fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
+#fas_df = pd.read_csv('fasta_list.csv', index_col='accession number')
 
 num_proteins = len(acc_ids)
 num_ligands = len(csvs)
