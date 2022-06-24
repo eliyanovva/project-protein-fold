@@ -1,4 +1,6 @@
 #This script tests the model on only one ligand with all proteins.
+#Ligand is citronellol
+#This script must be run from outside the sample_runs folder. ie: While pwd is RF, call python3 sample_runs/OneLigandRF.py
 
 import sys
 sys.path.append('../../project-protein-fold/RF/')

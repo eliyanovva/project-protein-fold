@@ -116,7 +116,7 @@ def import_final():
     #For No3Di.py
     global AA
     AA = AA_mat
-    #For One LigandRF.py
+    #For OneLigandRF.py and OneProteinRF.py
     global proteins
     proteins = seqvar1
     global dictionary
