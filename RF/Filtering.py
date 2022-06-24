@@ -1,6 +1,6 @@
 import Globals
-import ReadingFasta
 
+#Import list of accession numbers
 acc_list = Globals.initialize_protein_list()
 
 #kmers: set of all possible kmers for the protein
@@ -63,23 +63,3 @@ def featurize(seq, k, feat):
             feat.add(kmer)
         dict[kmer] += 1
     return dict
-
-"""
-kmers = set()
-proteins = ['P1', 'P2', 'P3']
-seqs = ['aaabbdabb', 'bbdabaaa', 'acaaadabb']
-
-for seq in seqs:
-    featurize(seq, 3, kmers)
-
-dicts = [{'abb': 2, 'bda': 1, 'dab': 1, 'aab': 1, 'bbd': 1, 'aaa': 1},
-         {'aba': 1, 'aaa': 1, 'dab': 1, 'bbd': 1, 'baa': 1, 'bda': 1},
-         {'aad': 1, 'aca': 1, 'aaa': 1, 'dab': 1, 'abb': 1, 'ada': 1, 'caa': 1}]
-
-seqvar = []
-for i in range(len(proteins)):
-    sv = ReadingFasta.Seq(proteins[i], seqs[i], dicts[i])
-    seqvar.append(sv)
-
-print(richness_protein(kmers, seqvar, {"P1": 2, 'P2': 1, 'P3': 1}, {"P1": 5, 'P2': 6, 'P3': 6}))
-"""
