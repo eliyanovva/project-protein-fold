@@ -50,18 +50,3 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
             ret.append(kmer)
 
     return ret
-
-#remember to comment
-
-def featurize(seq, k, feat):
-    dict = {}
-
-    for i in range(0, len(seq) - k + 1):
-        kmer = ""
-        for j in range(k):
-            kmer += seq[i + j]
-        if kmer not in dict:
-            dict[kmer] = 0
-            feat.add(kmer)
-        dict[kmer] += 1
-    return dict

@@ -1,7 +1,8 @@
+#This script performs cross validation to optimize the hyperparameters of the Random Forest model. 
+
 #Adapted from: https://www.youtube.com/watch?v=SctFnD_puQI
 
 #Imports
-import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.experimental import enable_halving_search_cv
@@ -60,7 +61,10 @@ X_train, X_test, y_train, y_test = train_test_split(testX, testY, test_size=0.1)
 ros = RandomUnderSampler(random_state = 42)
 X_res, y_res = ros.fit_resample(X_train, y_train)
 
+#Train the model (performing cross validation)
 grid.fit(X_res, y_res)
+#Print optimized parameters
 print(grid.best_params_)
 
+#Test the model on the test set
 print(grid.score(X_test, y_test))

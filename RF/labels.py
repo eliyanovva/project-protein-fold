@@ -1,3 +1,5 @@
+#This script generates dictionaries of logFC, p-value, and classification with protein/ligand pairs as keys
+
 import pandas as pd
 import Globals
 
@@ -18,7 +20,7 @@ for id in acc_ids:
            logFC_byID[id] = {}
            pVal_byID[id] = {}
 
-#returns vectors of the logFC and p-values
+#returns dictionaries of the logFC and p-values
 #key: protein id, value: dict (key: ligand file name, value: data label)
 def labels():
     fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
