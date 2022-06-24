@@ -1,11 +1,11 @@
 import pandas as pd
 import Globals
 
+#Generate lists of proteins and ligands
 acc_ids = Globals.initialize_protein_list()
 csvs = Globals.initialize_ligand_list()
 
-fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
-
+#Initialize variables
 num_proteins = len(acc_ids)
 num_ligands = len(csvs)
 logFC_byID = {}
@@ -21,23 +21,22 @@ for id in acc_ids:
 #returns vectors of the logFC and p-values
 #key: protein id, value: dict (key: ligand file name, value: data label)
 def labels():
+    fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
+    
+    #Read each csv file for the corresponding ligand
     for csv in csvs:
         file_name = '../olfr_de/'+csv
         curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
-        #curr_df = pd.read_csv(file_name, index_col='name')
 
         for id in acc_ids:
+            ensem_id = fas_df.loc[id]['ensembl_gene_id'] #The ENSEMBLE id corresponding to the accession number
+            logFC_byID[id][csv] = (curr_df.loc[ensem_id]['logFC']) #Find logFC for the ligand-protein pair
+            pVal_byID[id][csv] = (curr_df.loc[ensem_id]['PValue']) #Find p-value for the ligand-protein pair
 
-            ensem_id = fas_df.loc[id]['ensembl_gene_id']
-            logFC_byID[id][csv] = (curr_df.loc[ensem_id]['logFC'])
-            pVal_byID[id][csv] = (curr_df.loc[ensem_id]['PValue'])
-            """
-            name = fas_df.loc[id]['receptor']
-            logFC_byID[id][csv] = (curr_df.loc[name]['logFC'])
-            pVal_byID[id][csv] = (curr_df.loc[name]['PValue'])
-            """
+    #Return dictionaries with protein-ligand pair keys and logFC and p-value values
     return logFC_byID, pVal_byID
 
+#Create a classification dictionary with protein-ligand pair keys and bind (1) or not bind (0) as values
 def classified_logFC_pVal(logFC_byID, pVal_byID):
     classified = {}
     pos_counts = {} #key: protein id, value: number of positive protein interactions
@@ -48,10 +47,10 @@ def classified_logFC_pVal(logFC_byID, pVal_byID):
         neg = 0
         classified[id] = {}
         for csv in csvs:
-            if (logFC_byID[id][csv] >= .5) & (pVal_byID[id][csv] <= .05):
+            if (logFC_byID[id][csv] >= .5) & (pVal_byID[id][csv] <= .05): #The protein and ligand bind
                 classified[id][csv] = 1
-                pos += 1
-            else:
+                pos += 1 
+            else: #The protein and ligand do not bind
                 classified[id][csv] = 0
                 neg += 1
         pos_counts[id] = pos
