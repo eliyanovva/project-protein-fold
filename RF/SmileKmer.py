@@ -1,19 +1,20 @@
-import numpy as np
-import Globals
+#This script generates the ligand features for the final matrix
 
-#dict ligand_dict ~ key = name of odorant / ligand, value = SMILE formula
-ligand_dict = Globals.initialize_ligand_dict()
+import numpy as np
+
+#Input Variables:
+#ligand_dict ~ key: odorant / ligand name, value = SMILE formula
+#k: int, length of the ligand k-mers
+#num_proteins: int, number of proteins in the dataset
+#smile: string, SMILE formula for a given ligand
+#ligands: list of ligands
 
 #initializes the global variable ligmat to be a matrix of ligand features
-#dict ligand_dict ~ key = ligand name, value = SMILE formula
-#int k ~ determines the length of the k-mers
-#int num_proteins ~ the number of protein types used in the dataset
-#Output:ligmat ~ a matrix of ligand features 
 def importmatrix(ligand_dict, k, num_proteins):
     global ligmat
     ligmat = ligand_matrix(ligand_dict, k, num_proteins)
 
-#ligand_matrix: initializes a matrix of ligand features
+#initializes a matrix of ligand features
 def ligand_matrix(ligand_dict, k, num_proteins):
     ligand_counts = ligand_kmer_count(ligand_dict, k)
     freq_mat = []
@@ -35,7 +36,6 @@ def ligand_kmer_count(ligand_dict, k):
             lig_dict[kster] = freq_dict[kster]
         ligand_counts[lig] = lig_dict
     return ligand_counts
-
 
 #create a list of all kmers that can be found in the ligands
 def find_total_kmers(ligand_dict, k):
@@ -74,13 +74,24 @@ def smile_list(smile, k):
             
     return kmer_list
         
-#Input: str smile = a SMILE formula for a given ligand
-#Output: list letters = a list of substrings of smile; each substring is a partitioned 'letter' of smile that can be used to form k-mers
+#Paritions a SMILE formula into a list of 'letters'
+#Each 'letter' is a substring of the SMILE, and can contain more than 1 character
+#Each 'letter' will count as a single character in regards to making the kmers
+
+#An overview of SMILE notation can be found at: https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system
+# Alphabetic letters designate an atom
+# A set of parenthesis '()' designates a side chain
+# '=' designates a double bond
+# Lowercase letters such as 'c' designate atoms in an aromatic ring
+
+# By our current defintions, letters are:
+#   -atoms in the backbone
+#   -atoms within an aromatic ring
+#   -any bond that isn't a single bond
+#   -all atoms within a side chain
+
 def form_letters(smile):        
-        # Letters are: 
-        # ~ atoms in the backbone
-        # ~ any bond that isn't a single bond
-        # ~ all atoms within a side chain
+
     letters = []  # list that stores the sectioned off 'letters' of the str smile
     for i in range(0, len(smile)):
         letters.append(0)
