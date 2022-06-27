@@ -10,8 +10,9 @@ import os
 from os.path import exists
 import torch
 import gzip
+import statistics
 
-file = pd.read_csv('./pS6_DE_1p_2e3mp.csv')
+file = pd.read_csv('/home/users/bmp40/project-protein-fold/cnn_scripts/olfr_de/pS6_DE_1p_heptanal.csv')
 mapping = pickle.load(open('ens_to_uniprot.txt', 'rb'))
 
 x_data = []
@@ -37,11 +38,20 @@ for i in range(len(file.ensembl_gene_id)):
 #print(file.ensembl_gene_id)
 
 #classify into 0 or 1 for now
+"""
 y_min = min(y_data)
 y_max = max(y_data)
 for i in range(len(y_data)):
     y_data[i] = round((y_data[i] - y_min)/(y_max - y_min))
     print(y_data[i])
+"""
+
+y_med = statistics.median(y_data)
+for i in range(len(y_data)):
+    if (y_data[i] >= y_med):
+         y_data[i] = 1
+    else:
+        y_data[i] = 0
 
 prot_vox, prot_centers, prot_N = getVoxelDescriptors(x_data[0], boxsize=box, center=cent)
 print(prot_vox.shape[1])
@@ -57,7 +67,7 @@ for i in range(len(x_data)):
     print(prot_N[0], prot_N[1], prot_N[2])
 
 #x_data = np.asarray(x_data)
-#print(x_data)
+print(len(x_data))
 y_np = np.asarray(y_data)
 x_np = np.asarray(x_data)
 np.save('x_data', x_np)
