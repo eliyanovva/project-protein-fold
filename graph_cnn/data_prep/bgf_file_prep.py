@@ -29,23 +29,30 @@ class BGFDataFile:
 
 
     def getFeatureMatrix(self):
-        # current number of features - 5: atom type, coordinates, confidence score
+        # current number of features - 5: 
+        # atom type, max covalent bonds, number of lone pairs, atomic charge, alphafold confidence score
         log.info('Initiated creation of BGF Feature matrix for protein ' + self.protein_name)
         feature_matrix = np.zeros((self.atom_count, constants.PROTEIN_FEATURES_COUNT), dtype='float')
+        confidence_scores = self.__getConfidenceScores()
+        
         with open(self.bgf_filename, 'r') as bgf_file:
             bgf_file_features = bgf_file.readlines()[5: 5 + self.atom_count]
         for i in range(self.atom_count):
             atom_data = self.__getDataFromHetAtmLine(bgf_file_features[i])
-            for j in range(1, constants.PROTEIN_FEATURES_COUNT + 1):
+            for j in range(1, constants.PROTEIN_FEATURES_COUNT):
                 feature_matrix[i][j-1] = atom_data[j]
+        # TODO: split this funciton for better readability
+        for i in range(self.atom_count):
+            feature_matrix[i][4] = confidence_scores[i]
+
         log.info('Initiated saving of feature matrix')
         np.save(os.path.join('pdb_features_data/', self.protein_name + '_feat_mat'), feature_matrix)
         log.info('The features matrix has been saved!')
 
 
     def __setProteinName(self):
-        left_index = self.bgf_filename.rfind('/') + 1
-        right_index = self.bgf_filename.find('-model')
+        left_index = self.bgf_filename.rfind('/AF-') + 4
+        right_index = self.bgf_filename.find('-F1')
         self.protein_name = self.bgf_filename[left_index : right_index]
 
 
@@ -97,7 +104,26 @@ class BGFDataFile:
         return data_line
 
 
-m_class = BGFDataFile('/home/users/tep18/new_ppp/project-protein-fold/bgf_files/AF-Q0VAX9-F1-model_v2.bgf')
+    def __getConfidenceScores(self):
+        log.info('Initiated extracting of confidence scores from PDB file for ' + self.protein_name)
+        confidence_scores = np.zeros(self.atom_count, dtype='float')
+        with open(
+            os.path.join(
+                constants.PDB_FILES_PATH,
+                'AF-' + self.protein_name + '-F1-model_v2.pdb'
+            )
+        ) as pdb_file:
+            lines = pdb_file.readlines()
+            index = 0
+            for line in lines:
+                if line.startswith('ATOM'):
+                    line_list = [x for x in line.split() if x != '']
+                    confidence_scores[index] = float(line_list[-2])
+                    index += 1
+        log.info('Extraction of confidence scores from PDB completed!')
+        return confidence_scores
+
+m_class = BGFDataFile(os.path.join(constants.BGF_FILES_PATH, 'AF-Q0VAX9-F1-model_v2.bgf'))
 m_class.getFeatureMatrix()
 
 #a = np.load('/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/mol_adjacency_data/C11H22O_adj_mat.npy')
