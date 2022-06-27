@@ -11,19 +11,15 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader, random_split
 import re
 import pandas as pd
-from openbabel import openbabel
 from openbabel import pybel
 
 # I/O arrays for model
 x = []
 y = []
 
+# Change directory
 os.chdir('/home/users/jvs15/project-protein-fold')
 mapper = pd.read_csv('odorantsForDE.csv')
-
-# obConversion = openbabel.OBConversion()
-# obConversion.SetInAndOutFormats("smi", "mol2")
-# gen3d = openbabel.OBOp.FindType("gen3D")
 
 # Retrieve ligand names from olfr_de to generate mol files
 mol_names = []
