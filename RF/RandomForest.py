@@ -12,7 +12,7 @@ def train(features, labels):
     y = labels #logFC
 
     #split into training and test set
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3) # 70% training and 30% test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1) # 90% training and 10% test
 
     #Create a Gaussian Regression
     clf=RandomForestRegressor(n_estimators=100)
@@ -22,11 +22,9 @@ def train(features, labels):
 
     #Form predictions
     y_pred=clf.predict(X_test)
-    print(y_pred)
-    print(y_test)
 
     #Print accuracy of the model
-    print("Accuracy:",metrics.r2_score(y_test, y_pred))
+    #print("Accuracy:",metrics.r2_score(y_test, y_pred))
 
 
 CombineLigandsProteins.import_final()

@@ -8,16 +8,18 @@ class PDB_Datafile:
     def __init__(self, pdb_filename):
         log.info('Class initialized!')
         self.pdb_filename = pdb_filename
+        self.atom_count = 0
         self.protein_name = ''
 
 
     def getAdjacencyMatrix(self):
-    # the adjacency matrix is created with the size of the constant set up in constants.py
+    # the adjacency matrix is created with the size of the protein, and will later go through a
+    # convolution until it reaches a certain size
         log.info('Initiated creation of PDB Adjacency matrix for protein ' + self.protein_name)
-        adjacency_matrix = np.zeros((constants.ATOMS_COUNT, constants.ATOMS_COUNT))
         pdb_data = self.__getPDBFileAtomData()
-        for i in range(constants.ATOMS_COUNT):
-            for j in range(constants.ATOMS_COUNT):
+        adjacency_matrix = np.zeros((self.atom_count, self.atom_count))
+        for i in range(self.atom_count):
+            for j in range(self.atom_count):
                 adjacency_matrix[i][j] = self.__distanceBetweenTwoAtoms(
                     pdb_data[i][1:4], pdb_data[j][1:4]
                 )
@@ -25,6 +27,23 @@ class PDB_Datafile:
         np.save('pdb_adjacency_data/' + self.protein_name + '_adj_mat', adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
 
+    def getFeatureMatrix(self):
+        # current number of features - 5: atom type, coordinates, confidence score
+        log.info('Initiated creation of PDB Feature matrix for protein ' + self.protein_name)
+        feature_matrix = np.zeros((self.atom_count, 5))
+        pdb_features = self.__getFeaturesFromPDB()
+        for i in range(self.atom_count):
+            for j in range(5):
+                feature_matrix[i][j] = pdb_features[i][j]
+        log.info('Initiated saving of feature matrix')
+        np.save('pdb_features_data/' + self.protein_name + '_feat_mat', feature_matrix)
+        log.info('The features matrix has been saved!')
+
+    def __getFeaturesFromPDB(self):
+        pdb_data = self.__getPDBFileAtomData()
+        data_stripped_rows = np.delete(pdb_data, np.s_[self.atom_count:], 0)
+        data_stripped_cols = np.delete(data_stripped_rows, np.s_[self.atom_count:], 1)
+        return data_stripped_cols        
 
     def __setProteinName(self):
         left_index = self.pdb_filename.rfind('/') + 1
@@ -63,6 +82,7 @@ class PDB_Datafile:
                 # TODO: ugly fix for the strip here, fix it later
                 atom_type = line.strip()[-1]
                 if len(numerical_data) > 0:
+                    self.atom_count += 1
                     entry = np.array(
                         [
                             constants.ATOM_DICT[atom_type], # atom type (C, O, N, S)

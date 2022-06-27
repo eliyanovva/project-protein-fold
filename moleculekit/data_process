@@ -1,0 +1,37 @@
+from moleculekit.molecule import Molecule
+from moleculekit.tools.voxeldescriptors import getVoxelDescriptors, viewVoxelFeatures
+from moleculekit.tools.atomtyper import prepareProteinForAtomtyping
+from moleculekit.smallmol.smallmol import SmallMol
+from moleculekit.home import home
+import os
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+from torch.utils.data import Dataset, DataLoader, random_split
+import re
+import pandas as pd
+from openbabel import pybel
+
+# I/O arrays for model
+x = []
+y = []
+
+# Change directory
+os.chdir('/home/users/jvs15/project-protein-fold')
+mapper = pd.read_csv('odorantsForDE.csv')
+
+# Retrieve ligand names from olfr_de to generate mol files
+mol_names = []
+for filename in os.listdir('olfr_de'):
+    if filename[0:3] == 'pS6':
+        chem = filename.split('_')[-1]
+        chem = chem[0:len(chem)-4]
+        smile = mapper.iat[(mapper['Name on Sheet'] == chem).idxmax(), 4]
+        if isinstance(smile, str):
+            mol = pybel.readstring("smi", smile)
+            mol.make3D()
+            print(chem)
+            print(mol.write('sdf'))
+            with open(f'mol_data_files/{chem}.mol', 'w') as f:
+                f.write(mol.write('sdf'))

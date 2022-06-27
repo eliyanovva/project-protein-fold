@@ -1,4 +1,3 @@
-#!/bin/bash
 #Code informed by: https://machinelearningmastery.com/random-forest-ensemble-in-python/ 
 #and https://scikit-learn.org/stable/modules/grid_search.html#grid-search
 # and https://towardsdatascience.com/faster-hyperparameter-tuning-with-scikit-learn-71aa76d06f12 
@@ -28,8 +27,8 @@ def train(features, labels):
     print(model.get_params().keys())
 
     #Cross validate
-    FACTOR = 2
-    MAX_RESOURCE_DIVISOR = 4
+    FACTOR = 10
+    MAX_RESOURCE_DIVISOR = 10
     # Number of trees in random forest
     n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)]
     # Number of features to consider at every split
@@ -61,24 +60,12 @@ def train(features, labels):
                           verbose=2)
 
     n_samples = len(X_train)
-    halving_results_n_samples =\
-    HalvingGridSearchCV(resource='n_samples',
-                        min_resources=n_samples//\
-                        MAX_RESOURCE_DIVISOR,
-                        factor=FACTOR,
-                        **grid_search_params
-                        )\
-                        .fit(X_train, y_train)
-    
-
-    #model.fit(X_train, y_train)
-    #Form predictions
-    #y_pred=model.predict(X_test)
-    #print(y_pred)
-    #print(y_test)
-
-    #Print accuracy of the model
-    #print("Accuracy:",metrics.r2_score(y_test, y_pred))
+    halving_results_n_samples = HalvingGridSearchCV(resource='n_samples', 
+                                min_resources=n_samples//MAX_RESOURCE_DIVISOR,
+                                factor=FACTOR,
+                                **grid_search_params
+                                ).fit(X_train, y_train)
+    print(halving_results_n_samples.best_params_)
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X

@@ -13,7 +13,7 @@ df = pd.read_csv('/home/users/sml96/bin/project-protein-fold/olfr_de/uniprot_lig
 
 for i in range (0, 35476, 2):
     if str(df.loc[i][0]) not in protdict:
-        protdict[str(df.loc[i][0])] = {}    
+        protdict[str(df.loc[i][0])] = {}
     ligdict = protdict[str(df.loc[i][0])]
     ligdict[str(df.loc[i][1])] = str(df.loc[i+1][1])
     protdict[str(df.loc[i][0])] = ligdict
@@ -34,16 +34,16 @@ for i in range(0, 35477, 2):
     protdict[frozenset(reader.loc[i])] = reader.loc[i+1][1]
 """
 
-
 #Concatenate AA and 3Di sequences
 protein_matrix = np.concatenate((np.array(ReadingFasta.sequence_matrix), np.array(ReadingFasta.structure_matrix)) , axis = 1)
-
+def export():
+    global proteins
+    proteins = protein_matrix
 
 def expand(matrix, ligand_count):
     return np.repeat(matrix, repeats = ligand_count, axis = 0)
 
-cut_matrix = protein_matrix[0:29]
-expanded_matrix = expand(cut_matrix, 38)
+expanded_matrix = expand(protein_matrix, 38)
 
 #Check for proper expansion
 #print(len(protein_matrix))
