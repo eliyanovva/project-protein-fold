@@ -76,7 +76,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
             ret.append(kmer)
         """
 
-        if counts_by_id[kmer] >= 700:
+        if counts_by_id[kmer] >= 500:
             ret.append(kmer)
 
     return ret
