@@ -1,0 +1,3 @@
+Comparing files bgf1.txt and BGF2.TXT
+FC: no differences encountered
+
