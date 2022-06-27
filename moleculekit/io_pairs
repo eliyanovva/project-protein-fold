@@ -34,7 +34,7 @@ for filename in os.listdir('mol_data_files'):
 for filename in os.listdir('pdb_data_files'):
     if (filename[0:3] == 'AF-' and filename[len(filename)-4:len(filename)] == '.pdb'):
         prot = Molecule(filename)
-        prot = prepareProteinForAtomTyping(prot)
+        prot = prepareProteinForAtomtyping(prot)
         prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, voxelsize=0.5, buffer=1)
 
         nchannels = prot_vox.shape[1]
