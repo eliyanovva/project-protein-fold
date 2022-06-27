@@ -27,7 +27,7 @@ def train(features, labels):
     clf.fit(X_res,y_res)
 
     #Form predictions
-    y_pred=clf.predict(X_test)
+    y_pred=clf.predict_proba(X_test)
 
     #Print accuracy of the model
     print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
