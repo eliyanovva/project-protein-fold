@@ -1,0 +1,51 @@
+from moleculekit.molecule import Molecule
+from moleculekit.tools.voxeldescriptors import getVoxelDescriptors, viewVoxelFeatures
+from moleculekit.tools.atomtyper import prepareProteinForAtomtyping
+from moleculekit.smallmol.smallmol import SmallMol
+from moleculekit.home import home
+import os
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+from torch.utils.data import Dataset, DataLoader, random_split
+import re
+import pandas as pd
+
+x1 = []
+x2 = []
+y = []
+
+os.chdir('/home/users/jvs15/project-protein-fold')
+
+for filename in os.listdir('mol_data_files'):
+    # Following preprocessing step on Acellera page: 
+    # https://software.acellera.com/docs/latest/moleculekit/tutorials/voxelization_tutorial.html?highlight=voxelization
+
+    ligand = SmallMol(filename, force_reading=True)
+
+    lig_vox, lig_centers, lig_N = getVoxelDescriptors(ligand, voxelsize=0.5, buffer=1)
+
+    lig_vox_t = lig_vox.transpose().reshape([1, lig_vox.shape[1], lig_N[0], lig_N[1], lig_N[2]])
+    lig_vox_t = torch.tensor(lig_vox_t.astype(np.float32))
+
+    x1.append(lig_vox_t)
+
+for filename in os.listdir('pdb_data_files'):
+    if (filename[0:3] == 'AF-' and filename[len(filename)-4:len(filename)] == '.pdb'):
+        prot = Molecule(filename)
+        prot = prepareProteinForAtomTyping(prot)
+        prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, voxelsize=0.5, buffer=1)
+
+        nchannels = prot_vox.shape[1]
+
+        prot_vox_t = prot_vox.transpose().reshape([1, nchannels, prot_N[0], prot_N[1], prot_N[2]])
+        prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
+
+        x2.append(prot_vox_t)
+
+        
+
+
+
+
