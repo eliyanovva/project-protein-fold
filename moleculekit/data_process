@@ -21,9 +21,9 @@ y = []
 os.chdir('/home/users/jvs15/project-protein-fold')
 mapper = pd.read_csv('odorantsForDE.csv')
 
-obConversion = openbabel.OBConversion()
-obConversion.SetInAndOutFormats("smi", "mol2")
-gen3d = openbabel.OBOp.FindType("gen3D")
+# obConversion = openbabel.OBConversion()
+# obConversion.SetInAndOutFormats("smi", "mol2")
+# gen3d = openbabel.OBOp.FindType("gen3D")
 
 # Retrieve ligand names from olfr_de to generate mol files
 mol_names = []
@@ -33,11 +33,9 @@ for filename in os.listdir('olfr_de'):
         chem = chem[0:len(chem)-4]
         smile = mapper.iat[(mapper['Name on Sheet'] == chem).idxmax(), 4]
         if isinstance(smile, str):
-            mol = openbabel.OBMol()
-            obConversion.ReadString(mol, smile)
-            mol.AddHydrogens()
+            mol = pybel.readstring("smi", smile)
+            mol.make3D()
             print(chem)
-            gen3d.Do(mol, "--best")
-            outmol = obConversion.WriteString(mol)
+            print(mol.write('sdf'))
             with open(f'mol_data_files/{chem}.mol', 'w') as f:
-                f.write(outmol)
+                f.write(mol.write('sdf'))
