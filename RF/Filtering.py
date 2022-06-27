@@ -73,7 +73,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
         protein_half = len(acc_list) / 2
 
 
-        if (richness[kmer] <= .125) & (richness[kmer] >= 8):
+        if (richness[kmer] <= .125) | (richness[kmer] >= 8):
             ret.append(kmer)
         """
 

@@ -43,9 +43,6 @@ filter_feat2 = Filtering.richness_protein(features2, seqvar2, pos_counts, neg_co
 # Make the matrix
 Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, di_matrix)
 
-print(len(AA_mat))
-print(len(AA_mat[0]))
-
 #Concatenate AA and 3Di matrices
 intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
 #Expand the protein matrix to account for the ligands
