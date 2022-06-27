@@ -7,18 +7,18 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.experimental import enable_halving_search_cv
 from sklearn.model_selection import HalvingRandomSearchCV
-from imblearn.over_sampling import RandomOverSampler
+from imblearn.under_sampling import RandomUnderSampler
 from sklearn.model_selection import train_test_split
 import CombineLigandsProteins
 
 #Number of trees in the forest
-n_estimators = [int(x) for x in np.linspace(start = 10, stop = 1000, num = 100)]
+n_estimators = [int(x) for x in np.linspace(start = 100, stop = 600, num = 100)]
 #Features considered at each split
 max_features = ['log2', 'sqrt', None]
 #Number of levels in each tree
 max_depth = [None]
 #Samples required to split a node
-min_samples_split = [int(x) for x in np.linspace(start = 10, stop = 1000, num = 100)]
+min_samples_split = [int(x) for x in np.linspace(start = 100, stop = 700, num = 100)]
 #Minimum samples at each leaf
 min_samples_leaf = [int(x) for x in np.linspace(start = 1, stop = 100, num = 100)]
 #Method of selecting samples for each tree
@@ -58,7 +58,7 @@ testY = CombineLigandsProteins.Y
 X_train, X_test, y_train, y_test = train_test_split(testX, testY, test_size=0.1) # 90% training and 10% test
 
 #Oversample
-ros = RandomOverSampler(random_state = 42)
+ros = RandomUnderSampler(random_state = 42)
 X_res, y_res = ros.fit_resample(X_train, y_train)
 
 #Train the model (performing cross validation)
