@@ -19,18 +19,19 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
     neg_counts_by_kmer = {}             #key: kmer, value: num. of negative pairs that involve the kmer
     pos_prop_by_kmer = {}               #key: kmer, value: proportion of positive pairs that involve the kmer
     neg_prop_by_kmer = {}               #key: kmer, value: proportion of negative pairs that involve the kmer
-    counts_by_id = {}
+    #counts_by_id = {}
     for kmer in kmers:
         pos_counts_by_kmer[kmer] = 0
         neg_counts_by_kmer[kmer] = 0
-        counts_by_id[kmer] = 0
+        #counts_by_id[kmer] = 0
 
+    """
     for kmer in kmers:
         for seq in seqvar:
             dict = seq.dictionary
             if kmer in dict:
                 counts_by_id[kmer] += dict[kmer]
-
+    """
     total_pos = 0                       #total num. of kmers involved in positive pairs
     total_neg = 0                       #total num. of kmers involved in negative pairs
 
@@ -71,12 +72,12 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
         total_kmer_freq = pos_counts_by_kmer[kmer] + neg_counts_by_kmer[kmer]
         protein_half = len(acc_list) / 2
 
-        """
-        if (richness[kmer] >= .9) & (richness[kmer] <= 1.1) & (counts_by_id[kmer] >= 40):
+
+        if (richness[kmer] <= .125) & (richness[kmer] >= 8):
             ret.append(kmer)
         """
 
         if counts_by_id[kmer] >= 500:
             ret.append(kmer)
-
+        """
     return ret
