@@ -46,18 +46,14 @@ N, P, Y_n, Y_p = train_test_split(X, Y, test_size=.1)
 def seperate_sets(N, Y):
     pos_set = []
     neg_set = []
-    for j in range(5):
-        print(j)
-        print(N[j])
-        print(list(N[j]))
-        print(j)
-        print()
-    for i in range(len(Y)):
 
+    for i in range(len(Y)):
         if Y[i] == 0:           #indicates a negative label
-            neg_set.append(list(N[i]))
+            #neg_set.append(list(N[i]))
+            neg_set.append(i)
         else:
-            pos_set.append(list(N[i]))
+            #pos_set.append(list(N[i]))
+            pos_set.append(i)
     return pos_set, neg_set
 
 #partition the negative observations into M sets
@@ -65,6 +61,9 @@ def seperate_sets(N, Y):
 def create_partitions(pos_set, neg_set, M):
     partitions = []
     part_len = len(pos_set)
+    print(len(pos_set))
+    print(len(neg_set))
+    print(M)
     overhang = part_len * M - len(neg_set)
     print(overhang)
     duplicate = []
