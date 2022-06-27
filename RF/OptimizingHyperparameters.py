@@ -6,19 +6,19 @@
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.experimental import enable_halving_search_cv
-from sklearn.model_selection import HalvingRandomSearchCV
+from sklearn.model_selection import HalvingGridSearchCV
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.model_selection import train_test_split
 import CombineLigandsProteins
 
 #Number of trees in the forest
-n_estimators = [int(x) for x in np.linspace(start = 100, stop = 600, num = 100)]
+n_estimators = [int(x) for x in np.linspace(start = 10, stop = 1000, num = 100)]
 #Features considered at each split
 max_features = ['log2', 'sqrt', None]
 #Number of levels in each tree
 max_depth = [None]
 #Samples required to split a node
-min_samples_split = [int(x) for x in np.linspace(start = 100, stop = 700, num = 100)]
+min_samples_split = [int(x) for x in np.linspace(start = 10, stop = 700, num = 100)]
 #Minimum samples at each leaf
 min_samples_leaf = [int(x) for x in np.linspace(start = 1, stop = 100, num = 100)]
 #Method of selecting samples for each tree
@@ -47,7 +47,7 @@ param_grid = {'n_estimators': n_estimators,
 #Define model
 model = RandomForestClassifier()
 #Define random grid
-grid = HalvingRandomSearchCV(estimator = model, param_distributions = param_grid, verbose = 2, n_jobs = -1)
+grid = HalvingGridSearchCV(estimator = model, param_grid = param_grid, verbose = 2, n_jobs = -1)
 
 #Import data
 CombineLigandsProteins.import_final()
