@@ -38,17 +38,26 @@ CombineLigandsProteins.import_final()
 X = CombineLigandsProteins.final_matrix
 Y = CombineLigandsProteins.logFCmat
 
+print('Started the SESVM')
+
 N, P, Y_n, Y_p = train_test_split(X, Y, test_size=.1)
 
 # separate a test set into positive and negative observations
 def seperate_sets(N, Y):
     pos_set = []
     neg_set = []
+    for j in range(5):
+        print(j)
+        print(N[j])
+        print(list(N[j]))
+        print(j)
+        print()
     for i in range(len(Y)):
+
         if Y[i] == 0:           #indicates a negative label
-            neg_set.append(N[i])
+            neg_set.append(list(N[i]))
         else:
-            pos_set.append(N[i])
+            pos_set.append(list(N[i]))
     return pos_set, neg_set
 
 #partition the negative observations into M sets
@@ -57,26 +66,37 @@ def create_partitions(pos_set, neg_set, M):
     partitions = []
     part_len = len(pos_set)
     overhang = part_len * M - len(neg_set)
+    print(overhang)
     duplicate = []
     for item in neg_set:
         duplicate.append(item)
-
+    print('made duplicate')
     for i in range(int(overhang)):
         dup_row = random.choice(duplicate)
         neg_set.append(dup_row)
         duplicate.remove(dup_row)
-
+    print('completed the overhang')
+    print(str(M))
+    print(str(part_len))
+    k = 0
     for i in range(int(M)):
         n_set = []
         for j in range(part_len):
             row = random.choice(neg_set)
             n_set.append(row)
             neg_set.remove(row)
+            k += 1
+            if k % 10 == 0:
+                print('chose row ' + str(k))
         partitions.append(n_set)
+        print('made a partition')
     return partitions
 
 def SESVM(N, Y, T, P_X, P_Y):
     pos_set, neg_set = seperate_sets(N, Y)
+
+    print('seperated the sets')
+
     M = np.ceil(float(len(neg_set)) / float(len(pos_set)))
     predictions = []
 
@@ -84,8 +104,9 @@ def SESVM(N, Y, T, P_X, P_Y):
         neg_copy = []
         for item in neg_set:
             neg_copy.append(item)
-
+        print('made neg copy')
         parts = create_partitions(pos_set, neg_copy, M)
+        print('made the partitions')
         labels = np.append(np.repeat(1, len(pos_set)), np.repeat(0, len(pos_set)))
 
         all_features = []
@@ -141,7 +162,7 @@ def MV(predictions):
             mv_prediction.append(1)
     return mv_prediction
 
-mv_prediction = MV(SESVM(N, Y_n, 9, P, Y_p))
+mv_prediction = MV(SESVM(N, Y_n, 3, P, Y_p))
 print("Accuracy: " + str(accuracy_score(Y_p, mv_prediction)))
 
 def MV_weighted(accuracies):

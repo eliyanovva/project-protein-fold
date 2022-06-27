@@ -18,16 +18,17 @@ class Seq:
 
 #function to extract kmers and kmer-frequency from protein sequences
 def featurize(seq,k,feat):
-     dict = {}
-     for i in range(0, len(seq) - k + 1):
-          kmer = ""
-          for j in range(k):
-               kmer += seq[i + j]
-          if kmer not in dict:
-               dict[kmer] = 0
-               feat.add(kmer)
-          dict[kmer] += 1
-     return dict
+    dict = {}
+    for i in range(0, len(seq) - k + 1):
+        kmer = ""
+        for j in range(k):
+            kmer += seq[i + j]
+
+        if kmer not in dict:
+            dict[kmer] = 0
+            feat.add(kmer)
+        dict[kmer] += 1
+    return dict
 
 #Return: List of sequence objects representing each protein; List of k-mers found in the protein
 #fasta = file to read
@@ -41,13 +42,13 @@ def make_seqvar(fasta, seqvar, feat):
         if line[0] == '>':
             name = line.replace('\n','')
             name = name.replace('>', '')
-            seqvar.append(Seq(name, '', featurize('',7,feat)))
+            seqvar.append(Seq(name, '', featurize('',5,feat)))
             i += 1
         #Update sequence objects to store sequences and frequency dictionaries
         else:
             sequence = line.replace('\n','')
             seqvar[i-1].sequence = seqvar[i-1].sequence + sequence
-            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,7,feat)
+            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,5,feat)
         j += 1
 
     return seqvar, feat

@@ -32,6 +32,7 @@ filter_feat = Filtering.richness_protein(features1, seqvar1, pos_counts, neg_cou
 # Make the matrix
 AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, categorized_matrix)
 
+
 #Creating output for 3Di sequences
 # Read fasta file
 fasta2 = open("../3DiSequences/fullset_ss.fasta")
@@ -41,6 +42,9 @@ seqvar2, features2 = ReadingFasta.make_seqvar(fasta2, di_seqs, di_features)
 filter_feat2 = Filtering.richness_protein(features2, seqvar2, pos_counts, neg_counts)
 # Make the matrix
 Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, di_matrix)
+
+print(len(AA_mat))
+print(len(AA_mat[0]))
 
 #Concatenate AA and 3Di matrices
 intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
