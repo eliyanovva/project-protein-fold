@@ -12,9 +12,8 @@ class GraphCNN:
     
     
     def trainTestSplit(self):
-        ### TODO: Remove entries in the comb_file_lines for which we don't have the protein or the ligand!!!
         with open('uniprot_ligand_logfc_pvalue.csv', 'r') as comb_file:
-            comb_file_lines = comb_file.readlines()
+            comb_file_lines = self.__getValidEntries(comb_file.readlines())
             x, y = [], []
         for row in comb_file_lines:
             row = row[:-1].split(',')
@@ -28,6 +27,33 @@ class GraphCNN:
 
         X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
         return X_train, X_test, y_train, y_test
+
+
+    def __getValidEntries(self, comb_file_lines):
+        # ensures that we have all necessary mol and pdb files for the training and testing data.
+        all_protein_files = os.listdir(constants.PROTEIN_ADJACENCY_PATH)
+        all_ligand_files = os.listdir(constants.MOL_ADJACENCY_PATH)
+
+        for line in list(comb_file_lines):
+            line_list = line.split(',')
+            
+            protein_match = False
+            ligand_match = False
+            for protein in all_protein_files:
+                if line_list[0] in protein:
+                    protein_match = True
+                    break
+            
+            for ligand in all_ligand_files:
+                #print(line_list[1][:-1])
+                comp_name_index = line_list[1].rfind('_')
+                
+                if line_list[1][comp_name_index + 1 :] in ligand:
+                    ligand_match = True
+                    break
+            if not (protein_match and ligand_match):
+                comb_file_lines.remove(line)
+        return comb_file_lines
 
 
     def __fetchProteinData(self, protein_name):
@@ -47,7 +73,6 @@ class GraphCNN:
         res = None
         print(ligand_name)
         for name in files_list:
-            #print(name)
             if ligand_name in name:
                 print('TUK SUM!!!!!!!')
                 res = name
