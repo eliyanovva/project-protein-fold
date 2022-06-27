@@ -47,10 +47,8 @@ param_grid = {'n_estimators': n_estimators,
 
 #Define model
 model = RandomForestClassifier()
-#Define scoring method
-fscorer = make_scorer(fbeta_score, beta = 1)
 #Define random grid
-grid = HalvingRandomSearchCV(estimator = model, param_distributions = param_grid, verbose = 2, n_jobs = -1, scoring = fscorer)
+grid = HalvingRandomSearchCV(estimator = model, param_distributions = param_grid, verbose = 2, n_jobs = -1, scoring = 'recall')
 
 #Import data
 CombineLigandsProteins.import_final()
@@ -60,7 +58,7 @@ testY = CombineLigandsProteins.Y
 #split into training and test set
 X_train, X_test, y_train, y_test = train_test_split(testX, testY, test_size=0.1) # 90% training and 10% test
 
-#Oversample
+#Undersample
 ros = RandomUnderSampler(random_state = 42)
 X_res, y_res = ros.fit_resample(X_train, y_train)
 

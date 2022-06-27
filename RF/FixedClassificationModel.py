@@ -16,14 +16,12 @@ def train(features, labels):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1) # 90% training and 10% test
 
     #Oversampling was necessary, because most ligand/receptor pairs do not bind in our dataset
-    ros = RandomOverSampler(random_state = 42)
+    ros = RandomOverSampler()
 
     X_res, y_res = ros.fit_resample(X_train, y_train)
 
     #Create a Gaussian Regression
-    clf=RandomForestClassifier(n_estimators=125, oob_score=False, min_samples_split=693, 
-                                min_samples_leaf=66, min_impurity_decrease=0, max_samples=None,
-                                max_leaf_nodes=None, max_features=None, max_depth=None, bootstrap=True)
+    clf=RandomForestClassifier(n_estimators=100)
 
     #Train the model
     clf.fit(X_res,y_res)
