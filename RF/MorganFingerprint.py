@@ -1,12 +1,29 @@
-#This script creates the protein matrix and ligand matrix to train and test the Random Forest Algorithm
-
-#Imports
+from rdkit import Chem
+from rdkit.Chem import AllChem
+from rdkit.Chem import DataStructs
+import numpy as np
+import Globals
 import SmileKmer
 import numpy as np
 import ReadingFasta
 import labels
 import Globals
 import Filtering
+import FixedClassificationModel
+
+def Smiles2Finger(smiles):
+    m1 = Chem.MolFromSmiles(smiles)
+    fp1 = AllChem.GetHashedMorganFingerprint(m1, 2, nBits=1024)
+    array = np.zeros((0,), dtype=np.int8)
+    DataStructs.ConvertToNumpyArray(fp1, array)
+    return array
+
+def ligandmatrix(smiledict, num_proteins):
+    fingerprints = []
+    for smile in list(smiledict.keys()):
+        for i in range(num_proteins):
+            fingerprints.append(Smiles2Finger(smiledict[smile])) 
+    return np.array(fingerprints)
 
 #Create classification dictionary
 logFC, pVal = labels.labels()
@@ -51,8 +68,8 @@ proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 #Import dictionary matching ligands to SMILES String
 ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
-SmileKmer.importmatrix(ligand_dict, 5, 1084)
-ligand_matrix = SmileKmer.ligmat
+ligand_matrix = ligandmatrix(ligand_dict, 1084)
+
 
 #Concatenate protein and ligand matrices
 final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)
@@ -64,40 +81,4 @@ for protein in proteins:
     for ligand in list(ligand_dict.keys()):
         logFCmat.append(float(classified[str(protein.name)][ligand]))
 
-#Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
-def uniquematrix(matrix):
-    rowCount = len(matrix)
-    if rowCount == 0:
-        return
-    columnCount = len(matrix[0])
-    if columnCount == 0:
-        return
-    unique = {}
-    ret = 0
-    for row in matrix:
-        rowkey =  " ".join(["%s"] * columnCount) % tuple(row)
-        if rowkey not in unique:
-            unique[rowkey] = True
-        else:
-            ret += 1
-    return ret
-
-#The following code checks whether all entries are unique
-#print(uniquematrix(final_matrix))
-
-def import_final():
-    #For No3Di.py
-    global AA
-    AA = AA_mat
-    #For OneLigandRF.py and OneProteinRF.py
-    global proteins
-    proteins = seqvar1
-    global dictionary
-    dictionary = classified
-    global protmat
-    protmat = intermed_matrix
-    #For TrainandTest.py
-    global X
-    X = final_matrix
-    global Y
-    Y = logFCmat
+FixedClassificationModel.train(final_matrix, logFCmat)

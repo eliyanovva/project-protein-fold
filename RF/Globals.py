@@ -15,6 +15,7 @@ def initialize_ligand_dict():
     return ligand_dict
 
 #List of filenames for ligands that we have matched SMILES strings to
+#Cannot distinguish chirality
 def initialize_ligand_list():
     ligands = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_ethylTiglate.csv',
                'pS6_DE_1p_bIonone.csv', 'pS6_DE_1p_butyricAcid.csv',
@@ -31,7 +32,10 @@ def initialize_ligand_list():
                'pS6_DE_1p_acetophenone.csv', 'pS6_DE_1p_transCinnamaldehyde.csv', 'pS6_DE_1p_linalool.csv',
                'pS6_DE_1p_2hexanone.csv', 'pS6_DE_1p_isopropylTiglate.csv',
                'pS6_DE_1p_aPinene.csv', 'pS6_DE_1p_diacetyl.csv', 'pS6_DE_1p_geranoil.csv',
-               'pS6_DE_1p_heptanoicAcid.csv']
+               'pS6_DE_1p_heptanoicAcid.csv', 'pS6_DE_1p_2e3mp.csv', 'pS6_DE_1p_2hac.csv', 'pS6_DE_1p_2m2p.csv', 
+               'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_2phenylAlcohol.csv', 'pS6_DE_1p_4methylAC.csv', 'pS6_DE_1p_25dmp.csv',
+               'pS6_DE_1p_nCarvone.csv', 'pS6_DE_1p_nDihydrocarveol.csv', 'pS6_DE_1p_nMenthol.csv', 'pS6_DE_1p_ntmt.csv', 
+               'pS6_DE_1p_pCarvone.csv', 'pS6_DE_1p_pDihydrocarveol.csv', 'pS6_DE_1p_pLimonene.csv', 'pS6_DE_1p_pMenthol.csv', 'pS6_DE_1p_sbt.csv', 'pS6_DE_1p_tmt.csv']
     return ligands
 
 #Function to create list of protein accessions

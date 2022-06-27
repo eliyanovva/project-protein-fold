@@ -16,7 +16,7 @@ def train(features, labels):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1) # 90% training and 10% test
 
     #Oversampling was necessary, because most ligand/receptor pairs do not bind in our dataset
-    ros = RandomOverSampler(random_state = 42)
+    ros = RandomOverSampler()
 
     X_res, y_res = ros.fit_resample(X_train, y_train)
 
@@ -31,4 +31,5 @@ def train(features, labels):
 
     #Print accuracy of the model
     print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
+    print("Accuracy:",metrics.f1_score(y_test, y_pred))
 

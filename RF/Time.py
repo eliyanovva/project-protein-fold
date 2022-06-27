@@ -30,5 +30,12 @@ def train(features, labels):
     #Form predictions
     y_pred=clf.predict(X_test)
 
-t = timeit.timeit(lambda: train(testX, testY), number = 10)
+t = timeit.timeit(lambda: train(testX, testY), number = 10, setup = """import timeit
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from imblearn.over_sampling import RandomOverSampler
+import CombineLigandsProteins
+CombineLigandsProteins.import_final()
+testX = CombineLigandsProteins.X
+testY = CombineLigandsProteins.Y""")
 print(t)
