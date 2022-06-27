@@ -6,6 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 from sklearn.metrics import precision_recall_curve
 from numpy import argmax
+from imblearn.over_sampling import RandomOverSampler
 
 def train(features, labels):
     #define features and labels
@@ -14,12 +15,17 @@ def train(features, labels):
 
     #split into training and test set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1) # 90% training and 10% test
+    print(y_test)
 
+    #Oversampling was necessary, because most ligand/receptor pairs do not bind in our dataset
+    ros = RandomOverSampler()
+
+    X_res, y_res = ros.fit_resample(X_train, y_train)
     #Create a Gaussian Regression
     clf=RandomForestClassifier(n_estimators=100)
 
     #Train the model
-    clf.fit(X_train,y_train)
+    clf.fit(X_res,y_res)
 
     #Form predictions
     y_pred=clf.predict_proba(X_test)
@@ -32,5 +38,3 @@ def train(features, labels):
 
     ix = argmax(fscore)
     print('Best Threshold=%f, F-Score=%.3f' % (thresholds[ix], fscore[ix]))
-
-
