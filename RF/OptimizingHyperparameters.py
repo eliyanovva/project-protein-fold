@@ -6,7 +6,8 @@
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.experimental import enable_halving_search_cv
-from sklearn.model_selection import HalvingGridSearchCV
+from sklearn.metrics import fbeta_score, make_scorer
+from sklearn.model_selection import HalvingRandomSearchCV
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.model_selection import train_test_split
 import CombineLigandsProteins
@@ -46,8 +47,10 @@ param_grid = {'n_estimators': n_estimators,
 
 #Define model
 model = RandomForestClassifier()
+#Define scoring method
+fscorer = make_scorer(fbeta_score, beta = 1)
 #Define random grid
-grid = HalvingGridSearchCV(estimator = model, param_grid = param_grid, verbose = 2, n_jobs = -1)
+grid = HalvingRandomSearchCV(estimator = model, param_distributions = param_grid, verbose = 2, n_jobs = -1, scoring = fscorer)
 
 #Import data
 CombineLigandsProteins.import_final()
