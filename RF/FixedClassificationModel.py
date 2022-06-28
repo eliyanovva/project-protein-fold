@@ -13,7 +13,7 @@ def train(features, labels):
     y = labels #Binds or not
 
     #split into training and test set
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1) # 90% training and 10% test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,test_size=0.1) # 90% training and 10% test
 
     #Oversampling was necessary, because most ligand/receptor pairs do not bind in our dataset
     ros = ADASYN()

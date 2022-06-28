@@ -1,16 +1,17 @@
 #This script performs cross validation to optimize the hyperparameters of the Random Forest model. 
 
-#Adapted from: https://www.youtube.com/watch?v=SctFnD_puQI
+#Adapted from: https://www.youtube.com/watch?v=SctFnD_puQI and https://datascience.stackexchange.com/questions/44327/oversampling-before-cross-validation-is-it-a-problem
 
 #Imports
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.experimental import enable_halving_search_cv
-from sklearn.metrics import fbeta_score, make_scorer
-from sklearn.model_selection import HalvingRandomSearchCV
-from imblearn.under_sampling import RandomUnderSampler
+from sklearn.model_selection import HalvingRandomSearchCV, cross_val_score
+from sklearn.model_selection import StratifiedKFold
+from imblearn.over_sampling import RandomOverSampler
 from sklearn.model_selection import train_test_split
 import CombineLigandsProteins
+from imblearn.pipeline import Pipeline, make_pipeline
 
 #Number of trees in the forest
 n_estimators = [int(x) for x in np.linspace(start = 10, stop = 1000, num = 100)]
@@ -45,25 +46,30 @@ param_grid = {'n_estimators': n_estimators,
                 'max_samples' : max_samples
                 }
 
-#Define model
-model = RandomForestClassifier()
-#Define random grid
-grid = HalvingRandomSearchCV(estimator = model, param_distributions = param_grid, verbose = 2, n_jobs = -1, scoring = 'recall')
-
 #Import data
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 
 #split into training and test set
-X_train, X_test, y_train, y_test = train_test_split(testX, testY, test_size=0.1) # 90% training and 10% test
+X_train, X_test, y_train, y_test = train_test_split(testX, testY, stratify=testY, test_size=0.1) # 90% training and 10% test
 
-#Undersample
-ros = RandomUnderSampler(random_state = 42)
-X_res, y_res = ros.fit_resample(X_train, y_train)
+#Define model
+model = RandomForestClassifier()
+#Define k-folds
+kf = StratifiedKFold()
+#Pipeline
+imba_pipeline = make_pipeline(RandomOverSampler(), 
+                              RandomForestClassifier(n_estimators=100))
+cross_val_score(imba_pipeline, X_train, y_train, scoring='roc_auc', cv=kf)
+new_params = {'randomforestclassifier__' + key: param_grid[key] for key in param_grid}
+
+#Define random grid
+grid = HalvingRandomSearchCV(imba_pipeline, param_distributions = new_params, verbose = 2, n_jobs = -1, scoring = 'roc_auc', 
+                            cv=kf, return_train_score=True)
 
 #Train the model (performing cross validation)
-grid.fit(X_res, y_res)
+grid.fit(X_train, y_train)
 #Print optimized parameters
 print(grid.best_params_)
 

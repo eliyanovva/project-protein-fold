@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 from sklearn.metrics import precision_recall_curve
-from numpy import argmax
+from numpy import nanargmax
 from imblearn.over_sampling import RandomOverSampler
 
 def train(features, labels):
@@ -36,5 +36,5 @@ def train(features, labels):
 
     fscore = (2 * precision * recall) / (precision + recall)
 
-    ix = argmax(fscore)
+    ix = nanargmax(fscore)
     print('Best Threshold=%f, F-Score=%.3f' % (thresholds[ix], fscore[ix]))
