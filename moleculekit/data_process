@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 from openbabel import pybel
+import numpy as np
 
 # I/O arrays for model
 x = []
@@ -12,16 +13,30 @@ os.chdir('/home/users/jvs15/project-protein-fold')
 mapper = pd.read_csv('odorantsForDE.csv')
 
 # Retrieve ligand names from olfr_de to generate mol files
-mol_names = []
-for filename in os.listdir('olfr_de'):
-    if filename[0:3] == 'pS6':
-        chem = filename.split('_')[-1]
-        chem = chem[0:len(chem)-4]
-        smile = mapper.iat[(mapper['Name on Sheet'] == chem).idxmax(), 4]
-        if isinstance(smile, str):
-            mol = pybel.readstring("smi", smile)
-            mol.make3D()
-            print(chem)
-            print(mol.write('sdf'))
-            with open(f'mol_data_files/{chem}.mol', 'w') as f:
-                f.write(mol.write('sdf'))
+# mol_names = []
+# for filename in os.listdir('olfr_de'):
+#     if filename[0:3] == 'pS6':
+#         chem = filename.split('_')[-1]
+#         chem = chem[0:len(chem)-4]
+#         smile = mapper.iat[(mapper['Name on Sheet'] == chem).idxmax(), 4]
+#         if isinstance(smile, str):
+#             mol = pybel.readstring("smi", smile)
+#             mol.make3D()
+#             print(chem)
+#             print(mol.write('sdf'))
+#             with open(f'mol_data_files/{chem}.mol', 'w') as f:
+#                 f.write(mol.write('sdf'))
+
+
+# Shit I made a list of dictionaries instead of one big dictionary
+os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
+# Map uniprot key names to Gene Names
+protein_dict = np.load('protein_data.npy', allow_pickle=True)
+print(protein_dict)
+# d = {}
+# for i in range(len(protein_dict)):
+#     for j in protein_dict[i].keys():
+#         d[j] = protein_dict[i][j]
+# dnp = np.asarray(d)
+# np.save('protein_data.npy', dnp)
+

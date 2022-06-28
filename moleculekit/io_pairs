@@ -16,8 +16,8 @@ import pandas as pd
 # Does all preprocessing for inputs--just need to be converted 
 # into tensors with desired settings when imported
 
-x1 = []
-x2 = []
+x1 = {}
+x2 = {}
 y = []
 
 os.chdir('/home/users/jvs15/project-protein-fold')
@@ -28,7 +28,7 @@ for filename in os.listdir('mol_data_files'):
 
     chem_name = filename[0:len(filename)-4]
     ligand = SmallMol(f'mol_data_files/{filename}', force_reading=True)
-    x1.append({chem_name : ligand})
+    x1[chem_name] = ligand
 
 os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
 x1np = np.asarray(x1)
@@ -45,7 +45,7 @@ for filename in os.listdir('pdb_data_files'):
         prot = Molecule(f'pdb_data_files/{filename}')
         prot.filter("protein or water or element {}".format(" ".join(metal_atypes)))
         prot = prepareProteinForAtomtyping(prot)
-        x2.append({uniprot : prot})
+        x2
 
 os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
 x2np = np.asarray(x2)
