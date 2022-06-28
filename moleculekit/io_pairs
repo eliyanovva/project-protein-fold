@@ -20,21 +20,21 @@ x1 = []
 x2 = []
 y = []
 
-# os.chdir('/home/users/jvs15/project-protein-fold')
+os.chdir('/home/users/jvs15/project-protein-fold')
 
-# for filename in os.listdir('mol_data_files'):
-#     # Following preprocessing step on Acellera page: 
-#     # https://software.acellera.com/docs/latest/moleculekit/tutorials/voxelization_tutorial.html?highlight=voxelization
+for filename in os.listdir('mol_data_files'):
+    # Following preprocessing step on Acellera page: 
+    # https://software.acellera.com/docs/latest/moleculekit/tutorials/voxelization_tutorial.html?highlight=voxelization
 
-#     chem_name = filename[0:len(filename)-4]
-#     ligand = SmallMol(f'mol_data_files/{filename}', force_reading=True)
-#     x1.append({chem_name : ligand})
+    chem_name = filename[0:len(filename)-4]
+    ligand = SmallMol(f'mol_data_files/{filename}', force_reading=True)
+    x1.append({chem_name : ligand})
 
-# os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
-# x1np = np.asarray(x1)
-# np.save('ligand_data.npy', x1np)
+os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
+x1np = np.asarray(x1)
+np.save('ligand_data.npy', x1np)
 
-# print('Wrote ligand data\n\n\n\n\n')
+print('Wrote ligand data\n\n\n\n\n')
 
 os.chdir('/home/users/jvs15/project-protein-fold')
 
