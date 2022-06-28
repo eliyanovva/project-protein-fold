@@ -18,12 +18,36 @@ testY = CombineLigandsProteins.Y
 #split into training and test set
 X_train, X_test, y_train, y_test = train_test_split(testX, testY, stratify=testY, test_size=0.1) # 90% training and 10% test
 
-#Cluster the data 
-kmeans_kwargs = {"verbose" : "1"} #Print SSE
 
+#Faster k-means (from: https://towardsdatascience.com/k-means-8x-faster-27x-lower-error-than-scikit-learns-in-25-lines-eaedc7a3a0c8)
+import faiss
+import numpy as np
+
+class FaissKMeans:
+    def __init__(self, n_clusters, n_init=10, max_iter=300):
+        self.n_clusters = n_clusters
+        self.n_init = n_init
+        self.max_iter = max_iter
+        self.kmeans = None
+        self.cluster_centers_ = None
+        self.inertia_ = None
+
+    def fit(self, X):
+        self.kmeans = faiss.Kmeans(d=X.shape[1],
+                                   k=self.n_clusters,
+                                   niter=self.max_iter,
+                                   nredo=self.n_init)
+        self.kmeans.train(X.astype(np.float32))
+        self.cluster_centers_ = self.kmeans.centroids
+        self.inertia_ = self.kmeans.obj[-1]
+
+    def predict(self, X):
+        return self.kmeans.index.search(X.astype(np.float32), 1)[1]
+
+#Cluster the data 
 sse = [] #list holding SSE values
 for k in range(1,40): #Test different number of clusters
-    kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
+    kmeans = FaissKMeans(n_clusters=k)
     kmeans.fit(X_train)
     sse.append(kmeans.inertia_)
 
