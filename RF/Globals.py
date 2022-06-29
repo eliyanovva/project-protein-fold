@@ -41,7 +41,7 @@ def initialize_ligand_list():
 #Function to create list of protein accessions
 def initialize_protein_list():
     acc_ids = []
-    fr = open("../AminoAcidSequences/allsequences.fasta", "r")
+    fr = open("../data_files/AminoAcidSequences/allsequences.fasta", "r")
     lines = fr.readlines()
     for line in lines:
         if line[0] == ">":

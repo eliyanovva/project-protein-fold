@@ -46,11 +46,14 @@ class FaissKMeans:
 
 #Cluster the data 
 sse = [] #list holding SSE values
-for k in range(1,40): #Test different number of clusters
+silhouette_coefficients = []
+for k in range(2,41): #Test different number of clusters
     kmeans = FaissKMeans(n_clusters=k)
     kmeans.fit(X_train)
     sse.append(kmeans.inertia_)
+    score = silhouette_score(X_train, kmeans.labels_)
+    silhouette_coefficients.append(score)
 
 #See how k decreases sse
-figure = plt.plot(range(1,40), sse)
+figure = plt.plot(range(2,41), sse)
 plt.savefig("ktest.png")

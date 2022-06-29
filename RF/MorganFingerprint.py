@@ -41,7 +41,7 @@ di_matrix = []
 
 #Creating output for categorized amino acids
 #Read fasta file
-fasta1 = open("../AminoAcidSequences/fully_categorized.fasta")
+fasta1 = open("../data_files/AminoAcidSequences/fully_categorized.fasta")
 #Create kmer frequency dictionary
 seqvar1, features1 = ReadingFasta.make_seqvar(fasta1, categorized_seqs, categorized_features)
 #Remove insignificant kmers
@@ -51,7 +51,7 @@ AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, categorized_matrix)
 
 #Creating output for 3Di sequences
 # Read fasta file
-fasta2 = open("../3DiSequences/fullset_ss.fasta")
+fasta2 = open("../data_files/3DiSequences/fullset_ss.fasta")
 #Create kmer frequency dictionary
 seqvar2, features2 = ReadingFasta.make_seqvar(fasta2, di_seqs, di_features)
 #Remove insignificant kmers
