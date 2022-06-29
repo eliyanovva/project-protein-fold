@@ -7,6 +7,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 from imblearn.over_sampling import ADASYN
+import numpy as np
+import pandas as pd
+import matplotlib as plt
 
 def train(features, labels):
     #define features and labels
@@ -35,4 +38,20 @@ def train(features, labels):
     #Print accuracy of the model
     print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
     print("Accuracy:",metrics.auc(recall,precision))
+
+    #Finding most important features
+    feature_names = [f"feature {i}" for i in range(X_test.shape[1])] #TODO: Replace this with actual kmer names
+    importances = clf.feature_importances_
+
+    #Plotting the features
+    std = np.std([tree.feature_importances_ for tree in clf.estimators_], axis=0)
+    feature_graph = pd.Series(importances, index=feature_names)
+    fig, ax = plt.subplots()
+    feature_graph.plot.bar(yerr=std, ax = ax)
+
+    ax.set_title("Feature importances")
+    ax.set_ylabel("Mean decrease in impurity")
+    fig.tight_layout()
+
+    plt.savefig("FeatureImportance.png")
 
