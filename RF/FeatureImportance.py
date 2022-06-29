@@ -30,15 +30,6 @@ def train(features, labels, filter_feat, filter_feat2, ligand_features):
     #Train the model
     clf.fit(X_res,y_res)
 
-    #Form predictions
-    y_pred=clf.predict_proba(X_test)[:,1]
-
-    precision, recall, thresholds = metrics.precision_recall_curve(y_test, y_pred)
-
-    #Print accuracy of the model
-    print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
-    print("Accuracy:",metrics.auc(recall,precision))
-
     #Finding most important features
     filter_feat.extend(filter_feat2) #Feature names
     filter_feat.extend(ligand_features)
