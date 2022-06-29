@@ -15,6 +15,7 @@ class DataHandlers:
             couples_list = couples_csv.readlines()
             cur_dataset_list = couples_list
             with open ('dataset.csv', 'a') as dataset:
+                dataset.write('ProteinAdjacency, ProteinFeatures, LigandAdjacency, logFC')
                 for i in range(len(cur_dataset_list)):
                     line_list = cur_dataset_list[i].split(',')
                     new_list = [0, 1, 2, 3]
