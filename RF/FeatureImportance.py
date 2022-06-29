@@ -45,15 +45,6 @@ def train(features, labels, filter_feat, filter_feat2, ligand_features):
 
     importances = clf.feature_importances_
 
-    #Plotting the features
-    std = np.std([tree.feature_importances_ for tree in clf.estimators_], axis=0)
-    feature_graph = pd.Series(importances, index=filter_feat)
-    fig, ax = plt.subplots()
-    feature_graph.plot.bar(yerr=std, ax = ax)
-
-    ax.set_title("Feature importances")
-    ax.set_ylabel("Mean decrease in impurity")
-    fig.tight_layout()
-
-    plt.savefig("FeatureImportance.png")
-
+    #Picking the most important features
+    index = np.argmax(importances)
+    print(filter_feat[index])
