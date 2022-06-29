@@ -28,7 +28,7 @@ fasta1 = open("../AminoAcidSequences/fully_categorized.fasta")
 #Create kmer frequency dictionary
 seqvar1, features1 = ReadingFasta.make_seqvar(fasta1, categorized_seqs, categorized_features)
 #Remove insignificant kmers
-filter_feat, max_freq1, max_AA_kmer = Filtering.richness_protein(features1, seqvar1, pos_counts, neg_counts)
+filter_feat = Filtering.richness_protein(features1, seqvar1, pos_counts, neg_counts)
 # Make the matrix
 AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, categorized_matrix)
 
@@ -38,7 +38,7 @@ fasta2 = open("../3DiSequences/fullset_ss.fasta")
 #Create kmer frequency dictionary
 seqvar2, features2 = ReadingFasta.make_seqvar(fasta2, di_seqs, di_features)
 #Remove insignificant kmers
-filter_feat2, max_freq2, max_3di_kmer = Filtering.richness_protein(features2, seqvar2, pos_counts, neg_counts)
+filter_feat2 = Filtering.richness_protein(features2, seqvar2, pos_counts, neg_counts)
 # Make the matrix
 Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, di_matrix)
 
