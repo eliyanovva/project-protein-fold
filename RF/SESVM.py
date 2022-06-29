@@ -77,27 +77,40 @@ def create_partitions(pos_set, neg_set, M):
     print('completed the overhang')
     print(str(M))
     print(str(part_len))
-    k = 0
+
     for i in range(int(M)):
         n_set = []
         for j in range(part_len):
             row = random.choice(neg_set)
             n_set.append(row)
             neg_set.remove(row)
-            k += 1
-            if k % 10 == 0:
-                print('chose row ' + str(k))
+
         partitions.append(n_set)
         print('made a partition')
-    return partitions
+
+    row_partitions = []
+
+    for part in partitions:
+        row_part = []
+        for item in part:
+            row_part.append(N[int(item)])
+
+        row_partitions.append(row_part)
+        print('assigned a partition')
+
+    return row_partitions
 
 def SESVM(N, Y, T, P_X, P_Y):
-    pos_set, neg_set = seperate_sets(N, Y)
+    pos_rows, neg_set = seperate_sets(N, Y)
 
     print('seperated the sets')
 
-    M = np.ceil(float(len(neg_set)) / float(len(pos_set)))
+    M = np.ceil(float(len(neg_set)) / float(len(pos_rows)))
     predictions = []
+
+    pos_set = []
+    for item in pos_rows:
+        pos_set.append(N[int(item)])
 
     for i in range(T):
         neg_copy = []
@@ -111,17 +124,48 @@ def SESVM(N, Y, T, P_X, P_Y):
         all_features = []
         accuracies = []
 
+        k = 1
+        predict_labels = np.append(np.repeat(1, len(pos_set)), np.repeat(0, k * len(pos_set)))
+
         for m in range(int(M)):
             #use GridSearchCV to optimize rbf hyperparameters???
             #C: decreasing C => more regulation, decrease C if there's a lot of noise
             #gamma
+
+            random_select = []
+            select_parts = []
+
+            for i in range(int(M)):
+                if i != m:
+                    random_select.append(i)
+
+            for j in range(k):
+                part = random.choice(random_select)
+                if len(select_parts) == 0:
+                    select_parts = parts[part]
+                else:
+                    select_parts = np.concatenate((select_parts, parts[part]), axis=0)
+                random_select.remove(part)
+
             features = np.concatenate((pos_set, parts[m]), axis=0)
-            theta = svm.SVC(kernel='rbf')
+            predict_set = np.concatenate((pos_set, select_parts), axis=0)
+
+            print('set up features')
+            theta = svm.SVC(kernel='rbf', gamma=.01, C=1)
+            print('made a theta')
             theta.fit(features, labels)
+            print('fit the data')               #a bit slow, but not ridiculous
             all_features.append(features)
-            p = theta.predict(N)
-            a = accuracy_score(Y, p)
+            print('stored the data')
+            #p = theta.predict(N)
+            p = theta.predict(predict_set)
+            print(len(p))
+            print('made a prediction')          #taking some time, at least 5 minutes
+            a = accuracy_score(predict_labels, p)
+            print('calculated accuracy')
             accuracies.append(a)
+
+            print('made a classifier')
 
         #out of the M training sets, find the most accurate classifier
         max_accuracy = 0
@@ -131,12 +175,14 @@ def SESVM(N, Y, T, P_X, P_Y):
                 max_accuracy = accuracies[m]
                 max_index = m
         #retrain a classifer based on the optimal training set, and use it to predict against the test set P
-        opt_theta = svm.SVC(kernel='rbf')
+        opt_theta = svm.SVC(kernel='rbf', gamma=.01, C=1)
         max_feat = all_features[max_index]
         opt_theta.fit(max_feat, labels)
         p = opt_theta.predict(P_X)
         predictions.append(p)
+        print('found max classifier for iter ' + str(i))
     return(predictions)
+
 
 #Majority Voting algorithm
 #Out of T predictions vectors, it will select the most frequent prediction for each sample

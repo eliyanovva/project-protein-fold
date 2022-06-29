@@ -42,13 +42,13 @@ def make_seqvar(fasta, seqvar, feat):
         if line[0] == '>':
             name = line.replace('\n','')
             name = name.replace('>', '')
-            seqvar.append(Seq(name, '', featurize('',5,feat)))
+            seqvar.append(Seq(name, '', featurize('',7,feat)))
             i += 1
         #Update sequence objects to store sequences and frequency dictionaries
         else:
             sequence = line.replace('\n','')
             seqvar[i-1].sequence = seqvar[i-1].sequence + sequence
-            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,5,feat)
+            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,7,feat)
         j += 1
 
     return seqvar, feat

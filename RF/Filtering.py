@@ -19,19 +19,18 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
     neg_counts_by_kmer = {}             #key: kmer, value: num. of negative pairs that involve the kmer
     pos_prop_by_kmer = {}               #key: kmer, value: proportion of positive pairs that involve the kmer
     neg_prop_by_kmer = {}               #key: kmer, value: proportion of negative pairs that involve the kmer
-    #counts_by_id = {}
+    counts_by_id = {}
     for kmer in kmers:
         pos_counts_by_kmer[kmer] = 0
         neg_counts_by_kmer[kmer] = 0
-        #counts_by_id[kmer] = 0
+        counts_by_id[kmer] = 0
 
-    """
     for kmer in kmers:
         for seq in seqvar:
             dict = seq.dictionary
             if kmer in dict:
                 counts_by_id[kmer] += dict[kmer]
-    """
+
     total_pos = 0                       #total num. of kmers involved in positive pairs
     total_neg = 0                       #total num. of kmers involved in negative pairs
 
@@ -67,6 +66,10 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
             richness[kmer] = pos_prop_by_kmer[kmer] / neg_prop_by_kmer[kmer]
 
     ret = []                #list of kmers that meet filtering conditions; to be used in final matrix
+    lowest_in_top10 = 1000000000
+    max = 0
+    max_kmer = ""
+
     for kmer in kmers:
 
         total_kmer_freq = pos_counts_by_kmer[kmer] + neg_counts_by_kmer[kmer]
@@ -77,7 +80,8 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
             ret.append(kmer)
         """
 
-        if counts_by_id[kmer] >= 500:
-            ret.append(kmer)
+        if counts_by_id[kmer] > max:
+            max = counts_by_id[kmer]
+            max_kmer = kmer
         """
-    return ret
+    return ret #, max, max_kmer
