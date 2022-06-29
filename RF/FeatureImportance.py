@@ -45,6 +45,8 @@ def train(features, labels, filter_feat, filter_feat2, ligand_features):
 
     importances = clf.feature_importances_
 
-    #Picking the most important features
-    index = np.argmax(importances)
-    print(filter_feat[index])
+    #Picking the 10 most important features
+    for i in range(0, 10):
+        index = np.argmax(importances)
+        importances[index] = 0
+        print(filter_feat[index])
