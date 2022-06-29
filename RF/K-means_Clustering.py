@@ -25,11 +25,10 @@ import numpy as np
 d = X_train.shape[1]
 niter = 20
 verbose = True
-gpu = True
 sse = [] #list holding SSE values
 for k in range(2,1000): #Test different number of clusters
     ncentroids=k
-    kmeans = faiss.Kmeans(d, ncentroids, niter = niter, verbose = verbose, gpu = gpu)
+    kmeans = faiss.Kmeans(d, ncentroids, niter = niter, verbose = verbose)
     kmeans.train(X_train)
     sse.append(kmeans.obj)
 
