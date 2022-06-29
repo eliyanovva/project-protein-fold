@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib as plt
 
-def train(features, labels):
+def train(features, labels, filter_feat, filter_feat2, ligand_features):
     #define features and labels
     X = features #Kmers
     y = labels #Binds or not
@@ -40,7 +40,10 @@ def train(features, labels):
     print("Accuracy:",metrics.auc(recall,precision))
 
     #Finding most important features
-    feature_names = [f"feature {i}" for i in range(X_test.shape[1])] #TODO: Replace this with actual kmer names
+    feature_names = [f"feature {i}" for i in range(X_test.shape[1])] #TODO: Replace this with actual kmer names (feat contains the k-mers)
+    filter_feat.extend(filter_feat2)
+    filter_feat.extend(ligand_features)
+
     importances = clf.feature_importances_
 
     #Plotting the features

@@ -21,7 +21,8 @@ def ligand_matrix(ligand_dict, k, num_proteins):
     for i in range(num_proteins):
         for lig in ligand_counts:
             freq_mat.append(np.array(list(ligand_counts[lig].values())))
-    return np.array(freq_mat)
+    ligfeatures = list(ligand_counts['pS6_DE_1p_citronellol.csv'].keys())
+    return np.array(freq_mat) , ligfeatures
 
 #create a dictionary of the frequency counts for all kmers
 #key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)

@@ -51,8 +51,7 @@ proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 #Import dictionary matching ligands to SMILES String
 ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
-SmileKmer.importmatrix(ligand_dict, 5, 1084)
-ligand_matrix = SmileKmer.ligmat
+ligand_matrix, ligand_features = SmileKmer.ligand_matrix(ligand_dict, 5, 1084)
 
 #Concatenate protein and ligand matrices
 final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)

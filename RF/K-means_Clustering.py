@@ -51,8 +51,6 @@ for k in range(2,41): #Test different number of clusters
     kmeans = FaissKMeans(n_clusters=k)
     kmeans.fit(X_train)
     sse.append(kmeans.inertia_)
-    score = silhouette_score(X_train, kmeans.labels_)
-    silhouette_coefficients.append(score)
 
 #See how k decreases sse
 figure = plt.plot(range(2,41), sse)
