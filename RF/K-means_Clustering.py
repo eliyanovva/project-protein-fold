@@ -29,7 +29,7 @@ sse = [] #list holding SSE values
 for k in range(2,1000): #Test different number of clusters
     ncentroids=k
     kmeans = faiss.Kmeans(d, ncentroids, niter = niter, verbose = verbose)
-    kmeans.train(X_train)
+    kmeans.train(X_train.astype(np.float32))
     sse.append(kmeans.obj)
 
 #See how k decreases sse
