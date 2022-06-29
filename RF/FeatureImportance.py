@@ -40,15 +40,14 @@ def train(features, labels, filter_feat, filter_feat2, ligand_features):
     print("Accuracy:",metrics.auc(recall,precision))
 
     #Finding most important features
-    feature_names = [f"feature {i}" for i in range(X_test.shape[1])] #TODO: Replace this with actual kmer names (feat contains the k-mers)
-    filter_feat.extend(filter_feat2)
+    filter_feat.extend(filter_feat2) #Feature names
     filter_feat.extend(ligand_features)
 
     importances = clf.feature_importances_
 
     #Plotting the features
     std = np.std([tree.feature_importances_ for tree in clf.estimators_], axis=0)
-    feature_graph = pd.Series(importances, index=feature_names)
+    feature_graph = pd.Series(importances, index=filter_feat)
     fig, ax = plt.subplots()
     feature_graph.plot.bar(yerr=std, ax = ax)
 

@@ -100,3 +100,9 @@ def import_final():
     X = final_matrix
     global Y
     Y = logFCmat
+    global feat1
+    feat1 = filter_feat
+    global feat2
+    feat2 = filter_feat2
+    global feat3
+    feat3 = ligand_features
