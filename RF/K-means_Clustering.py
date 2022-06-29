@@ -28,7 +28,8 @@ verbose = True
 gpu = True
 sse = [] #list holding SSE values
 for k in range(2,1000): #Test different number of clusters
-    kmeans = faiss.Kmeans(ncentroids=k, niter = niter, d = d, verbose = verbose, gpu = gpu)
+    ncentroids=k
+    kmeans = faiss.Kmeans(d, ncentroids, niter = niter, verbose = verbose, gpu = gpu)
     kmeans.train(X_train)
     sse.append(kmeans.obj)
 
