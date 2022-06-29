@@ -6,7 +6,6 @@ import os
 from protein_handlers import ProteinAdjacencyData, ProteinFeatureData
 from ligand_handlers import LigandAdjacencyData
 import data_prep.constants as constants
-# train-test split upon uniprot-ligand-logfc csv
 
 class GraphCNN:
     def __init__(self):

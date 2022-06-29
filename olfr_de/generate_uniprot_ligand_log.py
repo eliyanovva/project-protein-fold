@@ -25,8 +25,9 @@ with open('file_names.txt', 'r') as filenames:
                     ensembl_gene_id = line_list[1]
                     logFC = line_list[2]
                     pValue = float(line_list[5])
+                    FDR = float(line_list[6])
 
-                    if pValue <= 0.1:
+                    if FDR <= 0.05 and pValue <= 0.05:
                         try:
                             uniprot_ID = GENE_DICT[ensembl_gene_id[1:-1]]    
                             csv_line = str(uniprot_ID) + ',' + filename[:-5] + ',' + str(logFC) + ',' + str(pValue) + '\n'

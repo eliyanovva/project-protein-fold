@@ -5,7 +5,7 @@ import os
 import data_prep.constants as constants
 
 
-class ProteinAdjacencyData:
+class LigandAdjacencyData:
     def __init__(self):
         #self.protein_name = protein_name
         pass
