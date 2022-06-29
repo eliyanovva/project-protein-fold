@@ -16,9 +16,9 @@ import pandas as pd
 
 os.chdir('/home/users/jvs15/project-protein-fold')
 
+# Very small test pair
 prot = Molecule('pdb_data_files/AF-Q8VGS3-F1-model_v2.pdb')
-
-ligand = SmallMol('moleculekit/mol_files/Prenylacetate.mol', force_reading=True)
+ligand = SmallMol('mol_data_files/pyridine.mol', force_reading=True)
 
 prot = prepareProteinForAtomtyping(prot)
 
