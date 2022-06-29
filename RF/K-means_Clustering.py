@@ -3,8 +3,6 @@
 #Imports
 import matplotlib.pyplot as plt
 from kneed import KneeLocator
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 import CombineLigandsProteins
@@ -19,39 +17,21 @@ testY = CombineLigandsProteins.Y
 X_train, X_test, y_train, y_test = train_test_split(testX, testY, stratify=testY, test_size=0.1) # 90% training and 10% test
 
 
-#Faster k-means (from: https://towardsdatascience.com/k-means-8x-faster-27x-lower-error-than-scikit-learns-in-25-lines-eaedc7a3a0c8)
+#Faster k-means (from: https://github.com/facebookresearch/faiss/wiki/Faiss-building-blocks:-clustering,-PCA,-quantization)
 import faiss
 import numpy as np
 
-class FaissKMeans:
-    def __init__(self, n_clusters, n_init=10, max_iter=300):
-        self.n_clusters = n_clusters
-        self.n_init = n_init
-        self.max_iter = max_iter
-        self.kmeans = None
-        self.cluster_centers_ = None
-        self.inertia_ = None
-
-    def fit(self, X):
-        self.kmeans = faiss.Kmeans(d=X.shape[1],
-                                   k=self.n_clusters,
-                                   niter=self.max_iter,
-                                   nredo=self.n_init)
-        self.kmeans.train(X.astype(np.float32))
-        self.cluster_centers_ = self.kmeans.centroids
-        self.inertia_ = self.kmeans.obj[-1]
-
-    def predict(self, X):
-        return self.kmeans.index.search(X.astype(np.float32), 1)[1]
-
 #Cluster the data 
+d = X_train.shape[1]
+niter = 20
+verbose = True
+gpu = True
 sse = [] #list holding SSE values
-silhouette_coefficients = []
-for k in range(2,41): #Test different number of clusters
-    kmeans = FaissKMeans(n_clusters=k)
-    kmeans.fit(X_train)
-    sse.append(kmeans.inertia_)
+for k in range(2,1000): #Test different number of clusters
+    kmeans = faiss.Kmeans(ncentroids=k, niter = niter, d = d, verbose = verbose, gpu = gpu)
+    kmeans.train(X_train)
+    sse.append(kmeans.obj)
 
 #See how k decreases sse
-figure = plt.plot(range(2,41), sse)
+figure = plt.plot(range(2,1000), sse)
 plt.savefig("ktest.png")
