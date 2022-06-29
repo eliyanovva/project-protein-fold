@@ -18,7 +18,7 @@ PROTEIN_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data')
 
 
 #TODO: fix constants and logging setup throughout the entire package
-PVALUE_THRESHOLD = 0.1
+PVALUE_THRESHOLD = 0.05
 # TODO: explain data file naming conventions somewhere
 
 

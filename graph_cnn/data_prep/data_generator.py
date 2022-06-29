@@ -25,6 +25,6 @@ def generateMolAdjacencyMatrices(folder_path=constants.MOL_FILES_PATH):
             mol_file.getAdjacencyMatrix()
 
 
-#generateMolAdjacencyMatrices('/home/users/tep18/new_ppp/project-protein-fold/mol_files/')
+generateMolAdjacencyMatrices()
 generateBGFAdjacencyMatrices()
 generateBGFFeatureMatrices()
