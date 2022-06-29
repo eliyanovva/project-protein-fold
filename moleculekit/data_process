@@ -64,10 +64,6 @@ def get_output(prot, ligand, mart_dir, lig_de_dir):
         y = None
     return y
     
-    
-
-
-
 if __name__ == "__main__":
     #dir = '/home/users/jvs15/project-protein-fold'
     #mapper = pd.read_csv('odorantsForDE.csv')
@@ -78,4 +74,5 @@ if __name__ == "__main__":
     # print(get_output(prot, ligand, mart_dir, lig_de_dir))
     prot_dict_dir = '/home/users/jvs15/project-protein-fold/moleculekit/protein_data.npy'
     ligand_dict_dir = '/home/users/jvs15/project-protein-fold/moleculekit/ligand_data.npy'
-    gen_output_dict(prot_dict_dir, ligand_dict_dir, mart_dir, lig_de_dir)
+    #gen_output_dict(prot_dict_dir, ligand_dict_dir, mart_dir, lig_de_dir)
+    print(np.load('/home/users/jvs15/project-protein-fold/moleculekit/de_data.npy', allow_pickle=True))
