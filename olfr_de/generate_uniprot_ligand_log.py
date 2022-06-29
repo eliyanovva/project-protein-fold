@@ -4,6 +4,12 @@
 import logging as log
 #from .. import constants
 
+#FIXME: REMOVE THE UGLY PATH AND FIX THE CONSTANTS
+with open('/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/pdb_adjacency_data/file_names.txt', 'r') as protein_txt_list:
+    protein_list = protein_txt_list.readlines()
+    for i in range(len(protein_list)):
+        protein_list[i] = protein_list[i][:-13]
+        print(protein_list[i])
 
 with open ('uniprot-ensemble-map.tab', 'r') as fp:
     lines = fp.readlines()[1:]
@@ -30,7 +36,10 @@ with open('file_names.txt', 'r') as filenames:
                     if FDR <= 0.05 and pValue <= 0.05:
                         try:
                             uniprot_ID = GENE_DICT[ensembl_gene_id[1:-1]]    
-                            csv_line = str(uniprot_ID) + ',' + filename[:-5] + ',' + str(logFC) + ',' + str(pValue) + '\n'
-                            write_file.write(csv_line)
+                            if uniprot_ID in protein_list:
+                                csv_line = str(uniprot_ID) + ',' + filename[:-5] + ',' + str(logFC) + ',' + str(pValue) + '\n'
+                                write_file.write(csv_line)
                         except:
                             log.info(ensembl_gene_id + ' is not in the dictionary')
+
+
