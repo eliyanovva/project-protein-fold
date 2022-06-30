@@ -5,13 +5,24 @@ MOL_ATOMS_COUNT = 70
 PROTEIN_FEATURES_COUNT = 5
 ATOM_DICT = {'C':0, 'O':1, 'N':2, 'S':3}
 
-DATA_FILES_PATH = os.path.join('/home', 'users', 'tep18', 'new_ppp', 'project-protein-fold', 'data_files')
+#absolute path for a file
+script_dir = os.path.abspath(os.curdir)
+#final directory in filepath
+last_dir = os.path.split(os.curdir)[-1]
+#ensures the final directory is project-protein-fold
+while last_dir != "project-protein-fold":
+    os.chdir("..")
+    script_dir = os.path.abspath(os.curdir)
+    last_dir = os.path.split(script_dir)[-1]
+
+#script_dir allows DATA_FILES_PATH to be called from any computer
+DATA_FILES_PATH = os.path.join(script_dir, 'data_files')
 PDB_FILES_PATH = os.path.join(DATA_FILES_PATH, 'pdb_data_files')
 BGF_FILES_PATH = os.path.join(DATA_FILES_PATH, 'bgf_files')
 MOL_FILES_PATH = os.path.join(DATA_FILES_PATH, 'mol_files')
 SMILES_FILES_PATH = os.path.join(DATA_FILES_PATH, 'smiles_files')
 
-MATRIX_DATA_FILES_PATH = os.path.join('/home', 'users', 'tep18', 'new_ppp', 'project-protein-fold', 'graph_cnn', 'data_prep')
+MATRIX_DATA_FILES_PATH = os.path.join(script_dir, 'graph_cnn', 'data_prep')
 MOL_ADJACENCY_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_adjacency_data')
 PROTEIN_ADJACENCY_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_adjacency_data')
 PROTEIN_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data')
