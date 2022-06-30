@@ -30,6 +30,14 @@ def featurize(seq,k,feat):
         dict[kmer] += 1
     return dict
 
+def make_seqvar_TMS(TM_dict, TM_num, seqvar, feat):
+    for id in TM_dict:
+        name = id
+        seq = TM_dict[name][TM_num]
+        seqvar.append(Seq(name, seq, featurize(seq, 7, feat)))
+    return seqvar, feat
+
+
 #Return: List of sequence objects representing each protein; List of k-mers found in the protein
 #fasta = file to read
 #seqvar = list to be populated with sequence objects

@@ -40,6 +40,9 @@ def initialize_ligand_list():
 
 #Function to create list of protein accessions
 def initialize_protein_list():
+    df = pd.read_csv("TMs.csv")
+    protein_list = list(df.iloc[:, 0])
+    """
     acc_ids = []
     fr = open("../data_files/AminoAcidSequences/allsequences.fasta", "r")
     lines = fr.readlines()
@@ -47,6 +50,34 @@ def initialize_protein_list():
         if line[0] == ">":
             acc_ids.append(line[1:-1])
     fr.close()
+    """
+    return protein_list
 
-    return acc_ids
 
+def initialize_AA_dict():
+    df = pd.read_csv("TMs.csv")
+    protein_list = initialize_protein_list()
+
+    TMs_by_id = {}
+
+    for i in range(len(protein_list)):
+        TMs = [str(df.iloc[i, 1]), str(df.iloc[i, 4]), str(df.iloc[i, 7]), str(df.iloc[i, 10])]
+        TMs_by_id[protein_list[i]] = TMs
+
+    return categorize(TMs_by_id)
+
+def categorize(TM_dict):
+    categorize_dict = {}
+    for id in TM_dict:
+        categorize_TMs = []
+        for TM in TM_dict[id]:
+            TM = TM.replace('A', 'a').replace('G', 'a').replace('V', 'a')
+            TM = TM.replace('I', 'b').replace('L', 'b').replace('F', 'b').replace('P', 'b')
+            TM = TM.replace('Y', 'c').replace('M', 'c').replace('T', 'c').replace('S', 'c')
+            TM = TM.replace('H', 'd').replace('N', 'd').replace('Q', 'd').replace('W', 'd')
+            TM = TM.replace('R', 'e').replace('K', 'e')
+            TM = TM.replace('D', 'f').replace('E', 'f')
+            TM = TM.replace('C', 'g')
+            categorize_TMs.append(TM)
+        categorize_dict[id] = categorize_TMs
+    return categorize_dict
