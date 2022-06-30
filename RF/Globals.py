@@ -66,6 +66,44 @@ def initialize_AA_dict():
 
     return categorize(TMs_by_id)
 
+def initialize_indices():
+    df = pd.read_csv("TMs.csv")
+    protein_list = initialize_protein_list()
+
+    TM_indices = {}
+    for i in range(len(protein_list)):
+        indices = [int(df.iloc[i, 2]), int(df.iloc[i, 3]), int(df.iloc[i, 5]), int(df.iloc[i, 6]), int(df.iloc[i, 8]),
+                   int(df.iloc[i, 9]), int(df.iloc[i, 11]), int(df.iloc[i, 12]), ]
+        TM_indices[protein_list[i]] = indices
+
+    return TM_indices
+
+def initialize_3Di_dict():
+    TM_indices = initialize_indices()
+    Di_dict = {}
+    Di = open("../data_files/3DiSequences/fullset_ss.fasta", "r")
+    lines = Di.readlines()
+    for i in range(len(lines)):
+        if i % 2 == 0:
+            id = lines[i][1:-1]
+            seq = lines[i + 1][:-1]
+            Di_dict[id] = seq
+    Di.close()
+
+    Di_TMs = {}
+    for id in TM_indices:
+        TMs = []
+        seq = Di_dict[id]
+
+        for i in range(4):
+            start = TM_indices[id][2 * i]
+            end = TM_indices[id][(2 * i) + 1]
+            TMs.append(seq[start - 1:end])
+
+        Di_TMs[id] = TMs
+
+    return Di_TMs
+
 def categorize(TM_dict):
     categorize_dict = {}
     for id in TM_dict:
@@ -81,7 +119,3 @@ def categorize(TM_dict):
             categorize_TMs.append(TM)
         categorize_dict[id] = categorize_TMs
     return categorize_dict
-
-pl = initialize_protein_list()
-for id in pl:
-    print(id)
