@@ -81,3 +81,7 @@ def categorize(TM_dict):
             categorize_TMs.append(TM)
         categorize_dict[id] = categorize_TMs
     return categorize_dict
+
+pl = initialize_protein_list()
+for id in pl:
+    print(id)
