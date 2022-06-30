@@ -31,3 +31,4 @@ TM_dict = json.loads(responseBody)
 
 for accession in TM_dict:
   print(accession['accession'])
+  print(accession['sequence'][int(accession["features"][3]['begin']):int(accession["features"][3]['end'])])
