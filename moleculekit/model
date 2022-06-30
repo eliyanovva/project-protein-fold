@@ -1,0 +1,42 @@
+from moleculekit.molecule import Molecule
+from moleculekit.tools.voxeldescriptors import getVoxelDescriptors, viewVoxelFeatures
+from moleculekit.tools.atomtyper import prepareProteinForAtomtyping
+from moleculekit.smallmol.smallmol import SmallMol
+from moleculekit.home import home
+import os
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+from torch.utils.data import Dataset, DataLoader, random_split
+import re
+import pandas as pd
+
+os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
+
+lig = np.load('ligand_data.npy', allow_pickle=True)
+prot = np.load('protein_data.npy', allow_pickle=True)
+de = np.load('de_data.npy', allow_pickle=True)
+
+x = []
+y = []
+
+# There are about 49k total interactions from listed ligands and proteins so far;
+# 2% of those have FDR < 0.05 and 4% have FDR < 0.25
+for i in lig.item().keys():
+    for j in prot.item().keys():
+        a = de.item().get((i, j))
+        if a.iloc[0]['FDR'] < 0.05:
+            x.append((lig.item().get(i), prot.item().get(j)))
+            if abs(a.iloc[0]['logFC']) > 1.5:
+                y.append(1)
+            else:
+                y.append(0)
+
+xi = np.asarray(x)
+yi = np.asarray(y)
+print(len(x))
+print(sum(y))
+
+# class ProtDatasetTrain(Dataset):
+#     def __init__(self):
