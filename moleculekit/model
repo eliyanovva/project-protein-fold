@@ -28,15 +28,53 @@ for i in lig.item().keys():
         a = de.item().get((i, j))
         if a.iloc[0]['FDR'] < 0.05:
             x.append((lig.item().get(i), prot.item().get(j)))
-            if abs(a.iloc[0]['logFC']) > 1.5:
+            if abs(a.iloc[0]['logFC']) > 1:
                 y.append(1)
             else:
                 y.append(0)
 
 xi = np.asarray(x)
 yi = np.asarray(y)
-print(len(x))
-print(sum(y))
+
+
+
+"""
+Attempting to build model in lines below; kind of shit so far
+Inspiration coming from following sources:
+- https://rosenfelder.ai/multi-input-neural-network-pytorch/
+- https://software.acellera.com/docs/latest/moleculekit/tutorials/voxelization_tutorial.html?highlight=voxelization
+- https://medium.datadriveninvestor.com/dual-input-cnn-with-keras-1e6d458cd979
+
+"""
 
 # class ProtDatasetTrain(Dataset):
 #     def __init__(self):
+
+def conv_block(input_size, output_size):
+    block = nn.Sequential(
+        nn.Conv3d(input_size, output_size, 5, stride=1, padding=1),
+        nn.ReLU(),
+        nn.BatchNorm3d(output_size),
+        nn.MaxPool3d(3)
+    )
+
+
+class Model(nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+        self.conv1 = conv_block(8, 32)
+        self.conv2 = conv_block(32, 64)
+        self.conv3 = conv_block(64, 128)
+
+
+def forward(self, x):
+    # Convolution blocks to be performed on the protein
+    x[1] = self.conv1(x[1])
+    x[1] = self.conv2(x[1])
+    x[1] = self.conv3(x[1])
+
+
+    # Convolution blocks to be performed on the ligand
+    x[0] = self.conv1(x[0])
+    x[0] = self.conv2(x[0])
+
