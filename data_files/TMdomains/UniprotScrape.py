@@ -1,5 +1,7 @@
 #This script imports TM domain sequences and positions from the Uniprot database
 
+import json
+
 #Create comma-separated list of accession numbers
 with open('accessions_tolookup.txt') as f:
     lines = f.readlines()
@@ -7,13 +9,14 @@ with open('accessions_tolookup.txt') as f:
 query = ""
 for line in lines:
     query += line.replace('\n','')
-    query+= ","
+    query+= "%2C"
 
 #The following code uses the uniprot API: https://www.ebi.ac.uk/proteins/api/doc/#/ to lookup transmembrane features for all proteins
+#https://academic.oup.com/nar/article/45/W1/W539/3106040?login=false
 
 import requests, sys
 
-requestURL = "https://www.ebi.ac.uk/proteins/api/features?offset=0&size=100&accession=A0A0B4J1M2%2CA0A0G2JFH3%2CA0A0N4SUP0%2CA0A0N4SVC3%2CA0A0N4SVP2%2CA0A0U1RNJ4%2CA0A0U1RP76%2CA0A140LIR8%2CA0A140LJF5%2CA0A1B0GSE1%2CA0A1B0GSF4%2CA0A1B0GSI9%2CA0A1B0GSN5%2CA0A1B0GST0%2CA0A1B0GSU5%2CA0A1L1SQ02%2CA0A1L1SQF6%2CA0A1L1SQJ6%2CA0A1L1SQT2%2CA0A1L1SR98%2CA0A1L1SRK6%2CA0A1L1SRZ5%2CA0A1L1SSB4%2CA0A1L1SSS5%2CA0A1L1SSZ5%2CA0A1L1ST14%2CA0A1L1STN9%2CA0A1L1STZ9%2CA0A1L1SU13%2CA0A1L1SUC9%2CA0A1L1SUS1%2CA0A1L1SV77%2CA0A1L1SVG7%2CA0A1L1SVH0%2CA0A1W2P740%2CA0A288CFY5%2CA0A2I3BPE8%2CA0A2I3BPU7%2CA0A2I3BQA3%2CA0A2I3BQR4%2CA0A2I3BR00%2CA0A2I3BR67%2CA0A2I3BRI6%2CA0A2I3BRV4%2CA0A2I3BRV7%2CA0PK57%2CA1L1B4%2CA2ACY8%2CA2AHM8%2CA2AK60%2CA2AK62%2CA2ALD2%2CA2AM35%2CA2ARY0%2CA2ARY1%2CA2ARZ0%2CA2ASU6%2CA2ASU7%2CA2ASV2%2CA2ASV3%2CA2AT78%2CA2AT85%2CA2AT86%2CA2AT96%2CA2ATA0%2CA2ATE0%2CA2ATE5%2CA2ATG2%2CA2ATG3%2CA2ATJ4%2CA2ATJ7%2CA2ATJ9%2CA2ATW2%2CA2AUA2%2CA2AUA4%2CA2AUS6%2CA2AV10%2CA2AV11%2CA2AV13%2CA2AV41%2CA2AVA9%2CA2AVB0%2CA2AVB5%2CA2AVB8%2CA2AVC0%2CA2AVC3%2CA2AVC4%2CA2AVC7%2CA2AVK5%2CA2AVL6%2CA2AVT0%2CA2AVT5%2CA2AVW1%2CA2AVW3%2CA2AVX9%2CA2AVY0%2CA2BFL7%2CA2BHP6%2CA2BHP7%2CA2RS33%2C&types=TRANSMEM"
+requestURL = "https://www.ebi.ac.uk/proteins/api/features?offset=0&size=100&accession=" + query + "&types=TRANSMEM"
 
 r = requests.get(requestURL, headers={ "Accept" : "application/json"})
 
@@ -21,5 +24,8 @@ if not r.ok:
   r.raise_for_status()
   sys.exit()
 
+#Prints results from scraping
 responseBody = r.text
-print(responseBody)
+TM_dict = json.loads(responseBody)
+print(json.dumps(TM_dict, indent=4))
+
