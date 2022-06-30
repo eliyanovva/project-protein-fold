@@ -3,7 +3,7 @@
 import json
 
 #Create comma-separated list of accession numbers
-with open('accessions_tolookup.txt') as f:
+with open('accessions_tolookup.txt') as f: #TODO: Try with all accessions
     lines = f.readlines()
 
 query = ""
@@ -27,5 +27,7 @@ if not r.ok:
 #Prints results from scraping
 responseBody = r.text
 TM_dict = json.loads(responseBody)
-print(json.dumps(TM_dict, indent=4))
+#print(json.dumps(TM_dict, indent=4))
 
+for accession in TM_dict:
+  print(accession['accession'])
