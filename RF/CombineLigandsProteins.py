@@ -119,7 +119,7 @@ proteins = Globals.initialize_protein_list()
 logFCmat = []
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
-        logFCmat.append(float(classified[str(protein.name)][ligand]))
+        logFCmat.append(float(classified[protein][ligand]))
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
 def uniquematrix(matrix):
