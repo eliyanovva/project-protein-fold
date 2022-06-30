@@ -38,7 +38,8 @@ def train(features, labels, filter_feat, filter_feat2, ligand_features):
 
     #Picking the 10 most important features
     with open("important_features.txt", "w") as f:
-        for i in range(0, 10):
+        while importances.size > 0:
             index = np.argmax(importances)
-            importances[index] = 0
             print(filter_feat[index], file=f)
+            print(importances[index], file=f)
+            importances = np.delete(importances, index)
