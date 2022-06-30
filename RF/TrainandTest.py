@@ -8,8 +8,6 @@ CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 
-acc,rec = FixedClassificationModel.train(testX, testY)
-
 """
 AA_feat = CombineLigandsProteins.feat1
 Di_feat = CombineLigandsProteins.feat2
@@ -20,11 +18,12 @@ FeatureImportance.train(testX, testY, AA_feat, Di_feat, Lig_feat)
 accuracy = 0
 recall = 0
 
-for i in range(10):
-    print("run " + str(i))
-    acc,rec = FixedClassificationModel.train(testX, testY)
-    accuracy += acc
-    recall += rec
+with open("scores.txt", "w") as f:
+    for i in range(10):
+        print("run " + str(i), file=f)
+        acc,rec = FixedClassificationModel.train(testX, testY)
+        accuracy += acc
+        recall += rec
 
-print('Average Accuracy: ' + str(accuracy/10))
-print('Average Recall: ' + str(recall/10))
+    print('Average Accuracy: ' + str(accuracy/10), file=f)
+    print('Average Recall: ' + str(recall/10), file=f)
