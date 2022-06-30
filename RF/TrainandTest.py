@@ -10,6 +10,9 @@ testY = CombineLigandsProteins.Y
 accuracy = 0
 recall = 0
 
+acc,rec = FixedClassificationModel.train(testX, testY)
+
+"""
 for i in range(10):
     print("run " + str(i))
     acc,rec = FixedClassificationModel.train(testX, testY)
@@ -18,3 +21,4 @@ for i in range(10):
 
 print('Average Accuracy: ' + str(accuracy/10))
 print('Average Recall: ' + str(recall/10))
+"""
