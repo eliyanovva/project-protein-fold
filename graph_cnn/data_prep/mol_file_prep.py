@@ -4,6 +4,7 @@ import os
 import constants
 import logging as log
 import log_config
+from feature_matrices import getMatrix
 
 # so far creates an adjacency matrix from a single pdb file
 # TODO: Figure out how/whether you need to save adjacencies to empty
@@ -29,6 +30,11 @@ class MolDataFile:
         file_name = os.path.join('mol_adjacency_data/', self.compound_name + '_adj_mat')
         np.save(file_name, adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
+
+    def getFeatureMatrix(self):
+    #building feature matrix for mol file
+        log.info('Initiated creation of Mol Feature matrix for the compound ' + self.compound_name)
+        getMatrix('mol', self.mol_filename)
 
 
     def __setCompoundName(self):
