@@ -2,6 +2,7 @@ import os
 import constants
 from bgf_file_prep import BGFDataFile
 from mol_file_prep import MolDataFile
+from pdb_file_prep import PDBDataFile
 
 
 def generateBGFAdjacencyMatrices(folder_path=constants.BGF_FILES_PATH):
@@ -24,7 +25,14 @@ def generateMolAdjacencyMatrices(folder_path=constants.MOL_FILES_PATH):
             mol_file = MolDataFile(os.path.join(folder_path, filename))
             mol_file.getAdjacencyMatrix()
 
+def generatePDBFeatureMatrices(folder_path=constants.PDB_FILES_PATH):
+    for filename in os.listdir(folder_path):
+        if filename.endswith('.pdb'):
+            pdb_file = PDBDataFile(os.path.join(folder_path, filename))
+            pdb_file.getFeatureMatrix()
 
+
+generatePDBFeatureMatrices()
 generateMolAdjacencyMatrices()
 generateBGFAdjacencyMatrices()
 generateBGFFeatureMatrices()
