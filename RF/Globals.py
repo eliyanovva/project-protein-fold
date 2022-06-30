@@ -40,6 +40,9 @@ def initialize_ligand_list():
 
 #Function to create list of protein accessions
 def initialize_protein_list():
+    df = pd.read_csv("TMs.csv")
+    protein_list = list(df.iloc[:, 0])
+    """
     acc_ids = []
     fr = open("../data_files/AminoAcidSequences/allsequences.fasta", "r")
     lines = fr.readlines()
@@ -47,6 +50,72 @@ def initialize_protein_list():
         if line[0] == ">":
             acc_ids.append(line[1:-1])
     fr.close()
+    """
+    return protein_list
 
-    return acc_ids
 
+def initialize_AA_dict():
+    df = pd.read_csv("TMs.csv")
+    protein_list = initialize_protein_list()
+
+    TMs_by_id = {}
+
+    for i in range(len(protein_list)):
+        TMs = [str(df.iloc[i, 1]), str(df.iloc[i, 4]), str(df.iloc[i, 7]), str(df.iloc[i, 10])]
+        TMs_by_id[protein_list[i]] = TMs
+
+    return categorize(TMs_by_id)
+
+def initialize_indices():
+    df = pd.read_csv("TMs.csv")
+    protein_list = initialize_protein_list()
+
+    TM_indices = {}
+    for i in range(len(protein_list)):
+        indices = [int(df.iloc[i, 2]), int(df.iloc[i, 3]), int(df.iloc[i, 5]), int(df.iloc[i, 6]), int(df.iloc[i, 8]),
+                   int(df.iloc[i, 9]), int(df.iloc[i, 11]), int(df.iloc[i, 12]), ]
+        TM_indices[protein_list[i]] = indices
+
+    return TM_indices
+
+def initialize_3Di_dict():
+    TM_indices = initialize_indices()
+    Di_dict = {}
+    Di = open("../data_files/3DiSequences/fullset_ss.fasta", "r")
+    lines = Di.readlines()
+    for i in range(len(lines)):
+        if i % 2 == 0:
+            id = lines[i][1:-1]
+            seq = lines[i + 1][:-1]
+            Di_dict[id] = seq
+    Di.close()
+
+    Di_TMs = {}
+    for id in TM_indices:
+        TMs = []
+        seq = Di_dict[id]
+
+        for i in range(4):
+            start = TM_indices[id][2 * i]
+            end = TM_indices[id][(2 * i) + 1]
+            TMs.append(seq[start - 1:end])
+
+        Di_TMs[id] = TMs
+
+    return Di_TMs
+
+def categorize(TM_dict):
+    categorize_dict = {}
+    for id in TM_dict:
+        categorize_TMs = []
+        for TM in TM_dict[id]:
+            TM = TM.replace('A', 'a').replace('G', 'a').replace('V', 'a')
+            TM = TM.replace('I', 'b').replace('L', 'b').replace('F', 'b').replace('P', 'b')
+            TM = TM.replace('Y', 'c').replace('M', 'c').replace('T', 'c').replace('S', 'c')
+            TM = TM.replace('H', 'd').replace('N', 'd').replace('Q', 'd').replace('W', 'd')
+            TM = TM.replace('R', 'e').replace('K', 'e')
+            TM = TM.replace('D', 'f').replace('E', 'f')
+            TM = TM.replace('C', 'g')
+            categorize_TMs.append(TM)
+        categorize_dict[id] = categorize_TMs
+    return categorize_dict
