@@ -1,0 +1,10 @@
+CCCCC
+C(C)CCS
+c1ccnc
+CCCC(=O)
+CCC(=O)O
+ccncc1
+C(=CCCC(=CCO)C)C
+C1CCC(CC1O)
+C(CC1O)C(=C)C
+CC(=CCCC(=CCO)C)
