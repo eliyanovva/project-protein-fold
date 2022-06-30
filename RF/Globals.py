@@ -119,3 +119,22 @@ def categorize(TM_dict):
             categorize_TMs.append(TM)
         categorize_dict[id] = categorize_TMs
     return categorize_dict
+
+"""
+fr = open('TMs.txt', "r")
+lines = fr.readlines()
+fr.close()
+
+fw = open('TMs.csv', 'w')
+fw.write('protein,TM3,s3,e3,TM5,s5,e5,TM6,s6,e6,TM7,s7,e7\n')
+
+for i in range(len(lines)):
+    line = lines[i][:-1]
+    #print(line)
+    if (i+1) % 6 != 0:
+        if line[0] == ">":
+            full_line = line[1:] + "," + lines[i+1][:-1] + "," + lines[i+2][:-1]\
+                        + "," + lines[i+3][:-1] + "," + lines[i+4][:-1] + "\n"
+            fw.write(full_line)
+fw.close()
+"""
