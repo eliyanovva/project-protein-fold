@@ -24,11 +24,16 @@ if not r.ok:
   r.raise_for_status()
   sys.exit()
 
-#Prints results from scraping
+#Results from scraping
 responseBody = r.text
 TM_dict = json.loads(responseBody)
 #print(json.dumps(TM_dict, indent=4))
 
-for accession in TM_dict:
-  print(accession['accession'])
-  print(accession['sequence'][int(accession["features"][3]['begin']):int(accession["features"][3]['end'])])
+with open("TM.txt", "w") as f:
+  for accession in TM_dict:
+    if len(accession["features"]) > 6:
+      print(accession['accession'], file=f)
+      print(accession['sequence'][int(accession["features"][2]['begin'])-1:int(accession["features"][2]['end'])], file=f)
+      print(accession['sequence'][int(accession["features"][4]['begin'])-1:int(accession["features"][4]['end'])], file=f)
+      print(accession['sequence'][int(accession["features"][5]['begin'])-1:int(accession["features"][5]['end'])], file=f)
+      print(accession['sequence'][int(accession["features"][6]['begin'])-1:int(accession["features"][6]['end'])], file=f)
