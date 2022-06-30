@@ -43,7 +43,7 @@ with open("TM.txt", "w") as f:
     for accession in TM_dict:
       if len(accession["features"]) > 6:
         print(('>' + accession['accession']), file=f)
-        print((accession['sequence'][int(accession["features"][2]['begin'])-1:int(accession["features"][2]['end'])]+','+accession["features"][2]['begin']+','+accession["features"][2]['end']), file=f)
-        print((accession['sequence'][int(accession["features"][4]['begin'])-1:int(accession["features"][4]['end'])]+','+accession["features"][4]['begin']+','+accession["features"][4]['end']), file=f)
-        print((accession['sequence'][int(accession["features"][5]['begin'])-1:int(accession["features"][5]['end'])]+','+accession["features"][5]['begin']+','+accession["features"][5]['end']), file=f)
-        print((accession['sequence'][int(accession["features"][6]['begin'])-1:int(accession["features"][6]['end'])]+','+accession["features"][6]['begin']+','+accession["features"][6]['end']), file=f)
+        print((accession['sequence'][int(accession["features"][2]['begin'])-6:int(accession["features"][2]['end'])+5]+','+str(int(accession["features"][2]['begin'])-5)+','+str(int(accession["features"][2]['end'])+5)), file=f)
+        print((accession['sequence'][int(accession["features"][4]['begin'])-6:int(accession["features"][4]['end'])+5]+','+str(int(accession["features"][4]['begin'])-5)+','+str(int(accession["features"][4]['end'])+5)), file=f)
+        print((accession['sequence'][int(accession["features"][5]['begin'])-6:int(accession["features"][5]['end'])+5]+','+str(int(accession["features"][5]['begin'])-5)+','+str(int(accession["features"][5]['end'])+5)), file=f)
+        print((accession['sequence'][int(accession["features"][6]['begin'])-6:int(accession["features"][6]['end'])+5]+','+str(int(accession["features"][6]['begin'])-5)+','+str(int(accession["features"][6]['end'])+5)), file=f)
