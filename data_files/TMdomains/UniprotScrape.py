@@ -16,6 +16,8 @@ for line in lines:
     query.append(addit)
     i = 0
     addit = ""
+  if (line == lines[-1]) & i!=0:
+    query.append(addit)
   i+=1
   
 
@@ -24,7 +26,7 @@ for line in lines:
 
 import requests, sys
 
-with open("TM.txt", "a") as f:
+with open("TM.txt", "w") as f:
   for set in query:
     requestURL = "https://www.ebi.ac.uk/proteins/api/features?offset=0&size=100&accession=" + set + "&types=TRANSMEM"
 
