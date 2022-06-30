@@ -59,24 +59,16 @@ AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, cat
 AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, categorized_seqs_TM6, categorized_features_TM6)
 AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, categorized_seqs_TM7, categorized_features_TM7)
 
-
-print(AA_features_TM3)
-print(len(AA_features_TM3))
-print(AA_features_TM5)
-print(len(AA_features_TM5))
-print(AA_features_TM6)
-print(len(AA_features_TM6))
-print(AA_features_TM7)
-print(len(AA_features_TM7))
-
 AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_features_TM3, categorized_matrix_TM3)
-print(len(AA_mat_TM3[0]))
 AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_features_TM5, categorized_matrix_TM5)
-print(len(AA_mat_TM5[0]))
 AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_features_TM6, categorized_matrix_TM6)
-print(len(AA_mat_TM6[0]))
 AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_features_TM7, categorized_matrix_TM7)
-print(len(AA_mat_TM7[0]))
+
+AA_matrix = np.concatenate((np.array(AA_mat_TM3, dtype = np.uint8), np.array(AA_mat_TM5, dtype = np.uint8),
+                            np.array(AA_mat_TM6, dtype = np.uint8), np.array(AA_mat_TM7, dtype = np.uint8)) , axis = 1)
+
+#318 + 623 + 544 + 375 = 1860
+#183 + 312 + 393 + 280 = 1168
 
 """
 #Creating output for 3Di sequences
@@ -97,27 +89,17 @@ Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_
 Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5, di_seqs_TM6, di_features_TM6)
 Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 5, di_seqs_TM7, di_features_TM7)
 
-print(Di_features_TM3)
-print(len(Di_features_TM3))
-print(Di_features_TM5)
-print(len(Di_features_TM5))
-print(Di_features_TM6)
-print(len(Di_features_TM6))
-print(Di_features_TM7)
-print(len(Di_features_TM7))
-
 Di_mat_TM3 = ReadingFasta.makematrix(Di_seqvar_TM3, Di_features_TM3, di_matrix_TM3)
-print(len(Di_mat_TM3[0]))
 Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_features_TM5, di_matrix_TM5)
-print(len(Di_mat_TM5[0]))
 Di_mat_TM6 = ReadingFasta.makematrix(Di_seqvar_TM6, Di_features_TM6, di_matrix_TM6)
-print(len(Di_mat_TM6[0]))
 Di_mat_TM7 = ReadingFasta.makematrix(Di_seqvar_TM7, Di_features_TM7, di_matrix_TM7)
-print(len(Di_mat_TM7[0]))
 
-"""
+Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_mat_TM5, dtype = np.uint8),
+                            np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
+
 #Concatenate AA and 3Di matrices
-intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
+#intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
+intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
 #Expand the protein matrix to account for the ligands
 ligand_count = 55
 proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
@@ -132,7 +114,8 @@ ligand_matrix, ligand_features = SmileKmer.ligand_matrix(ligand_dict, 5, 100)
 final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)
 
 #Create Classification Vector
-proteins = seqvar1
+#proteins = seqvar1
+proteins = Globals.initialize_protein_list()
 logFCmat = []
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
@@ -162,10 +145,10 @@ def uniquematrix(matrix):
 def import_final():
     #For No3Di.py
     global AA
-    AA = AA_mat
+    #AA = AA_mat
     #For OneLigandRF.py and OneProteinRF.py
     global proteins
-    proteins = seqvar1
+    #proteins = seqvar1
     global dictionary
     dictionary = classified
     global protmat
@@ -176,9 +159,9 @@ def import_final():
     global Y
     Y = logFCmat
     global feat1
-    feat1 = filter_feat
+    #feat1 = filter_feat
     global feat2
-    feat2 = filter_feat2
+    #feat2 = filter_feat2
     global feat3
     feat3 = ligand_features
-"""
+
