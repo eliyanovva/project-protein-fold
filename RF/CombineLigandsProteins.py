@@ -1,11 +1,11 @@
 #This script creates the protein matrix and ligand matrix to train and test the Random Forest Algorithm
 
 #Imports
-import SmileKmer
+#import SmileKmer
 import numpy as np
-import ReadingFasta
+#import ReadingFasta
 import labels
-import Globals
+#import Globals
 import Filtering
 
 #Create classification dictionary
