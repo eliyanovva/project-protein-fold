@@ -31,7 +31,12 @@ def train(features, labels):
 
     precision, recall, thresholds = metrics.precision_recall_curve(y_test, y_pred)
 
+    acc = metrics.roc_auc_score(y_test, y_pred)
+    rec = metrics.auc(recall,precision)
+
     #Print accuracy of the model
-    print("Accuracy:",metrics.roc_auc_score(y_test, y_pred))
-    print("Accuracy:",metrics.auc(recall,precision))
+    print("Accuracy:",acc)
+    print("Accuracy:",rec)
+
+    return acc,rec
 

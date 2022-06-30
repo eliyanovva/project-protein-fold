@@ -1,11 +1,11 @@
 #This script creates the protein matrix and ligand matrix to train and test the Random Forest Algorithm
 
 #Imports
-#import SmileKmer
+import SmileKmer
 import numpy as np
-#import ReadingFasta
+import ReadingFasta
 import labels
-#import Globals
+import Globals
 import Filtering
 
 #Create classification dictionary
@@ -54,10 +54,10 @@ AA_mat = ReadingFasta.makematrix(seqvar1, filter_feat, categorized_matrix)
 
 #Create AA output for TMs 3,5,6,7
 AA_dict = Globals.initialize_AA_dict()
-AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
-AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, categorized_seqs_TM5, categorized_features_TM5)
-AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, categorized_seqs_TM6, categorized_features_TM6)
-AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, categorized_seqs_TM7, categorized_features_TM7)
+AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 7, categorized_seqs_TM3, categorized_features_TM3)
+AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 7, categorized_seqs_TM5, categorized_features_TM5)
+AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 7, categorized_seqs_TM6, categorized_features_TM6)
+AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 7, categorized_seqs_TM7, categorized_features_TM7)
 
 AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_features_TM3, categorized_matrix_TM3)
 AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_features_TM5, categorized_matrix_TM5)
@@ -84,10 +84,10 @@ Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, di_matrix)
 
 #Create 3Di output for Tms 3,5,6,7
 Di_dict = Globals.initialize_3Di_dict()
-Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
-Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_seqs_TM5, di_features_TM5)
-Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5, di_seqs_TM6, di_features_TM6)
-Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 5, di_seqs_TM7, di_features_TM7)
+Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 7, di_seqs_TM3, di_features_TM3)
+Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 7, di_seqs_TM5, di_features_TM5)
+Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 7, di_seqs_TM6, di_features_TM6)
+Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 7, di_seqs_TM7, di_features_TM7)
 
 Di_mat_TM3 = ReadingFasta.makematrix(Di_seqvar_TM3, Di_features_TM3, di_matrix_TM3)
 Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_features_TM5, di_matrix_TM5)
