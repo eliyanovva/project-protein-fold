@@ -8,12 +8,9 @@ if not os.path.exists('./logs'):
 
     
 logging.basicConfig(
-    #filename='logs/script.log', 
     encoding='utf-8', 
     level=logging.INFO, 
     format='%(asctime)s %(message)s',
-    handlers=[
-        logging.FileHandler("logs/script.log"),
-        logging.StreamHandler(sys.stdout)
-    ]
+    filename='logs/script.log',
+
 )
