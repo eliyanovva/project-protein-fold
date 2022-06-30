@@ -2,17 +2,24 @@
 
 import CombineLigandsProteins
 import FixedClassificationModel
+#import FeatureImportance
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 
-accuracy = 0
-recall = 0
-
 acc,rec = FixedClassificationModel.train(testX, testY)
 
 """
+AA_feat = CombineLigandsProteins.feat1
+Di_feat = CombineLigandsProteins.feat2
+Lig_feat = CombineLigandsProteins.feat3
+FeatureImportance.train(testX, testY, AA_feat, Di_feat, Lig_feat) 
+"""
+
+accuracy = 0
+recall = 0
+
 for i in range(10):
     print("run " + str(i))
     acc,rec = FixedClassificationModel.train(testX, testY)
@@ -21,4 +28,3 @@ for i in range(10):
 
 print('Average Accuracy: ' + str(accuracy/10))
 print('Average Recall: ' + str(recall/10))
-"""

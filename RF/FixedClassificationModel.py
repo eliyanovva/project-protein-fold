@@ -36,7 +36,7 @@ def train(features, labels):
 
     #Print accuracy of the model
     print("Accuracy:",acc)
-    print("Accuracy:",rec)
+    print("Recall:",rec)
 
     return acc,rec
 
