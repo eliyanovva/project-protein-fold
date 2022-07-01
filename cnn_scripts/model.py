@@ -11,10 +11,11 @@ import torch.optim as optim
 import numpy as np
 import os
 import pickle
+import sklearn
 
 x_data = np.load('x_data.npy')
-
 y_data = np.load('y_data.npy')
+x_data, y_data = sklearn.utils.shuffle(x_data, y_data)
 
 #def transform(prot_vox): #reshapes to (nchannels, d, h, w)
     #return prot_vox.transpose().reshape([nchannels, prot_N[0], prot_N[1], prot_N[2]])
