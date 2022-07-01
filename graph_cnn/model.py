@@ -1,42 +1,91 @@
 import tensorflow as tf
 import numpy as np
+import pandas as pd
+import logging as log
 from sklearn.model_selection import train_test_split
 import os
 
+import data_prep.log_config
 from protein_handlers import ProteinAdjacencyData, ProteinFeatureData
 from ligand_handlers import LigandAdjacencyData
 import data_prep.constants as constants
+
 
 class GraphCNN:
     def __init__(self):
         self.prot_adj_data_handler = ProteinAdjacencyData()
         self.prot_feat_data_handler = ProteinFeatureData()
         self.lig_adj_data_handler = LigandAdjacencyData()
+        
+        log.info('initialized GraphCNN class')
+        self.dataset = pd.read_pickle(os.path.join(constants.MATRIX_DATA_FILES_PATH, 'dataset_part_0.pkl'))
+        log.info('Loaded dataset')
+        self.y = self.dataset.iloc[:,3]
+        log.info('Loaded target columns')
+        self.dataset = self.dataset.drop(self.dataset.columns[[3]],axis = 1)
+        log.info('Removed y column from dataset')
+        
+        
+#        self.dataset = tf.data.experimental.make_csv_dataset(
+#            './dataset.csv',
+#            column_names=['ProteinAdjacency', 'ProteinFeatures', 'LigandAdjacency', 'logFC'],
+#            batch_size=4, # Artificially small to make examples easier to show.
+#            label_name='logFC',
+#            num_epochs=1,
+#            header=True
+            #ignore_errors=True
+#            )
+        #chunksize = 10 ** 6
+        #textFileReader = pd.read_csv('dataset.csv', chunksize=chunksize)
+        #full_data = pd.concat(textFileReader, ignore_index=True)
+        #self.dataset = pd.read_csv('dataset.csv')
+        #print('finished reading csv')
+        #self.y = self.dataset.iloc[:, 2]
+        #self.dataset.drop([2], axis=1)
     
     
     def trainTestSplit(self):
-        with open('uniprot_ligand_logfc_pvalue.csv', 'r') as comb_file:
-            comb_file_lines = self.__getValidEntries(comb_file.readlines())
-            x, y = [], []
-        for row in comb_file_lines:
-            row = row[:-1].split(',')
-            if len(row) == 4:
-                protein_ligand_list = []
-                protein_ligand_list.append(row[0]) # protein-ligand(file name from Hiro's lab) tuple
-                comp_name_index = row[1].rfind('_')
-                protein_ligand_list.append(row[1][comp_name_index + 1:])
-                x.append(protein_ligand_list)
-                y.append(row[2]) # logfc score only; doesn't make sense to predict pvalues
+        #with open('uniprot_ligand_logfc_pvalue.csv', 'r') as comb_file:
+        #    comb_file_lines = self.__getValidEntries(comb_file.readlines())
+        #    x, y = [], []
+        #for row in comb_file_lines:
+        #    row = row[:-1].split(',')
+        #    if len(row) == 4:
+        #        protein_ligand_list = []
+        #        protein_ligand_list.append(row[0]) # protein-ligand(file name from Hiro's lab) tuple
+        #        comp_name_index = row[1].rfind('_')
+        #        protein_ligand_list.append(row[1][comp_name_index + 1:])
+        #        x.append(protein_ligand_list)
+        #        y.append(row[2]) # logfc score only; doesn't make sense to predict pvalues
 
-        X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+        X_train, X_test, y_train, y_test = train_test_split(
+            self.dataset, self.y, test_size=0.3
+            )
+        log.info('Split data in training and testing sets.')
         return X_train, X_test, y_train, y_test
 
 
     def createModel(self):
-        prot_adj_model = self.prot_adj_data_handler.createModel()
-        prot_feat_model = self.prot_feat_data_handler.createModel()
-        lig_adj_model = self.lig_adj_data_handler.createModel()
+        #prot_adj_model = self.prot_adj_data_handler.createModel()
+        #prot_feat_model = self.prot_feat_data_handler.createModel()
+        #lig_adj_model = self.lig_adj_data_handler.createModel()
         
+        prot_adj_in = tf.keras.layers.Input(
+            shape=(constants.PROTEIN_ADJACENCY_MAT_SIZE, ),
+            name='Protein-Adjacency-Matrix'
+        )
+        
+        prot_feat_in = tf.keras.layers.Input(
+            shape=(constants.PROTEIN_ADJACENCY_MAT_SIZE, ),
+            name='Protein-Feature-Matrix'
+        )
+
+        ligand_adj_in = tf.keras.layers.Input(
+            shape=(constants.LIGAND_ADJACENCY_MAT_SIZE, ),
+            name='Ligand-Adjacency-Matrix'
+        )
+
+
         concat_layer = tf.keras.layers.Concatenate([
             prot_adj_model.output,
             prot_feat_model.output,
@@ -57,6 +106,7 @@ class GraphCNN:
         )
 
         model.compile(optimizer='adam', loss='mean_absolute_error')
+        return model
 
 
     def __getValidEntries(self, comb_file_lines):
@@ -108,10 +158,11 @@ class GraphCNN:
         return res
         
 g = GraphCNN()
-a, b, c, d = g.trainTestSplit()
-
-print(len(a))
-print(g.fetchProteinData(a[4000][0]))
+X_train, X_test, y_train, y_test = g.trainTestSplit()
+print(y_test)
+#model = g.createModel()
+#print(len(a))
+#print(g.fetchProteinData(a[4000][0]))
 
 #print(b)
 #print(d)

@@ -2,8 +2,9 @@ import numpy as np
 import pandas as pd
 import logging as log
 import os
+import sys
 import re
-
+import log_config
 import constants
 
 class DataHandlers:
@@ -11,22 +12,63 @@ class DataHandlers:
         pass
 
     def createDatasetCSV(self):
-        with open('uniprot_ligand_logfc_pvalue.csv') as couples_csv:
+        with open('/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/uniprot_ligand_logfc_pvalue.csv', 'r') as couples_csv:
             couples_list = couples_csv.readlines()
             cur_dataset_list = couples_list
-            with open ('dataset.csv', 'a') as dataset:
-                dataset.write('ProteinAdjacency, ProteinFeatures, LigandAdjacency, logFC')
-                for i in range(len(cur_dataset_list)):
+            with open ('/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/dataset.csv', 'a') as dataset:
+                dataset.truncate(0)
+                #dataset.write('ProteinAdjacency, ProteinFeatures, LigandAdjacency, logFC\n')
+                for i in range(3):#len(cur_dataset_list)):
                     line_list = cur_dataset_list[i].split(',')
+                    
                     new_list = [0, 1, 2, 3]
-                    new_list[0], new_list[1] = self.__fetchProteinData(line_list[0])
-                    log.info('first add successfull for row ', i, ' out of ', len(cur_dataset_list))
-                    new_list[2] = self.__fetchLigandData(line_list[1])
-                    log.info('second add successfull for row ', i, ' out of ', len(cur_dataset_list))
-                    new_list[3] = (line_list[2])
-                    log.info('third add successfull for row ', i, ' out of ', len(cur_dataset_list))
 
-                    dataset.write(','.join(new_list))
+                    protein_data = self.__fetchProteinData(line_list[0])
+                    ligand_data = self.__fetchLigandData(line_list[1])
+                    new_list[0], new_list[1] = self.__convertNumpyToString(protein_data[0]), self.__convertNumpyToString(protein_data[1])
+                    log.info('first add successfull for row ' + str(i) + ' out of ' + str(len(cur_dataset_list)))
+                    new_list[2] = self.__convertNumpyToString(self.__fetchLigandData(line_list[1]))
+                    log.info('second add successfull for row ' + str(i) + ' out of ' + str(len(cur_dataset_list)))
+                    new_list[3] = (line_list[2])
+                    log.info('third add successfull for row ' + str(i) + ' out of ' + str(len(cur_dataset_list)))
+
+                    
+                    #print(','.join(new_list))
+                    #dataset.write('\t'.join(new_list) + '\n')
+
+    
+    def createDatasetPickles(self):
+        with open('/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/uniprot_ligand_logfc_pvalue.csv', 'r') as couples_csv:
+            couples_list = couples_csv.readlines()
+            cur_dataset_list = couples_list
+            row_count = len(couples_list)
+            dataset_count = row_count // 250 + 1
+            print(dataset_count)
+
+            for i in range(dataset_count):
+                dataset_size = min(250, row_count - i * 250)
+                df = pd.DataFrame(index=range(dataset_size),columns=range(4))
+                
+                for j in range(i*250, i*250 + dataset_size):
+                    line_list = cur_dataset_list[j].split(',')
+                    protein_data = self.__fetchProteinData(line_list[0])
+                    ligand_data = self.__fetchLigandData(line_list[1])
+                    logFc = line_list[2]
+
+                    log.info('data extraction completed' + str(j))
+
+                    df.iat[j % 250, 0] = protein_data[0].resize((constants.PROTEIN_ADJACENCY_MAT_SIZE, constants.PROTEIN_ADJACENCY_MAT_SIZE))
+                    
+                    log.info('protein adjacency matrix resized and added to df')
+                    df.iat[j % 250, 1] = protein_data[1].resize((constants.PROTEIN_ADJACENCY_MAT_SIZE, constants.PROTEIN_FEATURES_COUNT))
+                    log.info('protein feature matrix resized and added to df')
+                    df.iat[j % 250, 2] = ligand_data.resize((constants.LIGAND_ADJACENCY_MAT_SIZE, constants.LIGAND_ADJACENCY_MAT_SIZE))
+                    log.info('ligand adjacency matrix resized and added to df')
+                    df.iat[j % 250, 3] = logFc
+                    log.info('dataframe load complete' +  str(j))
+
+                df.to_pickle(os.path.join(constants.MATRIX_DATA_FILES_PATH, 'dataset_part_' + str(i) + '.pkl'))
+
 
     def concatenateDatasets(self):
         data_prep_files = os.listdir('.')
@@ -43,9 +85,7 @@ class DataHandlers:
         protein_feature_matrix = np.load(
             os.path.join(constants.PROTEIN_FEATURE_PATH, protein_name + '_feat_mat.npy')
         )
-        return np.array2string(protein_adjacency_matrix, precision=4, separator=',',
-                      suppress_small=True), np.array2string(protein_feature_matrix, precision=4, separator=',',
-                      suppress_small=True)
+        return protein_adjacency_matrix, protein_feature_matrix
 
 
     def __fetchLigandData(self, ligand_name):
@@ -54,9 +94,26 @@ class DataHandlers:
         ligand_adjacency_matrix = np.load(
             os.path.join(constants.MOL_ADJACENCY_PATH, adjacency_file_name)
         )
-        return np.array2string(ligand_adjacency_matrix, precision=4, separator=',',
-                      suppress_small=True)
+        return ligand_adjacency_matrix
     
+
+    def __convertNumpyToString(self, np_matrix):
+        log.info('started converting numpy file to string')
+        arr_str = "["
+        for row in np_matrix:
+            row_str = '['
+            for item in row:
+                row_str = row_str + str(item) + ","
+            row_str = row_str[:-1]
+            row_str = row_str + '],'
+            arr_str = arr_str + row_str
+        arr_str = arr_str[:-1]
+        arr_str = arr_str + "]"
+        log.info('finished numpy file conversion')
+        #print(arr_str)
+        return arr_str
+
+
     def __getLigandFileNames(self, ligand_name):
         """The function returns the filename of the ligand adjacency matrix corresponding to the
         ligand name from the ligand column in the uniprot-ligand-logFC-pValue csv.
@@ -73,4 +130,4 @@ class DataHandlers:
 
 
 dh = DataHandlers()
-dh.createDatasetCSV()
+dh.createDatasetPickles()
