@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib as plt
 
-def train(features, labels, filter_feat, filter_feat2, ligand_features):
+def train(features, labels, filter_feat):
     #define features and labels
     X = features #Kmers
     y = labels #Binds or not
@@ -31,12 +31,9 @@ def train(features, labels, filter_feat, filter_feat2, ligand_features):
     clf.fit(X_res,y_res)
 
     #Finding most important features
-    filter_feat.extend(filter_feat2) #Feature names
-    filter_feat.extend(ligand_features)
-
     importances = clf.feature_importances_
 
-    #Picking the 10 most important features
+    #Writes the features of the model in order of importance to the important_features.txt file
     with open("important_features.txt", "w") as f:
         while importances.size > 0:
             index = np.argmax(importances)

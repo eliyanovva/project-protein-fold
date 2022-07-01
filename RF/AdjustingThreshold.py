@@ -1,3 +1,4 @@
+#This script determines the best probability threshold for determining positive vs negative pairings
 #Adapted from: https://machinelearningmastery.com/threshold-moving-for-imbalanced-classification/
 
 #imports

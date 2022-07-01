@@ -178,10 +178,14 @@ def import_final():
     X = final_matrix
     global Y
     Y = logFCmat
-    global feat1
-    #feat1 = filter_feat
-    global feat2
-    #feat2 = filter_feat2
-    global feat3
-    feat3 = ligand_features
+    global feats
+    AA_filter_TM3.extend(AA_filter_TM5)
+    AA_filter_TM3.extend(AA_filter_TM6)
+    AA_filter_TM3.extend(AA_filter_TM7)
+    AA_filter_TM3.extend(Di_filter_TM3)
+    AA_filter_TM3.extend(Di_filter_TM5)
+    AA_filter_TM3.extend(Di_filter_TM6)
+    AA_filter_TM3.extend(Di_filter_TM7)
+    AA_filter_TM3.extend(ligand_features)
+    feats = AA_filter_TM3
 

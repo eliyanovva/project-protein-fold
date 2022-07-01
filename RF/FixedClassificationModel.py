@@ -1,4 +1,4 @@
-#This script is a Classification Random Forest Model with Oversampling
+#This script is a Classification Random Forest Model with Undersampling
 #Code adapted from: https://www.datacamp.com/tutorial/random-forests-classifier-python 
 
 #imports
