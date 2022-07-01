@@ -59,10 +59,10 @@ AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, cat
 AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, categorized_seqs_TM6, categorized_features_TM6)
 AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, categorized_seqs_TM7, categorized_features_TM7)
 
-AA_filter_TM3 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts)
-AA_filter_TM5 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts)
-AA_filter_TM6 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts)
-AA_filter_TM7 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts)
+AA_filter_TM3, feat1 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3")
+AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5")
+AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6")
+AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7")
 
 print('AA_TM3 kmers: ' + str(len(AA_filter_TM3)))
 print('AA_TM5 kmers: ' + str(len(AA_filter_TM5)))
@@ -99,10 +99,10 @@ Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_
 Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5, di_seqs_TM6, di_features_TM6)
 Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 5, di_seqs_TM7, di_features_TM7)
 
-Di_filter_TM3 = Filtering.richness_protein(Di_features_TM3, Di_seqvar_TM3, pos_counts, neg_counts)
-Di_filter_TM5 = Filtering.richness_protein(Di_features_TM5, Di_seqvar_TM5, pos_counts, neg_counts)
-Di_filter_TM6 = Filtering.richness_protein(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts)
-Di_filter_TM7 = Filtering.richness_protein(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts)
+Di_filter_TM3, feat5 = Filtering.richness_protein(Di_features_TM3, Di_seqvar_TM3, pos_counts, neg_counts, "TM3")
+Di_filter_TM5, feat6 = Filtering.richness_protein(Di_features_TM5, Di_seqvar_TM5, pos_counts, neg_counts, "TM5")
+Di_filter_TM6, feat7 = Filtering.richness_protein(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts, "TM6")
+Di_filter_TM7, feat8 = Filtering.richness_protein(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts, "TM7")
 
 print('Di_TM3 kmers: ' + str(len(Di_filter_TM3)))
 print('Di_TM5 kmers: ' + str(len(Di_filter_TM5)))
@@ -141,26 +141,6 @@ for protein in proteins:
     for ligand in list(ligand_dict.keys()):
         logFCmat.append(float(classified[protein][ligand]))
 
-#Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
-def uniquematrix(matrix):
-    rowCount = len(matrix)
-    if rowCount == 0:
-        return
-    columnCount = len(matrix[0])
-    if columnCount == 0:
-        return
-    unique = {}
-    ret = 0
-    for row in matrix:
-        rowkey =  " ".join(["%s"] * columnCount) % tuple(row)
-        if rowkey not in unique:
-            unique[rowkey] = True
-        else:
-            ret += 1
-    return ret
-
-#The following code checks whether all entries are unique
-#print(uniquematrix(final_matrix))
 
 def import_final():
     #For No3Di.py
@@ -179,13 +159,13 @@ def import_final():
     global Y
     Y = logFCmat
     global feats
-    AA_filter_TM3.extend(AA_filter_TM5)
-    AA_filter_TM3.extend(AA_filter_TM6)
-    AA_filter_TM3.extend(AA_filter_TM7)
-    AA_filter_TM3.extend(Di_filter_TM3)
-    AA_filter_TM3.extend(Di_filter_TM5)
-    AA_filter_TM3.extend(Di_filter_TM6)
-    AA_filter_TM3.extend(Di_filter_TM7)
-    AA_filter_TM3.extend(ligand_features)
-    feats = AA_filter_TM3
+    feat1.extend(feat2)
+    feat1.extend(feat3)
+    feat1.extend(feat4)
+    feat1.extend(feat5)
+    feat1.extend(feat6)
+    feat1.extend(feat7)
+    feat1.extend(feat8)
+    feat1.extend(ligand_features)
+    feats = feat1
 

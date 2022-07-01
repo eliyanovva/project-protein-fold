@@ -12,7 +12,7 @@ acc_list = Globals.initialize_protein_list()
 #seqvar: list of Seq class objects (name, sequence = protein sequence, dictionary = kmer freq dictionary)
 #pos_counts: key = protein id, value = # pos. interactions with the protein
 #neg_counts: key = protein id, value = # neg. interactions with the protein
-def richness_protein(kmers, seqvar, pos_counts, neg_counts):
+def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
     kmers = list(kmers)
 
     pos_counts_by_kmer = {}             #key: kmer, value: num. of positive pairs that involve the kmer
@@ -66,6 +66,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
             richness[kmer] = pos_prop_by_kmer[kmer] / neg_prop_by_kmer[kmer]
 
     ret = []                #list of kmers that meet filtering conditions; to be used in final matrix
+    ret2 = []               #for importances list
     lowest_in_top10 = 1000000000
     max = 0
     max_kmer = ""
@@ -77,10 +78,11 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts):
 
         if (richness[kmer] <= .125) | (richness[kmer] >= 8):
             ret.append(kmer)
+            ret2.append(kmer + domain)
         """
 
         if counts_by_id[kmer] > max:
             max = counts_by_id[kmer]
             max_kmer = kmer
         """
-    return ret #, max, max_kmer
+    return ret, ret2 #, max, max_kmer
