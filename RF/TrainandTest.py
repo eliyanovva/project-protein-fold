@@ -1,8 +1,8 @@
 #This script tests the Random Forest on the entire preprocessed data set
 
 import CombineLigandsProteins
-#import FixedClassificationModel
-import FeatureImportance
+import FixedClassificationModel
+#import FeatureImportance
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
@@ -10,22 +10,25 @@ testY = CombineLigandsProteins.Y
 
 print("imported matrices")
 
-FeatureImportance.train(testX, testY, CombineLigandsProteins.feats) 
-
-
+#FeatureImportance.train(testX, testY, CombineLigandsProteins.feats)
 #FixedClassificationModel.train(testX, testY)
 
-"""
-accuracy = 0
-recall = 0
 
-for i in range(5):
+accuracy = []
+recall = []
+
+f = open('results_100.csv', "w")
+
+for i in range(200):
     print("run " + str(i))
     acc,rec = FixedClassificationModel.train(testX, testY)
-    accuracy += acc
-    recall += rec
+    accuracy.append(acc)
+    recall.append(rec)
+    f.write(str(i+1) + "," + str(acc) + "," + str(rec) + "\n")
 
-print('Average Accuracy: ' + str(accuracy/5))
-print('Average Recall: ' + str(recall/5))
+print(accuracy)
+print(recall)
+#print('Average Accuracy: ' + str(accuracy/5))
+#print('Average Recall: ' + str(recall/5))
 
-"""
+f.close()

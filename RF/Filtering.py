@@ -85,4 +85,4 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
             max = counts_by_id[kmer]
             max_kmer = kmer
         """
-    return ret, ret2 #, max, max_kmer
+    return ret , ret2 #, max, max_kmer
