@@ -2,7 +2,6 @@
 
 import CombineLigandsProteins
 import FixedClassificationModel
-#import FeatureImportance
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
@@ -17,13 +16,13 @@ FixedClassificationModel.train(testX, testY)
 accuracy = 0
 recall = 0
 
-with open("scores.txt", "w") as f:
-    for i in range(10):
-        print("run " + str(i), file=f)
-        acc,rec = FixedClassificationModel.train(testX, testY)
-        accuracy += acc
-        recall += rec
+for i in range(5):
+    print("run " + str(i))
+    acc,rec = FixedClassificationModel.train(testX, testY)
+    accuracy += acc
+    recall += rec
 
-    print('Average Accuracy: ' + str(accuracy/10), file=f)
-    print('Average Recall: ' + str(recall/10), file=f)
+print('Average Accuracy: ' + str(accuracy/5))
+print('Average Recall: ' + str(recall/5))
+
 """
