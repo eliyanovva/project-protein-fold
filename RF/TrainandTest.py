@@ -1,16 +1,19 @@
 #This script tests the Random Forest on the entire preprocessed data set
 
 import CombineLigandsProteins
-import FixedClassificationModel
+#import FixedClassificationModel
+import FeatureImportance
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 
-#FeatureImportance.train(testX, testY, CombineLigandsProteins.feats) 
 print("imported matrices")
 
-FixedClassificationModel.train(testX, testY)
+FeatureImportance.train(testX, testY, CombineLigandsProteins.feats) 
+
+
+#FixedClassificationModel.train(testX, testY)
 
 """
 accuracy = 0

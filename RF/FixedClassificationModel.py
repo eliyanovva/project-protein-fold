@@ -5,7 +5,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
-from imblearn.under_sampling import RepeatedEditedNearestNeighbours
+from imblearn.under_sampling import RandomUnderSampler
 
 def train(features, labels):
     #define features and labels
@@ -16,9 +16,9 @@ def train(features, labels):
     X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,test_size=0.1) # 90% training and 10% test
     print("split test and train")
     #Undersampling was necessary, because most ligand/receptor pairs do not bind in our dataset
-    enn = RepeatedEditedNearestNeighbours()
+    rus = RandomUnderSampler()
     
-    X_res, y_res = enn.fit_resample(X_train, y_train)
+    X_res, y_res = rus.fit_resample(X_train, y_train)
     print("Undersampled")
 
     #Create a Gaussian Regression
