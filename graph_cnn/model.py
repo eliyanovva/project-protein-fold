@@ -11,6 +11,7 @@ from protein_handlers import ProteinAdjacencyData, ProteinFeatureData
 from ligand_handlers import LigandAdjacencyData
 import data_prep.constants as constants
 
+#these two are deprecated!
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
