@@ -10,25 +10,21 @@ testY = CombineLigandsProteins.Y
 
 print("imported matrices")
 
-#FeatureImportance.train(testX, testY, CombineLigandsProteins.feats)
+#FeatureImportance.train(testX, testY, CombineLigandsProteins.feats) 
+
+
 #FixedClassificationModel.train(testX, testY)
 
 
-accuracy = []
-recall = []
+accuracy = 0
+recall = 0
 
-f = open('results_100.csv', "w")
-
-for i in range(200):
+for i in range(5):
     print("run " + str(i))
     acc,rec = FixedClassificationModel.train(testX, testY)
-    accuracy.append(acc)
-    recall.append(rec)
-    f.write(str(i+1) + "," + str(acc) + "," + str(rec) + "\n")
+    accuracy += acc
+    recall += rec
 
-print(accuracy)
-print(recall)
-#print('Average Accuracy: ' + str(accuracy/5))
-#print('Average Recall: ' + str(recall/5))
+print('Average Accuracy: ' + str(accuracy/5))
+print('Average Recall: ' + str(recall/5))
 
-f.close()

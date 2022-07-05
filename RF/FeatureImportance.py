@@ -5,11 +5,8 @@
 #imports
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn import metrics
-from imblearn.under_sampling import RandomUnderSampler
+from imblearn.under_sampling import InstanceHardnessThreshold
 import numpy as np
-import pandas as pd
-import matplotlib as plt
 
 def train(features, labels, filter_feat):
     #define features and labels
@@ -20,9 +17,9 @@ def train(features, labels, filter_feat):
     X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,test_size=0.1) # 90% training and 10% test
 
     #Oversampling was necessary, because most ligand/receptor pairs do not bind in our dataset
-    rus = RandomUnderSampler()
+    ih = InstanceHardnessThreshold(n_jobs=-1, cv=3)
 
-    X_res, y_res = rus.fit_resample(X_train, y_train)
+    X_res, y_res = ih.fit_resample(np.int_(X_train), np.int_(y_train))
 
     #Create a Gaussian Regression
     clf=RandomForestClassifier(n_estimators=100)
