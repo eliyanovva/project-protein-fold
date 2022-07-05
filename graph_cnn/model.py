@@ -11,6 +11,7 @@ import data_prep.constants as constants
 from protein_handlers import ProteinAdjacencyData, ProteinFeatureData
 from ligand_handlers import LigandAdjacencyData
 from data_prep.data_handlers import DataHandlers
+import data_prep.constants as constants
 
 
 log.info(os.getpid())

@@ -2,13 +2,11 @@
 
 import CombineLigandsProteins
 #import FixedClassificationModel
-import FeatureImportance
+import RF.Feature_Importance.FeatureImportance as FeatureImportance
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
-
-print("imported matrices")
 
 FeatureImportance.train(testX, testY, CombineLigandsProteins.feats) 
 
@@ -27,5 +25,4 @@ for i in range(5):
 
 print('Average Accuracy: ' + str(accuracy/5))
 print('Average Recall: ' + str(recall/5))
-
 """

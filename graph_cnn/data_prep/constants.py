@@ -24,7 +24,7 @@ SMILES_FILES_PATH = os.path.join(DATA_FILES_PATH, 'smiles_files')
 
 MATRIX_DATA_FILES_PATH = os.path.join(script_dir, 'graph_cnn', 'data_prep')
 MOL_ADJACENCY_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_adjacency_data')
-MOL_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_features_data')
+MOL_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_feature_data')
 PROTEIN_ADJACENCY_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_adjacency_data')
 PROTEIN_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data')
 PROTEIN_FEATURE_PATH_PDB = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data_local')

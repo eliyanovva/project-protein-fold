@@ -64,11 +64,6 @@ AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5
 AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6")
 AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7")
 
-print('AA_TM3 kmers: ' + str(len(AA_filter_TM3)))
-print('AA_TM5 kmers: ' + str(len(AA_filter_TM5)))
-print('AA_TM6 kmers: ' + str(len(AA_filter_TM6)))
-print('AA_TM7 kmers: ' + str(len(AA_filter_TM7)))
-
 AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, categorized_matrix_TM3)
 AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, categorized_matrix_TM5)
 AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, categorized_matrix_TM6)
@@ -103,11 +98,6 @@ Di_filter_TM3, feat5 = Filtering.richness_protein(Di_features_TM3, Di_seqvar_TM3
 Di_filter_TM5, feat6 = Filtering.richness_protein(Di_features_TM5, Di_seqvar_TM5, pos_counts, neg_counts, "TM5")
 Di_filter_TM6, feat7 = Filtering.richness_protein(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts, "TM6")
 Di_filter_TM7, feat8 = Filtering.richness_protein(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts, "TM7")
-
-print('Di_TM3 kmers: ' + str(len(Di_filter_TM3)))
-print('Di_TM5 kmers: ' + str(len(Di_filter_TM5)))
-print('Di_TM6 kmers: ' + str(len(Di_filter_TM6)))
-print('Di_TM7 kmers: ' + str(len(Di_filter_TM7)))
 
 Di_mat_TM3 = ReadingFasta.makematrix(Di_seqvar_TM3, Di_filter_TM3, di_matrix_TM3)
 Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_filter_TM5, di_matrix_TM5)
