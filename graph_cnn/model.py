@@ -66,9 +66,10 @@ class GraphCNN:
 
 
     def createModel(self):
-        #prot_adj_model = self.prot_adj_data_handler.createModel()
-        #prot_feat_model = self.prot_feat_data_handler.createModel()
-        #lig_adj_model = self.lig_adj_data_handler.createModel()
+        #undid '#' infront of these three lines
+        prot_adj_model = self.prot_adj_data_handler.createModel()
+        prot_feat_model = self.prot_feat_data_handler.createModel()
+        lig_adj_model = self.lig_adj_data_handler.createModel()
         
         prot_adj_in = tf.keras.layers.Input(
             shape=(constants.PROTEIN_ADJACENCY_MAT_SIZE, ),
