@@ -9,9 +9,10 @@
 #f: {Asp, Glu} => {D, E}
 #g: {Cys} => {C}
 
-cmd.load("AF-A0A1L1SQ02-F1-model_v2.pdb") #Load in pdb file
-cmd.color("magenta", "AF-A0A1L1SQ02-F1")
+#Imports
+import os
 
+#Method to determine all possible combinations of amino acids for each code
 def uncat(feature):
     ret = ['']
     for letter in feature:
@@ -52,64 +53,82 @@ def uncat(feature):
                 ret[i] += 'C'
     return ret
 
+directory = 'pdb_data_files'
 
-printstatement1 = ""
-i = 0
-for sequence in uncat('cgbbb'):
-    if i > 0:
-        printstatement1 += ' or '
-    printstatement1 += 'pepseq ' + sequence
-    i = 1
-print(printstatement1)
+#Iterate through each pdb
+for filename in os.listdir(directory):
+    f = os.path.join(directory, filename)
+    if os.path.isfile(f):
+        location_of_protein = directory + "/" + filename
+        cmd.load(location_of_protein) #Load in pdb file
+        name_of_protein = filename.replace("-model_v2.pdb", "")
+        cmd.color("magenta", name_of_protein)
 
-printstatement2 = ""
-i = 0
-for sequence in uncat('ebcae'):
-    if i > 0:
-        printstatement2 += ' or '
-    printstatement2 += 'pepseq ' + sequence
-    i = 1
-print(printstatement2)
+        #Select important Amino Acids
+        printstatement1 = ""
+        i = 0
+        for sequence in uncat('cgbbb'):
+            if i > 0:
+                printstatement1 += ' or '
+            printstatement1 += 'pepseq ' + sequence
+            i = 1
+        print(printstatement1)
 
-printstatement3 = ""
-i = 0
-for sequence in uncat('gaecd'):
-    if i > 0:
-        printstatement3 += ' or '
-    printstatement3 += 'pepseq ' + sequence
-    i = 1
-print(printstatement3)
+        printstatement2 = ""
+        i = 0
+        for sequence in uncat('ebcae'):
+            if i > 0:
+                printstatement2 += ' or '
+            printstatement2 += 'pepseq ' + sequence
+            i = 1
+        print(printstatement2)
 
-printstatement4 = ""
-i = 0
-for sequence in uncat('cfggb'):
-    if i > 0:
-        printstatement4 += ' or '
-    printstatement4 += 'pepseq ' + sequence
-    i = 1
-print(printstatement4)
+        printstatement3 = ""
+        i = 0
+        for sequence in uncat('gaecd'):
+            if i > 0:
+                printstatement3 += ' or '
+            printstatement3 += 'pepseq ' + sequence
+            i = 1
+        print(printstatement3)
 
-printstatement5 = ""
-i = 0
-for sequence in uncat('dabfd'):
-    if i > 0:
-        printstatement5 += ' or '
-    printstatement5 += 'pepseq ' + sequence
-    i = 1
-print(printstatement5)
+        printstatement4 = ""
+        i = 0
+        for sequence in uncat('cfggb'):
+            if i > 0:
+                printstatement4 += ' or '
+            printstatement4 += 'pepseq ' + sequence
+            i = 1
+        print(printstatement4)
 
+        printstatement5 = ""
+        i = 0
+        for sequence in uncat('dabfd'):
+            if i > 0:
+                printstatement5 += ' or '
+            printstatement5 += 'pepseq ' + sequence
+            i = 1
+        print(printstatement5)
 
-cmd.select("AA1", printstatement1)
-cmd.color("red", "AA1")
+        #Color important Amino Acids
+        cmd.select("AA1", printstatement1)
+        cmd.color("red", "AA1")
 
-cmd.select("AA2", printstatement2)
-cmd.color("orange", "AA2")
+        cmd.select("AA2", printstatement2)
+        cmd.color("orange", "AA2")
 
-cmd.select("AA3", printstatement3)
-cmd.color("yellow", "AA3")
+        cmd.select("AA3", printstatement3)
+        cmd.color("yellow", "AA3")
 
-cmd.select("AA4", printstatement4)
-cmd.color("green", "AA4")
+        cmd.select("AA4", printstatement4)
+        cmd.color("green", "AA4")
 
-cmd.select("AA5", printstatement5)
-cmd.color("blue", "AA5")
+        cmd.select("AA5", printstatement5)
+        cmd.color("blue", "AA5")
+
+        #Save as png
+        savelocation = "Images/" + name_of_protein + ".png"
+        cmd.png(savelocation)
+        
+        #Hide protein
+        cmd.hide("everything", name_of_protein)
