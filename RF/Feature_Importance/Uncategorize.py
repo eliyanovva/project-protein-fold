@@ -110,20 +110,25 @@ for filename in os.listdir(directory):
             i = 1
         print(printstatement5)
 
+        TM3 = "Res 70-170"
+        TM5 = "Res 150-280"
+        TM6 = "Res 210-310"
+        TM7 = "Res 240-350"
+        
         #Color important Amino Acids
-        cmd.select("AA1", printstatement1)
+        cmd.select("AA1", printstatement1 + " and " + TM6)
         cmd.color("red", "AA1")
 
-        cmd.select("AA2", printstatement2)
+        cmd.select("AA2", printstatement2 + " and " + TM6)
         cmd.color("orange", "AA2")
 
-        cmd.select("AA3", printstatement3)
+        cmd.select("AA3", printstatement3 + " and " + TM7)
         cmd.color("yellow", "AA3")
 
-        cmd.select("AA4", printstatement4)
+        cmd.select("AA4", printstatement4 + " and " + TM3)
         cmd.color("green", "AA4")
 
-        cmd.select("AA5", printstatement5)
+        cmd.select("AA5", printstatement5 + " and " + TM5)
         cmd.color("blue", "AA5")
 
         #Save as png
