@@ -2,7 +2,7 @@
 
 import CombineLigandsProteins
 #import FixedClassificationModel
-import FeatureImportance
+import RF.Feature_Importance.FeatureImportance as FeatureImportance
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
