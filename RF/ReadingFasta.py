@@ -67,7 +67,6 @@ def make_seqvar(fasta, seqvar, feat):
 def makematrix(seqvar, feat, mat):
     for seq in seqvar:
         newseq = []
-
         for kmer in feat:
             #For kmers not found in the protein, populate the matrix with zeros
             if kmer not in seq.dictionary:

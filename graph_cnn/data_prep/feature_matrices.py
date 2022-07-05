@@ -1,9 +1,15 @@
 import openbabel
 from openbabel import pybel
-import constants
+from constants import PDB_FILES_PATH
+import logging as log
+import log_config
+import os
 
 def getMatrix(filetype, filepath):
     #reading pdb or mol file
+    filepath = os.path.join(PDB_FILES_PATH, filepath)
+    log.info('filetype in format ' + filetype)
+    log.info('filepath is ' + filepath)
     prefile = next(pybel.readfile(filetype, filepath))
 
     #creating a Molecule object
@@ -62,3 +68,7 @@ def getMatrix(filetype, filepath):
 #Notes:
 # feature ideas - in binding pocket(a boolean)
 #use help(protein) to learn about the molecule object
+#always creates error "Open Babel Warning  in PerceiveBondOrders
+#  Failed to kekulize aromatic bonds in OBMol::PerceiveBondOrders"
+#error already reported on github https://github.com/volkamerlab/teachopencadd/issues/180
+#does not appear to cause problems

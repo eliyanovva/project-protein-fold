@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import logging as log
 from sklearn.model_selection import train_test_split
+from data_prep.data_handlers import DataHandlers
 import os
 
 import data_prep.log_config
@@ -10,6 +11,15 @@ from protein_handlers import ProteinAdjacencyData, ProteinFeatureData
 from ligand_handlers import LigandAdjacencyData
 import data_prep.constants as constants
 
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+
+config = ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.4
+session = InteractiveSession(config=config)
+
+
+log.info(os.getpid())
 
 class GraphCNN:
     def __init__(self):
@@ -45,67 +55,101 @@ class GraphCNN:
     
     
     def trainTestSplit(self):
-        #with open('uniprot_ligand_logfc_pvalue.csv', 'r') as comb_file:
-        #    comb_file_lines = self.__getValidEntries(comb_file.readlines())
-        #    x, y = [], []
-        #for row in comb_file_lines:
-        #    row = row[:-1].split(',')
-        #    if len(row) == 4:
-        #        protein_ligand_list = []
-        #        protein_ligand_list.append(row[0]) # protein-ligand(file name from Hiro's lab) tuple
-        #        comp_name_index = row[1].rfind('_')
-        #        protein_ligand_list.append(row[1][comp_name_index + 1:])
-        #        x.append(protein_ligand_list)
-        #        y.append(row[2]) # logfc score only; doesn't make sense to predict pvalues
+        with open(constants.MATRIX_DATA_FILES_PATH + '/uniprot_ligand_logfc_pvalue.csv', 'r') as comb_file:
+            comb_file_lines = self.__getValidEntries(comb_file.readlines())
+            x, y = [], []
+            # FIX SIZE LATER, SET TO 250 FOR A SMALLER BATCH TRY
+        for row in comb_file_lines[:100]:
+            row = row[:-1].split(',')
+            if len(row) == 4:
+                protein_ligand_list = []
+                protein_ligand_list.append(row[0]) # protein-ligand(file name from Hiro's lab) tuple
+                comp_name_index = row[1].rfind('_')
+                protein_ligand_list.append(row[1][comp_name_index + 1:])
+                x.append(protein_ligand_list)
+                y.append(row[2]) # logfc score only; doesn't make sense to predict pvalues
 
         X_train, X_test, y_train, y_test = train_test_split(
-            self.dataset, self.y, test_size=0.3
+            x, y, test_size=0.3
             )
-        log.info('Split data in training and testing sets.')
+        #log.info('Split data in training and testing sets.')
         return X_train, X_test, y_train, y_test
 
 
     def createModel(self):
-        #prot_adj_model = self.prot_adj_data_handler.createModel()
-        #prot_feat_model = self.prot_feat_data_handler.createModel()
-        #lig_adj_model = self.lig_adj_data_handler.createModel()
+        #undid '#' infront of these three lines
+        prot_adj_model = self.prot_adj_data_handler.createModel()
+        prot_feat_model = self.prot_feat_data_handler.createModel()
+        lig_adj_model = self.lig_adj_data_handler.createModel()
         
         prot_adj_in = tf.keras.layers.Input(
-            shape=(constants.PROTEIN_ADJACENCY_MAT_SIZE, ),
+            shape=(constants.PROTEIN_ADJACENCY_MAT_SIZE,
+            constants.PROTEIN_ADJACENCY_MAT_SIZE ),
             name='Protein-Adjacency-Matrix'
         )
         
         prot_feat_in = tf.keras.layers.Input(
-            shape=(constants.PROTEIN_ADJACENCY_MAT_SIZE, ),
+            shape=(constants.PROTEIN_ADJACENCY_MAT_SIZE,
+            constants.PROTEIN_FEATURES_COUNT),
             name='Protein-Feature-Matrix'
         )
 
         ligand_adj_in = tf.keras.layers.Input(
-            shape=(constants.LIGAND_ADJACENCY_MAT_SIZE, ),
+            shape=(constants.LIGAND_ADJACENCY_MAT_SIZE,
+            constants.LIGAND_ADJACENCY_MAT_SIZE),
             name='Ligand-Adjacency-Matrix'
         )
-
-
-        concat_layer = tf.keras.layers.Concatenate([
-            prot_adj_model.output,
-            prot_feat_model.output,
-            lig_adj_model.output
-        ])
-
-        output = tf.keras.layers.Dense(1024, activation='relu')(concat_layer)
-        output = tf.keras.layers.Dense(512, activation='relu')(output)
-        output = tf.keras.layers.Dense(128, activation='relu')(output)
-        output = tf.keras.layers.Dense(1, activation='relu')(output)    
+ 
+        # the first branch operates on the first input
+        x = tf.keras.layers.Conv1D(
+            2, 3, activation='relu'
+        )(prot_adj_in)
+        x = tf.keras.layers.AveragePooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.Flatten()(x)
+        x = tf.keras.layers.Dense(128, activation="relu")(x)
+        x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
+        # the second branch opreates on the second input
         
-        model = tf.keras.models.Model([
-            prot_adj_model.input,
-            prot_feat_model.input,
-            lig_adj_model.input
-            ], 
-            outputs=output
-        )
+        y = tf.keras.layers.Flatten()(prot_feat_in)
+        y = tf.keras.layers.Dense(32, activation="relu")(y)
+        #y = tf.keras.layers.Dense(4, activation="relu")(y)
+        y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
 
-        model.compile(optimizer='adam', loss='mean_absolute_error')
+        z = tf.keras.layers.Flatten()(ligand_adj_in)
+        z = tf.keras.layers.Dense(32, activation="relu")(z)
+        #z = tf.keras.layers.Dense(4, activation="relu")(z)
+        z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
+        # combine the output of the two branches
+        combined = tf.keras.layers.concatenate([x.output, y.output, z.output])
+        # apply a FC layer and then a regression prediction on the
+        # combined outputs
+        out = tf.keras.layers.Dense(2, activation="relu")(combined)
+        out = tf.keras.layers.Dense(1, activation="linear")(out)
+        # our model will accept the inputs of the two branches and
+        # then output a single value
+        model = tf.keras.Model(inputs=[x.input, y.input, z.input], outputs=out)
+
+        print(model.summary())
+        #concat_layer = tf.keras.layers.Concatenate([
+        #    prot_adj_model.output,
+        #    prot_feat_model.output,
+        #    lig_adj_model.output
+       # ])
+
+        #output = tf.keras.layers.Dense(1024, activation='relu')(concat_layer)
+        #output = tf.keras.layers.Dense(512, activation='relu')(output)
+        #output = tf.keras.layers.Dense(128, activation='relu')(output)
+        #output = tf.keras.layers.Dense(1, activation='relu')(output)    
+        
+        #model = tf.keras.models.Model([
+        #    prot_adj_model.input,
+        #    prot_feat_model.input,
+        #    lig_adj_model.input
+        #    ], 
+        #    outputs=output
+        #)
+
+        model.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
         return model
 
 
@@ -159,8 +203,106 @@ class GraphCNN:
         
 g = GraphCNN()
 X_train, X_test, y_train, y_test = g.trainTestSplit()
-print(y_test)
+
+np_prot_adjacency = np.zeros((
+    len(X_train),
+    constants.PROTEIN_ADJACENCY_MAT_SIZE,
+    constants.PROTEIN_ADJACENCY_MAT_SIZE
+    ), dtype = 'int8'
+)
+
+np_prot_features = np.zeros((
+    len(X_train),
+    constants.PROTEIN_ADJACENCY_MAT_SIZE,
+    constants.PROTEIN_FEATURES_COUNT)
+)
+
+np_ligand_adjacency = np.zeros((
+    len(X_train),
+    constants.LIGAND_ADJACENCY_MAT_SIZE,
+    constants.LIGAND_ADJACENCY_MAT_SIZE), dtype='int8'
+)
+
+np_logfc = np.array(y_train)
+
+log.info('Began initializing the arrays')
+for i in range(len(X_train)):
+    dh = DataHandlers()
+
+    log.info('NP arrays start loading')
+    protein_data = dh.fetchProteinData(X_train[i][0])
+    ligand_data = dh.fetchLigandData(X_train[i][1])
+    log.info('np arrays loading finished')
+
+    protein_adjacency_matrix = np.pad(
+        np.array(protein_data[0], ndmin=2),
+        ((0, constants.PROTEIN_ADJACENCY_MAT_SIZE - len(protein_data[0])),
+        (0, constants.PROTEIN_ADJACENCY_MAT_SIZE - len(protein_data[0][0]))),
+        'constant',
+        constant_values=(0)
+    )
+
+    protein_feature_matrix = np.pad(
+        np.array(protein_data[1], ndmin=2),
+        ((0, constants.PROTEIN_ADJACENCY_MAT_SIZE - len(protein_data[1])),
+        (0, constants.PROTEIN_FEATURES_COUNT - len(protein_data[1][0]))),
+        'constant',
+        constant_values=(0)
+    )
+
+    ligand_adjacency_matrix = np.pad(
+        np.array(ligand_data, ndmin=2),
+        ((0, constants.LIGAND_ADJACENCY_MAT_SIZE - len(ligand_data)),
+        (0, constants.LIGAND_ADJACENCY_MAT_SIZE - len(ligand_data[0]))),
+        'constant',
+        constant_values=(0)
+    )
+        
+    np_prot_adjacency[i] = protein_adjacency_matrix
+    np_prot_features[i] = protein_feature_matrix
+    np_ligand_adjacency[i] = ligand_adjacency_matrix
+
+    log.info('Done with initializing the arrays ')
+
+log.info('start converting numpy data to tensors')
+tf_prot_adjacency = tf.convert_to_tensor(
+    np_prot_adjacency
+    #shape=[len(X_train), constants.PROTEIN_ADJACENCY_MAT_SIZE, constants.PROTEIN_ADJACENCY_MAT_SIZE],
+    #dtype=int
+)
+tf_prot_features = tf.convert_to_tensor(
+    np_prot_features
+    #shape=(len(X_train), constants.PROTEIN_ADJACENCY_MAT_SIZE, constants.PROTEIN_FEATURES_COUNT),
+    #dtype=float
+)
+tf_ligand_adjacency = tf.convert_to_tensor(
+    np_ligand_adjacency
+#    shape=(len(X_train), constants.LIGAND_ADJACENCY_MAT_SIZE, constants.LIGAND_ADJACENCY_MAT_SIZE),
+#    dtype=int
+)
+print(y_train[0])
+
+tf_logfc = tf.strings.to_number(tf.convert_to_tensor(np_logfc), out_type=tf.dtypes.float32)
+
+print(tf_ligand_adjacency.dtype, tf_logfc.dtype, tf_prot_adjacency.dtype, tf_prot_features.dtype)
+
+log.info('completed tensor generation')
+model = g.createModel()
+#print(X_train)
 #model = g.createModel()
+
+log.info('model fitting started')
+
+model.fit([tf_prot_adjacency, tf_prot_features, tf_ligand_adjacency],
+          tf_logfc,
+          epochs=10, verbose=True, batch_size=1)
+
+log.info ('model fitting finished successfully')
+
+#log.info('model evaluation started')
+#print(model.evaluate([X_test.iloc[:,0], X_test.iloc[:,1], X_test.iloc[:,2]],
+#          y_test, verbose=False))
+#log.info('model evaluation completed')"""
 #print(len(a))
 #print(g.fetchProteinData(a[4000][0]))
 
