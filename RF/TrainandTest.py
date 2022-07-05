@@ -9,8 +9,11 @@ testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 
 #FeatureImportance.train(testX, testY, CombineLigandsProteins.feats) 
+print("imported matrices")
 
+FixedClassificationModel.train(testX, testY)
 
+"""
 accuracy = 0
 recall = 0
 
@@ -23,3 +26,4 @@ with open("scores.txt", "w") as f:
 
     print('Average Accuracy: ' + str(accuracy/10), file=f)
     print('Average Recall: ' + str(recall/10), file=f)
+"""
