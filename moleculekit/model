@@ -12,48 +12,6 @@ from torch.utils.data import Dataset, DataLoader, random_split
 import re
 import pandas as pd
 
-os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
-
-lig = np.load('ligand_data.npy', allow_pickle=True)
-prot = np.load('protein_data.npy', allow_pickle=True)
-de = np.load('de_data.npy', allow_pickle=True)
-
-x = []
-y = []
-
-# There are about 49k total interactions from listed ligands and proteins so far;
-# 2% of those have FDR < 0.05 and 4% have FDR < 0.25
-for i in lig.item().keys():
-    for j in prot.item().keys():
-        a = de.item().get((i, j))
-        if a.iloc[0]['FDR'] < 0.05:
-            x.append((lig.item().get(i), prot.item().get(j)))
-            if abs(a.iloc[0]['logFC']) > 1:
-                y.append(1)
-            else:
-                y.append(0)
-
-box = [20, 20, 20]
-cent = [10, 10, 10]
-
-# Voxelize and make tensors
-# getVoxelDescriptors is super slow... need to do this in preprocessing
-# Shit
-xi = []
-for i in range(len(x)):
-    prot_vox, prot_centers, prot_N = getVoxelDescriptors(x[i][1], boxsize=box, center=cent, buffer = 1)
-    lig_vox, lig_centers, lig_N = getVoxelDescriptors(x[i][0], voxelsize = 0.5, buffer=1)
-
-    nchannels = prot_vox.shape[1]
-    prot_vox_t = prot_vox.transpose().reshape([1, nchannels, prot_N[0], prot_N[1], prot_N[2]])
-    prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
-
-    lig_vox_t = lig_vox.transpose().reshape([1, nchannels, lig_N[0], lig_N[1], lig_N[2]])
-    lig_vox_t = torch.tensor(lig_vox_t.astype(np.float32))
-
-    xi.append((lig_vox_t, prot_vox_t))
-
-
 """
 Attempting to build model in lines below; kind of shit so far
 Inspiration coming from following sources:
@@ -63,48 +21,89 @@ Inspiration coming from following sources:
 
 """
 
+os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
+
+lig = np.load('ligand_data_tensors.npy', allow_pickle=True)
+prot = np.load('protein_data.npy', allow_pickle=True)
+de = np.load('de_data.npy', allow_pickle=True)
+
+x = []
+y = []
+
+prot_test = prot.item().get('Q8VFN8')
+prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot_test, buffer = 1)
+prot_vox_t = prot_vox.transpose().reshape([1, 8, prot_N[0], prot_N[1], prot_N[2]])
+prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
+
+lig_vox_t = lig.item().get('geranoil')
+
+# # There are about 49k total interactions from listed ligands and proteins so far;
+# # 2% of those have FDR < 0.05 and 4% have FDR < 0.25
+# for i in lig.item().keys():
+#     for j in prot.item().keys():
+#         a = de.item().get((i, j))
+#         if a.iloc[0]['FDR'] < 0.05:
+#             x.append((lig.item().get(i), prot.item().get(j)))
+#             if abs(a.iloc[0]['logFC']) > 1:
+#                 y.append(1)
+#             else:
+#                 y.append(0)
+
 # class ProtDatasetTrain(Dataset):
 #     def __init__(self):
-
-
 
 def conv_block(input_size, output_size):
     block = nn.Sequential(
         nn.Conv3d(input_size, output_size, 5, stride=1, padding=1),
         nn.LeakyReLU(),
         nn.BatchNorm3d(output_size),
-        nn.MaxPool3d(3)
+        nn.MaxPool3d(2)
         # Add dropout here later
     )
+    return block
 
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
         self.conv1 = nn.Sequential(
-            conv_block(8, 32),
-            conv_block(32, 64),
-            conv_block(64, 128))
+            conv_block(8, 16),
+            conv_block(16, 32),
+            conv_block(32, 64))
         self.conv2 = nn.Sequential(
             conv_block(8, 32),
             conv_block(32, 64))
 
+        self.flatten = nn.Flatten()
+        self.LeakyReLU = nn.LeakyReLU()
 
 
-def forward(self, x):
-    # Convolution blocks to be performed on the protein
-    x[1] = self.conv1(x[1])
+    def forward(self, x1, x2):
+        # Convolution blocks to be performed on the protein
+        prot = self.conv1(x2)
+        prot = self.flatten(prot)
+        
+        # Convolution blocks to be performed on the ligand
+        lig = self.conv2(x1)
+        lig = self.flatten(lig)
 
-    # Convolution blocks to be performed on the ligand
-    x[0] = self.conv2(x[0])
+        print(prot.shape)
+        print(lig.shape)
+        hybrid = torch.cat((prot, lig), dim=1)
+        hybrid = self.LeakyReLU(hybrid)
 
-    hybrid = torch.cat((x[0], x[1]), dim=1)
-   
+        return torch.sigmoid(hybrid)
 
-    hybrid = nn.LeakyReLU(hybrid)
+model = Model()
+out = model.forward(lig_vox_t, prot_vox_t)
 
+epoch = 100
+lr = 0.1
 
-    return 
+"""
+for i in range(epoch):
 
+    return
+"""
 
 
 
