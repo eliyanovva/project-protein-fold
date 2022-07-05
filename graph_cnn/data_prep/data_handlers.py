@@ -4,8 +4,8 @@ import logging as log
 import os
 import sys
 import re
-import log_config
-import constants
+from . import log_config
+from . import constants
 
 class DataHandlers:
     def __init__(self):
@@ -23,8 +23,8 @@ class DataHandlers:
                     
                     new_list = [0, 1, 2, 3]
 
-                    protein_data = self.__fetchProteinData(line_list[0])
-                    ligand_data = self.__fetchLigandData(line_list[1])
+                    protein_data = self.fetchProteinData(line_list[0])
+                    ligand_data = self.fetchLigandData(line_list[1])
                     new_list[0], new_list[1] = self.__convertNumpyToString(protein_data[0]), self.__convertNumpyToString(protein_data[1])
                     log.info('first add successfull for row ' + str(i) + ' out of ' + str(len(cur_dataset_list)))
                     new_list[2] = self.__convertNumpyToString(self.__fetchLigandData(line_list[1]))
@@ -51,8 +51,8 @@ class DataHandlers:
                 
                 for j in range(i*250, i*250 + dataset_size):
                     line_list = cur_dataset_list[j].split(',')
-                    protein_data = self.__fetchProteinData(line_list[0])
-                    ligand_data = self.__fetchLigandData(line_list[1])
+                    protein_data = self.fetchProteinData(line_list[0])
+                    ligand_data = self.fetchLigandData(line_list[1])
                     logFc = line_list[2]
 
                     log.info('data extraction completed' + str(j))
@@ -77,7 +77,7 @@ class DataHandlers:
                 pass
 
 # TODO: fix the fact that this function exists in 2 other files :)
-    def __fetchProteinData(self, protein_name):
+    def fetchProteinData(self, protein_name):
         # the protein name should be from the train/test X data.
         protein_adjacency_matrix = np.load(
             os.path.join(constants.PROTEIN_ADJACENCY_PATH, protein_name + '_adj_mat.npy')
@@ -88,7 +88,7 @@ class DataHandlers:
         return protein_adjacency_matrix, protein_feature_matrix
 
 
-    def __fetchLigandData(self, ligand_name):
+    def fetchLigandData(self, ligand_name):
         # the protein name should be from the train/test X data.
         adjacency_file_name = self.__getLigandFileNames(ligand_name)
         ligand_adjacency_matrix = np.load(
@@ -129,5 +129,5 @@ class DataHandlers:
         return adjacency_matrix_filename[0]
 
 
-dh = DataHandlers()
-dh.createDatasetPickles()
+#dh = DataHandlers()
+#dh.createDatasetPickles()
