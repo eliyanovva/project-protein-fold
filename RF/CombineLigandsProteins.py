@@ -8,6 +8,23 @@ import labels
 import Globals
 import Filtering
 
+
+tri = [3, 3, 3, 3, 3, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 3, 3, 5, 5, 5, 5, 6, 7, 7, 'l', 'l', 'l']
+"""
+T3A = 5
+T5A = 2
+T6A = 3
+T7A = 5
+T3D = 2
+T5D = 4
+T6D = 1
+T7D = 2
+lig = 3
+"""
+
+#first: [:len(first part)]
+#next: [end of prev: end + len(curr part)]
+
 #Create classification dictionary
 logFC, FDR = labels.labels()
 classified, pos_counts, neg_counts = labels.classified_logFC_FDR(logFC, FDR)
@@ -59,6 +76,8 @@ AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, cat
 AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, categorized_seqs_TM6, categorized_features_TM6)
 AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, categorized_seqs_TM7, categorized_features_TM7)
 
+
+
 AA_filter_TM3, feat1 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3")
 AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5")
 AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6")
@@ -89,9 +108,11 @@ filter_feat2 = Filtering.richness_protein(features2, seqvar2, pos_counts, neg_co
 Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, di_matrix)
 """
 
+diff = {}
+
 #Create 3Di output for Tms 3,5,6,7
 Di_dict = Globals.initialize_3Di_dict()
-print(Di_dict)
+#(Di_dict)
 Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
 Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_seqs_TM5, di_features_TM5)
 Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5, di_seqs_TM6, di_features_TM6)
@@ -121,7 +142,25 @@ proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
 #ligand_matrix, ligand_features = SmileKmer.ligand_matrix(ligand_dict, 5, 1084)
-ligand_matrix, ligand_features = SmileKmer.ligand_matrix(ligand_dict, 5, 796)
+ligand_matrix, ligand_features, ligand_count = SmileKmer.ligand_matrix(ligand_dict, 5, 796)
+
+ligand_freqs = {}
+
+for lig in ligand_count:
+    ligand_freqs[lig] = list(ligand_count[lig].values())
+
+unique_p1 = set()
+for p in all_protein_freqs:
+    string = ""
+    for i in range(8):
+        for char in all_protein_freqs[p][i]:
+            string += str(char)
+    unique_p1.add(string)
+
+print(len(unique_p1))
+
+#unique considering AA: 504
+#unique considering all: 524
 
 #Concatenate protein and ligand matrices
 final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)
@@ -133,6 +172,9 @@ logFCmat = []
 for protein in proteins:
     for ligand in list(ligand_dict.keys()):
         logFCmat.append(float(classified[protein][ligand]))
+
+def unique_proteins(seqvar):
+    unique_seqs = {}
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
 def uniquematrix(matrix):
@@ -152,8 +194,10 @@ def uniquematrix(matrix):
             ret += 1
     return ret
 
+#unique returned
+
 #The following code checks whether all entries are unique
-#print(uniquematrix(final_matrix))
+print(uniquematrix(final_matrix))
 
 def import_final():
     #For No3Di.py
@@ -181,4 +225,8 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
+    global all_protein
+    all_protein = all_protein_freqs
+    global all_ligand
+    all_ligand = ligand_freqs
 
