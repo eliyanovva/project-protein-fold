@@ -33,6 +33,8 @@ for filename in os.listdir(directory):
         location_of_protein = directory + "/" + filename
         cmd.load(location_of_protein) #Load in pdb file
         name_of_protein = filename.replace("-model_v2.pdb", "")
+        cmd.hide("everything")
+        cmd.show("cartoon", name_of_protein)
         cmd.color("magenta", name_of_protein)
         
         name = name_of_protein.replace("AF-", "")
@@ -40,66 +42,60 @@ for filename in os.listdir(directory):
 
         if name in Di_dict:
             #Visualize the 3Di features
-            printstatement1 = ""
-            i = 0
-            for structure in resinumber(name,'QVVCV', 3):
-                if i > 0:
-                    printstatement1 += ' or '
-                printstatement1 += 'Resi ' + str(structure) + '- ' + str(structure+5)
-                i = 1
-            print(printstatement1)
+            if len(resinumber(name,'QVVCV', 3)) > 0:
+                printstatement1 = ""
+                i = 0
+                for structure in resinumber(name,'QVVCV', 3):
+                    if i > 0:
+                        printstatement1 += ' or '
+                    printstatement1 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    i = 1
+                cmd.select("Di1", printstatement1)
+                cmd.color("red", "Di1")
+            
+            if len(resinumber(name,'PPNVS', 4)) > 0:
+                printstatement2 = ""
+                i = 0
+                for structure in resinumber(name,'PPNVS', 4):
+                    if i > 0:
+                        printstatement2 += ' or '
+                    printstatement2 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    i = 1
+                cmd.select("Di2", printstatement2)
+                cmd.color("orange", "Di2")
+            
+            if len(resinumber(name,'PNPSS', 4)) > 0:
+                printstatement3 = ""
+                i = 0
+                for structure in resinumber(name,'PNPSS', 4):
+                    if i > 0:
+                        printstatement3 += ' or '
+                    printstatement3 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    i = 1
+                cmd.select("Di3", printstatement3)
+                cmd.color("yellow", "Di3")
+            
+            if len(resinumber(name,'VNPLV', 3)) > 0:
+                printstatement4 = ""
+                i = 0
+                for structure in resinumber(name,'VNPLV', 3):
+                    if i > 0:
+                        printstatement4 += ' or '
+                    printstatement4 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    i = 1
+                cmd.select("Di4", printstatement4)
+                cmd.color("green", "Di4")
 
-            printstatement2 = ""
-            i = 0
-            for structure in resinumber(name,'PPNVS', 4):
-                if i > 0:
-                    printstatement2 += ' or '
-                printstatement2 += 'Resi ' + str(structure) + '- ' + str(structure+5)
-                i = 1
-            print(printstatement2)
-
-            printstatement3 = ""
-            i = 0
-            for structure in resinumber(name,'PNPSS', 4):
-                if i > 0:
-                    printstatement3 += ' or '
-                printstatement3 += 'Resi ' + str(structure) + '- ' + str(structure+5)
-                i = 1
-            print(printstatement3)
-
-            printstatement4 = ""
-            i = 0
-            for structure in resinumber(name,'VNPLV', 3):
-                if i > 0:
-                    printstatement4 += ' or '
-                printstatement4 += 'Resi ' + str(structure) + '- ' + str(structure+5)
-                i = 1
-            print(printstatement4)
-
-            printstatement5 = ""
-            i = 0
-            for structure in resinumber(name,'VVCCV', 4):
-                if i > 0:
-                    printstatement5 += ' or '
-                printstatement5 += 'Resi ' + str(structure) + '- ' + str(structure+5)
-                i = 1
-            print(printstatement5)
-
-            #Color important structures
-            cmd.select("Di1", printstatement1)
-            cmd.color("red", "Di1")
-
-            cmd.select("Di2", printstatement2)
-            cmd.color("orange", "Di2")
-
-            cmd.select("Di3", printstatement3)
-            cmd.color("yellow", "Di3")
-
-            cmd.select("Di4", printstatement4)
-            cmd.color("green", "Di4")
-
-            cmd.select("Di5", printstatement5)
-            cmd.color("blue", "Di5")
+            if len(resinumber(name,'VVCCV', 4)) > 0:
+                printstatement5 = ""
+                i = 0
+                for structure in resinumber(name,'VVCCV', 4):
+                    if i > 0:
+                        printstatement5 += ' or '
+                    printstatement5 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    i = 1
+                cmd.select("Di5", printstatement5)
+                cmd.color("blue", "Di5")
 
         #Save as png
         savelocation = "/Feature_Importance/Images/" + "Di_" + name_of_protein + ".png"
