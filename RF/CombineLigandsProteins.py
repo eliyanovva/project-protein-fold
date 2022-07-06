@@ -89,6 +89,7 @@ Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, di_matrix)
 
 #Create 3Di output for Tms 3,5,6,7
 Di_dict = Globals.initialize_3Di_dict()
+print(Di_dict)
 Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
 Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_seqs_TM5, di_features_TM5)
 Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5, di_seqs_TM6, di_features_TM6)
