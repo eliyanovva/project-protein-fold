@@ -2,8 +2,9 @@ import os
 
 PROTEIN_ADJACENCY_MAT_SIZE = 3500
 LIGAND_ADJACENCY_MAT_SIZE = 70
-PROTEIN_FEATURES_COUNT = 5
-ATOM_DICT = {'C':0, 'O':1, 'N':2, 'S':3}
+PROTEIN_FEATURES_COUNT = 13
+LIGAND_FEATURES_COUNT = 12
+ATOM_DICT = {'C':0, 'O':1, 'N':2, 'S':3, 'H':4}
 
 #absolute path for a file
 script_dir = os.path.abspath(os.curdir)
@@ -23,10 +24,12 @@ MOL_FILES_PATH = os.path.join(DATA_FILES_PATH, 'mol_files')
 SMILES_FILES_PATH = os.path.join(DATA_FILES_PATH, 'smiles_files')
 
 MATRIX_DATA_FILES_PATH = os.path.join(script_dir, 'graph_cnn', 'data_prep')
+# MOL is for LIGAND
 MOL_ADJACENCY_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_adjacency_data')
-MOL_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_feature_data')
+LIGAND_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_feature_data')
 PROTEIN_ADJACENCY_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_adjacency_data')
 PROTEIN_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data')
+
 PROTEIN_FEATURE_PATH_PDB = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data_local')
 
 

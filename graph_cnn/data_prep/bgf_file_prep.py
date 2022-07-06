@@ -1,8 +1,12 @@
-import numpy as np
-import os
-import constants
 import logging as log
+import os
+
+import numpy as np
+from openbabel import pybel
+
+import constants
 import log_config
+
 
 # so far creates an adjacency matrix from a single pdb file
 class BGFDataFile:
@@ -30,30 +34,54 @@ class BGFDataFile:
 
     def getFeatureMatrix(self):
         # current number of features - 5: 
-        # atom type, max covalent bonds, number of lone pairs, atomic charge, alphafold confidence score
+        # atom type, max covalent bonds, number of lone pairs, atomic charge, alphafold score
         log.info('Initiated creation of BGF Feature matrix for protein ' + self.protein_name)
         feature_matrix = np.zeros((self.atom_count, constants.PROTEIN_FEATURES_COUNT), dtype='float')
         confidence_scores = self.__getConfidenceScores()
-        
-        with open(self.bgf_filename, 'r') as bgf_file:
-            bgf_file_features = bgf_file.readlines()[5: 5 + self.atom_count]
-        for i in range(self.atom_count):
-            atom_data = self.__getDataFromHetAtmLine(bgf_file_features[i])
-            for j in range(1, constants.PROTEIN_FEATURES_COUNT):
-                feature_matrix[i][j-1] = atom_data[j]
-        # TODO: split this funciton for better readability
-        for i in range(self.atom_count):
-            feature_matrix[i][4] = confidence_scores[i]
+        atom_types = self.__getAtomTypes()
+       
+        prefile = next(pybel.readfile('pdb', self.pdb_file_name))
+        molecule = pybel.Molecule(prefile)
+
+        atom_index = 0
+        for atom in molecule:
+            feature_matrix[atom_index][:-2] = self.__getMoleculeDataRow(atom)
+            feature_matrix[atom_index][-2] = atom_types[atom_index]
+            feature_matrix[atom_index][-1] = confidence_scores[atom_index]
+            atom_index += 1
 
         log.info('Initiated saving of feature matrix')
-        np.save(os.path.join('pdb_features_data/', self.protein_name + '_feat_mat'), feature_matrix)
+        np.save(os.path.join(constants.PROTEIN_FEATURE_PATH, self.protein_name + '_feat_mat'), feature_matrix)
         log.info('The features matrix has been saved!')
+
+
+    def __getMoleculeDataRow(self, atom):
+        features_arr = np.zeros((constants.PROTEIN_FEATURES_COUNT - 2))
+        features_arr[0] = atom.atomicmass
+        features_arr[1] = atom.exactmass
+        features_arr[2] = atom.formalcharge
+        features_arr[3] = atom.heavydegree
+        features_arr[4] = atom.heterodegree
+        features_arr[5] = atom.hyb
+        # FIXME: create a classification index which is based on where in the protein can we find the atom
+        features_arr[6] = atom.idx
+        features_arr[7] = atom.isotope
+        features_arr[8] = atom.partialcharge
+        features_arr[9] = atom.spin
+        #FIXME: EXTRACT TYPE FROM ELSEWHERE
+        #features_arr[10] = x.type
+        features_arr[10] = atom.degree
+        return features_arr
 
 
     def __setProteinName(self):
         left_index = self.bgf_filename.rfind('/AF-') + 4
         right_index = self.bgf_filename.find('-F1')
         self.protein_name = self.bgf_filename[left_index : right_index]
+        self.pdb_file_name = os.path.join(
+                constants.PDB_FILES_PATH,
+                'AF-' + self.protein_name + '-F1-model_v2.pdb'
+            )
 
 
     def __getSizes(self):
@@ -107,12 +135,7 @@ class BGFDataFile:
     def __getConfidenceScores(self):
         log.info('Initiated extracting of confidence scores from PDB file for ' + self.protein_name)
         confidence_scores = np.zeros(self.atom_count, dtype='float')
-        with open(
-            os.path.join(
-                constants.PDB_FILES_PATH,
-                'AF-' + self.protein_name + '-F1-model_v2.pdb'
-            )
-        ) as pdb_file:
+        with open(self.pdb_file_name) as pdb_file:
             lines = pdb_file.readlines()
             index = 0
             for line in lines:
@@ -123,10 +146,28 @@ class BGFDataFile:
         log.info('Extraction of confidence scores from PDB completed!')
         return confidence_scores
 
+
+    def __getAtomTypes(self):
+        log.info('Initiated extracting of atom types from PDB file for ' + self.protein_name)
+        atom_types = np.zeros(self.atom_count, dtype='float')
+        with open(self.pdb_file_name) as pdb_file:
+            lines = pdb_file.readlines()
+            index = 0
+            for line in lines:
+                if line.startswith('ATOM'):
+                    line_list = [x for x in line.split() if x != '']
+                    #FIXME: add check if it is a valid key; assign non-valid to a key for others
+                    atom_types[index] = constants.ATOM_DICT[line_list[-1]]
+                    index += 1
+        log.info('Extraction of atom types from PDB completed!')
+        return atom_types
+
+
 m_class = BGFDataFile(os.path.join(constants.BGF_FILES_PATH, 'AF-Q0VAX9-F1-model_v2.bgf'))
+
 m_class.getFeatureMatrix()
 
-#a = np.load('/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/mol_adjacency_data/C11H22O_adj_mat.npy')
+#a = np.load(os.join(constants.PROTEIN_FEATURE_PATH, )'/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/mol_adjacency_data/C11H22O_adj_mat.npy')
 #print(a)
     # create feature matrix
 

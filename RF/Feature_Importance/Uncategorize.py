@@ -53,7 +53,7 @@ def uncat(feature):
                 ret[i] += 'C'
     return ret
 
-directory = 'pdb_data_files'
+directory = '../../data_files/pdb_data_files'
 
 #Iterate through each pdb
 for filename in os.listdir(directory):
@@ -62,6 +62,8 @@ for filename in os.listdir(directory):
         location_of_protein = directory + "/" + filename
         cmd.load(location_of_protein) #Load in pdb file
         name_of_protein = filename.replace("-model_v2.pdb", "")
+        cmd.hide("everything")
+        cmd.show("cartoon", name_of_protein)
         cmd.color("magenta", name_of_protein)
 
         #Select important Amino Acids
