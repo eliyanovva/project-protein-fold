@@ -23,27 +23,28 @@ Inspiration coming from following sources:
 
 os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
 
-lig = np.load('ligand_data_tensors.npy', allow_pickle=True)
-prot = np.load('protein_data_tensors.npy', allow_pickle=True)
-de = np.load('de_data.npy', allow_pickle=True)
-
-x = []
-y = []
-
-prot_test = prot.item().get('Q8VFN8')
-lig_vox_t = lig.item().get('geranoil')
+xdat = np.load('xdata.npy', allow_pickle=True)
+ydat = np.load('ydata.npy', allow_pickle=True)
 
 
 class ProtDataset(Dataset):
     def __init__(self):
-        self.lig = np.load('ligand_data_tensors.npy', allow_pickle=True).item()
-        self.prot = np.load('protein_data_tensors.npy', allow_pickle=True).item()
-        self.de = np.load('de_data.npy', allow_pickle=True)
-        self.n_pairs = len(self.de)
+        self.x = torch.from_numpy(np.load('x_data.npy'))
+        self.y = torch.from_numpy(np.load('y_data.npy'))
+        self.n_pairs = len(self.y)
 
     def __len__(self):
         return self.n_pairs
 
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+        
+        lig = x[idx][0]
+        prot = x[idx][1]
+        y = y[idx]
+
+        return lig, prot, y
 
 
 def conv_block(input_size, output_size):

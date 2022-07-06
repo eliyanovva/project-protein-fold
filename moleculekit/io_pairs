@@ -91,9 +91,9 @@ def gen_outputs(fdr, logfc):
                     y.append(0)
     
     ydat = np.asarray(y)
-    np.save('y_data.npy')
+    np.save('y_data.npy', ydat)
     xdat = np.asarray(x)
-    np.save('x_data.npy')
+    np.save('x_data.npy', xdat)
     return        
 
 if __name__ == "__main__":
