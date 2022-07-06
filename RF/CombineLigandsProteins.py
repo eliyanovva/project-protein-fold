@@ -91,7 +91,7 @@ Di_mat = ReadingFasta.makematrix(seqvar2, filter_feat2, di_matrix)
 
 #Create 3Di output for Tms 3,5,6,7
 Di_dict = Globals.initialize_3Di_dict()
-print(Di_dict)
+#(Di_dict)
 Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
 Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_seqs_TM5, di_features_TM5)
 Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5, di_seqs_TM6, di_features_TM6)
@@ -107,6 +107,8 @@ Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_filter_TM5, di_matrix_TM5
 Di_mat_TM6 = ReadingFasta.makematrix(Di_seqvar_TM6, Di_filter_TM6, di_matrix_TM6, all_protein_freqs)
 Di_mat_TM7 = ReadingFasta.makematrix(Di_seqvar_TM7, Di_filter_TM7, di_matrix_TM7, all_protein_freqs)
 
+print(all_protein_freqs.keys())
+
 Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_mat_TM5, dtype = np.uint8),
                             np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
 
@@ -121,7 +123,12 @@ proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
 #ligand_matrix, ligand_features = SmileKmer.ligand_matrix(ligand_dict, 5, 1084)
-ligand_matrix, ligand_features = SmileKmer.ligand_matrix(ligand_dict, 5, 796)
+ligand_matrix, ligand_features, ligand_count = SmileKmer.ligand_matrix(ligand_dict, 5, 796)
+
+ligand_freqs = []
+
+for lig in ligand_count:
+    ligand_freqs[lig] = list(ligand_count[lig].values())
 
 #Concatenate protein and ligand matrices
 final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)
