@@ -53,7 +53,7 @@ def uncat(feature):
                 ret[i] += 'C'
     return ret
 
-directory = '../../data_files/pdb_data_files'
+directory = '../data_files/pdb_data_files'
 
 #Iterate through each pdb
 for filename in os.listdir(directory):
