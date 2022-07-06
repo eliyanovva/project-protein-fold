@@ -55,10 +55,7 @@ class LigandFeatureData(DataHandlers):
         """
 
         mylist = os.listdir(constants.LIGAND_FEATURE_PATH)
-        print(mylist)
         left_index = ligand_name.rfind('_')
-        print(ligand_name)
         r = re.compile(".*"+ ligand_name[left_index:] + ".*_feat_mat.npy")
         adjacency_matrix_filename = list(filter(r.match, mylist))
-        print(adjacency_matrix_filename)
         return adjacency_matrix_filename[0]
