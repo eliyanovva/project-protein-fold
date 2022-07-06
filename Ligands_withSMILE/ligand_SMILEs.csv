@@ -44,13 +44,13 @@ pS6_DE_1p_2m2t.csv,CC1=NCCS1
 pS6_DE_1p_2phenylAlcohol.csv,C1=CC=C(C=C1)CCO
 pS6_DE_1p_4methylAC.csv,CC1=CC=C(C=C1)C(=O)C
 pS6_DE_1p_25dmp.csv,CC1=CN=C(C=N1)C
-pS6_DE_1p_nCarvone.csv,CC1=CCC(CC1=O)C(=C)C
-pS6_DE_1p_nDihydrocarveol.csv,CC1CCC(CC1O)C(=C)C
-pS6_DE_1p_nMenthol.csv,CC1CCC(C(C1)O)C(C)C
+pS6_DE_1p_nCarvone.csv,O=C1C[C@@H](C\C=C1\C)C(C)=C
+pS6_DE_1p_nDihydrocarveol.csv,C[C@@H]1CC[C@H](C[C@H]1O)C(=C)C
+pS6_DE_1p_nMenthol.csv,CC(C)[C@@H]1CC[C@@H](C)C[C@H]1O
 pS6_DE_1p_ntmt.csv,CC1=C(SC(=N1)C)C
-pS6_DE_1p_pCarvone.csv,CC1=CCC(CC1=O)C(=C)C
-pS6_DE_1p_pDihydrocarveol.csv,CC1CCC(CC1O)C(=C)C
+pS6_DE_1p_pCarvone.csv, O=C1C[C@H](C\C=C1\C)C(C)=C
+pS6_DE_1p_pDihydrocarveol.csv,C[C@H]1CC[C@@H](C[C@@H]1O)C(=C)C
 pS6_DE_1p_pLimonene.csv,CC1=CCC(CC1)C(=C)C
-pS6_DE_1p_pMenthol.csv,CC1CCC(C(C1)O)C(C)C
+pS6_DE_1p_pMenthol.csv,CC(C)[C@@H]1CC[C@@H](C)C[C@@H]1O
 pS6_DE_1p_sbt.csv,CCC(C)O
 pS6_DE_1p_tmt.csv,CC1=C(SC(=N1)C)C
