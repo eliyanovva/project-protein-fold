@@ -16,6 +16,38 @@ import pandas as pd
 # Does all preprocessing for inputs--just need to be converted 
 # into tensors with desired settings when imported
 
+fdr = 0.05
+logfc = 1
+
+print('Ret was made')
+os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
+lig = np.load('ligand_data_tensors.npy', allow_pickle=True)
+prot = np.load('protein_data_tensors.npy', allow_pickle=True)
+de = np.load('de_data.npy', allow_pickle=True)
+
+ret = pd.DataFrame(columns = ['Ligand Name', 'Ligand Data', 'Protein Name', 'Protein Data', 'Binding'])
+
+for i in lig.item().keys():
+    for j in prot.item().keys():
+        a = de.item().get((i, j))
+        if a.iloc[0]['FDR'] < fdr:
+            x.append((lig.item().get(i), prot.item().get(j)))
+            if abs(a.iloc[0]['logFC']) > logfc:
+                y = 1
+                print(y)
+            else:
+                y = 0
+
+            ret.append({'Ligand Name' : i,
+            'Ligand Data' : lig.item().get(i),
+            'Protein Name' : j, 
+            'Protein Data' : prot.item().get(j),
+            'Binding' : y},
+            ignore_index=True)
+
+ret.to_csv('all_data.csv')
+
+
 def voxelize_ligands():
     x1 = {}
     os.chdir('/home/users/jvs15/project-protein-fold')
@@ -62,41 +94,19 @@ def voxelize_proteins():
     np.save('protein_data_tensors.npy', x2np)
     return
 
-def gen_outputs(fdr, logfc):
+# def gen_outputs(fdr, logfc):
     # There are about 49k total interactions from listed ligands and proteins so far;
     # 2% of those have FDR < 0.05 and 4% have FDR < 0.25
     """
     @fdr: fdr cutoff threshold
     @logfc: logfc cutoff threshold
     """
-    
-    x = []
-    y = []
 
-    os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
-    lig = np.load('ligand_data_tensors.npy', allow_pickle=True)
-    prot = np.load('protein_data_tensors.npy', allow_pickle=True)
-    de = np.load('de_data.npy', allow_pickle=True)
 
-    ret = pd.DataFrame(columns = ['Ligand Data', 'Protein Data', 'Binding'])
+    # return        
 
-    for i in lig.item().keys():
-        for j in prot.item().keys():
-            a = de.item().get((i, j))
-            if a.iloc[0]['FDR'] < fdr:
-                x.append((lig.item().get(i), prot.item().get(j)))
-                if abs(a.iloc[0]['logFC']) > logfc:
-                    y.append(1)
-                else:
-                    y.append(0)
-    
-    ydat = np.asarray(y)
-    np.save('y_data.npy', ydat)
-    xdat = np.asarray(x)
-    np.save('x_data.npy', xdat)
-    return        
 
-if __name__ == "__main__":
-    gen_outputs(0.05, 1)
+# if __name__ == "__main__":
+#     gen_outputs(0.05, 1)
 
 
