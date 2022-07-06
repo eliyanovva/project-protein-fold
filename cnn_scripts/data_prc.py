@@ -11,6 +11,8 @@ from os.path import exists
 import torch
 import gzip
 import statistics
+from scipy.ndimage.interpolation import rotate
+import random
 
 file = pd.read_csv('/home/users/bmp40/project-protein-fold/cnn_scripts/olfr_de/pS6_DE_1p_heptanal.csv')
 mapping = pickle.load(open('ens_to_uniprot.txt', 'rb'))
@@ -19,12 +21,14 @@ x_data = []
 y_data = []
 lig_data = []
 
+box = [40, 40, 40]
+cent = [20, 20, 20]
+
 lig = SmallMol('/home/users/bmp40/project-protein-fold/mol_data_files/heptanal.mol', force_reading=True)
-lig_vox, lig_centers, lig_N = getVoxelDescriptors(lig)
+lig_vox, lig_centers, lig_N = getVoxelDescriptors(lig, boxsize=box, center=cent)
 
 datapath = home(dataDir='/home/users/bmp40/mouse')
-box = [20, 20, 20]
-cent = [10, 10, 10]
+
 #print(file.logFC)
 for i in range(len(file.ensembl_gene_id)):
 #for i in range(100):
