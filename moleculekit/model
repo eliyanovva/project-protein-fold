@@ -34,8 +34,17 @@ prot_test = prot.item().get('Q8VFN8')
 lig_vox_t = lig.item().get('geranoil')
 
 
-# class ProtDatasetTrain(Dataset):
-#     def __init__(self):
+class ProtDataset(Dataset):
+    def __init__(self):
+        self.lig = np.load('ligand_data_tensors.npy', allow_pickle=True).item()
+        self.prot = np.load('protein_data_tensors.npy', allow_pickle=True).item()
+        self.de = np.load('de_data.npy', allow_pickle=True)
+        self.n_pairs = len(self.de)
+
+    def __len__(self):
+        return self.n_pairs
+
+
 
 def conv_block(input_size, output_size):
     block = nn.Sequential(

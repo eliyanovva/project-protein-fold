@@ -69,10 +69,16 @@ def gen_outputs(fdr, logfc):
     @fdr: fdr cutoff threshold
     @logfc: logfc cutoff threshold
     """
+    
+    x = []
     y = []
+
     os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
     lig = np.load('ligand_data_tensors.npy', allow_pickle=True)
     prot = np.load('protein_data_tensors.npy', allow_pickle=True)
+    de = np.load('de_data.npy', allow_pickle=True)
+
+    ret = pd.DataFrame(columns = ['Ligand Data', 'Protein Data', 'Binding'])
 
     for i in lig.item().keys():
         for j in prot.item().keys():
@@ -84,8 +90,10 @@ def gen_outputs(fdr, logfc):
                 else:
                     y.append(0)
     
-    out = np.asarray(y)
+    ydat = np.asarray(y)
     np.save('y_data.npy')
+    xdat = np.asarray(x)
+    np.save('x_data.npy')
     return        
 
 if __name__ == "__main__":
