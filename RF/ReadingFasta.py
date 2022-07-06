@@ -30,6 +30,131 @@ def featurize(seq,k,feat):
         dict[kmer] += 1
     return dict
 
+def remove_duplicates(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
+    unique_seqs = set()
+    unique_proteins = []
+
+    print(AA_seqvar[0])
+    print(Di_seqvar[0])
+    print(AA_feat[0])
+    print(Di_feat[0])
+
+    for i in range(4):
+        for seq in AA_seqvar[i]:
+            for kmer in AA_feat[i]:
+                if kmer not in seq.dictionary:
+                    seq.dictionary[kmer] = 0
+    for i in range(4):
+        for seq in Di_seqvar[i]:
+            for kmer in Di_feat[i]:
+                if kmer not in seq.dictionary:
+                    seq.dictionary[kmer] = 0
+
+    all_ids = []
+    for seq in AA_seqvar[0]:
+        all_ids.append(seq.name)
+
+    for id in all_ids:
+        freq_str = ""
+        for i in range(4):
+            for seq in AA_seqvar[i]:
+                if seq.name == id:
+                    for kmer in AA_feat[i]:
+                        freq_str += str(seq.dictionary[kmer])
+        for i in range(4):
+            for seq in Di_seqvar[i]:
+                if seq.name == id:
+                    for kmer in Di_feat[i]:
+                        freq_str += str(seq.dictionary[kmer])
+        print(len(freq_str))
+        if freq_str not in unique_seqs:
+            unique_seqs.add(freq_str)
+            unique_proteins.append(id)
+
+    """
+    for seq in seqvar_a3:
+        for kmer in feat_a3:
+            if kmer not in seq.dictionary:
+                seq.dictionary[kmer] = 0
+
+    for seq in seqvar_a5:
+        for kmer in feat_a5:
+            if kmer not in seq.dictionary:
+                seq.dictionary[kmer] = 0
+
+    for seq in seqvar_a6:
+        for kmer in feat_a6:
+            if kmer not in seq.dictionary:
+                seq.dictionary[kmer] = 0
+
+    for seq in seqvar_a7:
+        for kmer in feat_a7:
+            if kmer not in seq.dictionary:
+                seq.dictionary[kmer] = 0
+
+    for seq in seqvar_d3:
+        for kmer in feat_d3:
+            if kmer not in seq.dictionary:
+                seq.dictionary[kmer] = 0
+
+    for seq in seqvar_d5:
+        for kmer in feat_d5:
+            if kmer not in seq.dictionary:
+                seq.dictionary[kmer] = 0
+
+    for seq in seqvar_d6:
+        for kmer in feat_d6:
+            if kmer not in seq.dictionary:
+                seq.dictionary[kmer] = 0
+
+    for seq in seqvar_d7:
+        for kmer in feat_d7:
+            if kmer not in seq.dictionary:
+                seq.dictionary[kmer] = 0
+
+    all_ids = []
+    for seq in seqvar_a3:
+        all_ids.append(seq.name)
+
+    for id in all_ids:
+        freq_str = ""
+        for seq in seqvar_a3:
+            if seq.name == id:
+                for kmer in feat_a3:
+                    freq_str += str(seq.dictionary[kmer])
+        for seq in seqvar_a5:
+            if seq.name == id:
+                for kmer in feat_a5:
+                    freq_str += str(seq.dictionary[kmer])
+        for seq in seqvar_a6:
+            if seq.name == id:
+                for kmer in feat_a6:
+                    freq_str += str(seq.dictionary[kmer])
+        for seq in seqvar_a7:
+            if seq.name == id:
+                for kmer in feat_a7:
+                    freq_str += str(seq.dictionary[kmer])
+        for seq in seqvar_d3:
+            if seq.name == id:
+                for kmer in feat_d3:
+                    freq_str += str(seq.dictionary[kmer])
+        for seq in seqvar_d5:
+            if seq.name == id:
+                for kmer in feat_d5:
+                    freq_str += str(seq.dictionary[kmer])
+        for seq in seqvar_d6:
+            if seq.name == id:
+                for kmer in feat_d6:
+                    freq_str += str(seq.dictionary[kmer])
+        for seq in seqvar_d7:
+            if seq.name == id:
+                for kmer in feat_d7:
+                    freq_str += str(seq.dictionary[kmer])
+        """
+
+    print(len(unique_proteins))
+
+
 def make_seqvar_TMS(TM_dict, TM_num, k, seqvar, feat):
     for id in TM_dict:
         name = id
