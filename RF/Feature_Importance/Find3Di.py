@@ -40,6 +40,8 @@ for filename in os.listdir(directory):
         name = name_of_protein.replace("AF-", "")
         name = name.replace("-F1", "")
 
+        save = False 
+
         if name in Di_dict:
             #Visualize the 3Di features
             if len(resinumber(name,'QVVCV', 3)) > 0:
@@ -48,10 +50,11 @@ for filename in os.listdir(directory):
                 for structure in resinumber(name,'QVVCV', 3):
                     if i > 0:
                         printstatement1 += ' or '
-                    printstatement1 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    printstatement1 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di1", printstatement1)
                 cmd.color("red", "Di1")
+                save = True
             
             if len(resinumber(name,'PPNVS', 4)) > 0:
                 printstatement2 = ""
@@ -59,10 +62,11 @@ for filename in os.listdir(directory):
                 for structure in resinumber(name,'PPNVS', 4):
                     if i > 0:
                         printstatement2 += ' or '
-                    printstatement2 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    printstatement2 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di2", printstatement2)
                 cmd.color("orange", "Di2")
+                save = True
             
             if len(resinumber(name,'PNPSS', 4)) > 0:
                 printstatement3 = ""
@@ -70,10 +74,11 @@ for filename in os.listdir(directory):
                 for structure in resinumber(name,'PNPSS', 4):
                     if i > 0:
                         printstatement3 += ' or '
-                    printstatement3 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    printstatement3 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di3", printstatement3)
                 cmd.color("yellow", "Di3")
+                save = True
             
             if len(resinumber(name,'VNPLV', 3)) > 0:
                 printstatement4 = ""
@@ -81,10 +86,11 @@ for filename in os.listdir(directory):
                 for structure in resinumber(name,'VNPLV', 3):
                     if i > 0:
                         printstatement4 += ' or '
-                    printstatement4 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    printstatement4 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di4", printstatement4)
                 cmd.color("green", "Di4")
+                save = True
 
             if len(resinumber(name,'VVCCV', 4)) > 0:
                 printstatement5 = ""
@@ -92,14 +98,17 @@ for filename in os.listdir(directory):
                 for structure in resinumber(name,'VVCCV', 4):
                     if i > 0:
                         printstatement5 += ' or '
-                    printstatement5 += 'Resi ' + str(structure) + ' - ' + str(structure+5)
+                    printstatement5 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di5", printstatement5)
                 cmd.color("blue", "Di5")
+                save = True
 
         #Save as png
-        savelocation = "/Feature_Importance/Images/" + "Di_" + name_of_protein + ".png"
-        cmd.png(savelocation)
+        if save:
+            cmd.deselect()
+            savelocation = "Feature_Importance/Images/" + "Di_" + name_of_protein + ".png"
+            cmd.png(savelocation)
         
         #Hide protein
         cmd.hide("everything", name_of_protein)
