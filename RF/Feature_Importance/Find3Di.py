@@ -9,7 +9,7 @@ import os
 Di_dict = Globals.initialize_3Di_dict()
 indices = Globals.initialize_indices()
 
-directory = 'pdb_data_files'
+directory = '../../data_files/pdb_data_files'
 
 #Find the location of the 3Di kmer
 def resinumber(protein, threeDi, domain): #domain is 1, 2, 3, or 4 corresponding to 3, 5, 6, or 7
