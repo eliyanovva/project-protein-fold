@@ -41,7 +41,7 @@ class LigandFeatureData(DataHandlers):
         # the protein name should be from the train/test X data.
         features_file_name = self.__getLigandFileNames(label_name)
         ligand_features_matrix = np.load(
-            os.path.join(constants.MOL_FEATURES_PATH, features_file_name)
+            os.path.join(constants.LIGAND_FEATURE_PATH, features_file_name)
         )
         return ligand_features_matrix 
     
@@ -54,8 +54,8 @@ class LigandFeatureData(DataHandlers):
             ligand_name (_type_): _description_
         """
 
-        mylist = os.listdir(constants.MOL_FEATURES_PATH)
+        mylist = os.listdir(constants.LIGAND_FEATURE_PATH)
         left_index = ligand_name.rfind('_')
-        r = re.compile(".*"+ ligand_name[left_index:] + "_feat_mat.npy")
+        r = re.compile(".*"+ ligand_name[left_index:] + ".*_feat_mat.npy")
         adjacency_matrix_filename = list(filter(r.match, mylist))
         return adjacency_matrix_filename[0]
