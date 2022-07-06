@@ -11,9 +11,9 @@ testY = CombineLigandsProteins.Y
 #FeatureImportance.train(testX, testY, CombineLigandsProteins.feats) 
 
 
-FixedClassificationModel.train(testX, testY)
+#FixedClassificationModel.train(testX, testY)
 
-"""
+
 accuracy = 0
 recall = 0
 
@@ -25,4 +25,4 @@ for i in range(5):
 
 print('Average Accuracy: ' + str(accuracy/5))
 print('Average Recall: ' + str(recall/5))
-"""
+
