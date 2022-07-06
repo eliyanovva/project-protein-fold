@@ -1,4 +1,4 @@
-#This script visualizes the most important structure elements in the proteins
+#This script must be interpreted in pymol and visualizes the most important structure elements in the proteins
 #Script must be run while pwd is in the RF directory
 
 import sys
@@ -36,6 +36,7 @@ for filename in os.listdir(directory):
         cmd.hide("everything")
         cmd.show("cartoon", name_of_protein)
         cmd.color("magenta", name_of_protein)
+        cmd.set("cartoon_transparency",  "0.75", name_of_protein)
         
         name = name_of_protein.replace("AF-", "")
         name = name.replace("-F1", "")
@@ -53,7 +54,9 @@ for filename in os.listdir(directory):
                     printstatement1 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di1", printstatement1)
-                cmd.color("red", "Di1")
+                cmd.create("obj1", "Di1")
+                cmd.color("red", "obj1")
+                cmd.set("cartoon_transparency",  "0", "obj1")
                 save = True
             
             if len(resinumber(name,'PPNVS', 4)) > 0:
@@ -65,7 +68,9 @@ for filename in os.listdir(directory):
                     printstatement2 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di2", printstatement2)
-                cmd.color("orange", "Di2")
+                cmd.create("obj2","Di2")
+                cmd.color("orange", "obj2")
+                cmd.set("cartoon_transparency",  "0", "obj2")
                 save = True
             
             if len(resinumber(name,'PNPSS', 4)) > 0:
@@ -77,7 +82,9 @@ for filename in os.listdir(directory):
                     printstatement3 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di3", printstatement3)
-                cmd.color("yellow", "Di3")
+                cmd.create("obj3", "Di3")
+                cmd.color("yellow", "obj3")
+                cmd.set("cartoon_transparency",  "0", "obj3")
                 save = True
             
             if len(resinumber(name,'VNPLV', 3)) > 0:
@@ -89,7 +96,9 @@ for filename in os.listdir(directory):
                     printstatement4 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di4", printstatement4)
-                cmd.color("green", "Di4")
+                cmd.create("obj4", "Di4")
+                cmd.color("green", "obj4")
+                cmd.set("cartoon_transparency",  "0", "obj4")
                 save = True
 
             if len(resinumber(name,'VVCCV', 4)) > 0:
@@ -101,7 +110,9 @@ for filename in os.listdir(directory):
                     printstatement5 += 'Resi ' + str(structure) + '-' + str(structure+5)
                     i = 1
                 cmd.select("Di5", printstatement5)
-                cmd.color("blue", "Di5")
+                cmd.create("obj5", "Di5")
+                cmd.color("blue", "obj5")
+                cmd.set("cartoon_transparency",  "0", "obj5")
                 save = True
 
         #Save as png
