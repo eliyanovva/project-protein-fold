@@ -24,17 +24,13 @@ Inspiration coming from following sources:
 os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
 
 lig = np.load('ligand_data_tensors.npy', allow_pickle=True)
-prot = np.load('protein_data.npy', allow_pickle=True)
+prot = np.load('protein_data_tensors.npy', allow_pickle=True)
 de = np.load('de_data.npy', allow_pickle=True)
 
 x = []
 y = []
 
 prot_test = prot.item().get('Q8VFN8')
-prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot_test, buffer = 1)
-prot_vox_t = prot_vox.transpose().reshape([1, 8, prot_N[0], prot_N[1], prot_N[2]])
-prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
-
 lig_vox_t = lig.item().get('geranoil')
 
 # # There are about 49k total interactions from listed ligands and proteins so far;
