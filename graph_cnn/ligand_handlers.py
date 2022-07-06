@@ -1,41 +1,61 @@
 import tensorflow as tf
 import numpy as np
 import os
+import re
+import abc
 
 import data_prep.constants as constants
+from data_prep.data_handlers import DataHandlers
 
 
-class LigandAdjacencyData:
-    def __init__(self):
-        #self.protein_name = protein_name
-        pass
+class LigandAdjacencyData(DataHandlers):
 
-
-    def __fetchData(self):
+    #@abc.abstractmethod
+    def loadDataSingleMatrix(self, label_name):
         # the protein name should be from the train/test X data.
-        ligand_data = os.listdir(constants.MOL_ADJACENCY_PATH)
-        for file in ligand_data:
-            ligand_adjacency_matrix = np.load(os.path.join(constants.MOL_ADJACENCY_PATH, file))
-        return ligand_adjacency_matrix
-    
-
-    def createModel(self):
-        input_layer = tf.keras.layers.Input()
-        conv_layer1 = tf.keras.layers.Conv2D(
-            filters=2, kernel_size=3, activation='relu', padding='same'
-        )(input_layer)
-        pool_layer1 = tf.keras.layers.AveragePooling2D(
-            pool_size=(2,2), strides=(1,1), padding='valid'
-        )(conv_layer1)
-        flat_layer = tf.keras.layers.Flatten()(pool_layer1)
-
-        adjacency_model = tf.keras.models.Model(
-            input_layer,
-            conv_layer1,
-            pool_layer1,
-            flat_layer,
-            name='Ligand-Adjacency-Model'
+        adjacency_file_name = self.__getLigandFileNames(label_name)
+        ligand_adjacency_matrix = np.load(
+            os.path.join(constants.MOL_ADJACENCY_PATH, adjacency_file_name)
         )
+        return ligand_adjacency_matrix 
+    
+    
+    def __getLigandFileNames(self, ligand_name):
+        """The function returns the filename of the ligand adjacency matrix corresponding to the
+        ligand name from the ligand column in the uniprot-ligand-logFC-pValue csv.
 
-        return adjacency_model
+        Args:
+            ligand_name (_type_): _description_
+        """
 
+        mylist = os.listdir(constants.MOL_ADJACENCY_PATH)
+        left_index = ligand_name.rfind('_')
+        r = re.compile(".*"+ ligand_name[left_index:] + "_adj_mat.npy")
+        adjacency_matrix_filename = list(filter(r.match, mylist))
+        return adjacency_matrix_filename[0]
+
+
+class LigandFeatureData(DataHandlers):
+
+    def loadDataSingleMatrix(self, label_name):
+        # the protein name should be from the train/test X data.
+        features_file_name = self.__getLigandFileNames(label_name)
+        ligand_features_matrix = np.load(
+            os.path.join(constants.MOL_FEATURES_PATH, features_file_name)
+        )
+        return ligand_features_matrix 
+    
+    
+    def __getLigandFileNames(self, ligand_name):
+        """The function returns the filename of the ligand adjacency matrix corresponding to the
+        ligand name from the ligand column in the uniprot-ligand-logFC-pValue csv.
+
+        Args:
+            ligand_name (_type_): _description_
+        """
+
+        mylist = os.listdir(constants.MOL_FEATURES_PATH)
+        left_index = ligand_name.rfind('_')
+        r = re.compile(".*"+ ligand_name[left_index:] + "_feat_mat.npy")
+        adjacency_matrix_filename = list(filter(r.match, mylist))
+        return adjacency_matrix_filename[0]
