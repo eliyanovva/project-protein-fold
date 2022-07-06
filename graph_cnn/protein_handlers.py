@@ -10,7 +10,6 @@ from data_prep.data_handlers import DataHandlers
 
 class ProteinAdjacencyData(DataHandlers):
     
-    #@abc.abstractmethod
     def loadDataSingleMatrix(self, label_name):
         # the protein name should be from the train/test X data.
         protein_adjacency_matrix = np.load(
@@ -24,7 +23,9 @@ class ProteinFeatureData(DataHandlers):
     def loadDataSingleMatrix(self, label_name):
         # the protein name should be from the train/test X data.
         protein_feature_matrix = np.load(
-            os.path.join(constants.PROTEIN_FEATURE_PATH, label_name + '_feat_mat.npy')
+            os.path.join(
+                constants.PROTEIN_FEATURE_PATH,
+                label_name + '_feat_mat.npy')
         )
         return protein_feature_matrix
 

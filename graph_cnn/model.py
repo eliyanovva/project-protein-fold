@@ -1,18 +1,17 @@
-from stringprep import in_table_c8
-import tensorflow as tf
-import numpy as np
-import pandas as pd
 import logging as log
 import os
+from stringprep import in_table_c8
+
+import numpy as np
+import pandas as pd
+import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
+import data_prep.constants as constants
 import data_prep.log_config
-import data_prep.constants as constants
-from protein_handlers import ProteinAdjacencyData, ProteinFeatureData
-from ligand_handlers import LigandAdjacencyData
 from data_prep.data_handlers import DataHandlers
-import data_prep.constants as constants
-
+from ligand_handlers import LigandAdjacencyData, LigandFeatureData
+from protein_handlers import ProteinAdjacencyData, ProteinFeatureData
 
 log.info(os.getpid())
 
@@ -20,11 +19,13 @@ class GraphCNN:
     def __init__(self):
         pass
 
-    
+
     def initialize(self):
         self.prot_adj_data_handler = ProteinAdjacencyData()
         self.prot_feat_data_handler = ProteinFeatureData()
         self.lig_adj_data_handler = LigandAdjacencyData()
+        self.lig_feat_data_handler = LigandFeatureData()
+        
         log.info('initialized GraphCNN class')
 
 
@@ -32,8 +33,8 @@ class GraphCNN:
         with open(constants.MATRIX_DATA_FILES_PATH + '/uniprot_ligand_logfc_pvalue.csv', 'r') as comb_file:
             comb_file_lines = self.__getValidEntries(comb_file.readlines())
             x, y = [], []
-            # FIX SIZE LATER, SET TO 250 FOR A SMALLER BATCH TRY
-        for row in comb_file_lines[300]:
+            # FIX SIZE LATER, SET TO 100 FOR A SMALLER BATCH TRY
+        for row in comb_file_lines[:100]:
             row = row[:-1].split(',')
             if len(row) == 4:
                 protein_ligand_list = []
@@ -71,32 +72,48 @@ class GraphCNN:
             constants.LIGAND_ADJACENCY_MAT_SIZE),
             name='Ligand-Adjacency-Matrix'
         )
+
+        ligand_feat_in = tf.keras.layers.Input(
+            shape=(constants.LIGAND_ADJACENCY_MAT_SIZE,
+            constants.LIGAND_FEATURES_COUNT),
+            name='Ligand-Feature-Matrix'
+        )
  
         x = tf.keras.layers.Conv1D(
             2, 3, activation='relu'
         )(prot_adj_in)
-        x = tf.keras.layers.AveragePooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.Conv1D(
+            2, 3, activation='relu'
+        )(x)
+        x = tf.keras.layers.MaxPooling1D(pool_size=(3))(x)
+        
         x = tf.keras.layers.Flatten()(x)
-        x = tf.keras.layers.Dense(128, activation="relu")(x)
+        x = tf.keras.layers.Dense(64, activation="relu")(x)
         x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
         
         y = tf.keras.layers.Flatten()(prot_feat_in)
+        y = tf.keras.layers.Dense(64, activation="relu")(y)
         y = tf.keras.layers.Dense(32, activation="relu")(y)
-        y = tf.keras.layers.Dense(4, activation="relu")(y)
         y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
 
         z = tf.keras.layers.Flatten()(ligand_adj_in)
         z = tf.keras.layers.Dense(32, activation="relu")(z)
-        z = tf.keras.layers.Dense(4, activation="relu")(z)
+        z = tf.keras.layers.Dense(8, activation="relu")(z)
         z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
         
-        combined = tf.keras.layers.concatenate([x.output, y.output, z.output])
+        z1 = tf.keras.layers.Flatten()(ligand_feat_in)
+        z1 = tf.keras.layers.Dense(16, activation="relu")(z1)
+        z1 = tf.keras.layers.Dense(8, activation="relu")(z1)
+        z1 = tf.keras.Model(inputs=ligand_feat_in, outputs=z1)
+
+        combined = tf.keras.layers.concatenate([x.output, y.output, z.output, z1.output])
         
 
-        out = tf.keras.layers.Dense(128, activation="relu")(combined)
+        out = tf.keras.layers.Dense(64, activation="relu")(combined)
         out = tf.keras.layers.Dense(1, activation="linear")(out)
         
-        model = tf.keras.Model(inputs=[x.input, y.input, z.input], outputs=out)
+        model = tf.keras.Model(inputs=[x.input, y.input, z.input, z1.input], outputs=out)
 
         print(model.summary())
 
@@ -158,12 +175,20 @@ class GraphCNN:
         )
         tf_lig_adjacency = self.lig_adj_data_handler.getTensor()
         
+        self.lig_feat_data_handler.initialize(
+            X_ligands, 
+            (constants.LIGAND_ADJACENCY_MAT_SIZE, constants.LIGAND_FEATURES_COUNT),
+            float
+        )
+        tf_lig_features = self.lig_feat_data_handler.getTensor()
+
+
         tf_logfc = tf.strings.to_number(
             tf.convert_to_tensor(np.array(y)),
             out_type=tf.dtypes.float32
         )
         
-        return [tf_prot_adjacency, tf_prot_features, tf_lig_adjacency], tf_logfc
+        return [tf_prot_adjacency, tf_prot_features, tf_lig_adjacency, tf_lig_features], tf_logfc
 
 
 
