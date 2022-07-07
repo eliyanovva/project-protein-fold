@@ -65,6 +65,7 @@ for filename in os.listdir(directory):
         cmd.hide("everything")
         cmd.show("cartoon", name_of_protein)
         cmd.color("magenta", name_of_protein)
+        cmd.set("cartoon_transparency",  "0.75", name_of_protein)
 
         #Select important Amino Acids
         printstatement1 = ""
@@ -119,19 +120,29 @@ for filename in os.listdir(directory):
         
         #Color important Amino Acids
         cmd.select("AA1", printstatement1 + " and " + TM6)
-        cmd.color("red", "AA1")
+        cmd.create("obj1","AA1")
+        cmd.color("red", "obj1")
+        cmd.set("cartoon_transparency",  "0", "obj1")
 
         cmd.select("AA2", printstatement2 + " and " + TM6)
-        cmd.color("orange", "AA2")
+        cmd.create("obj2","AA2")
+        cmd.color("orange", "obj2")
+        cmd.set("cartoon_transparency",  "0", "obj2")
 
         cmd.select("AA3", printstatement3 + " and " + TM7)
-        cmd.color("yellow", "AA3")
+        cmd.create("obj3","AA3")
+        cmd.color("yellow", "obj3")
+        cmd.set("cartoon_transparency",  "0", "obj3")
 
         cmd.select("AA4", printstatement4 + " and " + TM3)
-        cmd.color("green", "AA4")
+        cmd.create("obj4","AA4")
+        cmd.color("green", "obj4")
+        cmd.set("cartoon_transparency",  "0", "obj4")
 
         cmd.select("AA5", printstatement5 + " and " + TM5)
-        cmd.color("blue", "AA5")
+        cmd.create("obj5","AA5")
+        cmd.color("blue", "obj5")
+        cmd.set("cartoon_transparency",  "0", "obj5")
 
         #Save as png
         savelocation = "Images/" + name_of_protein + ".png"
