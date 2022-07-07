@@ -46,6 +46,9 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
     pos_counts = {}  # key: protein id, value: number of positive protein interactions
     neg_counts = {}  # key: protein id, value: number of negative protein interactions
 
+    pos_pairs = []
+    neg_pairs = []
+
     class_by_CSV = {}
 
     for csv in csvs:
@@ -56,17 +59,18 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
         neg = 0
         classified[id] = {}
         for csv in csvs:
-            # Remove if FDR > .1
-            # classify as 1: if logFC >= 1
-            # else classify as 0
-            if (logFC_byID[id][csv] >= 1) & (FDR_byID[id][csv] <= .05):  # The protein and ligand bind
-                classified[id][csv] = 1
-                pos += 1
-                class_by_CSV[csv] += 1
-            else:  # The protein and ligand do not bind
-                classified[id][csv] = 0
-                neg += 1
-        pos_counts[id] = pos
-        neg_counts[id] = neg
+            if FDR_byID[id][csv] <= .1:
+                if logFC_byID[id][csv] >= 1:  # The protein and ligand bind
+                    classified[id][csv] = 1
+                    pos += 1    #only update pos count if pair isn't removed
+                    class_by_CSV[csv] += 1
+                    pos_pairs.append([id, csv])
+                elif logFC_byID[id][csv] < 1:  # The protein and ligand do not bind
+                    classified[id][csv] = 0
+                    neg += 1    #only update neg count if pair isn't removed
+                    neg_pairs.append([id, csv])
 
-    return classified, pos_counts, neg_counts
+            pos_counts[id] = pos
+            neg_counts[id] = neg
+
+    return classified, pos_counts, neg_counts, pos_pairs, neg_pairs
