@@ -30,6 +30,52 @@ def featurize(seq,k,feat):
         dict[kmer] += 1
     return dict
 
+def remove_duplicates(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
+    unique_seqs = set()
+    unique_proteins = set()
+
+    print(AA_seqvar[0])
+    print(Di_seqvar[0])
+    print(AA_feat[0])
+    print(Di_feat[0])
+
+    for i in range(4):
+        for seq in AA_seqvar[i]:
+            for kmer in AA_feat[i]:
+                if kmer not in seq.dictionary:
+                    seq.dictionary[kmer] = 0
+    for i in range(4):
+        for seq in Di_seqvar[i]:
+            for kmer in Di_feat[i]:
+                if kmer not in seq.dictionary:
+                    seq.dictionary[kmer] = 0
+
+    all_ids = []
+    for seq in AA_seqvar[0]:
+        all_ids.append(seq.name)
+
+    for id in all_ids:
+        freq_str = ""
+        for i in range(4):
+            for seq in AA_seqvar[i]:
+                if seq.name == id:
+                    for kmer in AA_feat[i]:
+                        freq_str += str(seq.dictionary[kmer])
+        for i in range(4):
+            for seq in Di_seqvar[i]:
+                if seq.name == id:
+                    for kmer in Di_feat[i]:
+                        freq_str += str(seq.dictionary[kmer])
+        print(len(freq_str))
+        if freq_str not in unique_seqs:
+            unique_seqs.add(freq_str)
+            unique_proteins.add(id)
+
+    print(len(unique_proteins))
+
+    return unique_proteins
+
+
 def make_seqvar_TMS(TM_dict, TM_num, k, seqvar, feat):
     for id in TM_dict:
         name = id
@@ -64,21 +110,22 @@ def make_seqvar(fasta, seqvar, feat):
 #seqvar = list of sequence objects
 #feat = list of k-mers
 #mat = empty matrix to be populated with frequency values
-def makematrix(seqvar, feat, mat, all_freqs):
+def makematrix(seqvar, feat, mat, unique, all_freqs):
     for seq in seqvar:
         newseq = []
 
         id = seq.name
-        if id not in all_freqs:
-            all_freqs[id] = []
+        if id in unique:
+            if id not in all_freqs:
+                all_freqs[id] = []
 
-        for kmer in feat:
-            #For kmers not found in the protein, populate the matrix with zeros
-            if kmer not in seq.dictionary:
-                seq.dictionary[kmer] = 0
-            #Add the frequency value of the kmer
-            newseq.append(seq.dictionary.get(kmer))
-        #Add a frequency array for each protein
-        mat.append(np.array(newseq))
-        all_freqs[id].append(newseq)
+            for kmer in feat:
+                #For kmers not found in the protein, populate the matrix with zeros
+                if kmer not in seq.dictionary:
+                    seq.dictionary[kmer] = 0
+                #Add the frequency value of the kmer
+                newseq.append(seq.dictionary.get(kmer))
+            #Add a frequency array for each protein
+            mat.append(np.array(newseq))
+            all_freqs[id].append(newseq)
     return mat

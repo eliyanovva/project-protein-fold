@@ -15,14 +15,14 @@ FDR_byID = {}
 cit_logFC = {}
 cit_FDR = {}
 
-#id = accession number of a given protein
-for id in acc_ids:
-           logFC_byID[id] = {}
-           FDR_byID[id] = {}
-
 #returns dictionaries of the logFC and p-values
 #key: protein id, value: dict (key: ligand file name, value: data label)
 def labels():
+    # id = accession number of a given protein
+    for id in acc_ids:
+        logFC_byID[id] = {}
+        FDR_byID[id] = {}
+
     fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
     
     #Read each csv file for the corresponding ligand
