@@ -146,6 +146,6 @@ def chunks(lst, n):
 
 if __name__ == "__main__":
     #gen_outputs(0.05, 1)
-    #voxelize_proteins()
-    print(list(chunks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4)))
+    voxelize_proteins()
+    #print(list(chunks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4)))
 
