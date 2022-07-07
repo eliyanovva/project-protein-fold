@@ -54,6 +54,9 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
         neg = 0
         classified[id] = {}
         for csv in csvs:
+            #Remove if FDR > .1
+            #classify as 1: if logFC >= 1
+            #else classify as 0
             if (logFC_byID[id][csv] >= 1) & (FDR_byID[id][csv] <= .05): #The protein and ligand bind
                 classified[id][csv] = 1
                 pos += 1
