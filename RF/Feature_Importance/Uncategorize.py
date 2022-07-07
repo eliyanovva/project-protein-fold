@@ -53,7 +53,7 @@ def uncat(feature):
                 ret[i] += 'C'
     return ret
 
-directory = '../../data_files/pdb_data_files'
+directory = '../../../../data_files/pdb_data_files'
 
 #Iterate through each pdb
 for filename in os.listdir(directory):
@@ -145,7 +145,8 @@ for filename in os.listdir(directory):
         cmd.set("cartoon_transparency",  "0", "obj5")
 
         #Save as png
-        savelocation = "Images/" + name_of_protein + ".png"
+        cmd.deselect()
+        savelocation = "../../Images/" + name_of_protein + ".png"
         cmd.png(savelocation)
         
         #Hide protein
