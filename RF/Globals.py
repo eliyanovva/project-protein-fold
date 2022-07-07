@@ -40,7 +40,7 @@ def initialize_ligand_list():
 
 #Function to create list of protein accessions
 def initialize_protein_list():
-    df = pd.read_csv("TMs.csv")
+    df = pd.read_csv("../data_files/TMdomains/TM.csv")
     protein_list = list(df.iloc[:, 0])
     """
     acc_ids = []
@@ -54,10 +54,9 @@ def initialize_protein_list():
     return protein_list
 
 
-def initialize_AA_dict(p_list):
-    df = pd.read_csv("TMs.csv")
-    #protein_list = initialize_protein_list()
-    protein_list = p_list
+def initialize_AA_dict():
+    df = pd.read_csv("../data_files/TMdomains/TM.csv")
+    protein_list = initialize_protein_list()
 
     TMs_by_id = {}
 
@@ -68,7 +67,7 @@ def initialize_AA_dict(p_list):
     return categorize(TMs_by_id)
 
 def initialize_indices():
-    df = pd.read_csv("TMs.csv")
+    df = pd.read_csv("../data_files/TMdomains/TM.csv")
     protein_list = initialize_protein_list()
 
     TM_indices = {}
@@ -126,7 +125,7 @@ fr = open('TMs.txt', "r")
 lines = fr.readlines()
 fr.close()
 
-fw = open('TMs.csv', 'w')
+fw = open('../data_files/TMdomains/TM.csv', 'w')
 fw.write('protein,TM3,s3,e3,TM5,s5,e5,TM6,s6,e6,TM7,s7,e7\n')
 
 for i in range(len(lines)):
