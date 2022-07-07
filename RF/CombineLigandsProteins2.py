@@ -11,7 +11,7 @@ import Filtering
 #Create classification dictionary
 acc_ids = Globals.initialize_protein_list()
 logFC, FDR = labels.labels()
-classified, pos_counts, neg_counts = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
+classified, pos_counts, neg_counts, pos_pairs, neg_pairs = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
 
 #Initialize Variables
 #categorized variables
