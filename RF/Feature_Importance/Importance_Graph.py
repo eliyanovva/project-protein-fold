@@ -28,12 +28,14 @@ for line in lines:
 print(values)
 print(domains)
 
-fig = plt.figure()
+fig,ax = plt.subplots()
 plt.bar(list(values.keys()), list(values.values()))
-
+ax.set_title("Feature Importance by Type")
+plt.ylabel('Mean Decrease in Impurity')
 fig.savefig('Relative_Feature_Importance.png')
 
-fig2 = plt.figure()
+fig2, ax2 = plt.subplots()
 plt.bar(list(domains.keys()), list(domains.values()))
-
+ax2.set_title("Feature Importance by Transmembrane Domain")
+plt.ylabel('Mean Decrease in Impurity')
 fig2.savefig('Domain_Importance.png')
