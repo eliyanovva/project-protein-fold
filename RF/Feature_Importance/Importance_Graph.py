@@ -1,4 +1,7 @@
+#This Script visualizes the relative importance of ligand, protein structure, and protein sequence information
+
 import math as m
+import matplotlib.pyplot as plt
 
 with open('important_features.txt') as f: 
     lines = f.readlines()
@@ -18,3 +21,8 @@ for line in lines:
     i+=1
 
 print(values)
+
+fig = plt.figure()
+plt.bar(list(values.keys()), list(values.values()))
+
+fig.savefig('Relative_Feature_Importance.png')
