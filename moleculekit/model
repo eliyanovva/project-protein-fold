@@ -11,6 +11,7 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader, random_split
 import re
 import pandas as pd
+import torch.optim as optim
 
 """
 Attempting to build model in lines below; kind of shit so far
@@ -89,16 +90,36 @@ class Model(nn.Module):
         return torch.sigmoid(hybrid)
 
 model = Model()
-out = model.forward(lig_vox_t, prot_vox_t)
+#out = model.forward(lig_vox_t, prot_vox_t)
 
-epoch = 100
+epochs = 100
 lr = 0.1
 
-"""
-for i in range(epoch):
+criterion = nn.L1Loss()
+optimizer = optim.Adam(model.parameters())
 
-    return
-"""
+for epoch in range(epochs):
+    running_loss = 0.0
+    """
+    for i, data in enumerate(dataloader_train, 0):
+        model.train()
+        # get the inputs; data is a list of [prot, lig, labels]
+        prot, labels = data
+        # zero the parameter gradients
+        optimizer.zero_grad()
 
+        # forward + backward + optimize
+        outputs = model(prot.float())
+        labels = labels.unsqueeze(1).float()
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+
+        # print statistics
+        running_loss += loss.item()
+        if i % 10 == 0:    # print every 2000 mini-batches
+            print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 10:.3f}')
+            running_loss = 0.0
+    """
 
 
