@@ -21,11 +21,13 @@ def train(features, labels, protein_freqs, ligand_freqs):
     print('assigned iht')
     X_res, y_res = ih.fit_resample(np.int_(X_train), np.int_(y_train))
     print('iht sampling')
-
-    #obs in X_train: 39402
+    print(len(X_res))
+    #obs in X_train: 28296
     #obs in X_res: 9248
 
-    #f = open('pl_pairs.txt', "w")
+    f = open('pl_pairs.txt', "w")
+
+    i = 0
 
     for obs in X_res:
         TM3_AA = obs[:904]
@@ -38,15 +40,9 @@ def train(features, labels, protein_freqs, ligand_freqs):
         TM7_Di = obs[5300:6014]
         ligand = obs[6014:]
 
-        print(len(TM3_AA))
-        print(len(TM5_AA))
-        print(len(TM6_AA))
-        print(len(TM7_AA))
-        print(len(TM3_Di))
-        print(len(TM5_Di))
-        print(len(TM6_Di))
-        print(len(TM7_Di))
-        print(len(ligand))
+        print(i)
+
+        i+= 1
 
         p = ""
         l = ""
@@ -69,9 +65,9 @@ def train(features, labels, protein_freqs, ligand_freqs):
                 l = lig
                 break
 
-        #f.write(p + " " + l + "\n")
+        f.write(p + " " + l + "\n")
 
-    #f.close()
+    f.close()
 
     print(len(X_train))
     print(len(X_train[0]))

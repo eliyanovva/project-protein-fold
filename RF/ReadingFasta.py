@@ -34,11 +34,6 @@ def remove_duplicates(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
     unique_seqs = set()
     unique_proteins = set()
 
-    print(AA_seqvar[0])
-    print(Di_seqvar[0])
-    print(AA_feat[0])
-    print(Di_feat[0])
-
     for i in range(4):
         for seq in AA_seqvar[i]:
             for kmer in AA_feat[i]:
@@ -66,12 +61,9 @@ def remove_duplicates(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
                 if seq.name == id:
                     for kmer in Di_feat[i]:
                         freq_str += str(seq.dictionary[kmer])
-        print(len(freq_str))
         if freq_str not in unique_seqs:
             unique_seqs.add(freq_str)
             unique_proteins.add(id)
-
-    print(len(unique_proteins))
 
     return unique_proteins
 

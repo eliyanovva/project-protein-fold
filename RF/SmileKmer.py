@@ -18,11 +18,22 @@ def importmatrix(ligand_dict, k, num_proteins):
 def ligand_matrix(ligand_dict, k, num_proteins):
     ligand_counts = ligand_kmer_count(ligand_dict, k)
     freq_mat = []
+    unique_seqs = set()
+    unique_ligands = []
+
+    for lig in ligand_counts:
+        freq_str = ""
+        for kmer in ligand_counts[lig]:
+            freq_str += str(ligand_counts[lig][kmer])
+        if freq_str not in unique_seqs:
+            unique_seqs.add(freq_str)
+            unique_ligands.append(lig)
+
     for i in range(num_proteins):
-        for lig in ligand_counts:
+        for lig in unique_ligands:
             freq_mat.append(np.array(list(ligand_counts[lig].values())))
     ligfeatures = list(ligand_counts['pS6_DE_1p_citronellol.csv'].keys())
-    return np.array(freq_mat), ligfeatures, ligand_counts
+    return np.array(freq_mat), ligfeatures, ligand_counts, unique_ligands
 
 #create a dictionary of the frequency counts for all kmers
 #key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)

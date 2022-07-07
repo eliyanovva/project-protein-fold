@@ -8,26 +8,13 @@ import labels
 import Globals
 import Filtering
 
-
-tri = [3, 3, 3, 3, 3, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7, 3, 3, 5, 5, 5, 5, 6, 7, 7, 'l', 'l', 'l']
-"""
-T3A = 5
-T5A = 2
-T6A = 3
-T7A = 5
-T3D = 2
-T5D = 4
-T6D = 1
-T7D = 2
-lig = 3
-"""
-
 #first: [:len(first part)]
 #next: [end of prev: end + len(curr part)]
 
 #Create classification dictionary
+acc_ids = Globals.initialize_protein_list()
 logFC, FDR = labels.labels()
-classified, pos_counts, neg_counts = labels.classified_logFC_FDR(logFC, FDR)
+classified, pos_counts, neg_counts = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
 
 #Initialize Variables
 #categorized variables
@@ -136,49 +123,35 @@ Di_mat_TM7 = ReadingFasta.makematrix(Di_seqvar_TM7, Di_filter_TM7, di_matrix_TM7
 Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_mat_TM5, dtype = np.uint8),
                             np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
 
-#Concatenate AA and 3Di matrices
-#intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
-intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
-#Expand the protein matrix to account for the ligands
-ligand_count = 55
-proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
-
-print(len(intermed_matrix))
-
 #Import dictionary matching ligands to SMILES String
 ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
 #ligand_matrix, ligand_features = SmileKmer.ligand_matrix(ligand_dict, 5, 1084)
-ligand_matrix, ligand_features, ligand_count = SmileKmer.ligand_matrix(ligand_dict, 5, len(unique_proteins))
-
+ligand_matrix, ligand_features, ligand_count, unique_ligands = SmileKmer.ligand_matrix(ligand_dict, 5, len(unique_proteins))
 ligand_freqs = {}
-
 for lig in ligand_count:
     ligand_freqs[lig] = list(ligand_count[lig].values())
 
-unique_p1 = set()
-for p in all_protein_freqs:
-    string = ""
-    for i in range(8):
-        for char in all_protein_freqs[p][i]:
-            string += str(char)
-    unique_p1.add(string)
+#Concatenate AA and 3Di matrices
+#intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
+intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
+#Expand the protein matrix to account for the ligands
+ligand_count = len(unique_ligands)
+proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 
-print(len(unique_p1))
-
-#unique considering AA: 504
-#unique considering all: 524
+#524 unique proteins
 
 #Concatenate protein and ligand matrices
 final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)
 
 #Create Classification Vector
 #proteins = seqvar1
+classified_unique, pos_unique, neg_unique = labels.classified_logFC_FDR(logFC, FDR, unique_proteins)
 proteins = Globals.initialize_protein_list()
 logFCmat = []
-for protein in proteins:
-    for ligand in list(ligand_dict.keys()):
-        logFCmat.append(float(classified[protein][ligand]))
+for protein in unique_proteins:
+    for ligand in unique_ligands:
+        logFCmat.append(float(classified_unique[protein][ligand]))
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
 def uniquematrix(matrix):
@@ -201,7 +174,7 @@ def uniquematrix(matrix):
 #unique returned
 
 #The following code checks whether all entries are unique
-#print(uniquematrix(final_matrix))
+#print(uniquematrix(intermed_matrix))
 
 def import_final():
     #For No3Di.py
