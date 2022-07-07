@@ -3,11 +3,6 @@
 #Methodology for filtering out kmers is based on 'String-Based Models for Predicting RNA-Protein Interaction',
 #https://dl.acm.org/doi/10.1145/3107411.3107508
 
-import Globals
-
-#Import list of accession numbers
-acc_list = Globals.initialize_protein_list()
-
 #kmers: set of all possible kmers for the protein
 #seqvar: list of Seq class objects (name, sequence = protein sequence, dictionary = kmer freq dictionary)
 #pos_counts: key = protein id, value = # pos. interactions with the protein
@@ -67,22 +62,11 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
 
     ret = []                #list of kmers that meet filtering conditions; to be used in final matrix
     ret2 = []               #for importances list
-    lowest_in_top10 = 1000000000
-    max = 0
-    max_kmer = ""
 
     for kmer in kmers:
-
-        total_kmer_freq = pos_counts_by_kmer[kmer] + neg_counts_by_kmer[kmer]
-        protein_half = len(acc_list) / 2
 
         if (richness[kmer] <= .125) | (richness[kmer] >= 8):
             ret.append(kmer)
             ret2.append(kmer + domain)
-        """
 
-        if counts_by_id[kmer] > max:
-            max = counts_by_id[kmer]
-            max_kmer = kmer
-        """
     return ret, ret2 #, max, max_kmer
