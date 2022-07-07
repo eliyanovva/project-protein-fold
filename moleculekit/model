@@ -86,57 +86,59 @@ class Model(nn.Module):
 
         return torch.sigmoid(hybrid)
 
-model = Model()
+# model = Model()
 dataset_full = ProtDataset(data_dir='/home/users/jvs15/project-protein-fold/moleculekit/model_files')
 train_test_split = 0.7
 train_size = int(train_test_split * len(dataset_full))
 test_size = len(dataset_full) - train_size
 dataset_train, dataset_test = torch.utils.data.random_split(dataset_full, [train_size, test_size])
 
-#out = model.forward(lig_vox_t, prot_vox_t)
+# #out = model.forward(lig_vox_t, prot_vox_t)
 
-print('training length: ', len(dataset_train))
+# print('training length: ', len(dataset_train))
 
 dataloader_train = DataLoader(dataset = dataset_train, batch_size = 4, shuffle = True, num_workers = 2)
 dataloader_test = DataLoader(dataset = dataset_test, batch_size = 4, shuffle = False, num_workers = 2)
 
-criterion = nn.L1Loss()
-optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-#optimizer = optim.Adam(model.parameters())
-model = model.float()
-epochs = 20
+# criterion = nn.L1Loss()
+# optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+# #optimizer = optim.Adam(model.parameters())
+# model = model.float()
+# epochs = 10
 
 
-for epoch in range(epochs):
-    running_loss = 0.0
-    for i, data in enumerate(dataloader_train, 0):
-        model.train()
-        # get the inputs; data is a list of [prot, lig, labels]
-        lig = data['Ligand Data']
-        prot = data['Protein Data']
-        y = data['Binding']
+# for epoch in range(epochs):
+#     running_loss = 0.0
+#     for i, data in enumerate(dataloader_train, 0):
+#         model.train()
+#         # get the inputs; data is a list of [prot, lig, labels]
+#         lig = data['Ligand Data']
+#         prot = data['Protein Data']
+#         y = data['Binding']
 
-        # zero the parameter gradients
-        optimizer.zero_grad()
+#         # zero the parameter gradients
+#         optimizer.zero_grad()
 
-        # forward + backward + optimize
-        outputs = model(lig.float(), prot.float())
-        y = y.unsqueeze(1).float()
-        loss = criterion(outputs, y)
-        loss.backward()
-        optimizer.step()
+#         # forward + backward + optimize
+#         outputs = model(lig.float(), prot.float())
+#         y = y.unsqueeze(1).float()
+#         loss = criterion(outputs, y)
+#         loss.backward()
+#         optimizer.step()
 
-        # print statistics
-        running_loss += loss.item()
-        if i % 10 == 0:    # print every 2000 mini-batches
-            print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 10:.3f}')
-            running_loss = 0.0
+#         # print statistics
+#         running_loss += loss.item()
+#         if i % 10 == 0:    # print every 2000 mini-batches
+#             print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 10:.3f}')
+#             running_loss = 0.0
     
-# Below is copied from Ben's branch
-print('finished training')
-# save model
-PATH = './cnn.pth'
-torch.save(model.state_dict(), PATH)
+# # Below is copied from Ben's branch
+# print('finished training')
+# # save model
+# PATH = './cnn.pth'
+# torch.save(model.state_dict(), PATH)
+model = Model()
+model.load_state_dict(torch.load('cnn.pth'))
 
 model.eval()
 
@@ -146,10 +148,10 @@ total = 0
 # evaluate model
 with torch.no_grad():
     for data in dataloader_test:
-        prot, lig, labels = data
         lig = data['Ligand Data']
         prot = data['Protein Data']
-        
+        labels = data['Binding']
+
         # calculate outputs by running images through the network
         outputs = model(lig.float(), prot.float())
         #print('outputs:', outputs)
