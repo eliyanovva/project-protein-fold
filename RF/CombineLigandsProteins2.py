@@ -3,15 +3,38 @@
 #Imports
 import SmileKmer
 import numpy as np
-import ReadingFasta
-import labels
+import ReadingFasta2
+import labels2
 import Globals
 import Filtering
 
 #Create classification dictionary
 acc_ids = Globals.initialize_protein_list()
-logFC, FDR = labels.labels()
-classified, pos_counts, neg_counts, pos_pairs, neg_pairs = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
+logFC, FDR = labels2.labels()
+classified, pos_counts, neg_counts, pos_pairs, neg_pairs = labels2.classified_logFC_FDR(logFC, FDR, acc_ids)
+
+print(len(pos_pairs))
+for pair in pos_pairs:
+    print(pair)
+print()
+print(len(neg_pairs))
+for pair in neg_pairs:
+    print(pair)
+
+proteins_toconsider = set()     #has 392 proteins
+ligands_toconsider = set()      #has 49 ligands
+
+for pair in pos_pairs:
+    proteins_toconsider.add(pair[0])
+    ligands_toconsider.add(pair[1])
+
+for pair in neg_pairs:
+    proteins_toconsider.add(pair[0])
+    ligands_toconsider.add(pair[1])
+
+print(len(proteins_toconsider))
+print(len(ligands_toconsider))
+
 
 #Initialize Variables
 #categorized variables
@@ -42,7 +65,8 @@ di_seqs_TM7 = []
 di_matrix_TM7 = []
 
 #Create AA output for TMs 3,5,6,7
-AA_dict = Globals.initialize_AA_dict()
+AA_dict = Globals.initialize_AA_dict(proteins_toconsider)   #create dict with proteins from pos / neg pairs
+
 AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
 AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, categorized_seqs_TM5, categorized_features_TM5)
 AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, categorized_seqs_TM6, categorized_features_TM6)

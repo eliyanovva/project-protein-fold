@@ -54,9 +54,10 @@ def initialize_protein_list():
     return protein_list
 
 
-def initialize_AA_dict():
+def initialize_AA_dict(p_list):
     df = pd.read_csv("TMs.csv")
-    protein_list = initialize_protein_list()
+    #protein_list = initialize_protein_list()
+    protein_list = p_list
 
     TMs_by_id = {}
 
