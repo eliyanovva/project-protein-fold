@@ -87,13 +87,13 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.conv1 = nn.Sequential(
             #convolution 1
-            nn.Conv3d(8, 32, 5, stride=5, padding=5),  # (in_channels, out_channels, kernel_size)
+            nn.Conv3d(16, 32, 5, stride=1, padding=0),  # (in_channels, out_channels, kernel_size)
             nn.MaxPool3d(2),
             nn.ReLU(),
             #convolution 2
-            nn.Conv3d(32, 64, 3, stride=3, padding=3),
-            nn.MaxPool3d(2),
-            nn.ReLU(),
+            #nn.Conv3d(32, 64, 3, stride=3, padding=3),
+            #nn.MaxPool3d(2),
+            #nn.ReLU(),
             #convolution 3
             #nn.Conv3d(64, 128, 3, stride=3, padding=3),
             #nn.MaxPool3d(2),
@@ -102,17 +102,16 @@ class Model(nn.Module):
             #nn.Softmax(1)
         )
         self.fc = nn.Sequential(
-            nn.Linear(576, 1000),
-            nn.Dropout(),
-            nn.ReLU(),
-            nn.Linear(1000, 1)
+            #nn.Linear(576, 1000),
+            #nn.Dropout(),
+            #nn.ReLU(),
+            nn.Linear(186624, 1)
         )
 
 
     def forward(self, x, lig):
-       x = self.conv1(x)
-       lig = self.conv1(lig)
        x = torch.cat((x, lig), dim=1)
+       x = self.conv1(x)
        x = self.fc(x)
        return torch.sigmoid(x)
 
