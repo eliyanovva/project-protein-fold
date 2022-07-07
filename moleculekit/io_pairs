@@ -108,7 +108,7 @@ def gen_outputs(fdr, logfc):
     prot = {}
     for filename in os.listdir('prot_files'):
         d = np.load(f'prot_files/{filename}', allow_pickle=True)
-        d = prot.item()
+        d = d.item()
         prot = {**d, **prot}
     print('Protein data loaded')
 
@@ -118,22 +118,34 @@ def gen_outputs(fdr, logfc):
 
     ret = pd.DataFrame(columns = ['Ligand Name', 'Ligand Data', 'Protein Name', 'Protein Data', 'Binding'])
 
+    num = 1
     for i in lig.keys():
         for j in prot.keys():
             a = de.get((i, j))
             if a.iloc[0]['FDR'] < fdr:
-                x.append((lig.get(i), prot.get(j)))
                 if abs(a.iloc[0]['logFC']) > logfc:
                     y = 1
                 else:
                     y = 0
-
-                ret.append({'Ligand Name' : i,
+                
+                entry = {'Ligand Name' : i,
                 'Ligand Data' : lig.get(i),
-                'Protein Name' : j, 
+                'Protein Name' : j,
                 'Protein Data' : prot.get(j),
-                'Binding' : y},
-                ignore_index=True)
+                'Binding' : y}
+
+                ret = ret.append(entry, ignore_index=True)
+                # entry = pd.DataFrame({
+                #     'Ligand Name': [i],
+                #     'Ligand Data': [lig.get(i)],
+                #     'Protein Name': [j],
+                #     'Protein Data': [prot.get(j)],
+                #     'Binding': [y]})
+
+                #pd.concat([ret, entry], ignore_index=True, axis=0)
+
+                print(f'entry {num} added')
+                num += 1
 
     ret.to_csv('all_data.csv')
 
@@ -145,7 +157,7 @@ def chunks(lst, n):
 
 
 if __name__ == "__main__":
-    #gen_outputs(0.05, 1)
-    voxelize_proteins()
+    gen_outputs(0.05, 1)
+    #voxelize_proteins()
     #print(list(chunks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4)))
 
