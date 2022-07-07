@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
+from matplotlib import pyplot as plt
+from contextlib import redirect_stdout
 
 import data_prep.constants as constants
 import data_prep.log_config
@@ -14,6 +16,14 @@ from ligand_handlers import LigandAdjacencyData, LigandFeatureData
 from protein_handlers import ProteinAdjacencyData, ProteinFeatureData
 
 log.info(os.getpid())
+
+from tensorflow.keras import backend as K
+
+def coeff_determination(y_true, y_pred):
+    SS_res =  K.sum(K.square( y_true-y_pred )) 
+    SS_tot = K.sum(K.square( y_true - K.mean(y_true) ) ) 
+    return ( 1 - SS_res/(SS_tot + K.epsilon()) )
+
 
 class GraphCNN:
     def __init__(self):
@@ -31,7 +41,7 @@ class GraphCNN:
 
     def trainTestSplit(self):
         with open(constants.MATRIX_DATA_FILES_PATH + '/uniprot_ligand_logfc_pvalue.csv', 'r') as comb_file:
-            comb_file_lines = self.__getValidEntries(comb_file.readlines())
+            comb_file_lines = comb_file.readlines()
             x, y = [], []
             # FIX SIZE LATER, SET TO 100 FOR A SMALLER BATCH TRY
         for row in comb_file_lines[:100]:
@@ -49,6 +59,8 @@ class GraphCNN:
             )
 
         log.info('Split data in training and testing sets.')
+
+        self.__visualizeOutput(np.array(y))
 
         return X_train, X_test, y_train, y_test
 
@@ -80,75 +92,71 @@ class GraphCNN:
         )
  
         x = tf.keras.layers.Conv1D(
-            2, 3, activation='relu'
+            filters=1024, kernel_size=3, activation='relu'
         )(prot_adj_in)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Conv1D(
-            2, 3, activation='relu'
+            filters=512, kernel_size=3, activation='relu'
         )(x)
-        x = tf.keras.layers.MaxPooling1D(pool_size=(3))(x)
-        
+        x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.Conv1D(
+            filters=256, kernel_size=3, activation='relu'
+        )(x)
+        x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Flatten()(x)
-        x = tf.keras.layers.Dense(64, activation="relu")(x)
+        x = tf.keras.layers.Dense(1024, activation="relu")(x)
+        x = tf.keras.layers.Dense(512, activation="relu")(x)
         x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
         
         y = tf.keras.layers.Flatten()(prot_feat_in)
+        y = tf.keras.layers.Dense(512, activation="relu")(y)
         y = tf.keras.layers.Dense(64, activation="relu")(y)
-        y = tf.keras.layers.Dense(32, activation="relu")(y)
         y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
 
         z = tf.keras.layers.Flatten()(ligand_adj_in)
-        z = tf.keras.layers.Dense(32, activation="relu")(z)
-        z = tf.keras.layers.Dense(8, activation="relu")(z)
+        z = tf.keras.layers.Dense(64, activation="relu")(z)
+        z = tf.keras.layers.Dense(16, activation="relu")(z)
         z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
         
         z1 = tf.keras.layers.Flatten()(ligand_feat_in)
-        z1 = tf.keras.layers.Dense(16, activation="relu")(z1)
-        z1 = tf.keras.layers.Dense(8, activation="relu")(z1)
+        z1 = tf.keras.layers.Dense(256, activation="relu")(z1)
+        z1 = tf.keras.layers.Dense(64, activation="relu")(z1)
         z1 = tf.keras.Model(inputs=ligand_feat_in, outputs=z1)
 
         combined = tf.keras.layers.concatenate([x.output, y.output, z.output, z1.output])
         
-
-        out = tf.keras.layers.Dense(64, activation="relu")(combined)
+        out = tf.keras.layers.Dense(1024, activation="relu")(combined)
+        out = tf.keras.layers.Dense(512, activation="relu")(out)
+        out = tf.keras.layers.Dense(64, activation="relu")(out)
         out = tf.keras.layers.Dense(1, activation="linear")(out)
         
         model = tf.keras.Model(inputs=[x.input, y.input, z.input, z1.input], outputs=out)
-
+        
         print(model.summary())
 
+        string = model.summary()
+        with open('results.txt', 'a') as res_log:
+            with redirect_stdout(res_log):
+                model.summary()
+            res_log.write('\n')
+
+
         model.compile(
-            optimizer='adam',
-            loss=tf.keras.losses.MeanSquaredLogarithmicError(),
-            metrics=[tf.keras.metrics.RootMeanSquaredError(), tf.keras.metrics.Accuracy()]
+            optimizer=tf.keras.optimizers.Adagrad(
+                learning_rate=0.0001,
+                initial_accumulator_value=0.1,
+                epsilon=1e-07),
+            loss=tf.keras.losses.MeanSquaredError(),
+            metrics=[tf.keras.metrics.LogCoshError(), coeff_determination]
         )
         return model
 
 
-    def __getValidEntries(self, comb_file_lines):
-        # ensures that we have all necessary mol and pdb files for the training and testing data.
-        all_protein_files = os.listdir(constants.PROTEIN_ADJACENCY_PATH)
-        all_ligand_files = os.listdir(constants.MOL_ADJACENCY_PATH)
-
-        for line in list(comb_file_lines):
-            line_list = line.split(',')
-            
-            protein_match = False
-            ligand_match = False
-            for protein in all_protein_files:
-                if line_list[0] in protein:
-                    protein_match = True
-                    break
-            
-            for ligand in all_ligand_files:
-                comp_name_index = line_list[1].rfind('_')
-                
-                if line_list[1][comp_name_index + 1 :] in ligand:
-                    ligand_match = True
-                    break
-            if not (protein_match and ligand_match):
-                comb_file_lines.remove(line)
-        return comb_file_lines
+    def __visualizeOutput(self, y):
+        print('The range for y is [', min(y), ', ', max(y), ']')
+        num_bins = 3
+        n, bins, patches = plt.hist(y, num_bins, facecolor='blue', alpha=0.5)
+        plt.savefig('visuals/y_distribution.png')
 
 
     def getTensors(self, X, y):
@@ -208,7 +216,11 @@ mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=1)
 log.info ('model fitting finished successfully')
 
 log.info('model evaluation started')
-print(model.evaluate(X_test, y_test, verbose=True))
+with open('results.txt', 'a') as res_log:
+    results = model.evaluate(X_test, y_test, verbose=True)
+    res_log.write(' '.join([str(r) for r in results]) + ' ')
+    res_log.write('\n')
+print(results)
 log.info('model evaluation completed')
 
 
