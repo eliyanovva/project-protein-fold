@@ -24,28 +24,27 @@ Inspiration coming from following sources:
 
 os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
 
-xdat = np.load('xdata.npy', allow_pickle=True)
-ydat = np.load('ydata.npy', allow_pickle=True)
+all_dat = pd.read_csv('all_data.csv')
 
 
 class ProtDataset(Dataset):
-    def __init__(self):
-        self.x = torch.from_numpy(np.load('x_data.npy'))
-        self.y = torch.from_numpy(np.load('y_data.npy'))
-        self.n_pairs = len(self.y)
+    def __init__(self, data_dir):
+        self.data_dir = data_dir
+        entries = []
+        for filename in os.listdir(self.data_dir):
+            a = np.load(f'{data_dir}/{filename}', allow_pickle=True)
+            entries = np.concatenate((a, entries), axis=None)
+        self.data = entries
+
 
     def __len__(self):
-        return self.n_pairs
+        return len(self.data)
 
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-        
-        lig = x[idx][0]
-        prot = x[idx][1]
-        y = y[idx]
-
-        return lig, prot, y
+        entry = self.data[idx]
+        return entry
 
 
 def conv_block(input_size, output_size):
@@ -90,28 +89,41 @@ class Model(nn.Module):
         return torch.sigmoid(hybrid)
 
 model = Model()
+dataset_full = ProtDataset(data_dir='/home/users/jvs15/project-protein-fold/moleculekit/model_files')
+train_test_split = 0.7
+train_size = int(train_test_split * len(dataset_full))
+test_size = len(dataset_full) - train_size
+dataset_train, dataset_test = torch.utils.data.random_split(dataset_full, [train_size, test_size])
+
 #out = model.forward(lig_vox_t, prot_vox_t)
 
-epochs = 100
-lr = 0.1
+print('training length: ', len(dataset_train))
+
+dataloader_train = DataLoader(dataset = dataset_train, batch_size = 4, shuffle = True, num_workers = 2)
+dataloader_test = DataLoader(dataset = dataset_test, batch_size = 4, shuffle = False, num_workers = 2)
 
 criterion = nn.L1Loss()
-optimizer = optim.Adam(model.parameters())
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+#optimizer = optim.Adam(model.parameters())
+model = model.float()
+epochs = 100
+
 
 for epoch in range(epochs):
     running_loss = 0.0
-    """
     for i, data in enumerate(dataloader_train, 0):
         model.train()
         # get the inputs; data is a list of [prot, lig, labels]
-        prot, labels = data
+        lig = data['Ligand Data']
+        prot = data['Protein Data']
+        y = data['Binding']
         # zero the parameter gradients
         optimizer.zero_grad()
 
         # forward + backward + optimize
-        outputs = model(prot.float())
-        labels = labels.unsqueeze(1).float()
-        loss = criterion(outputs, labels)
+        outputs = model(lig.float(), prot.float())
+        y = y.unsqueeze(1).float()
+        loss = criterion(outputs, y)
         loss.backward()
         optimizer.step()
 
@@ -120,6 +132,6 @@ for epoch in range(epochs):
         if i % 10 == 0:    # print every 2000 mini-batches
             print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 10:.3f}')
             running_loss = 0.0
-    """
+    
 
 
