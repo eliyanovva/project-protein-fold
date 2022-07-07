@@ -63,12 +63,10 @@ def train(features, labels, protein_freqs, ligand_freqs):
             TM5_AA = X_res[i][904:1906]
             TM6_AA = X_res[i][1906:2629]
             TM7_AA = X_res[i][2629:3607]
-            """
             TM3_Di = X_res[i][3607:3890]
             TM5_Di = X_res[i][3890:4471]
             TM6_Di = obs[4471:5300]
             TM7_Di = obs[5300:6014]
-            """
             ligand = X_res[i][6014:]
 
             print('NOT SAMPLED ' + str(i) + "\n")
