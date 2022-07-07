@@ -123,23 +123,21 @@ Di_mat_TM7 = ReadingFasta.makematrix(Di_seqvar_TM7, Di_filter_TM7, di_matrix_TM7
 Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_mat_TM5, dtype = np.uint8),
                             np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
 
-#Concatenate AA and 3Di matrices
-#intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
-intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
-#Expand the protein matrix to account for the ligands
-ligand_count = 55
-proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
-
 #Import dictionary matching ligands to SMILES String
 ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
 #ligand_matrix, ligand_features = SmileKmer.ligand_matrix(ligand_dict, 5, 1084)
-ligand_matrix, ligand_features, ligand_count = SmileKmer.ligand_matrix(ligand_dict, 5, len(unique_proteins))
-
+ligand_matrix, ligand_features, ligand_count, unique_ligands = SmileKmer.ligand_matrix(ligand_dict, 5, len(unique_proteins))
 ligand_freqs = {}
-
 for lig in ligand_count:
     ligand_freqs[lig] = list(ligand_count[lig].values())
+
+#Concatenate AA and 3Di matrices
+#intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
+intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
+#Expand the protein matrix to account for the ligands
+ligand_count = len(unique_ligands)
+proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
 
 #524 unique proteins
 
@@ -176,7 +174,7 @@ def uniquematrix(matrix):
 #unique returned
 
 #The following code checks whether all entries are unique
-#print(uniquematrix(final_matrix))
+#print(uniquematrix(intermed_matrix))
 
 def import_final():
     #For No3Di.py
