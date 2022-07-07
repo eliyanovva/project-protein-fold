@@ -117,6 +117,7 @@ for epoch in range(epochs):
         lig = data['Ligand Data']
         prot = data['Protein Data']
         y = data['Binding']
+
         # zero the parameter gradients
         optimizer.zero_grad()
 

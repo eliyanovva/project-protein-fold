@@ -37,7 +37,7 @@ def voxelize_ligands():
         chem_name = filename[0:len(filename)-4]
         ligand = SmallMol(f'mol_data_files/{filename}', force_reading=True)
         lig_vox, lig_centers, lig_N = getVoxelDescriptors(ligand, voxelsize = 0.5, buffer=1, boxsize=box, center=cent)
-        lig_vox_t = lig_vox.transpose().reshape([1, 8, lig_N[0], lig_N[1], lig_N[2]])
+        lig_vox_t = lig_vox.transpose().reshape([8, lig_N[0], lig_N[1], lig_N[2]])
         lig_vox_t = torch.tensor(lig_vox_t.astype(np.float32))
         x1[chem_name] = lig_vox_t
 
@@ -77,7 +77,7 @@ def voxelize_proteins():
                 prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, buffer = 1, boxsize=box, center=cent)
 
                 # Make tensor from voxelized format
-                prot_vox_t = prot_vox.transpose().reshape([1, 8, prot_N[0], prot_N[1], prot_N[2]])
+                prot_vox_t = prot_vox.transpose().reshape([8, prot_N[0], prot_N[1], prot_N[2]])
                 prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
 
                 # Add tensor to dict
@@ -152,7 +152,8 @@ def chunks(lst, n):
 
 
 if __name__ == "__main__":
-    gen_outputs(0.05, 1)
-    #voxelize_proteins()
+    #voxelize_ligands()
+    #gen_outputs(0.05, 1)
+    voxelize_proteins()
     #print(list(chunks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4)))
 
