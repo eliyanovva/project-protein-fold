@@ -39,7 +39,7 @@ def labels():
     return logFC_byID, FDR_byID
 
 #Create a classification dictionary with protein-ligand pair keys and bind (1) or not bind (0) as values
-def classified_logFC_FDR(logFC_byID, FDR_byID):
+def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
     classified = {}
     pos_counts = {} #key: protein id, value: number of positive protein interactions
     neg_counts = {} #key: protein id, value: number of negative protein interactions
@@ -49,7 +49,7 @@ def classified_logFC_FDR(logFC_byID, FDR_byID):
     for csv in csvs:
         class_by_CSV[csv] = 0
 
-    for id in FDR_byID:
+    for id in protein_list:
         pos = 0
         neg = 0
         classified[id] = {}
