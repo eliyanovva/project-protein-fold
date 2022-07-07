@@ -150,7 +150,7 @@ classified_unique, pos_unique, neg_unique = labels.classified_logFC_FDR(logFC, F
 proteins = Globals.initialize_protein_list()
 logFCmat = []
 for protein in unique_proteins:
-    for ligand in list(ligand_dict.keys()):
+    for ligand in unique_ligands:
         logFCmat.append(float(classified_unique[protein][ligand]))
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
