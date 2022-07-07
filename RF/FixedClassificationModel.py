@@ -18,54 +18,72 @@ def train(features, labels, protein_freqs, ligand_freqs):
     print('split data')
     
     """
-    f = open('pl_pairs.txt', "w")
+    f = open('pl_pairs3.txt', "w")
 
     i = 0
 
+    X_res_str = []
+    X_train_str = []
+
+    k = 0
     for obs in X_train:
-        TM3_AA = obs[:904]
-        TM5_AA = obs[904:1906]
-        TM6_AA = obs[1906:2629]
-        TM7_AA = obs[2629:3607]
-        TM3_Di = obs[3607:3890]
-        TM5_Di = obs[3890:4471]
-        TM6_Di = obs[4471:5300]
-        TM7_Di = obs[5300:6014]
-        ligand = obs[6014:]
+        print(k)
+        k += 1
+        string = ""
+        for freq in obs:
+            string += str(freq)
+        X_train_str.append(string)
 
-        print(i)
+    k = 0
+    for obs in X_res:
+        print(k)
+        k += 1
+        string = ""
+        for freq in obs:
+            string += str(freq)
+        X_res_str.append(string)
 
-        i+= 1
+    j = 0
+    for i in range(len(X_train)):
+        print(j)
+        string = ""
+        for freq in X_train[i]:
+            string += str(freq)
 
-        p = ""
-        l = ""
+        if X_res_str.count(string) == 0:
 
-        #https://www.geeksforgeeks.org/numpy-array_equal-python/
-        for prot in protein_freqs:
-            if ((np.array_equal(np.array(TM3_AA), np.array(protein_freqs[prot][0]))) &
-                (np.array_equal(np.array(TM5_AA), np.array(protein_freqs[prot][1]))) &
-                (np.array_equal(np.array(TM6_AA), np.array(protein_freqs[prot][2]))) &
-                (np.array_equal(np.array(TM7_AA), np.array(protein_freqs[prot][3]))) &
-                (np.array_equal(np.array(TM3_Di), np.array(protein_freqs[prot][4]))) &
-                (np.array_equal(np.array(TM5_Di), np.array(protein_freqs[prot][5]))) &
-                (np.array_equal(np.array(TM6_Di), np.array(protein_freqs[prot][6]))) &
-                (np.array_equal(np.array(TM7_Di), np.array(protein_freqs[prot][7])))):
-                    p = prot
+            TM3_AA = X_res[i][:904]
+            TM5_AA = X_res[i][904:1906]
+            TM6_AA = X_res[i][1906:2629]
+            TM7_AA = X_res[i][2629:3607]
+            TM3_Di = X_res[i][3607:3890]
+            TM5_Di = X_res[i][3890:4471]
+            TM6_Di = obs[4471:5300]
+            TM7_Di = obs[5300:6014]
+            ligand = X_res[i][6014:]
+
+            print('NOT SAMPLED ' + str(i) + "\n")
+            i+= 1
+            p = ""
+            l = ""
+
+            #https://www.geeksforgeeks.org/numpy-array_equal-python/
+            for prot in protein_freqs:
+                if ((np.array_equal(np.array(TM3_AA), np.array(protein_freqs[prot][0]))) &
+                    (np.array_equal(np.array(TM5_AA), np.array(protein_freqs[prot][1]))) &
+                    (np.array_equal(np.array(TM6_AA), np.array(protein_freqs[prot][2]))) &
+                    (np.array_equal(np.array(TM7_AA), np.array(protein_freqs[prot][3])))):
+                        p = prot
+                        break
+
+            for lig in ligand_freqs:
+                if (np.array_equal(np.array(ligand_freqs[lig]), np.array(ligand))):
+                    l = lig
                     break
 
-        for lig in ligand_freqs:
-            if (np.array_equal(np.array(ligand_freqs[lig]), np.array(ligand))):
-                l = lig
-                break
-
-        f.write(p + " " + l + "\n")
+            f.write(p + " " + l + "\n")
 
     f.close()
-
-    print(len(X_train))
-    print(len(X_train[0]))
-    print(len(X_train))
-    print(len(X_train[0]))
     """
 
     #Create a Gaussian Regression

@@ -128,8 +128,9 @@ ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
 #ligand_matrix, ligand_features = SmileKmer.ligand_matrix(ligand_dict, 5, 1084)
 ligand_matrix, ligand_features, ligand_count, unique_ligands = SmileKmer.ligand_matrix(ligand_dict, 5, len(unique_proteins))
+
 ligand_freqs = {}
-for lig in ligand_count:
+for lig in unique_ligands:
     ligand_freqs[lig] = list(ligand_count[lig].values())
 
 #Concatenate AA and 3Di matrices

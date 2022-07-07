@@ -105,7 +105,6 @@ def make_seqvar(fasta, seqvar, feat):
 def makematrix(seqvar, feat, mat, unique, all_freqs):
     for seq in seqvar:
         newseq = []
-
         id = seq.name
         if id in unique:
             if id not in all_freqs:
