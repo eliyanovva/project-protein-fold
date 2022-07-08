@@ -2,14 +2,14 @@
 
 import CombineLigandsProteins
 import FixedClassificationModel
-import AdjustingThreshold
+#import AdjustingThreshold
 #import FeatureImportance
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 
-AdjustingThreshold.train(testX, testY)
+#AdjustingThreshold.train(testX, testY)
 
 #FeatureImportance.train(testX, testY, CombineLigandsProteins.feats)
 FixedClassificationModel.train(testX, testY)
