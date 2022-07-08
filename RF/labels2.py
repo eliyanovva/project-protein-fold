@@ -54,12 +54,16 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
     for csv in csvs:
         class_by_CSV[csv] = 0
 
+    count = 0
+
     for id in protein_list:
         pos = 0
         neg = 0
         classified[id] = {}
         for csv in csvs:
             if FDR_byID[id][csv] <= .1:
+                count += 1
+
                 if logFC_byID[id][csv] >= 1:  # The protein and ligand bind
                     classified[id][csv] = 1
                     pos += 1    #only update pos count if pair isn't removed

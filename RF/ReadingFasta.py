@@ -117,12 +117,11 @@ def makematrix(seqvar, feat, mat, unique):
             mat.append(np.array(newseq))
     return mat
 
-def makematrix2(seqvar, feat, mat, unique):
+def makematrix2(seqvar, feat, mat, unique, counts):
     for seq in seqvar:
         newseq = []
         id = seq.name
         if id in unique:
-
             for kmer in feat:
                 #For kmers not found in the protein, populate the matrix with zeros
                 if kmer not in seq.dictionary:
@@ -130,6 +129,7 @@ def makematrix2(seqvar, feat, mat, unique):
                 #Add the frequency value of the kmer
                 newseq.append(seq.dictionary.get(kmer))
             #Add a frequency array for each protein
-            mat.append(np.array(newseq))
+            for i in range(counts[id]):
+                mat.append(np.array(newseq))
     return mat
 
