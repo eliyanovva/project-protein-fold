@@ -35,9 +35,23 @@ def train(features, labels):
 
     y_pred = y_pred[:,1]
 
+    #Determine optimal threshold
     precision, recall, thresholds = precision_recall_curve(y_test, y_pred)
 
     fscore = (2 * precision * recall) / (precision + recall)
 
     ix = nanargmax(fscore)
     print('Best Threshold=%f, F-Score=%.3f' % (thresholds[ix], fscore[ix]))
+
+    #Run the model with the optimal threshold
+    y_pred = (clf.predict_proba(X_test)[:,1] >= thresholds[ix]).astype(bool)
+
+    precision, recall, thresholds = metrics.precision_recall_curve(y_test, y_pred)
+
+    acc = metrics.roc_auc_score(y_test, y_pred)
+    rec = metrics.auc(recall,precision)
+
+    print("Accuracy:",acc)
+    print("Recall:",rec)
+
+    return acc,rec
