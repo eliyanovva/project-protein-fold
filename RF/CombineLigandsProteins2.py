@@ -90,29 +90,47 @@ ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
 ligand_features, ligand_count, unique_ligands = SmileKmer.ligand_matrix(ligand_dict, 5, len(unique_proteins), ligands_toconsider)
 
-"""
-AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, categorized_matrix_TM3, unique_proteins)
-AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, categorized_matrix_TM5, unique_proteins)
-AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, categorized_matrix_TM6, unique_proteins)
-AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, categorized_matrix_TM7, unique_proteins)
+print(len(unique_proteins))     #347 unique proteins
+print(len(unique_ligands))      #48 unique ligands
+#801 total pairs (before selecting unique)
+#642 pairs after unique
+
+pos_AA_mat_TM3 = ReadingFasta.makematrix2(AA_seqvar_TM3, AA_filter_TM3, categorized_matrix_TM3, unique_proteins, pos_counts)
+pos_AA_mat_TM5 = ReadingFasta.makematrix2(AA_seqvar_TM5, AA_filter_TM5, categorized_matrix_TM5, unique_proteins, pos_counts)
+pos_AA_mat_TM6 = ReadingFasta.makematrix2(AA_seqvar_TM6, AA_filter_TM6, categorized_matrix_TM6, unique_proteins, pos_counts)
+pos_AA_mat_TM7 = ReadingFasta.makematrix2(AA_seqvar_TM7, AA_filter_TM7, categorized_matrix_TM7, unique_proteins, pos_counts)
+
+AA_mat_TM3 = ReadingFasta.makematrix2(AA_seqvar_TM3, AA_filter_TM3, pos_AA_mat_TM3, unique_proteins, neg_counts)
+AA_mat_TM5 = ReadingFasta.makematrix2(AA_seqvar_TM5, AA_filter_TM5, pos_AA_mat_TM5, unique_proteins, neg_counts)
+AA_mat_TM6 = ReadingFasta.makematrix2(AA_seqvar_TM6, AA_filter_TM6, pos_AA_mat_TM6, unique_proteins, neg_counts)
+AA_mat_TM7 = ReadingFasta.makematrix2(AA_seqvar_TM7, AA_filter_TM7, pos_AA_mat_TM7, unique_proteins, neg_counts)
 
 AA_matrix = np.concatenate((np.array(AA_mat_TM3, dtype = np.uint8), np.array(AA_mat_TM5, dtype = np.uint8),
                             np.array(AA_mat_TM6, dtype = np.uint8), np.array(AA_mat_TM7, dtype = np.uint8)) , axis = 1)
 
-Di_mat_TM3 = ReadingFasta.makematrix(Di_seqvar_TM3, Di_filter_TM3, di_matrix_TM3, unique_proteins)
-Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_filter_TM5, di_matrix_TM5, unique_proteins)
-Di_mat_TM6 = ReadingFasta.makematrix(Di_seqvar_TM6, Di_filter_TM6, di_matrix_TM6, unique_proteins)
-Di_mat_TM7 = ReadingFasta.makematrix(Di_seqvar_TM7, Di_filter_TM7, di_matrix_TM7, unique_proteins)
+print(len(AA_matrix))
+print(len(AA_matrix[0]))
+
+pos_Di_mat_TM3 = ReadingFasta.makematrix2(Di_seqvar_TM3, Di_filter_TM3, di_matrix_TM3, unique_proteins, pos_counts)
+pos_Di_mat_TM5 = ReadingFasta.makematrix2(Di_seqvar_TM5, Di_filter_TM5, di_matrix_TM5, unique_proteins, pos_counts)
+pos_Di_mat_TM6 = ReadingFasta.makematrix2(Di_seqvar_TM6, Di_filter_TM6, di_matrix_TM6, unique_proteins, pos_counts)
+pos_Di_mat_TM7 = ReadingFasta.makematrix2(Di_seqvar_TM7, Di_filter_TM7, di_matrix_TM7, unique_proteins, pos_counts)
+
+Di_mat_TM3 = ReadingFasta.makematrix2(Di_seqvar_TM3, Di_filter_TM3, pos_Di_mat_TM3, unique_proteins, neg_counts)
+Di_mat_TM5 = ReadingFasta.makematrix2(Di_seqvar_TM5, Di_filter_TM5, pos_Di_mat_TM5, unique_proteins, neg_counts)
+Di_mat_TM6 = ReadingFasta.makematrix2(Di_seqvar_TM6, Di_filter_TM6, pos_Di_mat_TM6, unique_proteins, neg_counts)
+Di_mat_TM7 = ReadingFasta.makematrix2(Di_seqvar_TM7, Di_filter_TM7, pos_Di_mat_TM7, unique_proteins, neg_counts)
 
 Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_mat_TM5, dtype = np.uint8),
                             np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
 
+print(len(Di_matrix))
+print(len(Di_matrix[0]))
+
 #Concatenate AA and 3Di matrices
 #intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
 intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
-#Expand the protein matrix to account for the ligands
-ligand_count = len(unique_ligands)
-proteins_matrix = np.repeat(intermed_matrix, repeats = ligand_count, axis = 0)
+"""
 
 #Concatenate protein and ligand matrices
 final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)
