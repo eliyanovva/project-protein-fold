@@ -131,7 +131,7 @@ for id in neg_dict:
             neg_dict[id].remove(lig)
 
 #801 total pairs (before selecting unique)
-#642 pairs after unique
+#627 pairs after unique
 
 pos_AA_mat_TM3 = ReadingFasta.makematrix2(AA_seqvar_TM3, AA_filter_TM3, categorized_matrix_TM3, unique_proteins, pos_dict)
 pos_AA_mat_TM5 = ReadingFasta.makematrix2(AA_seqvar_TM5, AA_filter_TM5, categorized_matrix_TM5, unique_proteins, pos_dict)
@@ -166,19 +166,24 @@ print(len(Di_matrix))
 #Concatenate AA and 3Di matrices
 #intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
 intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
-"""
 
 #Concatenate protein and ligand matrices
-final_matrix = np.concatenate((proteins_matrix, np.array(ligand_matrix, dtype = np.uint8)), axis = 1)
+final_matrix = np.concatenate((intermed_matrix, np.array(lig_mat, dtype = np.uint8)), axis = 1)
+
+total_pos = 0
+total_neg = 0
+
+for id in unique_proteins:
+    if id in pos_dict:
+        total_pos += len(pos_dict[id])
+    if id in neg_dict:
+        total_neg += len(neg_dict[id])
 
 #Create Classification Vector
-#proteins = seqvar1
-classified_unique, pos_unique, neg_unique = labels.classified_logFC_FDR(logFC, FDR, unique_proteins)
-proteins = Globals.initialize_protein_list()
-logFCmat = []
-for protein in unique_proteins:
-    for ligand in unique_ligands:
-        logFCmat.append(float(classified_unique[protein][ligand]))
+
+pos_array = np.repeat(1, int(total_pos))
+neg_array = np.repeat(0, int(total_neg))
+logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
 def uniquematrix(matrix):
@@ -229,4 +234,4 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
-"""
+
