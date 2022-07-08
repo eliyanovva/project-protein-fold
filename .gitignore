@@ -8,7 +8,7 @@
 *.smiles
 
 # ALl npy files
-#*.npy
+*.npy
 
 # All python cache files
 *.pyc
