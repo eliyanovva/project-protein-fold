@@ -6,12 +6,11 @@
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.experimental import enable_halving_search_cv
-from sklearn.model_selection import HalvingRandomSearchCV, cross_val_score
+from sklearn.model_selection import HalvingRandomSearchCV
 from sklearn.model_selection import StratifiedKFold
-from imblearn.over_sampling import RandomOverSampler
 from sklearn.model_selection import train_test_split
 import CombineLigandsProteins
-from imblearn.pipeline import Pipeline, make_pipeline
+from sklearn import metrics
 
 #Number of trees in the forest
 n_estimators = [int(x) for x in np.linspace(start = 10, stop = 1000, num = 100)]
@@ -55,23 +54,26 @@ testY = CombineLigandsProteins.Y
 X_train, X_test, y_train, y_test = train_test_split(testX, testY, stratify=testY, test_size=0.1) # 90% training and 10% test
 
 #Define model
-model = RandomForestClassifier()
+model = RandomForestClassifier(class_weight = "balanced")
 #Define k-folds
 kf = StratifiedKFold()
-#Pipeline
-imba_pipeline = make_pipeline(RandomOverSampler(), 
-                              RandomForestClassifier(n_estimators=100))
-cross_val_score(imba_pipeline, X_train, y_train, scoring='roc_auc', cv=kf)
-new_params = {'randomforestclassifier__' + key: param_grid[key] for key in param_grid}
 
 #Define random grid
-grid = HalvingRandomSearchCV(imba_pipeline, param_distributions = new_params, verbose = 2, n_jobs = -1, scoring = 'roc_auc', 
-                            cv=kf, return_train_score=True)
+grid = HalvingRandomSearchCV(estimator = model, param_distributions = param_grid, verbose = 2, n_jobs = -1,
+                            cv=kf, return_train_score=True, scoring = "balanced_accuracy")
 
 #Train the model (performing cross validation)
 grid.fit(X_train, y_train)
 #Print optimized parameters
 print(grid.best_params_)
 
-#Test the model on the test set
-print(grid.score(X_test, y_test))
+#Form predictions
+y_pred=grid.predict_proba(X_test)[:,1]
+
+precision, recall, thresholds = metrics.precision_recall_curve(y_test, y_pred)
+
+acc = metrics.roc_auc_score(y_test, y_pred)
+rec = metrics.auc(recall,precision)
+#Print accuracy of the model
+print("Accuracy:",acc)
+print("Recall:",rec)

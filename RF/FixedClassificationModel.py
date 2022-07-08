@@ -5,8 +5,6 @@
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
-from imblearn.under_sampling import InstanceHardnessThreshold
-import numpy as np
 
 def train(features, labels):
     #define features and labels
@@ -36,6 +34,9 @@ def train(features, labels):
     #Print accuracy of the model
     print("Accuracy:",acc)
     print("Recall:",rec)
+
+    y_pred=clf.predict(X_test)
+    print(metrics.balanced_accuracy_score(y_test, y_pred))
 
     return acc,rec
 
