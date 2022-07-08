@@ -6,6 +6,7 @@ and so on.
 """
 import logging as log
 from abc import ABC, abstractmethod
+from xml.dom.minidom import DOMImplementation
 
 import numpy as np
 import tensorflow as tf
@@ -69,15 +70,28 @@ class DataHandlers(ABC):
         for i in range(len(self.labels_list)):
             data = self.loadDataSingleMatrix(self.labels_list[i])
             log.info('Succesfully loaded data for ' + self.labels_list[i])
-            self.matrix[i] = np.pad(
-                np.array(data, ndmin=2),
-                ((0, self.dimensions[0] - len(data)),
-                (0, self.dimensions[1] - len(data[0]))),
-                'constant',
-                constant_values=(0)
-            )
-            log.info('Padded and added data for ' + self.labels_list[i])
-
+            data_rows = len(data)
+            data_cols = len(data[0])
+            
+            if data_rows < self.dimensions[0] and data_cols < self.dimensions[1]:
+                self.matrix[i] = np.pad(
+                    np.array(data, ndmin=2),
+                    ((0, self.dimensions[0] - data_rows),
+                    (0, self.dimensions[1] - data_cols)),
+                    'constant',
+                    constant_values=(0)
+                )
+                log.info('Padded and added data for ' + self.labels_list[i])
+          
+            elif data_rows > self.dimensions[0] or data_cols > self.dimensions[1]:
+                row_diff = (data_rows - self.dimensions[0]) // 2
+                col_diff = (data_cols - self.dimensions[1]) // 2
+                print(data_rows - self.dimensions[0])
+                self.matrix[i] = np.array(data, ndmin=2)[
+                    row_diff : self.dimensions[0] + row_diff ,
+                    col_diff : self.dimensions[1] + col_diff 
+                ]
+                log.info('Cropped and added data for ' + self.labels_list[i])
 
     def __initializeNpMatrix(self):
         self.matrix = np.zeros(

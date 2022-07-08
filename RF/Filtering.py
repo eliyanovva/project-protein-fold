@@ -21,17 +21,15 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
         counts_by_id[kmer] = 0
 
     for kmer in kmers:
-        for seq in seqvar:
-            dict = seq.dictionary
-            if kmer in dict:
-                counts_by_id[kmer] += dict[kmer]
+        for id in seqvar:
+            if kmer in seqvar[id]:
+                counts_by_id[kmer] += seqvar[id][kmer]
 
     total_pos = 0                       #total num. of kmers involved in positive pairs
     total_neg = 0                       #total num. of kmers involved in negative pairs
 
-    for seq in seqvar:
-        id = seq.name                   #id = accession id of protein
-        freq_dict = seq.dictionary      #freq_dict = freq. counts of all known kmers in the protein
+    for id in seqvar:                #id = accession id of protein
+        freq_dict = seqvar[id]      #freq_dict = freq. counts of all known kmers in the protein
 
         #increase total kmer counts by (num. of pairs that involve the protein) x (num. of kmers that the protein has)
         total_pos += pos_counts[id] * sum(freq_dict.values())
@@ -69,4 +67,4 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
             ret.append(kmer)
             ret2.append(kmer + domain)
 
-    return ret, ret2 #, max, max_kmer
+    return ret, ret2
