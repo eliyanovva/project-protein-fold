@@ -118,8 +118,6 @@ for id in unique_proteins:
             if lig in unique_ligands:
                 lig_mat.append(np.array(list(ligand_counts[lig].values())))
 
-print(len(lig_mat))
-
 for id in pos_dict:
     for lig in pos_dict[id]:
         if lig not in unique_ligands:
@@ -146,8 +144,6 @@ AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, pos_AA_mat_TM
 AA_matrix = np.concatenate((np.array(AA_mat_TM3, dtype = np.uint8), np.array(AA_mat_TM5, dtype = np.uint8),
                             np.array(AA_mat_TM6, dtype = np.uint8), np.array(AA_mat_TM7, dtype = np.uint8)) , axis = 1)
 
-print(len(AA_matrix))
-
 pos_Di_mat_TM3 = ReadingFasta.makematrix(Di_seqvar_TM3, Di_filter_TM3, di_matrix_TM3, unique_proteins, pos_dict)
 pos_Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_filter_TM5, di_matrix_TM5, unique_proteins, pos_dict)
 pos_Di_mat_TM6 = ReadingFasta.makematrix(Di_seqvar_TM6, Di_filter_TM6, di_matrix_TM6, unique_proteins, pos_dict)
@@ -160,8 +156,6 @@ Di_mat_TM7 = ReadingFasta.makematrix(Di_seqvar_TM7, Di_filter_TM7, pos_Di_mat_TM
 
 Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_mat_TM5, dtype = np.uint8),
                             np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
-
-print(len(Di_matrix))
 
 #Concatenate AA and 3Di matrices
 #intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
