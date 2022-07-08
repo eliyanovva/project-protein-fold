@@ -40,23 +40,16 @@ def initialize_ligand_list():
 
 #Function to create list of protein accessions
 def initialize_protein_list():
-    df = pd.read_csv("../data_files/TMdomains/TM.csv")
+    df = pd.read_csv("TMs.csv")
     protein_list = list(df.iloc[:, 0])
-    """
-    acc_ids = []
-    fr = open("../data_files/AminoAcidSequences/allsequences.fasta", "r")
-    lines = fr.readlines()
-    for line in lines:
-        if line[0] == ">":
-            acc_ids.append(line[1:-1])
-    fr.close()
-    """
+
     return protein_list
 
 
-def initialize_AA_dict():
-    df = pd.read_csv("../data_files/TMdomains/TM.csv")
-    protein_list = initialize_protein_list()
+def initialize_AA_dict(p_list):
+    df = pd.read_csv("TMs.csv")
+    #protein_list = initialize_protein_list()
+    protein_list = p_list
 
     TMs_by_id = {}
 
@@ -66,20 +59,21 @@ def initialize_AA_dict():
 
     return categorize(TMs_by_id)
 
-def initialize_indices():
-    df = pd.read_csv("../data_files/TMdomains/TM.csv")
-    protein_list = initialize_protein_list()
+def initialize_indices(p_list):
+    df = pd.read_csv("TMs.csv")
+    # protein_list = initialize_protein_list()
+    protein_list = p_list
 
     TM_indices = {}
     for i in range(len(protein_list)):
         indices = [int(df.iloc[i, 2]), int(df.iloc[i, 3]), int(df.iloc[i, 5]), int(df.iloc[i, 6]), int(df.iloc[i, 8]),
-                   int(df.iloc[i, 9]), int(df.iloc[i, 11]), int(df.iloc[i, 12]), ]
+                   int(df.iloc[i, 9]), int(df.iloc[i, 11]), int(df.iloc[i, 12])]
         TM_indices[protein_list[i]] = indices
 
     return TM_indices
 
-def initialize_3Di_dict():
-    TM_indices = initialize_indices()
+def initialize_3Di_dict(p_list):
+    TM_indices = initialize_indices(p_list)
     Di_dict = {}
     Di = open("../data_files/3DiSequences/fullset_ss.fasta", "r")
     lines = Di.readlines()
@@ -125,7 +119,7 @@ fr = open('TMs.txt', "r")
 lines = fr.readlines()
 fr.close()
 
-fw = open('../data_files/TMdomains/TM.csv', 'w')
+fw = open('TMs.csv', 'w')
 fw.write('protein,TM3,s3,e3,TM5,s5,e5,TM6,s6,e6,TM7,s7,e7\n')
 
 for i in range(len(lines)):
