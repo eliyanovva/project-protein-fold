@@ -74,7 +74,7 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
                     neg += 1    #only update neg count if pair isn't removed
                     neg_pairs.append([id, csv])
 
-            pos_counts[id] = pos
-            neg_counts[id] = neg
+                pos_counts[id] = pos
+                neg_counts[id] = neg
 
     return classified, pos_counts, neg_counts, pos_pairs, neg_pairs
