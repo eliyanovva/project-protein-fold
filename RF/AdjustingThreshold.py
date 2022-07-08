@@ -46,4 +46,4 @@ def train(features, labels):
     #Run the model with the optimal threshold
     y_pred = (clf.predict_proba(X_test)[:,1] >= thresholds[ix]).astype(bool)
 
-    print(metrics.balanced_accuracy_score(y_test, y_pred))
+    print(metrics.balanced_accuracy_score(y_test, y_pred, adjusted = "True"))
