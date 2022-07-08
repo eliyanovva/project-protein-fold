@@ -11,7 +11,7 @@ from xml.dom.minidom import DOMImplementation
 import numpy as np
 import tensorflow as tf
 
-from . import log_config
+import log_config
 
 
 class DataHandlers(ABC):
