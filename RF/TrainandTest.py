@@ -1,7 +1,7 @@
 #This script tests the Random Forest on the entire preprocessed data set
 
 import CombineLigandsProteins
-import FixedClassificationModel
+#import FixedClassificationModel
 import AdjustingThreshold
 #import FeatureImportance
 
