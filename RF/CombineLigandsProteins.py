@@ -67,6 +67,10 @@ di_features_TM7 = set()
 di_seqs_TM7 = {}
 di_matrix_TM7 = []
 
+def import_plist():
+    #For Find3Di.py
+    return proteins_toconsider
+
 #Create AA output for TMs 3,5,6,7
 AA_dict = Globals.initialize_AA_dict(list(proteins_toconsider))   #create dict with proteins from pos / neg pairs
 AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
