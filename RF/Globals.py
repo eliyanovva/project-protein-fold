@@ -46,10 +46,10 @@ def initialize_protein_list():
     return protein_list
 
 
-def initialize_AA_dict(p_list):
+def initialize_AA_dict():
     df = pd.read_csv("TMs.csv")
-    #protein_list = initialize_protein_list()
-    protein_list = p_list
+    protein_list = initialize_protein_list()
+    #protein_list = p_list
 
     TMs_by_id = {}
 
@@ -59,10 +59,10 @@ def initialize_AA_dict(p_list):
 
     return categorize(TMs_by_id)
 
-def initialize_indices(p_list):
+def initialize_indices():
     df = pd.read_csv("TMs.csv")
-    # protein_list = initialize_protein_list()
-    protein_list = p_list
+    protein_list = initialize_protein_list()
+    #protein_list = p_list
 
     TM_indices = {}
     for i in range(len(protein_list)):
@@ -72,8 +72,8 @@ def initialize_indices(p_list):
 
     return TM_indices
 
-def initialize_3Di_dict(p_list):
-    TM_indices = initialize_indices(p_list)
+def initialize_3Di_dict():
+    TM_indices = initialize_indices()
     Di_dict = {}
     Di = open("../data_files/3DiSequences/fullset_ss.fasta", "r")
     lines = Di.readlines()

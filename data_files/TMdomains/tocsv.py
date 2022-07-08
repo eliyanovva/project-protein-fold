@@ -14,3 +14,5 @@ with open('TM.csv', 'w') as f:
             print(printstatement)
         else:
             printstatement += ',' + line.replace('\n', '')
+
+    print(printstatement, file = f)

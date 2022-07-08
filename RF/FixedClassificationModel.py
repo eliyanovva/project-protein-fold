@@ -8,7 +8,7 @@ from sklearn import metrics
 from imblearn.under_sampling import InstanceHardnessThreshold
 import numpy as np
 
-def train(features, labels, protein_freqs, ligand_freqs):
+def train(features, labels):
     #define features and labels
     X = features #Kmers
     y = labels #Binds or not
