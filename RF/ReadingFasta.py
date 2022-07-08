@@ -98,23 +98,8 @@ def make_seqvar(fasta, seqvar, feat):
 #seqvar = list of sequence objects
 #feat = list of k-mers
 #mat = empty matrix to be populated with frequency values
-def makematrix(seqvar, feat, mat, unique):
-    for seq in seqvar:
-        newseq = []
-        id = seq.name
-        if id in unique:
 
-            for kmer in feat:
-                #For kmers not found in the protein, populate the matrix with zeros
-                if kmer not in seq.dictionary:
-                    seq.dictionary[kmer] = 0
-                #Add the frequency value of the kmer
-                newseq.append(seq.dictionary.get(kmer))
-            #Add a frequency array for each protein
-            mat.append(np.array(newseq))
-    return mat
-
-def makematrix2(seqvar, feat, mat, unique, counts):
+def makematrix(seqvar, feat, mat, unique, counts):
     for id in unique:
         if id in counts:
             newseq = []

@@ -1,13 +1,13 @@
 #This script tests the Random Forest on the entire preprocessed data set
 
-import CombineLigandsProteins2
+import CombineLigandsProteins
 import FixedClassificationModel
 import AdjustingThreshold
 #import FeatureImportance
 
-CombineLigandsProteins2.import_final()
-testX = CombineLigandsProteins2.X
-testY = CombineLigandsProteins2.Y
+CombineLigandsProteins.import_final()
+testX = CombineLigandsProteins.X
+testY = CombineLigandsProteins.Y
 
 AdjustingThreshold.train(testX, testY)
 
