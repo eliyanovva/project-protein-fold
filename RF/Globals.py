@@ -42,21 +42,14 @@ def initialize_ligand_list():
 def initialize_protein_list():
     df = pd.read_csv("TMs.csv")
     protein_list = list(df.iloc[:, 0])
-    """
-    acc_ids = []
-    fr = open("../data_files/AminoAcidSequences/allsequences.fasta", "r")
-    lines = fr.readlines()
-    for line in lines:
-        if line[0] == ">":
-            acc_ids.append(line[1:-1])
-    fr.close()
-    """
+
     return protein_list
 
 
 def initialize_AA_dict():
     df = pd.read_csv("TMs.csv")
     protein_list = initialize_protein_list()
+    #protein_list = p_list
 
     TMs_by_id = {}
 
@@ -69,11 +62,12 @@ def initialize_AA_dict():
 def initialize_indices():
     df = pd.read_csv("TMs.csv")
     protein_list = initialize_protein_list()
+    #protein_list = p_list
 
     TM_indices = {}
     for i in range(len(protein_list)):
         indices = [int(df.iloc[i, 2]), int(df.iloc[i, 3]), int(df.iloc[i, 5]), int(df.iloc[i, 6]), int(df.iloc[i, 8]),
-                   int(df.iloc[i, 9]), int(df.iloc[i, 11]), int(df.iloc[i, 12]), ]
+                   int(df.iloc[i, 9]), int(df.iloc[i, 11]), int(df.iloc[i, 12])]
         TM_indices[protein_list[i]] = indices
 
     return TM_indices

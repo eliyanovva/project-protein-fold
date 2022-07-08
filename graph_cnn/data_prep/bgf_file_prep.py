@@ -8,7 +8,7 @@ import constants
 import log_config
 
 
-# so far creates an adjacency matrix from a single pdb file
+#adjacency matrix from bgf file, feature matrix from pdb and bgf file
 class BGFDataFile:
     def __init__(self, bgf_filename):
         self.bgf_filename = bgf_filename
@@ -28,7 +28,7 @@ class BGFDataFile:
                 for bond in data:
                     adjacency_matrix[int(bond[0])][int(bond[1])] = bond[2]    
         log.info('Initiated saving of adjacency matrix')
-        np.save(os.path.join('pdb_adjacency_data/', self.protein_name + '_adj_mat'), adjacency_matrix)
+        np.save(os.path.join(constants.PROTEIN_ADJACENCY_PATH, self.protein_name + '_adj_mat'), adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
 
 
@@ -115,7 +115,8 @@ class BGFDataFile:
 
 
     def __getDataFromConectOrderLines(self, data_lines):
-        """Collects bond data from CONECT-ORDER paor of lines in a bgf file.
+        """
+        Collects bond data from CONECT-ORDER paor of lines in a bgf file.
 
         Args:
             data_lines (List[str]): a CONECT line and a ORDER line.
@@ -161,15 +162,3 @@ class BGFDataFile:
                     index += 1
         log.info('Extraction of atom types from PDB completed!')
         return atom_types
-
-
-m_class = BGFDataFile(os.path.join(constants.BGF_FILES_PATH, 'AF-Q0VAX9-F1-model_v2.bgf'))
-
-m_class.getFeatureMatrix()
-
-#a = np.load(os.join(constants.PROTEIN_FEATURE_PATH, )'/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/mol_adjacency_data/C11H22O_adj_mat.npy')
-#print(a)
-    # create feature matrix
-
-
-    # create feature matrix

@@ -15,27 +15,43 @@ def train(features, labels):
     y = labels #Binds or not
 
     #split into training and test set
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1) # 90% training and 10% test
-    print(y_test)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,test_size=0.1) # 90% training and 10% test
+    print('split data')
 
-    #Oversampling was necessary, because most ligand/receptor pairs do not bind in our dataset
-    ros = RandomOverSampler()
+    #compare to random undersampling
 
-    X_res, y_res = ros.fit_resample(X_train, y_train)
     #Create a Gaussian Regression
-    clf=RandomForestClassifier(n_estimators=100)
+    clf=RandomForestClassifier(n_estimators=100, class_weight="balanced") #add in , class_weight="balanced"
+    print('made classifier')
+    #Train the model
+    clf.fit(X_train,y_train)
+    print('fit the data')
 
     #Train the model
-    clf.fit(X_res,y_res)
+    clf.fit(X_train,y_train)
 
     #Form predictions
     y_pred=clf.predict_proba(X_test)
 
     y_pred = y_pred[:,1]
 
+    #Determine optimal threshold
     precision, recall, thresholds = precision_recall_curve(y_test, y_pred)
 
     fscore = (2 * precision * recall) / (precision + recall)
 
     ix = nanargmax(fscore)
     print('Best Threshold=%f, F-Score=%.3f' % (thresholds[ix], fscore[ix]))
+
+    #Run the model with the optimal threshold
+    y_pred = (clf.predict_proba(X_test)[:,1] >= thresholds[ix]).astype(bool)
+
+    precision, recall, thresholds = metrics.precision_recall_curve(y_test, y_pred)
+
+    acc = metrics.roc_auc_score(y_test, y_pred)
+    rec = metrics.auc(recall,precision)
+
+    print("Accuracy:",acc)
+    print("Recall:",rec)
+
+    return acc,rec
