@@ -34,6 +34,6 @@ def generateLigandFeatureMatrices(folder_path=constants.MOL_FILES_PATH):
 
 
 #generateLigandAdjacencyMatrices()
-generateLigandFeatureMatrices()
+#generateLigandFeatureMatrices()
 #generateProteinAdjacencyMatrices()
 #generateProteinFeatureMatrices()

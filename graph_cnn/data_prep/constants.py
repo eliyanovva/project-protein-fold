@@ -30,9 +30,6 @@ LIGAND_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_feature_data')
 PROTEIN_ADJACENCY_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_adjacency_data')
 PROTEIN_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data')
 
-PROTEIN_FEATURE_PATH_PDB = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data_local')
-
-
 #TODO: fix constants and logging setup throughout the entire package
 PVALUE_THRESHOLD = 0.05
 # TODO: explain data file naming conventions somewhere

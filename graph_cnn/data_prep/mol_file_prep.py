@@ -30,7 +30,7 @@ class MolDataFile:
             adjacency_matrix[bond_data[i][0] - 1][bond_data[i][1] - 1] = bond_data[i][2]
         
         log.info('Initiated saving of adjacency matrix')
-        file_name = os.path.join('mol_adjacency_data/', self.compound_name + '_adj_mat')
+        file_name = os.path.join(constants.MOL_ADJACENCY_PATH, self.compound_name + '_adj_mat')
         np.save(file_name, adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
 
@@ -186,8 +186,8 @@ class MolDataFile:
 
 
 
-m_class = MolDataFile('/home/users/tep18/new_ppp/project-protein-fold/moleculekit/mol_files/Undecanal.mol')
-m_class.getFeatureMatrix()
+#m_class = MolDataFile('/home/users/tep18/new_ppp/project-protein-fold/moleculekit/mol_files/Undecanal.mol')
+#m_class.getFeatureMatrix()
 
 #a = np.load('/home/users/tep18/new_ppp/project-protein-fold/graph_cnn/data_prep/mol_adjacency_data/C11H22O_adj_mat.npy')
 #print(a)
