@@ -31,7 +31,7 @@ def train(features, labels, filter_feat):
     importances = clf.feature_importances_
 
     #Writes the features of the model in order of importance to the important_features.txt file
-    with open("important_features.txt", "w") as f:
+    with open("Feature_Importance/important_features.txt", "w") as f:
         while importances.size > 0:
             index = np.argmax(importances)
             print(filter_feat[index], file=f)
