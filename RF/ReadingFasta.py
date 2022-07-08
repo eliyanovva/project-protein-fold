@@ -46,7 +46,6 @@ def remove_duplicates(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
                     Di_seqvar[i][id][kmer] = 0
 
     all_ids = []
-    print(len(AA_seqvar[0]))
     for id in AA_seqvar[0]:
         all_ids.append(id)
 
@@ -117,15 +116,16 @@ def makematrix(seqvar, feat, mat, unique):
 
 def makematrix2(seqvar, feat, mat, unique, counts):
     for id in unique:
-        newseq = []
-        for kmer in feat:
-            #For kmers not found in the protein, populate the matrix with zeros
-            if kmer not in seqvar[id]:
-                seqvar[id][kmer] = 0
-            #Add the frequency value of the kmer
-            newseq.append(seqvar[id].get(kmer))
-        #Add a frequency array for each protein
-        for i in range(counts[id]):
-            mat.append(np.array(newseq))
+        if id in counts:
+            newseq = []
+            for kmer in feat:
+                #For kmers not found in the protein, populate the matrix with zeros
+                if kmer not in seqvar[id]:
+                    seqvar[id][kmer] = 0
+                #Add the frequency value of the kmer
+                newseq.append(seqvar[id].get(kmer))
+            #Add a frequency array for each protein
+            for i in range(len(counts[id])):
+                mat.append(np.array(newseq))
     return mat
 
