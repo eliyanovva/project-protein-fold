@@ -86,7 +86,6 @@ class DataHandlers(ABC):
             elif data_rows > self.dimensions[0] or data_cols > self.dimensions[1]:
                 row_diff = (data_rows - self.dimensions[0]) // 2
                 col_diff = (data_cols - self.dimensions[1]) // 2
-                print(data_rows - self.dimensions[0])
                 self.matrix[i] = np.array(data, ndmin=2)[
                     row_diff : self.dimensions[0] + row_diff ,
                     col_diff : self.dimensions[1] + col_diff 
