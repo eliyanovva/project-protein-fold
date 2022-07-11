@@ -279,8 +279,8 @@ with open('results.txt', 'a') as res_log:
 
 print(results)
 log.info('model evaluation completed')
-#returns loss value and metric values, currently LogCoshError and coeff_determination
-#
+#returns loss value (MeanSquaredLogarithmicError) and metric values, currently LogCoshError and coeff_determination
+#and RootMeanSquaredError
 
 fig, ax1 = plt.subplots(1, figsize=(15, 5))
 
@@ -290,7 +290,7 @@ ax1.legend(["train", "test"], loc="upper right")
 ax1.set_xlabel("Epochs")
 ax1.set_ylabel("Loss")
 
-plt.savefig('loss_graph.png')
+plt.savefig('visuals/loss_graph.png')
 
 # Plot the results
 #print(mod_history.history.keys())
