@@ -1,0 +1,972 @@
+/var/lib/slurm-llnl/slurmd/job1856894/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1856894/slurm_script: module: not found
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/users/bmp40/project-protein-fold/cnn_scripts/model3.py:16: DeprecationWarning: Please use `rotate` from the `scipy.ndimage` namespace, the `scipy.ndimage.interpolation` namespace is deprecated.
+  from scipy.ndimage.interpolation import rotate
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/torch/cuda/__init__.py:82: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 10010). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at  ../c10/cuda/CUDAFunctions.cpp:112.)
+  return torch._C._cuda_getDeviceCount() > 0
+False
+  0%|          | 0/11 [00:00<?, ?it/s]
+  0%|          | 0/58 [00:00<?, ?it/s][A100%|██████████| 58/58 [00:00<00:00, 111336.22it/s]
+  9%|▉         | 1/11 [00:00<00:01,  5.71it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 114880.96it/s]
+ 18%|█▊        | 2/11 [00:00<00:02,  3.55it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 113913.74it/s]
+ 27%|██▋       | 3/11 [00:00<00:02,  3.84it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 99485.39it/s]
+ 36%|███▋      | 4/11 [00:00<00:01,  4.08it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 97383.42it/s]
+ 45%|████▌     | 5/11 [00:01<00:01,  4.11it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 85896.05it/s]
+ 55%|█████▍    | 6/11 [00:01<00:01,  4.17it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 79362.42it/s]
+ 64%|██████▎   | 7/11 [00:01<00:00,  4.22it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 76218.50it/s]
+ 73%|███████▎  | 8/11 [00:01<00:00,  4.25it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 70386.04it/s]
+ 82%|████████▏ | 9/11 [00:02<00:00,  4.27it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 63588.60it/s]
+ 91%|█████████ | 10/11 [00:02<00:00,  4.35it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 60107.54it/s]
+100%|██████████| 11/11 [00:02<00:00,  4.33it/s]100%|██████████| 11/11 [00:02<00:00,  4.22it/s]
+  0%|          | 0/1058 [00:00<?, ?it/s]100%|██████████| 1058/1058 [00:00<00:00, 231087.52it/s]
+torch.Size([1058, 8, 40, 40, 40])
+torch.Size([1058, 8, 40, 40, 40])
+torch.Size([1058])
+  0%|          | 0/846 [00:00<?, ?it/s]100%|██████████| 846/846 [00:00<00:00, 108909.52it/s]
+training length:  846
+  0%|          | 0/1 [00:00<?, ?it/s]first epoch begin
+
+0it [00:00, ?it/s][A
+1it [00:05,  5.14s/it][A
+2it [00:10,  4.99s/it][A
+3it [00:14,  4.87s/it][A
+4it [00:19,  4.91s/it][A
+5it [00:24,  4.88s/it][A
+6it [00:29,  4.85s/it][A
+7it [00:34,  4.83s/it][A
+8it [00:38,  4.82s/it][A
+9it [00:43,  4.80s/it][A
+10it [00:48,  4.79s/it][A
+11it [00:53,  4.79s/it][A
+12it [00:57,  4.78s/it][A
+13it [01:02,  4.77s/it][A
+14it [01:07,  4.78s/it][A
+15it [01:12,  4.77s/it][A
+16it [01:17,  4.78s/it][A
+17it [01:21,  4.78s/it][A
+18it [01:26,  4.78s/it][A
+19it [01:31,  4.77s/it][A
+20it [01:36,  4.78s/it][A
+21it [01:41,  4.79s/it][A
+22it [01:45,  4.78s/it][A
+23it [01:50,  4.78s/it][A
+24it [01:55,  4.82s/it][A
+25it [02:00,  4.81s/it][A
+26it [02:05,  4.80s/it][A
+27it [02:09,  4.79s/it][A
+28it [02:14,  4.78s/it][A
+29it [02:19,  4.78s/it][A
+30it [02:24,  4.78s/it][A
+31it [02:28,  4.78s/it][A
+32it [02:33,  4.78s/it][A
+33it [02:38,  4.78s/it][A
+34it [02:43,  4.77s/it][A
+35it [02:47,  4.78s/it][A
+36it [02:52,  4.78s/it][A
+37it [02:57,  4.78s/it][A
+38it [03:02,  4.82s/it][A
+39it [03:07,  4.86s/it][A
+40it [03:12,  4.84s/it][A
+41it [03:16,  4.82s/it][A
+42it [03:21,  4.80s/it][A
+43it [03:26,  4.79s/it][A
+44it [03:31,  4.78s/it][A
+45it [03:36,  4.78s/it][A
+46it [03:40,  4.78s/it][A
+47it [03:45,  4.77s/it][A
+48it [03:50,  4.77s/it][A
+49it [03:55,  4.77s/it][A
+50it [03:59,  4.77s/it][A
+51it [04:04,  4.76s/it][A
+52it [04:09,  4.76s/it][A
+53it [04:14,  4.76s/it][A
+54it [04:18,  4.77s/it][A
+55it [04:23,  4.76s/it][A
+56it [04:28,  4.76s/it][A
+57it [04:33,  4.77s/it][A
+58it [04:37,  4.77s/it][A
+59it [04:42,  4.77s/it][A
+60it [04:47,  4.77s/it][A
+61it [04:52,  4.77s/it][A
+62it [04:57,  4.77s/it][A
+63it [05:01,  4.78s/it][A
+64it [05:06,  4.78s/it][A
+65it [05:11,  4.78s/it][A
+66it [05:16,  4.77s/it][A
+67it [05:20,  4.77s/it][A
+68it [05:25,  4.77s/it][A
+69it [05:30,  4.77s/it][A
+70it [05:35,  4.76s/it][A
+71it [05:39,  4.76s/it][A
+72it [05:44,  4.77s/it][A
+73it [05:49,  4.77s/it][A
+74it [05:54,  4.76s/it][A
+75it [05:59,  4.81s/it][A
+76it [06:03,  4.79s/it][A
+77it [06:08,  4.79s/it][A
+78it [06:13,  4.79s/it][A
+79it [06:18,  4.77s/it][A
+80it [06:22,  4.76s/it][A
+81it [06:27,  4.76s/it][A
+82it [06:32,  4.76s/it][A
+83it [06:37,  4.77s/it][A
+84it [06:42,  4.76s/it][A
+85it [06:46,  4.76s/it][A
+86it [06:51,  4.77s/it][A
+87it [06:56,  4.77s/it][A
+88it [07:01,  4.77s/it][A
+89it [07:05,  4.77s/it][A
+90it [07:10,  4.77s/it][A
+91it [07:15,  4.77s/it][A
+92it [07:20,  4.77s/it][A
+93it [07:25,  4.82s/it][A
+94it [07:29,  4.80s/it][A
+95it [07:34,  4.80s/it][A
+96it [07:39,  4.78s/it][A
+97it [07:44,  4.77s/it][A
+98it [07:48,  4.76s/it][A
+99it [07:53,  4.76s/it][A
+100it [07:58,  4.77s/it][A
+101it [08:03,  4.76s/it][A
+102it [08:07,  4.76s/it][A
+103it [08:12,  4.76s/it][A
+104it [08:17,  4.77s/it][A
+105it [08:22,  4.77s/it][A
+106it [08:27,  4.76s/it][A
+107it [08:31,  4.76s/it][A
+108it [08:36,  4.76s/it][A
+109it [08:41,  4.78s/it][A
+110it [08:46,  4.77s/it][A
+111it [08:50,  4.78s/it][A
+112it [08:55,  4.77s/it][A
+113it [09:00,  4.77s/it][A
+114it [09:05,  4.83s/it][A
+115it [09:10,  4.81s/it][A
+116it [09:14,  4.79s/it][A
+117it [09:19,  4.78s/it][A
+118it [09:24,  4.79s/it][A
+119it [09:29,  4.78s/it][A
+120it [09:34,  4.78s/it][A
+121it [09:38,  4.77s/it][A
+122it [09:43,  4.79s/it][A
+123it [09:48,  4.79s/it][A
+124it [09:53,  4.80s/it][A
+125it [09:57,  4.79s/it][A
+126it [10:02,  4.78s/it][A
+127it [10:07,  4.79s/it][A
+128it [10:12,  4.78s/it][A
+129it [10:17,  4.78s/it][A
+130it [10:21,  4.77s/it][A
+131it [10:26,  4.77s/it][A
+132it [10:31,  4.77s/it][A
+133it [10:36,  4.77s/it][A
+134it [10:40,  4.77s/it][A
+135it [10:45,  4.77s/it][A
+136it [10:50,  4.77s/it][A
+137it [10:55,  4.82s/it][A
+138it [11:00,  4.81s/it][A
+139it [11:04,  4.79s/it][A
+140it [11:09,  4.79s/it][A
+141it [11:14,  4.78s/it][A
+142it [11:19,  4.78s/it][A
+143it [11:24,  4.78s/it][A
+144it [11:28,  4.72s/it][A
+145it [11:33,  4.73s/it][A
+146it [11:38,  4.75s/it][A
+147it [11:42,  4.76s/it][A
+148it [11:47,  4.76s/it][A
+149it [11:52,  4.75s/it][A
+150it [11:57,  4.75s/it][A
+151it [12:01,  4.76s/it][A
+152it [12:06,  4.76s/it][A
+153it [12:11,  4.81s/it][A
+154it [12:16,  4.80s/it][A
+155it [12:21,  4.79s/it][A
+156it [12:25,  4.78s/it][A
+157it [12:30,  4.78s/it][A
+158it [12:35,  4.77s/it][A
+159it [12:40,  4.77s/it][A
+160it [12:45,  4.77s/it][A
+161it [12:49,  4.77s/it][A
+162it [12:54,  4.76s/it][A
+163it [12:59,  4.82s/it][A
+164it [13:04,  4.81s/it][A
+165it [13:09,  4.80s/it][A
+166it [13:13,  4.79s/it][A
+167it [13:18,  4.78s/it][A
+168it [13:23,  4.78s/it][A
+169it [13:28,  4.84s/it][A
+170it [13:33,  4.82s/it][A
+171it [13:38,  4.85s/it][A
+172it [13:42,  4.82s/it][A
+173it [13:47,  4.82s/it][A
+174it [13:52,  4.80s/it][A
+175it [13:57,  4.79s/it][A
+176it [14:01,  4.78s/it][A
+177it [14:06,  4.78s/it][A
+178it [14:11,  4.78s/it][A
+179it [14:16,  4.84s/it][A
+180it [14:21,  4.81s/it][A
+181it [14:26,  4.80s/it][A
+182it [14:30,  4.82s/it][A
+183it [14:35,  4.81s/it][A
+184it [14:40,  4.79s/it][A
+185it [14:45,  4.79s/it][A
+186it [14:49,  4.78s/it][A
+187it [14:54,  4.78s/it][A
+188it [14:59,  4.78s/it][A
+189it [15:04,  4.77s/it][A
+190it [15:08,  4.77s/it][A
+191it [15:13,  4.77s/it][A
+192it [15:18,  4.77s/it][A
+193it [15:23,  4.77s/it][A
+194it [15:28,  4.77s/it][A
+195it [15:32,  4.77s/it][A
+196it [15:37,  4.78s/it][A
+197it [15:42,  4.77s/it][A
+198it [15:47,  4.77s/it][A
+199it [15:51,  4.77s/it][A
+200it [15:56,  4.77s/it][A
+201it [16:01,  4.77s/it][A
+202it [16:06,  4.77s/it][A
+203it [16:10,  4.77s/it][A
+204it [16:15,  4.76s/it][A
+205it [16:20,  4.77s/it][A
+206it [16:25,  4.77s/it][A
+207it [16:30,  4.77s/it][A
+208it [16:34,  4.76s/it][A
+209it [16:39,  4.77s/it][A
+210it [16:44,  4.71s/it][A
+211it [16:48,  4.73s/it][A
+212it [16:51,  4.03s/it][A212it [16:51,  4.77s/it]
+100%|██████████| 1/1 [16:51<00:00, 1011.72s/it]100%|██████████| 1/1 [16:51<00:00, 1011.72s/it]
+training begin ITERATION NUMBER:
+0
+[1,     1] loss: 0.069
+training begin ITERATION NUMBER:
+1
+training begin ITERATION NUMBER:
+2
+training begin ITERATION NUMBER:
+3
+training begin ITERATION NUMBER:
+4
+training begin ITERATION NUMBER:
+5
+training begin ITERATION NUMBER:
+6
+training begin ITERATION NUMBER:
+7
+training begin ITERATION NUMBER:
+8
+training begin ITERATION NUMBER:
+9
+training begin ITERATION NUMBER:
+10
+[1,    11] loss: 0.680
+training begin ITERATION NUMBER:
+11
+training begin ITERATION NUMBER:
+12
+training begin ITERATION NUMBER:
+13
+training begin ITERATION NUMBER:
+14
+training begin ITERATION NUMBER:
+15
+training begin ITERATION NUMBER:
+16
+training begin ITERATION NUMBER:
+17
+training begin ITERATION NUMBER:
+18
+training begin ITERATION NUMBER:
+19
+training begin ITERATION NUMBER:
+20
+[1,    21] loss: 0.640
+training begin ITERATION NUMBER:
+21
+training begin ITERATION NUMBER:
+22
+training begin ITERATION NUMBER:
+23
+training begin ITERATION NUMBER:
+24
+training begin ITERATION NUMBER:
+25
+training begin ITERATION NUMBER:
+26
+training begin ITERATION NUMBER:
+27
+training begin ITERATION NUMBER:
+28
+training begin ITERATION NUMBER:
+29
+training begin ITERATION NUMBER:
+30
+[1,    31] loss: 0.572
+training begin ITERATION NUMBER:
+31
+training begin ITERATION NUMBER:
+32
+training begin ITERATION NUMBER:
+33
+training begin ITERATION NUMBER:
+34
+training begin ITERATION NUMBER:
+35
+training begin ITERATION NUMBER:
+36
+training begin ITERATION NUMBER:
+37
+training begin ITERATION NUMBER:
+38
+training begin ITERATION NUMBER:
+39
+training begin ITERATION NUMBER:
+40
+[1,    41] loss: 0.517
+training begin ITERATION NUMBER:
+41
+training begin ITERATION NUMBER:
+42
+training begin ITERATION NUMBER:
+43
+training begin ITERATION NUMBER:
+44
+training begin ITERATION NUMBER:
+45
+training begin ITERATION NUMBER:
+46
+training begin ITERATION NUMBER:
+47
+training begin ITERATION NUMBER:
+48
+training begin ITERATION NUMBER:
+49
+training begin ITERATION NUMBER:
+50
+[1,    51] loss: 0.415
+training begin ITERATION NUMBER:
+51
+training begin ITERATION NUMBER:
+52
+training begin ITERATION NUMBER:
+53
+training begin ITERATION NUMBER:
+54
+training begin ITERATION NUMBER:
+55
+training begin ITERATION NUMBER:
+56
+training begin ITERATION NUMBER:
+57
+training begin ITERATION NUMBER:
+58
+training begin ITERATION NUMBER:
+59
+training begin ITERATION NUMBER:
+60
+[1,    61] loss: 0.384
+training begin ITERATION NUMBER:
+61
+training begin ITERATION NUMBER:
+62
+training begin ITERATION NUMBER:
+63
+training begin ITERATION NUMBER:
+64
+training begin ITERATION NUMBER:
+65
+training begin ITERATION NUMBER:
+66
+training begin ITERATION NUMBER:
+67
+training begin ITERATION NUMBER:
+68
+training begin ITERATION NUMBER:
+69
+training begin ITERATION NUMBER:
+70
+[1,    71] loss: 0.230
+training begin ITERATION NUMBER:
+71
+training begin ITERATION NUMBER:
+72
+training begin ITERATION NUMBER:
+73
+training begin ITERATION NUMBER:
+74
+training begin ITERATION NUMBER:
+75
+training begin ITERATION NUMBER:
+76
+training begin ITERATION NUMBER:
+77
+training begin ITERATION NUMBER:
+78
+training begin ITERATION NUMBER:
+79
+training begin ITERATION NUMBER:
+80
+[1,    81] loss: 0.447
+training begin ITERATION NUMBER:
+81
+training begin ITERATION NUMBER:
+82
+training begin ITERATION NUMBER:
+83
+training begin ITERATION NUMBER:
+84
+training begin ITERATION NUMBER:
+85
+training begin ITERATION NUMBER:
+86
+training begin ITERATION NUMBER:
+87
+training begin ITERATION NUMBER:
+88
+training begin ITERATION NUMBER:
+89
+training begin ITERATION NUMBER:
+90
+[1,    91] loss: 0.454
+training begin ITERATION NUMBER:
+91
+training begin ITERATION NUMBER:
+92
+training begin ITERATION NUMBER:
+93
+training begin ITERATION NUMBER:
+94
+training begin ITERATION NUMBER:
+95
+training begin ITERATION NUMBER:
+96
+training begin ITERATION NUMBER:
+97
+training begin ITERATION NUMBER:
+98
+training begin ITERATION NUMBER:
+99
+training begin ITERATION NUMBER:
+100
+[1,   101] loss: 0.331
+training begin ITERATION NUMBER:
+101
+training begin ITERATION NUMBER:
+102
+training begin ITERATION NUMBER:
+103
+training begin ITERATION NUMBER:
+104
+training begin ITERATION NUMBER:
+105
+training begin ITERATION NUMBER:
+106
+training begin ITERATION NUMBER:
+107
+training begin ITERATION NUMBER:
+108
+training begin ITERATION NUMBER:
+109
+training begin ITERATION NUMBER:
+110
+[1,   111] loss: 0.173
+training begin ITERATION NUMBER:
+111
+training begin ITERATION NUMBER:
+112
+training begin ITERATION NUMBER:
+113
+training begin ITERATION NUMBER:
+114
+training begin ITERATION NUMBER:
+115
+training begin ITERATION NUMBER:
+116
+training begin ITERATION NUMBER:
+117
+training begin ITERATION NUMBER:
+118
+training begin ITERATION NUMBER:
+119
+training begin ITERATION NUMBER:
+120
+[1,   121] loss: 0.243
+training begin ITERATION NUMBER:
+121
+training begin ITERATION NUMBER:
+122
+training begin ITERATION NUMBER:
+123
+training begin ITERATION NUMBER:
+124
+training begin ITERATION NUMBER:
+125
+training begin ITERATION NUMBER:
+126
+training begin ITERATION NUMBER:
+127
+training begin ITERATION NUMBER:
+128
+training begin ITERATION NUMBER:
+129
+training begin ITERATION NUMBER:
+130
+[1,   131] loss: 0.258
+training begin ITERATION NUMBER:
+131
+training begin ITERATION NUMBER:
+132
+training begin ITERATION NUMBER:
+133
+training begin ITERATION NUMBER:
+134
+training begin ITERATION NUMBER:
+135
+training begin ITERATION NUMBER:
+136
+training begin ITERATION NUMBER:
+137
+training begin ITERATION NUMBER:
+138
+training begin ITERATION NUMBER:
+139
+training begin ITERATION NUMBER:
+140
+[1,   141] loss: 0.620
+training begin ITERATION NUMBER:
+141
+training begin ITERATION NUMBER:
+142
+training begin ITERATION NUMBER:
+143
+training begin ITERATION NUMBER:
+144
+training begin ITERATION NUMBER:
+145
+training begin ITERATION NUMBER:
+146
+training begin ITERATION NUMBER:
+147
+training begin ITERATION NUMBER:
+148
+training begin ITERATION NUMBER:
+149
+training begin ITERATION NUMBER:
+150
+[1,   151] loss: 0.461
+training begin ITERATION NUMBER:
+151
+training begin ITERATION NUMBER:
+152
+training begin ITERATION NUMBER:
+153
+training begin ITERATION NUMBER:
+154
+training begin ITERATION NUMBER:
+155
+training begin ITERATION NUMBER:
+156
+training begin ITERATION NUMBER:
+157
+training begin ITERATION NUMBER:
+158
+training begin ITERATION NUMBER:
+159
+training begin ITERATION NUMBER:
+160
+[1,   161] loss: 0.384
+training begin ITERATION NUMBER:
+161
+training begin ITERATION NUMBER:
+162
+training begin ITERATION NUMBER:
+163
+training begin ITERATION NUMBER:
+164
+training begin ITERATION NUMBER:
+165
+training begin ITERATION NUMBER:
+166
+training begin ITERATION NUMBER:
+167
+training begin ITERATION NUMBER:
+168
+training begin ITERATION NUMBER:
+169
+training begin ITERATION NUMBER:
+170
+[1,   171] loss: 0.438
+training begin ITERATION NUMBER:
+171
+training begin ITERATION NUMBER:
+172
+training begin ITERATION NUMBER:
+173
+training begin ITERATION NUMBER:
+174
+training begin ITERATION NUMBER:
+175
+training begin ITERATION NUMBER:
+176
+training begin ITERATION NUMBER:
+177
+training begin ITERATION NUMBER:
+178
+training begin ITERATION NUMBER:
+179
+training begin ITERATION NUMBER:
+180
+[1,   181] loss: 0.231
+training begin ITERATION NUMBER:
+181
+training begin ITERATION NUMBER:
+182
+training begin ITERATION NUMBER:
+183
+training begin ITERATION NUMBER:
+184
+training begin ITERATION NUMBER:
+185
+training begin ITERATION NUMBER:
+186
+training begin ITERATION NUMBER:
+187
+training begin ITERATION NUMBER:
+188
+training begin ITERATION NUMBER:
+189
+training begin ITERATION NUMBER:
+190
+[1,   191] loss: 0.169
+training begin ITERATION NUMBER:
+191
+training begin ITERATION NUMBER:
+192
+training begin ITERATION NUMBER:
+193
+training begin ITERATION NUMBER:
+194
+training begin ITERATION NUMBER:
+195
+training begin ITERATION NUMBER:
+196
+training begin ITERATION NUMBER:
+197
+training begin ITERATION NUMBER:
+198
+training begin ITERATION NUMBER:
+199
+training begin ITERATION NUMBER:
+200
+[1,   201] loss: 0.478
+training begin ITERATION NUMBER:
+201
+training begin ITERATION NUMBER:
+202
+training begin ITERATION NUMBER:
+203
+training begin ITERATION NUMBER:
+204
+training begin ITERATION NUMBER:
+205
+training begin ITERATION NUMBER:
+206
+training begin ITERATION NUMBER:
+207
+training begin ITERATION NUMBER:
+208
+training begin ITERATION NUMBER:
+209
+training begin ITERATION NUMBER:
+210
+[1,   211] loss: 0.417
+training begin ITERATION NUMBER:
+211
+finished training
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 0, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 0, 0, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([0, 0, 1, 0])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 0, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([0, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 0])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 0])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 0, 0, 0])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 0, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 0, 0])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 0, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 0, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 1, 0, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+labels: tensor([1, 0, 1, 1])
+rounded output: tensor([[1.],
+        [1.],
+        [1.],
+        [1.]])
+accuracy of the network: 90 %

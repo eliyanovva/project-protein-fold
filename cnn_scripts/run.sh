@@ -1,3 +1,3 @@
 #!/bin/sh
 module load python
-python model2.py
+python model3.py

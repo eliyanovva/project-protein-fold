@@ -1,0 +1,129 @@
+/var/lib/slurm-llnl/slurmd/job1856890/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1856890/slurm_script: module: not found
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/users/bmp40/project-protein-fold/cnn_scripts/model3.py:16: DeprecationWarning: Please use `rotate` from the `scipy.ndimage` namespace, the `scipy.ndimage.interpolation` namespace is deprecated.
+  from scipy.ndimage.interpolation import rotate
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/torch/cuda/__init__.py:82: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 10010). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at  ../c10/cuda/CUDAFunctions.cpp:112.)
+  return torch._C._cuda_getDeviceCount() > 0
+False
+  0%|          | 0/11 [00:00<?, ?it/s]
+  0%|          | 0/58 [00:00<?, ?it/s][A100%|██████████| 58/58 [00:00<00:00, 108457.26it/s]
+  9%|▉         | 1/11 [00:00<00:01,  5.61it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 115259.80it/s]
+ 18%|█▊        | 2/11 [00:00<00:02,  3.54it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 116605.62it/s]
+ 27%|██▋       | 3/11 [00:00<00:02,  3.83it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 105916.77it/s]
+ 36%|███▋      | 4/11 [00:00<00:01,  4.08it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 95238.51it/s]
+ 45%|████▌     | 5/11 [00:01<00:01,  4.01it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 87673.58it/s]
+ 55%|█████▍    | 6/11 [00:01<00:01,  4.10it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 76218.50it/s]
+ 64%|██████▎   | 7/11 [00:01<00:00,  4.17it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 73519.79it/s]
+ 73%|███████▎  | 8/11 [00:01<00:00,  4.22it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 67173.35it/s]
+ 82%|████████▏ | 9/11 [00:02<00:00,  4.24it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 62294.73it/s]
+ 91%|█████████ | 10/11 [00:02<00:00,  4.33it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 59375.76it/s]
+100%|██████████| 11/11 [00:02<00:00,  4.32it/s]100%|██████████| 11/11 [00:02<00:00,  4.19it/s]
+  0%|          | 0/1058 [00:00<?, ?it/s]100%|██████████| 1058/1058 [00:00<00:00, 230535.28it/s]
+torch.Size([1058, 8, 40, 40, 40])
+torch.Size([1058, 8, 40, 40, 40])
+torch.Size([1058])
+  0%|          | 0/846 [00:00<?, ?it/s]100%|██████████| 846/846 [00:00<00:00, 117000.17it/s]
+training length:  846
+  0%|          | 0/1 [00:00<?, ?it/s]first epoch begin
+
+0it [00:00, ?it/s][A
+1it [00:05,  5.07s/it][A
+2it [00:10,  5.05s/it][A
+3it [00:15,  5.03s/it][A
+4it [00:20,  5.04s/it][A
+5it [00:25,  5.04s/it][A
+6it [00:30,  5.04s/it][A
+7it [00:35,  5.03s/it][A
+8it [00:40,  5.03s/it][A
+9it [00:45,  5.01s/it][A
+10it [00:50,  5.02s/it][A
+11it [00:55,  5.01s/it][A
+12it [01:00,  5.02s/it][A
+13it [01:05,  5.02s/it][A
+14it [01:10,  5.02s/it][A
+15it [01:15,  5.01s/it][A
+16it [01:20,  5.01s/it][A
+17it [01:25,  4.99s/it][A
+18it [01:30,  4.99s/it][A
+19it [01:35,  5.00s/it][A
+20it [01:40,  5.00s/it][A
+21it [01:45,  4.99s/it][A
+22it [01:50,  4.99s/it][A
+23it [01:55,  4.99s/it][A
+24it [02:00,  4.99s/it][A
+25it [02:05,  4.99s/it][A
+26it [02:10,  4.99s/it][A
+27it [02:15,  4.99s/it][A
+28it [02:20,  5.00s/it][A
+29it [02:25,  4.99s/it][A
+30it [02:30,  5.01s/it][A
+31it [02:35,  5.01s/it][A
+32it [02:40,  5.01s/it][A
+33it [02:45,  5.00s/it][A
+34it [02:50,  5.00s/it][A
+35it [02:55,  4.99s/it][A
+36it [03:00,  5.01s/it][A
+37it [03:05,  5.01s/it][A
+38it [03:10,  4.99s/it][A
+39it [03:15,  4.98s/it][A
+40it [03:20,  4.97s/it][A
+41it [03:25,  4.98s/it][A
+42it [03:30,  4.97s/it][A
+43it [03:35,  4.96s/it][A
+44it [03:39,  4.96s/it][A
+45it [03:44,  4.96s/it][A
+46it [03:49,  4.98s/it][A
+47it [03:54,  4.97s/it][A
+48it [03:59,  4.97s/it][A
+49it [04:04,  4.98s/it][A
+50it [04:09,  5.00s/it][A
+51it [04:14,  4.99s/it][A
+52it [04:19,  4.99s/it][A
+53it [04:24,  4.98s/it][A
+54it [04:29,  4.99s/it][A
+55it [04:34,  4.99s/it][A
+56it [04:39,  4.99s/it][A
+57it [04:44,  4.98s/it][A
+58it [04:49,  5.00s/it][A
+59it [04:54,  5.01s/it][A
+60it [04:59,  5.03s/it][A
+61it [05:04,  5.02s/it][A
+62it [05:09,  5.01s/it][A
+63it [05:14,  5.00s/it][A
+64it [05:19,  5.00s/it][A
+65it [05:24,  4.90s/it][A
+66it [05:29,  4.87s/it][A
+67it [05:34,  4.84s/it][A
+68it [05:39,  4.86s/it][A
+69it [05:43,  4.84s/it][A
+70it [05:48,  4.82s/it][A
+71it [05:53,  4.80s/it][A
+72it [05:58,  4.79s/it][A
+73it [06:02,  4.79s/it][A
+74it [06:07,  4.84s/it][A
+75it [06:12,  4.81s/it][A
+76it [06:17,  4.85s/it][A
+77it [06:22,  4.83s/it][A
+78it [06:27,  4.82s/it][A
+79it [06:31,  4.81s/it][A
+80it [06:36,  4.80s/it][A
+81it [06:41,  4.80s/it][A
+82it [06:46,  4.80s/it][A
+83it [06:51,  4.84s/it][Aslurmstepd: error: *** JOB 1856890 ON linux1 CANCELLED AT 2022-07-11T12:58:58 ***

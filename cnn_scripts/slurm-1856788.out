@@ -1,0 +1,43 @@
+/var/lib/slurm-llnl/slurmd/job1856788/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1856788/slurm_script: module: not found
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/users/bmp40/project-protein-fold/cnn_scripts/model3.py:16: DeprecationWarning: Please use `rotate` from the `scipy.ndimage` namespace, the `scipy.ndimage.interpolation` namespace is deprecated.
+  from scipy.ndimage.interpolation import rotate
+False
+  0%|          | 0/11 [00:00<?, ?it/s]
+  0%|          | 0/58 [00:00<?, ?it/s][A100%|██████████| 58/58 [00:00<00:00, 118552.45it/s]
+  9%|▉         | 1/11 [00:00<00:01,  5.86it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 115164.85it/s]
+ 18%|█▊        | 2/11 [00:00<00:02,  3.85it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 113420.88it/s]
+ 27%|██▋       | 3/11 [00:00<00:02,  3.90it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 105649.97it/s]
+ 36%|███▋      | 4/11 [00:00<00:01,  4.01it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 99674.52it/s]
+ 45%|████▌     | 5/11 [00:01<00:01,  3.98it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 90297.18it/s]
+ 55%|█████▍    | 6/11 [00:01<00:01,  3.99it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 86072.32it/s]
+ 64%|██████▎   | 7/11 [00:01<00:00,  4.00it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 77629.17it/s]
+ 73%|███████▎  | 8/11 [00:01<00:00,  4.02it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 71186.42it/s]
+ 82%|████████▏ | 9/11 [00:02<00:00,  4.01it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 66523.46it/s]
+ 91%|█████████ | 10/11 [00:02<00:00,  4.07it/s]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 61608.46it/s]
+100%|██████████| 11/11 [00:02<00:00,  3.97it/s]100%|██████████| 11/11 [00:02<00:00,  4.02it/s]
+  0%|          | 0/1058 [00:00<?, ?it/s]100%|██████████| 1058/1058 [00:00<00:00, 273316.93it/s]
+torch.Size([1058, 8, 40, 40, 40])
+torch.Size([1058, 8, 40, 40, 40])
+torch.Size([1058])
+  0%|          | 0/846 [00:00<?, ?it/s]100%|██████████| 846/846 [00:00<00:00, 124069.27it/s]
+training length:  846
+  0%|          | 0/1 [00:00<?, ?it/s]first epoch begin
+slurmstepd: error: *** JOB 1856788 ON linux2 CANCELLED AT 2022-07-11T12:57:19 ***

@@ -16,6 +16,8 @@ import random
 from scipy.ndimage.interpolation import rotate
 from tqdm import tqdm
 
+print(torch.cuda.is_available())
+
 x_data = np.load('x_data.npy')
 y_data = np.load('y_data.npy')
 lig_data = np.load('lig_data.npy')
@@ -87,13 +89,13 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.conv1 = nn.Sequential(
             #convolution 1
-            nn.Conv3d(16, 32, 5, stride=1, padding=0),  # (in_channels, out_channels, kernel_size)
+            nn.Conv3d(16, 32, 5),  # (in_channels, out_channels, kernel_size)
             nn.MaxPool3d(2),
             nn.ReLU(),
             #convolution 2
-            #nn.Conv3d(32, 64, 3, stride=3, padding=3),
-            #nn.MaxPool3d(2),
-            #nn.ReLU(),
+            nn.Conv3d(32, 64, 3),
+            nn.MaxPool3d(2),
+            nn.ReLU(),
             #convolution 3
             #nn.Conv3d(64, 128, 3, stride=3, padding=3),
             #nn.MaxPool3d(2),
@@ -102,10 +104,10 @@ class Model(nn.Module):
             #nn.Softmax(1)
         )
         self.fc = nn.Sequential(
-            #nn.Linear(576, 1000),
-            #nn.Dropout(),
-            #nn.ReLU(),
-            nn.Linear(186624, 1)
+            nn.Linear(32768, 128),
+            nn.Dropout(),
+            nn.ReLU(),
+            nn.Linear(128, 1)
         )
 
 

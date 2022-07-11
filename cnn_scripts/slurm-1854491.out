@@ -1,167 +1,0 @@
-/var/lib/slurm-llnl/slurmd/job1854491/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1854491/slurm_script: module: not found
-/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
-  setattr(self, word, getattr(machar, word).flat[0])
-/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
-  return self._float_to_str(self.smallest_subnormal)
-/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
-  setattr(self, word, getattr(machar, word).flat[0])
-/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
-  return self._float_to_str(self.smallest_subnormal)
-/home/users/bmp40/project-protein-fold/cnn_scripts/model2.py:16: DeprecationWarning: Please use `rotate` from the `scipy.ndimage` namespace, the `scipy.ndimage.interpolation` namespace is deprecated.
-  from scipy.ndimage.interpolation import rotate
-  0%|          | 0/144 [00:00<?, ?it/s]  1%|          | 1/144 [00:00<00:58,  2.46it/s]  1%|▏         | 2/144 [00:00<00:53,  2.66it/s]  2%|▏         | 3/144 [00:01<00:52,  2.67it/s]  3%|▎         | 4/144 [00:01<00:51,  2.69it/s]  3%|▎         | 5/144 [00:01<00:52,  2.67it/s]  4%|▍         | 6/144 [00:02<00:52,  2.64it/s]  5%|▍         | 7/144 [00:02<00:51,  2.67it/s]  6%|▌         | 8/144 [00:03<00:51,  2.64it/s]  6%|▋         | 9/144 [00:03<00:50,  2.70it/s]  7%|▋         | 10/144 [00:03<00:49,  2.73it/s]  8%|▊         | 11/144 [00:04<00:48,  2.77it/s]  8%|▊         | 12/144 [00:04<00:47,  2.77it/s]  9%|▉         | 13/144 [00:04<00:46,  2.82it/s] 10%|▉         | 14/144 [00:05<00:47,  2.75it/s] 10%|█         | 15/144 [00:05<00:47,  2.72it/s] 11%|█         | 16/144 [00:05<00:47,  2.71it/s] 12%|█▏        | 17/144 [00:06<00:46,  2.73it/s] 12%|█▎        | 18/144 [00:06<00:46,  2.70it/s] 13%|█▎        | 19/144 [00:07<00:47,  2.64it/s] 14%|█▍        | 20/144 [00:07<00:46,  2.64it/s] 15%|█▍        | 21/144 [00:07<00:46,  2.65it/s] 15%|█▌        | 22/144 [00:08<00:45,  2.67it/s] 16%|█▌        | 23/144 [00:08<00:44,  2.74it/s] 17%|█▋        | 24/144 [00:08<00:43,  2.79it/s] 17%|█▋        | 25/144 [00:09<00:42,  2.82it/s] 18%|█▊        | 26/144 [00:09<00:42,  2.78it/s] 19%|█▉        | 27/144 [00:09<00:41,  2.80it/s] 19%|█▉        | 28/144 [00:10<00:42,  2.74it/s] 20%|██        | 29/144 [00:10<00:42,  2.73it/s] 21%|██        | 30/144 [00:11<00:42,  2.69it/s] 22%|██▏       | 31/144 [00:11<00:42,  2.65it/s] 22%|██▏       | 32/144 [00:11<00:42,  2.65it/s] 23%|██▎       | 33/144 [00:12<00:41,  2.66it/s] 24%|██▎       | 34/144 [00:12<00:39,  2.75it/s] 24%|██▍       | 35/144 [00:12<00:38,  2.81it/s] 25%|██▌       | 36/144 [00:13<00:38,  2.83it/s] 26%|██▌       | 37/144 [00:13<00:37,  2.85it/s] 26%|██▋       | 38/144 [00:13<00:36,  2.89it/s] 27%|██▋       | 39/144 [00:14<00:36,  2.91it/s] 28%|██▊       | 40/144 [00:14<00:36,  2.89it/s] 28%|██▊       | 41/144 [00:14<00:35,  2.86it/s] 29%|██▉       | 42/144 [00:15<00:37,  2.75it/s] 30%|██▉       | 43/144 [00:15<00:37,  2.72it/s] 31%|███       | 44/144 [00:16<00:37,  2.70it/s] 31%|███▏      | 45/144 [00:16<00:36,  2.68it/s] 32%|███▏      | 46/144 [00:16<00:36,  2.69it/s] 33%|███▎      | 47/144 [00:17<00:35,  2.72it/s] 33%|███▎      | 48/144 [00:17<00:34,  2.77it/s] 34%|███▍      | 49/144 [00:17<00:33,  2.83it/s] 35%|███▍      | 50/144 [00:18<00:32,  2.87it/s] 35%|███▌      | 51/144 [00:18<00:33,  2.79it/s] 36%|███▌      | 52/144 [00:18<00:32,  2.81it/s] 37%|███▋      | 53/144 [00:19<00:32,  2.80it/s] 38%|███▊      | 54/144 [00:19<00:32,  2.80it/s] 38%|███▊      | 55/144 [00:20<00:31,  2.81it/s] 39%|███▉      | 56/144 [00:20<00:31,  2.75it/s] 40%|███▉      | 57/144 [00:20<00:31,  2.73it/s] 40%|████      | 58/144 [00:21<00:31,  2.71it/s] 41%|████      | 59/144 [00:21<00:32,  2.64it/s] 42%|████▏     | 60/144 [00:21<00:31,  2.64it/s] 42%|████▏     | 61/144 [00:22<00:30,  2.69it/s] 43%|████▎     | 62/144 [00:22<00:29,  2.74it/s] 44%|████▍     | 63/144 [00:22<00:28,  2.81it/s] 44%|████▍     | 64/144 [00:23<00:28,  2.81it/s] 45%|████▌     | 65/144 [00:23<00:28,  2.79it/s] 46%|████▌     | 66/144 [00:24<00:27,  2.82it/s] 47%|████▋     | 67/144 [00:24<00:27,  2.84it/s] 47%|████▋     | 68/144 [00:24<00:26,  2.89it/s] 48%|████▊     | 69/144 [00:25<00:26,  2.86it/s] 49%|████▊     | 70/144 [00:25<00:25,  2.88it/s] 49%|████▉     | 71/144 [00:25<00:25,  2.85it/s] 50%|█████     | 72/144 [00:26<00:25,  2.79it/s] 51%|█████     | 73/144 [00:26<00:26,  2.73it/s] 51%|█████▏    | 74/144 [00:26<00:25,  2.70it/s] 52%|█████▏    | 75/144 [00:27<00:25,  2.69it/s] 53%|█████▎    | 76/144 [00:27<00:25,  2.69it/s] 53%|█████▎    | 77/144 [00:28<00:24,  2.77it/s] 54%|█████▍    | 78/144 [00:28<00:24,  2.72it/s] 55%|█████▍    | 79/144 [00:28<00:23,  2.75it/s] 56%|█████▌    | 80/144 [00:29<00:23,  2.75it/s] 56%|█████▋    | 81/144 [00:29<00:22,  2.77it/s] 57%|█████▋    | 82/144 [00:29<00:22,  2.79it/s] 58%|█████▊    | 83/144 [00:30<00:22,  2.74it/s] 58%|█████▊    | 84/144 [00:30<00:22,  2.68it/s] 59%|█████▉    | 85/144 [00:30<00:22,  2.67it/s] 60%|█████▉    | 86/144 [00:31<00:21,  2.65it/s] 60%|██████    | 87/144 [00:31<00:21,  2.69it/s] 61%|██████    | 88/144 [00:32<00:20,  2.70it/s] 62%|██████▏   | 89/144 [00:32<00:20,  2.66it/s] 62%|██████▎   | 90/144 [00:32<00:20,  2.70it/s] 63%|██████▎   | 91/144 [00:33<00:19,  2.77it/s] 64%|██████▍   | 92/144 [00:33<00:18,  2.83it/s] 65%|██████▍   | 93/144 [00:33<00:17,  2.83it/s] 65%|██████▌   | 94/144 [00:34<00:17,  2.81it/s] 66%|██████▌   | 95/144 [00:34<00:17,  2.82it/s] 67%|██████▋   | 96/144 [00:34<00:16,  2.84it/s] 67%|██████▋   | 97/144 [00:35<00:16,  2.89it/s] 68%|██████▊   | 98/144 [00:35<00:15,  2.91it/s] 69%|██████▉   | 99/144 [00:35<00:15,  2.87it/s] 69%|██████▉   | 100/144 [00:36<00:15,  2.81it/s] 70%|███████   | 101/144 [00:36<00:15,  2.76it/s] 71%|███████   | 102/144 [00:37<00:15,  2.68it/s] 72%|███████▏  | 103/144 [00:37<00:15,  2.69it/s] 72%|███████▏  | 104/144 [00:37<00:14,  2.75it/s] 73%|███████▎  | 105/144 [00:38<00:14,  2.77it/s] 74%|███████▎  | 106/144 [00:38<00:13,  2.78it/s] 74%|███████▍  | 107/144 [00:38<00:13,  2.80it/s] 75%|███████▌  | 108/144 [00:39<00:12,  2.79it/s] 76%|███████▌  | 109/144 [00:39<00:12,  2.81it/s] 76%|███████▋  | 110/144 [00:39<00:12,  2.81it/s] 77%|███████▋  | 111/144 [00:40<00:11,  2.77it/s] 78%|███████▊  | 112/144 [00:40<00:11,  2.69it/s] 78%|███████▊  | 113/144 [00:41<00:11,  2.70it/s] 79%|███████▉  | 114/144 [00:41<00:11,  2.68it/s] 80%|███████▉  | 115/144 [00:41<00:10,  2.72it/s] 81%|████████  | 116/144 [00:42<00:10,  2.75it/s] 81%|████████▏ | 117/144 [00:42<00:10,  2.66it/s] 82%|████████▏ | 118/144 [00:42<00:09,  2.73it/s] 83%|████████▎ | 119/144 [00:43<00:09,  2.74it/s] 83%|████████▎ | 120/144 [00:43<00:08,  2.77it/s] 84%|████████▍ | 121/144 [00:43<00:08,  2.78it/s] 85%|████████▍ | 122/144 [00:44<00:07,  2.81it/s] 85%|████████▌ | 123/144 [00:44<00:07,  2.82it/s] 86%|████████▌ | 124/144 [00:45<00:07,  2.82it/s] 87%|████████▋ | 125/144 [00:45<00:06,  2.83it/s] 88%|████████▊ | 126/144 [00:45<00:06,  2.86it/s] 88%|████████▊ | 127/144 [00:46<00:06,  2.77it/s] 89%|████████▉ | 128/144 [00:46<00:05,  2.75it/s] 90%|████████▉ | 129/144 [00:46<00:05,  2.68it/s] 90%|█████████ | 130/144 [00:47<00:05,  2.63it/s] 91%|█████████ | 131/144 [00:47<00:04,  2.64it/s] 92%|█████████▏| 132/144 [00:47<00:04,  2.70it/s] 92%|█████████▏| 133/144 [00:48<00:04,  2.74it/s] 93%|█████████▎| 134/144 [00:48<00:03,  2.70it/s] 94%|█████████▍| 135/144 [00:49<00:03,  2.72it/s] 94%|█████████▍| 136/144 [00:49<00:02,  2.74it/s] 95%|█████████▌| 137/144 [00:49<00:02,  2.75it/s] 96%|█████████▌| 138/144 [00:50<00:02,  2.75it/s] 97%|█████████▋| 139/144 [00:50<00:01,  2.70it/s] 97%|█████████▋| 140/144 [00:50<00:01,  2.72it/s] 98%|█████████▊| 141/144 [00:51<00:01,  2.70it/s] 99%|█████████▊| 142/144 [00:51<00:00,  2.69it/s] 99%|█████████▉| 143/144 [00:52<00:00,  2.70it/s]100%|██████████| 144/144 [00:52<00:00,  2.67it/s]100%|██████████| 144/144 [00:52<00:00,  2.75it/s]
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-reached
-training length:  288
-/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/torch/autograd/__init__.py:173: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 10010). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at  ../c10/cuda/CUDAFunctions.cpp:112.)
-  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
-[1,     1] loss: 0.069
-[1,    11] loss: 0.719
-[1,    21] loss: 0.752
-[1,    31] loss: 0.722
-[1,    41] loss: 0.652
-[1,    51] loss: 0.743
-[1,    61] loss: 0.702
-[1,    71] loss: 0.712

@@ -1,0 +1,5 @@
+/var/lib/slurm-llnl/slurmd/job1857000/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1857000/slurm_script: module: not found
+Traceback (most recent call last):
+  File "/home/users/bmp40/project-protein-fold/cnn_scripts/model3.py", line 1, in <module>
+    from moleculekit.molecule import Molecule
+ModuleNotFoundError: No module named 'moleculekit'
