@@ -23,9 +23,7 @@ for pair in pos_pairs:
 for pair in neg_pairs:
     proteins_toconsider.add(pair[0])
     ligands_toconsider.add(pair[1])
-print(len(pos_pairs))
-print(len(neg_pairs))
-print(len(proteins_toconsider))
+
 #pos_pairs = 565
 #neg_pairs = 236
 #proteins_toconsider = 392
@@ -45,9 +43,6 @@ for pair in neg_pairs:
         neg_dict[id] = []
     neg_dict[id].append(pair[1])
 
-print(len(pos_dict))
-print(len(neg_dict))
-
 pos_sum = 0
 neg_sum = 0
 
@@ -55,9 +50,6 @@ for id in pos_dict:
     pos_sum += len(pos_dict[id])
 for id in neg_dict:
     neg_sum += len(neg_dict[id])
-
-print(pos_sum)
-print(neg_sum)
 
 #pos_dict = 299
 #neg_dict = 168
@@ -96,24 +88,37 @@ di_matrix_TM7 = []
 
 #Create AA output for TMs 3,5,6,7
 AA_dict = Globals.initialize_AA_dict(list(proteins_toconsider))   #create dict with proteins from pos / neg pairs
-print(len(AA_dict))
 AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
 AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, categorized_seqs_TM5, categorized_features_TM5)
 AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, categorized_seqs_TM6, categorized_features_TM6)
 AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, categorized_seqs_TM7, categorized_features_TM7)
 
-print(len(AA_seqvar_TM3))
-print(len(AA_seqvar_TM5))
-print(len(AA_seqvar_TM6))
-print(len(AA_seqvar_TM7))
+#AA_dict = 392
+#AA_seqvar_TM3 = 392
+#AA_seqvar_TM5 = 392
+#AA_seqvar_TM6 = 392
+#AA_seqvar_TM7 = 392
+#AA_features_TM3 = 1744
+#AA_features_TM5 = 2019
+#AA_features_TM6 = 1402
+#AA_features_TM7 = 1520
+#AA_filter_TM3 = 922, 944, 1008, 990, 938
+#AA_filter_TM5 = 1126, 1121, 1113, 1134, 1120
+#AA_filter_TM6 = 759, 780, 729, 696, 711
+#AA_filter_TM7 = 882, 870, 887, 901, 858
 
-#AA_dict =
+print(len(AA_features_TM3))
+print(len(AA_features_TM5))
+print(len(AA_features_TM6))
+print(len(AA_features_TM7))
+print()
 
-AA_filter_TM3, feat1 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3")
-AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5")
-AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6")
-AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7")
 
+
+AA_filter_TM3, feat1 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3", 'no')
+AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5", 'no')
+AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6", 'no')
+AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7", 'yes')
 
 """
 #Create 3Di output for Tms 3,5,6,7
