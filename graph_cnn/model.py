@@ -9,6 +9,7 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 from contextlib import redirect_stdout
+import matplotlib.pyplot as plt
 
 # FIXME: VERY UGLY FIX FOR THE config.py
 # fix upon packaging and creating the CLI!!!!!
@@ -154,9 +155,15 @@ class GraphCNN:
                 learning_rate=0.0001,
                 initial_accumulator_value=0.1,
                 epsilon=1e-07),
-            loss=tf.keras.losses.MeanSquaredError(),
+                #RMSprop(
+                #learning_rate=0.001,
+                #rho=0.9,
+                #momentum=0.0,
+                #epsilon=1e-07),
+            loss=tf.keras.losses.MeanSquaredLogarithmicError(),
             metrics=[tf.keras.metrics.LogCoshError(),
-                coeff_determination
+                coeff_determination,
+                tf.keras.metrics.RootMeanSquaredError(),
                 ]
         )
         return model
@@ -273,9 +280,21 @@ with open('results.txt', 'a') as res_log:
 print(results)
 log.info('model evaluation completed')
 #returns loss value and metric values, currently LogCoshError and coeff_determination
-#AUC, Accuracy
+#
 
+fig, ax1 = plt.subplots(1, figsize=(15, 5))
 
+ax1.plot(mod_history.history["loss"])
+#ax1.plot(mod_history.history["val_loss"])
+ax1.legend(["train", "test"], loc="upper right")
+ax1.set_xlabel("Epochs")
+ax1.set_ylabel("Loss")
+
+plt.savefig('loss_graph.png')
+
+# Plot the results
+#print(mod_history.history.keys())
+#acc = mod_history.history['accuracy']
 loss = mod_history.history['loss']
 val_loss = mod_history.history['val_loss']
 epochs = range(len(loss))
