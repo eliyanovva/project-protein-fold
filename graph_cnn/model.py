@@ -152,7 +152,10 @@ class GraphCNN:
                 #initial_accumulator_value=0.1,
                 #epsilon=1e-07),
             loss=tf.keras.losses.MeanSquaredError(),
-            metrics=[tf.keras.metrics.LogCoshError(), coeff_determination]
+            metrics=[tf.keras.metrics.LogCoshError(),
+                coeff_determination,
+                tf.keras.metrics.AUC(),
+                tf.keras.metrics.Accuracy()]
         )
         return model
 
@@ -228,6 +231,7 @@ with open('results.txt', 'a') as res_log:
 print(results)
 log.info('model evaluation completed')
 #returns loss value and metric values, currently LogCoshError and coeff_determination
+#AUC, Accuracy
 
 
 #import matplotlib.pyplot as plt
