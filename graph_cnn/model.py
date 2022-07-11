@@ -142,12 +142,20 @@ class GraphCNN:
 
 
         model.compile(
-            optimizer=tf.keras.optimizers.Adagrad(
-                learning_rate=0.0001,
-                initial_accumulator_value=0.1,
+            optimizer=tf.keras.optimizers.RMSprop(
+                learning_rate=0.001,
+                rho=0.9,
+                momentum=0.0,
                 epsilon=1e-07),
+                #Adagrad(
+                #learning_rate=0.0001,
+                #initial_accumulator_value=0.1,
+                #epsilon=1e-07),
             loss=tf.keras.losses.MeanSquaredError(),
-            metrics=[tf.keras.metrics.LogCoshError(), coeff_determination]
+            metrics=[tf.keras.metrics.LogCoshError(),
+                coeff_determination,
+                tf.keras.metrics.AUC(),
+                tf.keras.metrics.Accuracy()]
         )
         return model
 
@@ -226,6 +234,8 @@ with open('results.txt', 'a') as res_log:
     res_log.write('\n')
 print(results)
 log.info('model evaluation completed')
+#returns loss value and metric values, currently LogCoshError and coeff_determination
+#AUC, Accuracy
 
 
 #import matplotlib.pyplot as plt

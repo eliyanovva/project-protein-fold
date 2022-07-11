@@ -4,10 +4,12 @@
 import sys
 sys.path.append('../../project-protein-fold/RF/')
 import Globals
+import CombineLigandsProteins
 import os
 
-Di_dict = Globals.initialize_3Di_dict()
-indices = Globals.initialize_indices()
+plist = CombineLigandsProteins.import_plist()
+Di_dict = Globals.initialize_3Di_dict(list(plist))
+indices = Globals.initialize_indices(list(plist))
 
 directory = '../data_files/pdb_data_files'
 
@@ -45,10 +47,10 @@ for filename in os.listdir(directory):
 
         if name in Di_dict:
             #Visualize the 3Di features
-            if len(resinumber(name,'QVVCV', 3)) > 0:
+            if len(resinumber(name,'SVVVV', 4)) > 0:
                 printstatement1 = ""
                 i = 0
-                for structure in resinumber(name,'QVVCV', 3):
+                for structure in resinumber(name,'SVVVV', 4):
                     if i > 0:
                         printstatement1 += ' or '
                     printstatement1 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -59,10 +61,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj1")
                 save = True
             
-            if len(resinumber(name,'PPNVS', 4)) > 0:
+            if len(resinumber(name,'LSVQS', 3)) > 0:
                 printstatement2 = ""
                 i = 0
-                for structure in resinumber(name,'PPNVS', 4):
+                for structure in resinumber(name,'LSVQS', 3):
                     if i > 0:
                         printstatement2 += ' or '
                     printstatement2 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -73,10 +75,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj2")
                 save = True
             
-            if len(resinumber(name,'PNPSS', 4)) > 0:
+            if len(resinumber(name,'PPPPS', 3)) > 0:
                 printstatement3 = ""
                 i = 0
-                for structure in resinumber(name,'PNPSS', 4):
+                for structure in resinumber(name,'PPPPS', 3):
                     if i > 0:
                         printstatement3 += ' or '
                     printstatement3 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -87,10 +89,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj3")
                 save = True
             
-            if len(resinumber(name,'VNPLV', 3)) > 0:
+            if len(resinumber(name,'CCQAS', 3)) > 0:
                 printstatement4 = ""
                 i = 0
-                for structure in resinumber(name,'VNPLV', 3):
+                for structure in resinumber(name,'CCQAS', 3):
                     if i > 0:
                         printstatement4 += ' or '
                     printstatement4 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -101,10 +103,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj4")
                 save = True
 
-            if len(resinumber(name,'VVCCV', 4)) > 0:
+            if len(resinumber(name,'VVVNV', 3)) > 0:
                 printstatement5 = ""
                 i = 0
-                for structure in resinumber(name,'VVCCV', 4):
+                for structure in resinumber(name,'VVVNV', 3):
                     if i > 0:
                         printstatement5 += ' or '
                     printstatement5 += 'Resi ' + str(structure) + '-' + str(structure+5)

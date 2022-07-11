@@ -46,12 +46,4 @@ def train(features, labels):
     #Run the model with the optimal threshold
     y_pred = (clf.predict_proba(X_test)[:,1] >= thresholds[ix]).astype(bool)
 
-    precision, recall, thresholds = metrics.precision_recall_curve(y_test, y_pred)
-
-    acc = metrics.roc_auc_score(y_test, y_pred)
-    rec = metrics.auc(recall,precision)
-
-    print("Accuracy:",acc)
-    print("Recall:",rec)
-
-    return acc,rec
+    print(metrics.balanced_accuracy_score(y_test, y_pred, adjusted = "True"))
