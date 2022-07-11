@@ -6,13 +6,11 @@ and so on.
 """
 import logging as log
 from abc import ABC, abstractmethod
-from xml.dom.minidom import DOMImplementation
 
 import numpy as np
 import tensorflow as tf
 
-import log_config
-
+import config
 
 class DataHandlers(ABC):
     """This is an abstract class used to generate Tensors from .npy matrices.
