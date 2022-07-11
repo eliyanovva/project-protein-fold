@@ -4,8 +4,7 @@ import os
 import numpy as np
 from openbabel import pybel
 
-import constants
-import log_config
+import config
 
 
 #adjacency matrix from bgf file, feature matrix from pdb and bgf file
@@ -28,7 +27,7 @@ class BGFDataFile:
                 for bond in data:
                     adjacency_matrix[int(bond[0])][int(bond[1])] = bond[2]    
         log.info('Initiated saving of adjacency matrix')
-        np.save(os.path.join(constants.PROTEIN_ADJACENCY_PATH, self.protein_name + '_adj_mat'), adjacency_matrix)
+        np.save(os.path.join(config.PROTEIN_ADJACENCY_PATH, self.protein_name + '_adj_mat'), adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
 
 
@@ -36,7 +35,7 @@ class BGFDataFile:
         # current number of features - 5: 
         # atom type, max covalent bonds, number of lone pairs, atomic charge, alphafold score
         log.info('Initiated creation of BGF Feature matrix for protein ' + self.protein_name)
-        feature_matrix = np.zeros((self.atom_count, constants.PROTEIN_FEATURES_COUNT), dtype='float')
+        feature_matrix = np.zeros((self.atom_count, config.PROTEIN_FEATURES_COUNT), dtype='float')
         confidence_scores = self.__getConfidenceScores()
         atom_types = self.__getAtomTypes()
        
@@ -51,12 +50,12 @@ class BGFDataFile:
             atom_index += 1
 
         log.info('Initiated saving of feature matrix')
-        np.save(os.path.join(constants.PROTEIN_FEATURE_PATH, self.protein_name + '_feat_mat'), feature_matrix)
+        np.save(os.path.join(config.PROTEIN_FEATURE_PATH, self.protein_name + '_feat_mat'), feature_matrix)
         log.info('The features matrix has been saved!')
 
 
     def __getMoleculeDataRow(self, atom):
-        features_arr = np.zeros((constants.PROTEIN_FEATURES_COUNT - 2))
+        features_arr = np.zeros((config.PROTEIN_FEATURES_COUNT - 2))
         features_arr[0] = atom.atomicmass
         features_arr[1] = atom.exactmass
         features_arr[2] = atom.formalcharge
@@ -79,7 +78,7 @@ class BGFDataFile:
         right_index = self.bgf_filename.find('-F1')
         self.protein_name = self.bgf_filename[left_index : right_index]
         self.pdb_file_name = os.path.join(
-                constants.PDB_FILES_PATH,
+                config.PDB_FILES_PATH,
                 'AF-' + self.protein_name + '-F1-model_v2.pdb'
             )
 
@@ -106,7 +105,7 @@ class BGFDataFile:
         data_line = data_line.strip().split()
         data_line = [
             int(data_line[1]), # atom count
-            (constants.ATOM_DICT[data_line[2][0]]), # atom type
+            (config.ATOM_DICT[data_line[2][0]]), # atom type
             int(data_line[-3]), # max number of covalent bonds
             int(data_line[-2]), # number of lone pairs
             float(data_line[-1])  # atomic charge
@@ -158,7 +157,7 @@ class BGFDataFile:
                 if line.startswith('ATOM'):
                     line_list = [x for x in line.split() if x != '']
                     #FIXME: add check if it is a valid key; assign non-valid to a key for others
-                    atom_types[index] = constants.ATOM_DICT[line_list[-1]]
+                    atom_types[index] = config.ATOM_DICT[line_list[-1]]
                     index += 1
         log.info('Extraction of atom types from PDB completed!')
         return atom_types
