@@ -55,7 +55,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
     #(ie, basing it off the prop. of a kmer in pos / neg counts, rather than the pure frequency counts for the kmer)
     for kmer in kmers:
         if neg_counts_by_kmer[kmer] == 0:       #kmer only occurs in positive pairs
-            richness[kmer] = 100000
+            richness[kmer] = 10000
         else:
             richness[kmer] = pos_prop_by_kmer[kmer] / neg_prop_by_kmer[kmer]
 
@@ -63,9 +63,10 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
     ret2 = []               #for importances list
 
     for kmer in kmers:
-
-        if (richness[kmer] <= .125) | (richness[kmer] >= 8):
+        if (richness[kmer] <= (1/12)) | (richness[kmer] >= 12):
             ret.append(kmer)
             ret2.append(kmer + domain)
+
+        #test 5, 6, and 10
 
     return ret, ret2 #, max, max_kmer

@@ -23,6 +23,12 @@ for pair in pos_pairs:
 for pair in neg_pairs:
     proteins_toconsider.add(pair[0])
     ligands_toconsider.add(pair[1])
+print(len(pos_pairs))
+print(len(neg_pairs))
+print(len(proteins_toconsider))
+#pos_pairs = 565
+#neg_pairs = 236
+#proteins_toconsider = 392
 
 pos_dict = {}
 neg_dict = {}
@@ -38,6 +44,26 @@ for pair in neg_pairs:
     if id not in neg_dict:
         neg_dict[id] = []
     neg_dict[id].append(pair[1])
+
+print(len(pos_dict))
+print(len(neg_dict))
+
+pos_sum = 0
+neg_sum = 0
+
+for id in pos_dict:
+    pos_sum += len(pos_dict[id])
+for id in neg_dict:
+    neg_sum += len(neg_dict[id])
+
+print(pos_sum)
+print(neg_sum)
+
+#pos_dict = 299
+#neg_dict = 168
+#pos_sum = 565
+#neg_sum = 236
+
 
 #Initialize Variables
 #categorized variables
@@ -67,6 +93,7 @@ di_features_TM7 = set()
 di_seqs_TM7 = {}
 di_matrix_TM7 = []
 
+
 #Create AA output for TMs 3,5,6,7
 AA_dict = Globals.initialize_AA_dict(list(proteins_toconsider))   #create dict with proteins from pos / neg pairs
 AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
@@ -79,6 +106,8 @@ AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5
 AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6")
 AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7")
 
+
+"""
 #Create 3Di output for Tms 3,5,6,7
 Di_dict = Globals.initialize_3Di_dict(list(proteins_toconsider))
 Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
@@ -228,4 +257,4 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
-
+"""
