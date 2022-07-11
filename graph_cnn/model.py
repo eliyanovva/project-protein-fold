@@ -44,7 +44,7 @@ class GraphCNN:
             comb_file_lines = comb_file.readlines()
             x, y = [], []
             # FIX SIZE LATER, SET TO 100 FOR A SMALLER BATCH TRY
-        for row in comb_file_lines[:100]:
+        for row in comb_file_lines:
             row = row[:-1].split(',')
             if len(row) == 4:
                 protein_ligand_list = []
@@ -154,9 +154,13 @@ class GraphCNN:
 
     def __visualizeOutput(self, y):
         print('The range for y is [', min(y), ', ', max(y), ']')
-        num_bins = 3
-        n, bins, patches = plt.hist(y, num_bins, facecolor='blue', alpha=0.5)
+        x = np.linspace(0, len(y) - 1, len(y))
+        plt.scatter(x, y) 
         plt.savefig('visuals/y_distribution.png')
+        plt.close()
+        with open(os.path.join(constants.MATRIX_DATA_FILES_PATH, 'outputs.csv'), 'w') as res_file:
+            res_file.write(','.join([y_mem for y_mem in y]))
+        print('stop')
 
 
     def getTensors(self, X, y):
@@ -212,7 +216,7 @@ model = g.createModel()
 
 log.info('model fitting started')
 
-mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=1)
+mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=1, validation_split=0.2)
 log.info ('model fitting finished successfully')
 
 log.info('model evaluation started')
@@ -227,16 +231,17 @@ log.info('model evaluation completed')
 #import matplotlib.pyplot as plt
 
 # Plot the results
+#print(mod_history.history.keys())
 #acc = mod_history.history['accuracy']
-#loss = mod_history.history['loss']
+loss = mod_history.history['loss']
+val_loss = mod_history.history['val_loss']
+epochs = range(len(loss))
 
-#epochs = range(len(acc))
+plt.scatter(epochs, loss, 'r', label='Training MSE')
+plt.scatter(epochs, val_loss, 'b', label='Validation MSE')
+plt.title('Training accuracy')
+plt.legend(loc=0)
 
-#plt.plot(epochs, acc, 'r', label='Training accuracy')
-#plt.plot(epochs, val_acc, 'b', label='Validation accuracy')
-#plt.title('Training accuracy')
-#plt.legend(loc=0)
-#plt.figure()
-
-#plt.savefig('training_accuracy.png')
+plt.savefig('visuals/training_accuracy.png')
+plt.close()
 
