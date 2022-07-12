@@ -35,7 +35,7 @@ class DataHandlers(ABC):
         self.labels_list = labels_list
         self.dimensions = dimensions
         self.type = data_type
-        log.info('Initialized data handler class')
+        log.debug('Initialized data handler class')
 
 
     def getTensor(self):
@@ -44,7 +44,7 @@ class DataHandlers(ABC):
         Returns:
             tf.Tensor: A Tensor which concatenates all matrices labeled in the labels_list.
         """
-        log.info('Started Tensor extraction process')
+        log.debug('Started Tensor extraction process')
         self.__initializeNpMatrix()
         self.__fillMatrix()
         return tf.convert_to_tensor(self.matrix)
@@ -64,10 +64,10 @@ class DataHandlers(ABC):
 
 
     def __fillMatrix(self):
-        log.info('Started filling out data matrix')
+        log.debug('Started filling out data matrix')
         for i in range(len(self.labels_list)):
             data = self.loadDataSingleMatrix(self.labels_list[i])
-            log.info('Succesfully loaded data for ' + self.labels_list[i])
+            log.debug('Succesfully loaded data for ' + self.labels_list[i])
             data_rows = len(data)
             data_cols = len(data[0])
             
@@ -79,7 +79,7 @@ class DataHandlers(ABC):
                     'constant',
                     constant_values=(0)
                 )
-                log.info('Padded and added data for ' + self.labels_list[i])
+                log.debug('Padded and added data for ' + self.labels_list[i])
           
             elif data_rows > self.dimensions[0] or data_cols > self.dimensions[1]:
                 row_diff = (data_rows - self.dimensions[0]) // 2
@@ -88,7 +88,7 @@ class DataHandlers(ABC):
                     row_diff : self.dimensions[0] + row_diff ,
                     col_diff : self.dimensions[1] + col_diff 
                 ]
-                log.info('Cropped and added data for ' + self.labels_list[i])
+                log.debug('Cropped and added data for ' + self.labels_list[i])
 
     def __initializeNpMatrix(self):
         self.matrix = np.zeros(
@@ -99,4 +99,4 @@ class DataHandlers(ABC):
             ),
             dtype = self.type
         )
-        log.info('Completed zero matrix initialization')
+        log.debug('Completed zero matrix initialization')
