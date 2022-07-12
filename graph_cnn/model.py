@@ -261,6 +261,7 @@ callbacks = [
 start_model_fitting = time.time()
 model = g.createModel()
 log.info('model fitting started')
+#look into ideal batch size
 mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=100, callbacks = callbacks, validation_split=0.2)
 end_model_fitting = time.time()
 
