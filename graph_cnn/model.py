@@ -56,7 +56,7 @@ class GraphCNN:
             comb_file_lines = comb_file.readlines()
             x, y = [], []
             # FIX SIZE LATER, SET TO 100 FOR A SMALLER BATCH TRY
-        for row in comb_file_lines[:150]:
+        for row in comb_file_lines[:100]:
             x_new, y_new = self.__extractRowDataProteinLigandPair(row)
             x.append(x_new)
             y.append(y_new) # logfc score only; doesn't make sense to predict pvalues
@@ -282,6 +282,8 @@ log.info('model evaluation completed')
 #returns loss value (MeanSquaredLogarithmicError) and metric values, currently LogCoshError and coeff_determination
 #and RootMeanSquaredError
 
+#plot the loss curve
+
 fig, ax1 = plt.subplots(1, figsize=(15, 5))
 
 ax1.plot(mod_history.history["loss"])
@@ -291,6 +293,7 @@ ax1.set_xlabel("Epochs")
 ax1.set_ylabel("Loss")
 
 plt.savefig('visuals/loss_graph.png')
+plt.close()
 
 # Plot the results
 #print(mod_history.history.keys())

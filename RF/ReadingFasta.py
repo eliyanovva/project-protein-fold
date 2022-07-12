@@ -69,30 +69,18 @@ def make_seqvar_TMS(TM_dict, TM_num, k, seqvar, feat):
         seq = TM_dict[id][TM_num]
         #seqvar.append(Seq(name, seq, featurize(seq, k, feat)))
         seqvar[id] = featurize(seq, k, feat)
+
+        if (TM_num == 1) & (id == 'Q7TQV4'):
+            print(seq)
+            print(len(seqvar[id]))
+            print(list(seqvar[id].values()))
+
     return seqvar, feat
 
 #Return: List of sequence objects representing each protein; List of k-mers found in the protein
 #fasta = file to read
 #seqvar = list to be populated with sequence objects
 #feat = list to be populated with k-mers
-def make_seqvar(fasta, seqvar, feat):
-    i = 0
-    j = 0
-    for line in fasta:
-        #Identify and add new sequence objects
-        if line[0] == '>':
-            name = line.replace('\n','')
-            name = name.replace('>', '')
-            seqvar.append(Seq(name, '', featurize('',7,feat)))
-            i += 1
-        #Update sequence objects to store sequences and frequency dictionaries
-        else:
-            sequence = line.replace('\n','')
-            seqvar[i-1].sequence = seqvar[i-1].sequence + sequence
-            seqvar[i-1].dictionary = featurize(seqvar[i-1].sequence,7,feat)
-        j += 1
-
-    return seqvar, feat
 
 #Return: 2 dimensional matrix (accession number by k-mer) of frequency values
 #seqvar = list of sequence objects

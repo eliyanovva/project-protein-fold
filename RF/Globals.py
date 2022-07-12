@@ -52,10 +52,13 @@ def initialize_AA_dict(p_list):
     protein_list = p_list
 
     TMs_by_id = {}
+    num_rows = df.shape[0]
 
-    for i in range(len(protein_list)):
-        TMs = [str(df.iloc[i, 1]), str(df.iloc[i, 4]), str(df.iloc[i, 7]), str(df.iloc[i, 10])]
-        TMs_by_id[protein_list[i]] = TMs
+    for i in range(num_rows):
+        id = df.at[i, 'protein']
+        if id in protein_list:
+            TMs = [str(df.at[i, 'TM3']), str(df.at[i, 'TM5']), str(df.at[i, 'TM6']), str(df.at[i, 'TM7'])]
+            TMs_by_id[id] = TMs
 
     return categorize(TMs_by_id)
 
@@ -65,10 +68,13 @@ def initialize_indices(p_list):
     protein_list = p_list
 
     TM_indices = {}
-    for i in range(len(protein_list)):
-        indices = [int(df.iloc[i, 2]), int(df.iloc[i, 3]), int(df.iloc[i, 5]), int(df.iloc[i, 6]), int(df.iloc[i, 8]),
-                   int(df.iloc[i, 9]), int(df.iloc[i, 11]), int(df.iloc[i, 12])]
-        TM_indices[protein_list[i]] = indices
+    num_rows = df.shape[0]
+    for i in range(num_rows):
+        id = df.at[i, 'protein']
+        if id in protein_list:
+            indices = [int(df.at[i,'s3']), int(df.at[i,'e3']), int(df.at[i,'s5']), int(df.at[i,'e5']),
+                       int(df.at[i,'s6']), int(df.at[i,'e6']), int(df.at[i,'s7']), int(df.at[i,'e7'])]
+            TM_indices[protein_list[i]] = indices
 
     return TM_indices
 
