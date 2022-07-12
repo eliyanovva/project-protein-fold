@@ -107,20 +107,11 @@ AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, cat
 #AA_filter_TM6 = 759, 780, 729, 696, 711
 #AA_filter_TM7 = 882, 870, 887, 901, 858
 
-print(len(AA_features_TM3))
-print(len(AA_features_TM5))
-print(len(AA_features_TM6))
-print(len(AA_features_TM7))
-print()
+AA_filter_TM3, feat1 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3")
+AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5")
+AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6")
+AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7")
 
-
-
-AA_filter_TM3, feat1 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3", 'no')
-AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5", 'no')
-AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6", 'no')
-AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7", 'yes')
-
-"""
 #Create 3Di output for Tms 3,5,6,7
 Di_dict = Globals.initialize_3Di_dict(list(proteins_toconsider))
 Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
@@ -132,6 +123,9 @@ Di_filter_TM3, feat5 = Filtering.richness_protein(Di_features_TM3, Di_seqvar_TM3
 Di_filter_TM5, feat6 = Filtering.richness_protein(Di_features_TM5, Di_seqvar_TM5, pos_counts, neg_counts, "TM5")
 Di_filter_TM6, feat7 = Filtering.richness_protein(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts, "TM6")
 Di_filter_TM7, feat8 = Filtering.richness_protein(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts, "TM7")
+
+print('Total kmers:')
+print(len(AA_filter_TM3) + len(AA_filter_TM5) + len(AA_filter_TM6) + len(AA_filter_TM7) + len(Di_filter_TM3) + len(Di_filter_TM5) + len(Di_filter_TM6) + len(Di_filter_TM7))
 
 all_protein_freqs = {}
 
@@ -270,4 +264,3 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
-"""

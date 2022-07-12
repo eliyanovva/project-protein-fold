@@ -74,7 +74,7 @@ def initialize_indices(p_list):
         if id in protein_list:
             indices = [int(df.at[i,'s3']), int(df.at[i,'e3']), int(df.at[i,'s5']), int(df.at[i,'e5']),
                        int(df.at[i,'s6']), int(df.at[i,'e6']), int(df.at[i,'s7']), int(df.at[i,'e7'])]
-            TM_indices[protein_list[i]] = indices
+            TM_indices[id] = indices
 
     return TM_indices
 

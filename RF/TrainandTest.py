@@ -18,8 +18,8 @@ FixedClassificationModel.train(testX, testY)
 accuracy = 0
 recall = 0
 BAC = 0
-#f = open('results_filter10.csv', 'w')
-#f.write('Run, Accuracy, Recall, Balanced Score' + "\n")
+f = open('results_filter_all.csv', 'w')
+f.write('Run, Accuracy, Recall, Balanced Score' + "\n")
 
 for i in range(50):
     print("run " + str(i))
@@ -27,7 +27,7 @@ for i in range(50):
     accuracy += acc
     recall += rec
     BAC += bac
-    #f.write(str(i+1) + ", " + str(acc) + ", " + str(rec) + ", " + str(bac) + "\n")
+    f.write(str(i+1) + ", " + str(acc) + ", " + str(rec) + ", " + str(bac) + "\n")
 
 print('Average Accuracy: ' + str(accuracy/50))
 print('Average Recall: ' + str(recall/50))
