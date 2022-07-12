@@ -155,15 +155,11 @@ class GraphCNN:
                 learning_rate=0.0001,
                 initial_accumulator_value=0.1,
                 epsilon=1e-07),
-                #RMSprop(
-                #learning_rate=0.001,
-                #rho=0.9,
-                #momentum=0.0,
-                #epsilon=1e-07),
             loss=tf.keras.losses.MeanSquaredLogarithmicError(),
             metrics=[tf.keras.metrics.LogCoshError(),
                 coeff_determination,
                 tf.keras.metrics.RootMeanSquaredError(),
+                tf.keras.metrics.MeanSquaredError()
                 ]
         )
         return model
@@ -265,7 +261,7 @@ callbacks = [
 start_model_fitting = time.time()
 model = g.createModel()
 log.info('model fitting started')
-mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=10, callbacks = callbacks, validation_split=0.2)
+mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=100, callbacks = callbacks, validation_split=0.2)
 end_model_fitting = time.time()
 
 log.info ('model fitting finished successfully')
@@ -288,7 +284,7 @@ with open('results.txt', 'a') as res_log:
 print(results)
 log.info('model evaluation completed')
 #returns loss value (MeanSquaredLogarithmicError) and metric values, currently LogCoshError and coeff_determination
-#and RootMeanSquaredError
+#and RootMeanSquaredError and MeanSquaredError
 
 #plot the loss curve: test vs training
 
