@@ -24,6 +24,10 @@ for pair in neg_pairs:
     proteins_toconsider.add(pair[0])
     ligands_toconsider.add(pair[1])
 
+#pos_pairs = 565
+#neg_pairs = 236
+#proteins_toconsider = 392
+
 pos_dict = {}
 neg_dict = {}
 
@@ -38,6 +42,20 @@ for pair in neg_pairs:
     if id not in neg_dict:
         neg_dict[id] = []
     neg_dict[id].append(pair[1])
+
+pos_sum = 0
+neg_sum = 0
+
+for id in pos_dict:
+    pos_sum += len(pos_dict[id])
+for id in neg_dict:
+    neg_sum += len(neg_dict[id])
+
+#pos_dict = 299
+#neg_dict = 168
+#pos_sum = 565
+#neg_sum = 236
+
 
 #Initialize Variables
 #categorized variables
@@ -67,9 +85,6 @@ di_features_TM7 = set()
 di_seqs_TM7 = {}
 di_matrix_TM7 = []
 
-def import_plist():
-    #For Find3Di.py
-    return proteins_toconsider
 
 #Create AA output for TMs 3,5,6,7
 AA_dict = Globals.initialize_AA_dict(list(proteins_toconsider))   #create dict with proteins from pos / neg pairs
@@ -77,6 +92,20 @@ AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, cat
 AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, categorized_seqs_TM5, categorized_features_TM5)
 AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, categorized_seqs_TM6, categorized_features_TM6)
 AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, categorized_seqs_TM7, categorized_features_TM7)
+
+#AA_dict = 392
+#AA_seqvar_TM3 = 392
+#AA_seqvar_TM5 = 392
+#AA_seqvar_TM6 = 392
+#AA_seqvar_TM7 = 392
+#AA_features_TM3 = 1744
+#AA_features_TM5 = 2019
+#AA_features_TM6 = 1402
+#AA_features_TM7 = 1520
+#AA_filter_TM3 = 922, 944, 1008, 990, 938
+#AA_filter_TM5 = 1126, 1121, 1113, 1134, 1120
+#AA_filter_TM6 = 759, 780, 729, 696, 711
+#AA_filter_TM7 = 882, 870, 887, 901, 858
 
 AA_filter_TM3, feat1 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3")
 AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5")
@@ -94,6 +123,9 @@ Di_filter_TM3, feat5 = Filtering.richness_protein(Di_features_TM3, Di_seqvar_TM3
 Di_filter_TM5, feat6 = Filtering.richness_protein(Di_features_TM5, Di_seqvar_TM5, pos_counts, neg_counts, "TM5")
 Di_filter_TM6, feat7 = Filtering.richness_protein(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts, "TM6")
 Di_filter_TM7, feat8 = Filtering.richness_protein(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts, "TM7")
+
+print('Total kmers:')
+print(len(AA_filter_TM3) + len(AA_filter_TM5) + len(AA_filter_TM6) + len(AA_filter_TM7) + len(Di_filter_TM3) + len(Di_filter_TM5) + len(Di_filter_TM6) + len(Di_filter_TM7))
 
 all_protein_freqs = {}
 
@@ -122,8 +154,6 @@ for id in unique_proteins:
             if lig in unique_ligands:
                 lig_mat.append(np.array(list(ligand_counts[lig].values())))
 
-print(len(lig_mat))
-
 for id in pos_dict:
     for lig in pos_dict[id]:
         if lig not in unique_ligands:
@@ -150,8 +180,6 @@ AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, pos_AA_mat_TM
 AA_matrix = np.concatenate((np.array(AA_mat_TM3, dtype = np.uint8), np.array(AA_mat_TM5, dtype = np.uint8),
                             np.array(AA_mat_TM6, dtype = np.uint8), np.array(AA_mat_TM7, dtype = np.uint8)) , axis = 1)
 
-print(len(AA_matrix))
-
 pos_Di_mat_TM3 = ReadingFasta.makematrix(Di_seqvar_TM3, Di_filter_TM3, di_matrix_TM3, unique_proteins, pos_dict)
 pos_Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_filter_TM5, di_matrix_TM5, unique_proteins, pos_dict)
 pos_Di_mat_TM6 = ReadingFasta.makematrix(Di_seqvar_TM6, Di_filter_TM6, di_matrix_TM6, unique_proteins, pos_dict)
@@ -164,8 +192,6 @@ Di_mat_TM7 = ReadingFasta.makematrix(Di_seqvar_TM7, Di_filter_TM7, pos_Di_mat_TM
 
 Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_mat_TM5, dtype = np.uint8),
                             np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
-
-print(len(Di_matrix))
 
 #Concatenate AA and 3Di matrices
 #intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
@@ -238,4 +264,3 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
-

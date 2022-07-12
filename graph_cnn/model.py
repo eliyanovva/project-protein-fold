@@ -56,7 +56,7 @@ class GraphCNN:
             comb_file_lines = comb_file.readlines()
             x, y = [], []
             # FIX SIZE LATER, SET TO 100 FOR A SMALLER BATCH TRY
-        for row in comb_file_lines[:150]:
+        for row in comb_file_lines:
             x_new, y_new = self.__extractRowDataProteinLigandPair(row)
             x.append(x_new)
             y.append(y_new) # logfc score only; doesn't make sense to predict pvalues
@@ -254,10 +254,18 @@ start_test_data_load = time.time()
 X_test, y_test = g.getTensors(X_test_labels, y_test_labels)
 end_test_data_load = time.time()
 
+callbacks = [
+    tf.keras.callbacks.EarlyStopping(
+        monitor = 'val_loss',
+        patience = 2,
+        restore_best_weights = True,
+    )
+]
+
 start_model_fitting = time.time()
 model = g.createModel()
 log.info('model fitting started')
-mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=1, validation_split=0.2)
+mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=10, callbacks = callbacks, validation_split=0.2)
 end_model_fitting = time.time()
 
 log.info ('model fitting finished successfully')
@@ -279,18 +287,21 @@ with open('results.txt', 'a') as res_log:
 
 print(results)
 log.info('model evaluation completed')
-#returns loss value and metric values, currently LogCoshError and coeff_determination
-#
+#returns loss value (MeanSquaredLogarithmicError) and metric values, currently LogCoshError and coeff_determination
+#and RootMeanSquaredError
+
+#plot the loss curve: test vs training
 
 fig, ax1 = plt.subplots(1, figsize=(15, 5))
 
 ax1.plot(mod_history.history["loss"])
-#ax1.plot(mod_history.history["val_loss"])
+ax1.plot(mod_history.history["val_loss"])
 ax1.legend(["train", "test"], loc="upper right")
 ax1.set_xlabel("Epochs")
 ax1.set_ylabel("Loss")
 
-plt.savefig('loss_graph.png')
+plt.savefig('visuals/loss_graph.png')
+plt.close()
 
 # Plot the results
 #print(mod_history.history.keys())

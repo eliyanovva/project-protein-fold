@@ -36,7 +36,9 @@ def train(features, labels):
     print("Recall:",rec)
 
     y_pred=clf.predict(X_test)
-    print(metrics.balanced_accuracy_score(y_test, y_pred))
+    print(metrics.matthews_corrcoef(y_test, y_pred))
+    bac = metrics.balanced_accuracy_score(y_test, y_pred)
+    print('Balanced Accuracy Score: ' + str(bac))
 
-    return acc,rec
+    return acc,rec,bac
 
