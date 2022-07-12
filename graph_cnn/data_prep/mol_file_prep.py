@@ -5,9 +5,8 @@ import os
 import numpy as np
 from openbabel import pybel
 
-import constants
-import log_config
-from feature_matrices import getMatrix
+import config
+
 
 # so far creates an adjacency matrix from a single pdb file
 # TODO: Figure out how/whether you need to save adjacencies to empty
@@ -22,7 +21,7 @@ class MolDataFile:
         
 
     def getAdjacencyMatrix(self):
-    # the adjacency matrix is created with the size of the constant set up in constants.py
+    # the adjacency matrix is created with the size of the constant set up in config.py
         log.info('Initiated creation of Mol Adjacency matrix for the compound ' + self.compound_name)
         adjacency_matrix = np.zeros((self.atom_count, self.atom_count))
         bond_data = self.__getMolFileBondData()
@@ -30,7 +29,7 @@ class MolDataFile:
             adjacency_matrix[bond_data[i][0] - 1][bond_data[i][1] - 1] = bond_data[i][2]
         
         log.info('Initiated saving of adjacency matrix')
-        file_name = os.path.join(constants.MOL_ADJACENCY_PATH, self.compound_name + '_adj_mat')
+        file_name = os.path.join(config.MOL_ADJACENCY_PATH, self.compound_name + '_adj_mat')
         np.save(file_name, adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
 
@@ -38,7 +37,7 @@ class MolDataFile:
     def getFeatureMatrix(self):
     #building feature matrix for mol file
         log.info('Initiated creation of Mol Feature matrix for the compound ' + self.compound_name)
-        feature_matrix = np.zeros((self.atom_count, constants.LIGAND_FEATURES_COUNT), dtype='float')
+        feature_matrix = np.zeros((self.atom_count, config.LIGAND_FEATURES_COUNT), dtype='float')
         atom_types = self.__getAtomTypes()
        
         prefile = next(pybel.readfile('mol', self.mol_filename))
@@ -51,7 +50,7 @@ class MolDataFile:
             atom_index += 1
 
         log.info('Initiated saving of feature matrix')
-        np.save(os.path.join(constants.LIGAND_FEATURE_PATH, self.compound_name + '_feat_mat'), feature_matrix)
+        np.save(os.path.join(config.LIGAND_FEATURE_PATH, self.compound_name + '_feat_mat'), feature_matrix)
         log.info('The features matrix has been saved!')
 
 
@@ -90,7 +89,7 @@ class MolDataFile:
 
 
     def __getMoleculeDataRow(self, atom):
-        features_arr = np.zeros((constants.LIGAND_FEATURES_COUNT - 1))
+        features_arr = np.zeros((config.LIGAND_FEATURES_COUNT - 1))
         features_arr[0] = atom.atomicmass
         features_arr[1] = atom.exactmass
         features_arr[2] = atom.formalcharge
@@ -121,7 +120,7 @@ class MolDataFile:
                 if len(numerical_data) > 0:
                     entry = np.array(
                         [
-                            #constants.ATOM_DICT[atom_type], # atom type (C, O, N, S)
+                            #config.ATOM_DICT[atom_type], # atom type (C, O, N, S)
                             numerical_data[0], # x coordinate
                             numerical_data[1], # y_coordinate
                             numerical_data[2], # z_coordinate
@@ -158,7 +157,7 @@ class MolDataFile:
                 line_list = [x for x in line.split() if x != '']
                 print(line_list)
                 #FIXME: add check if it is a valid key; assign non-valid to a key for others
-                atom_types[index] = constants.ATOM_DICT[line_list[3]]
+                atom_types[index] = config.ATOM_DICT[line_list[3]]
                 index += 1
         log.info('Extraction of atom types from MOL completed!')
         return atom_types

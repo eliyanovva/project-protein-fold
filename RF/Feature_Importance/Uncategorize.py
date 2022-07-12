@@ -70,7 +70,7 @@ for filename in os.listdir(directory):
         #Select important Amino Acids
         printstatement1 = ""
         i = 0
-        for sequence in uncat('cgbbb'):
+        for sequence in uncat('babbe'):
             if i > 0:
                 printstatement1 += ' or '
             printstatement1 += 'pepseq ' + sequence
@@ -79,7 +79,7 @@ for filename in os.listdir(directory):
 
         printstatement2 = ""
         i = 0
-        for sequence in uncat('ebcae'):
+        for sequence in uncat('bbacb'):
             if i > 0:
                 printstatement2 += ' or '
             printstatement2 += 'pepseq ' + sequence
@@ -88,7 +88,7 @@ for filename in os.listdir(directory):
 
         printstatement3 = ""
         i = 0
-        for sequence in uncat('gaecd'):
+        for sequence in uncat('cfgcb'):
             if i > 0:
                 printstatement3 += ' or '
             printstatement3 += 'pepseq ' + sequence
@@ -97,7 +97,7 @@ for filename in os.listdir(directory):
 
         printstatement4 = ""
         i = 0
-        for sequence in uncat('cfggb'):
+        for sequence in uncat('bcbdc'):
             if i > 0:
                 printstatement4 += ' or '
             printstatement4 += 'pepseq ' + sequence
@@ -106,7 +106,7 @@ for filename in os.listdir(directory):
 
         printstatement5 = ""
         i = 0
-        for sequence in uncat('dabfd'):
+        for sequence in uncat('abgeb'):
             if i > 0:
                 printstatement5 += ' or '
             printstatement5 += 'pepseq ' + sequence
@@ -119,27 +119,27 @@ for filename in os.listdir(directory):
         TM7 = "Res 240-350"
         
         #Color important Amino Acids
-        cmd.select("AA1", printstatement1 + " and " + TM6)
+        cmd.select("AA1", printstatement1 + " and " + TM5)
         cmd.create("obj1","AA1")
         cmd.color("red", "obj1")
         cmd.set("cartoon_transparency",  "0", "obj1")
 
-        cmd.select("AA2", printstatement2 + " and " + TM6)
+        cmd.select("AA2", printstatement2 + " and " + TM5)
         cmd.create("obj2","AA2")
         cmd.color("orange", "obj2")
         cmd.set("cartoon_transparency",  "0", "obj2")
 
-        cmd.select("AA3", printstatement3 + " and " + TM7)
+        cmd.select("AA3", printstatement3 + " and " + TM3)
         cmd.create("obj3","AA3")
         cmd.color("yellow", "obj3")
         cmd.set("cartoon_transparency",  "0", "obj3")
 
-        cmd.select("AA4", printstatement4 + " and " + TM3)
+        cmd.select("AA4", printstatement4 + " and " + TM6)
         cmd.create("obj4","AA4")
         cmd.color("green", "obj4")
         cmd.set("cartoon_transparency",  "0", "obj4")
 
-        cmd.select("AA5", printstatement5 + " and " + TM5)
+        cmd.select("AA5", printstatement5 + " and " + TM3)
         cmd.create("obj5","AA5")
         cmd.color("blue", "obj5")
         cmd.set("cartoon_transparency",  "0", "obj5")
