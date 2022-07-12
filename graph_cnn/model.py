@@ -56,7 +56,7 @@ class GraphCNN:
             comb_file_lines = comb_file.readlines()
             x, y = [], []
             # FIX SIZE LATER, SET TO 100 FOR A SMALLER BATCH TRY
-        for row in comb_file_lines[:300]:
+        for row in comb_file_lines:
             x_new, y_new = self.__extractRowDataProteinLigandPair(row)
             x.append(x_new)
             y.append(y_new) # logfc score only; doesn't make sense to predict pvalues
