@@ -17,9 +17,7 @@ def initialize_ligand_dict():
 #List of filenames for ligands that we have matched SMILES strings to
 #Cannot distinguish chirality
 def initialize_ligand_list():
-    ligands = ['pS6_DE_1p_dimethyltrisulfide.csv', 'pS6_DE_1p_tbm.csv', 'pS6_DE_p01_e2butene1thiol.csv', 'pS6_DE_1p_3methyl1butanethiol.csv', 
-    'pS6_DE_500mM_2propylthietane.csv', 'pS6_DE_p01_cyclopentanethiol.csv', 'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_ntmt.csv', 'pS6_DE_1p_tmt.csv']
-    """['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_ethylTiglate.csv',
+    ligands = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_ethylTiglate.csv',
                'pS6_DE_1p_bIonone.csv', 'pS6_DE_1p_butyricAcid.csv',
                'pS6_DE_1p_paraCresol.csv', 'pS6_DE_1p_bCaryophyllene.csv', 'pS6_DE_p1_isovalericAcid.csv',
                'pS6_DE_1p_Octanal.csv', 'pS6_DE_1p_heptanal.csv',
@@ -37,7 +35,10 @@ def initialize_ligand_list():
                'pS6_DE_1p_heptanoicAcid.csv', 'pS6_DE_1p_2e3mp.csv', 'pS6_DE_1p_2hac.csv', 'pS6_DE_1p_2m2p.csv', 
                'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_2phenylAlcohol.csv', 'pS6_DE_1p_4methylAC.csv', 'pS6_DE_1p_25dmp.csv',
                'pS6_DE_1p_nCarvone.csv', 'pS6_DE_1p_nDihydrocarveol.csv', 'pS6_DE_1p_nMenthol.csv', 'pS6_DE_1p_ntmt.csv', 
-               'pS6_DE_1p_pCarvone.csv', 'pS6_DE_1p_pDihydrocarveol.csv', 'pS6_DE_1p_pLimonene.csv', 'pS6_DE_1p_pMenthol.csv', 'pS6_DE_1p_sbt.csv', 'pS6_DE_1p_tmt.csv']"""
+               'pS6_DE_1p_pCarvone.csv', 'pS6_DE_1p_pDihydrocarveol.csv', 'pS6_DE_1p_pLimonene.csv', 'pS6_DE_1p_pMenthol.csv', 'pS6_DE_1p_sbt.csv', 'pS6_DE_1p_tmt.csv']
+    """['pS6_DE_1p_dimethyltrisulfide.csv', 'pS6_DE_1p_tbm.csv', 'pS6_DE_p01_e2butene1thiol.csv', 'pS6_DE_1p_3methyl1butanethiol.csv', 
+    'pS6_DE_500mM_2propylthietane.csv', 'pS6_DE_p01_cyclopentanethiol.csv', 'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_ntmt.csv', 'pS6_DE_1p_tmt.csv']
+    """
     return ligands
 
 #Function to create list of protein accessions

@@ -33,9 +33,9 @@ def importance_file(features, labels, filter_feat):
     importances = train(features, labels)
     for i in range(0,1000,1):
         importances += train(features,labels)
-    with open("Feature_Importance/sulfur_importance.txt", "w") as f:
-        while importances.size > 0:
+    with open("Feature_Importance/important_features.txt", "w") as f:
+        while np.argmax(importances) > 0:
             index = np.argmax(importances)
             print(filter_feat[index], file=f)
             print(importances[index], file=f)
-            importances = np.delete(importances, index)
+            importances[index] = 0

@@ -63,7 +63,7 @@ kf = StratifiedKFold()
 
 #Define random grid
 grid = HalvingRandomSearchCV(estimator = model, param_distributions = param_grid, verbose = 2, n_jobs = -1,
-                            cv=kf, return_train_score=True, scoring = "balanced_accuracy")
+                            cv=kf, return_train_score=True, scoring = metrics.matthews_corrcoef)
 
 #Train the model (performing cross validation)
 grid.fit(X_train, y_train)
