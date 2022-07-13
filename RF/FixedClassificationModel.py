@@ -26,6 +26,8 @@ def train(features, labels):
 
     #Form predictions
     y_pred=clf.predict_proba(X_test)[:,1]
+    print(y_pred)
+    print(y_test)
     print('made predictions')
     precision, recall, thresholds = metrics.precision_recall_curve(y_test, y_pred)
 

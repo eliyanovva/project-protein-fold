@@ -45,7 +45,10 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
 
     for kmer in kmers:
         pos_prop_by_kmer[kmer] = float(pos_counts_by_kmer[kmer]) / float(total_pos)
-        neg_prop_by_kmer[kmer] = float(neg_counts_by_kmer[kmer]) / float(total_neg)
+        if total_neg == 0:
+            neg_prop_by_kmer = 0
+        else:
+            neg_prop_by_kmer[kmer] = float(neg_counts_by_kmer[kmer]) / float(total_neg)
 
     richness = {}
     #dict richness stores an adapted richness measure for all kmers

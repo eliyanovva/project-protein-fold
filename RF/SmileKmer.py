@@ -29,7 +29,7 @@ def ligand_matrix(ligand_dict, k, num_proteins, ligands_toconsider):
             unique_seqs.add(freq_str)
             unique_ligands.append(lig)
 
-    ligfeatures = list(ligand_counts['pS6_DE_1p_citronellol.csv'].keys())
+    ligfeatures = list(ligand_counts['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
     return ligfeatures, ligand_counts, unique_ligands
 
 #create a dictionary of the frequency counts for all kmers
