@@ -32,9 +32,31 @@ def train(features, labels):
     #print("Recall:",rec)
 
     y_pred=clf.predict(X_test)
-    #print(metrics.matthews_corrcoef(y_test, y_pred))
+
+    mat = (metrics.matthews_corrcoef(y_test, y_pred))
     bac = metrics.balanced_accuracy_score(y_test, y_pred)
     #print('Balanced Accuracy Score: ' + str(bac))
 
-    return acc,rec,bac
+    TN, FN, TP, FP = matthew_counts(y_test, y_pred)
+
+    return acc,rec,bac,mat,TN, FN, TP, FP
+
+def matthew_counts(y_test, y_pred):
+    TN = 0
+    FN = 0
+    TP = 0
+    FP = 0
+
+    for i in range(len(y_test)):
+        if (y_test[i] == 0) & (y_pred[i] == 0):
+            TN += 1
+        if (y_test[i] == 1) & (y_pred[i] == 0):
+            FN += 1
+        if (y_test[i] == 1) & (y_pred[i] == 1):
+            TP += 1
+        if (y_test[i] == 0) & (y_pred[i] == 1):
+            FP += 1
+
+    return TN, FN, TP, FP
+
 

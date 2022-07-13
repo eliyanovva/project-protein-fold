@@ -118,11 +118,11 @@ def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig):
 
     kmers_filtered = []                #list of kmers that meet filtering conditions; to be used in final matrix
     kmers_failed = []
-    richness_level = 4
+    richness_level = 6
 
     for kmer in kmers:
-        if (richness[kmer] <= (1/richness_level)) | (richness[kmer] >= richness_level):
-        #if (richness[kmer] == 10000) | (richness[kmer] == 0):
+        #if (richness[kmer] <= (1/richness_level)) | (richness[kmer] >= richness_level):
+        if (richness[kmer] == 10000) | (richness[kmer] == 0):
             kmers_filtered.append(kmer)
         else:
             kmers_failed.append(kmer)
