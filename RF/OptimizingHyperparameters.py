@@ -2,6 +2,7 @@
 
 #Adapted from: https://www.youtube.com/watch?v=SctFnD_puQI and https://datascience.stackexchange.com/questions/44327/oversampling-before-cross-validation-is-it-a-problem
 
+
 #Imports
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
@@ -11,6 +12,8 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import train_test_split
 import CombineLigandsProteins
 from sklearn import metrics
+from sklearn.metrics import precision_recall_curve
+from numpy import nanargmax
 
 #Number of trees in the forest
 n_estimators = [int(x) for x in np.linspace(start = 10, stop = 1000, num = 100)]
@@ -77,3 +80,20 @@ rec = metrics.auc(recall,precision)
 #Print accuracy of the model
 print("Accuracy:",acc)
 print("Recall:",rec)
+
+
+#Determine optimal threshold
+precision, recall, thresholds = precision_recall_curve(y_test, y_pred)
+
+fscore = (2 * precision * recall) / (precision + recall)
+
+ix = nanargmax(fscore)
+print('Best Threshold=%f, F-Score=%.3f' % (thresholds[ix], fscore[ix]))
+
+#Run the model with the optimal threshold
+y_pred = (grid.predict_proba(X_test)[:,1] >= thresholds[ix]).astype(bool)
+
+bac = metrics.balanced_accuracy_score(y_test, y_pred, adjusted = "True")
+
+print('Balanced Accuracy Score: ' + str(bac))
+print(metrics.matthews_corrcoef(y_test, y_pred))
