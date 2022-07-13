@@ -14,14 +14,13 @@ testY = CombineLigandsProteins.Y
 #fi.train(testX, testY, CombineLigandsProteins.feats)
 FixedClassificationModel.train(testX, testY)
 
-
 accuracy = 0
 recall = 0
 BAC = 0
-f = open('results_filter_all.csv', 'w')
+f = open('results_filter_compare14.csv', 'w')
 f.write('Run, Accuracy, Recall, Balanced Score' + "\n")
 
-for i in range(50):
+for i in range(100):
     print("run " + str(i))
     acc, rec, bac = FixedClassificationModel.train(testX, testY)
     accuracy += acc
@@ -29,7 +28,7 @@ for i in range(50):
     BAC += bac
     f.write(str(i+1) + ", " + str(acc) + ", " + str(rec) + ", " + str(bac) + "\n")
 
-print('Average Accuracy: ' + str(accuracy/50))
-print('Average Recall: ' + str(recall/50))
-print('Average Balanced: ' + str(BAC/50))
+print('Average Accuracy: ' + str(accuracy/100))
+print('Average Recall: ' + str(recall/100))
+print('Average Balanced: ' + str(BAC/100))
 #f.close()
