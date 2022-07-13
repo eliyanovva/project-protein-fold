@@ -77,7 +77,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
 
 
 def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig):
-    kmers = list(ligand_counts['pS6_DE_1p_nCarvone.csv'].keys())
+    kmers = list(ligand_counts['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
 
     pos_counts_by_kmer = {}             #key: kmer, value: num. of positive pairs that involve the kmer
     neg_counts_by_kmer = {}             #key: kmer, value: num. of negative pairs that involve the kmer
