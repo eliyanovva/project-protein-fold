@@ -63,8 +63,8 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
     richness_level = 14
 
     for kmer in kmers:
-        if (richness[kmer] <= (1/richness_level)) | (richness[kmer] >= richness_level):
-        #if (richness[kmer] == 10000) | (richness[kmer] == 0):
+        #if (richness[kmer] <= (1/richness_level)) | (richness[kmer] >= richness_level):
+        if (richness[kmer] == 10000) | (richness[kmer] == 0):
             ret.append(kmer)
             ret2.append(kmer + domain)
 
@@ -118,7 +118,7 @@ def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig):
 
     kmers_filtered = []                #list of kmers that meet filtering conditions; to be used in final matrix
     kmers_failed = []
-    richness_level = 2
+    richness_level = 4
 
     for kmer in kmers:
         if (richness[kmer] <= (1/richness_level)) | (richness[kmer] >= richness_level):
@@ -130,5 +130,7 @@ def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig):
     for lig in ligand_counts:
         for kmer in kmers_failed:
             ligand_counts[lig].pop(kmer)
+
+    print('Num. Kmers: ' + str(len(kmers_filtered)))
 
     return ligand_counts

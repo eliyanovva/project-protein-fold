@@ -31,11 +31,11 @@ def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
             unique_proteins.add(id)
     return unique_proteins
 
-def remove_ligands(ligand_counts, ligands_toconsider):
+def remove_ligands(ligand_counts):
     unique_seqs = set()
     unique_ligands = []
 
-    for lig in ligands_toconsider:
+    for lig in ligand_counts:
         freq_str = ""
         for kmer in ligand_counts[lig]:
             freq_str += str(ligand_counts[lig][kmer])

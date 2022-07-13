@@ -142,25 +142,14 @@ ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
 ligand_features, ligand_counts = SmileKmer.ligand_matrix(ligand_dict, 5, ligands_toconsider)
 
-lig_mat = []
+#ligand_counts only has ligands from ligands_toconsider as keys
 
 lig_counts_filter = Filtering.richness_ligand(ligand_counts, pos_by_lig, neg_by_lig)
-#print(len(lig_counts_filter))
 
-#unique_ligands = Duplicates.remove_ligands(ligand_counts, ligands_toconsider)
+unique_ligands = Duplicates.remove_ligands(ligand_counts)
+print('Unique Ligs: ' + str(len(unique_ligands)))
 
-"""
-for id in unique_proteins:
-    if id in pos_dict.keys():
-        for lig in pos_dict[id]:
-            if lig in unique_ligands:
-                lig_mat.append(np.array(list(ligand_counts[lig].values())))
-
-for id in unique_proteins:
-    if id in neg_dict.keys():
-        for lig in neg_dict[id]:
-            if lig in unique_ligands:
-                lig_mat.append(np.array(list(ligand_counts[lig].values())))
+lig_mat = []
 
 for id in pos_dict:
     for lig in pos_dict[id]:
@@ -172,7 +161,19 @@ for id in neg_dict:
         if lig not in unique_ligands:
             neg_dict[id].remove(lig)
 
-print(len(ligand_counts['pS6_DE_1p_4methylAC.csv']))
+for id in unique_proteins:
+    if id in pos_dict.keys():
+        for lig in pos_dict[id]:
+            lig_mat.append(np.array(list(ligand_counts[lig].values())))
+
+for id in unique_proteins:
+    if id in neg_dict.keys():
+        for lig in neg_dict[id]:
+            lig_mat.append(np.array(list(ligand_counts[lig].values())))
+
+print(len(lig_mat))
+
+#print(len(ligand_counts['pS6_DE_1p_4methylAC.csv']))
 #182 ligand kmers
 
 
@@ -276,4 +277,3 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
-"""
