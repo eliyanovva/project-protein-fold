@@ -7,6 +7,7 @@ import ReadingFasta
 import labels
 import Globals
 import Filtering
+import Duplicates
 
 #Create classification dictionary
 acc_ids = Globals.initialize_protein_list()
@@ -51,11 +52,28 @@ for id in pos_dict:
 for id in neg_dict:
     neg_sum += len(neg_dict[id])
 
-#pos_dict = 299
-#neg_dict = 168
-#pos_sum = 565
-#neg_sum = 236
+pos_by_lig = {}
+neg_by_lig = {}
+total_by_lig = {}
 
+for lig in ligands_toconsider:
+    pos_by_lig[lig] = 0
+    neg_by_lig[lig] = 0
+    total_by_lig[lig] = 0
+
+for id in proteins_toconsider:
+    if id in pos_dict:
+        p_pairs = pos_dict[id]
+        for lig in p_pairs:
+            if lig in ligands_toconsider:
+                pos_by_lig[lig] += 1
+                total_by_lig[lig] += 1
+    if id in neg_dict:
+        n_pairs = neg_dict[id]
+        for lig in n_pairs:
+            if lig in ligands_toconsider:
+                neg_by_lig[lig] += 1
+                total_by_lig[lig] += 1
 
 #Initialize Variables
 #categorized variables
@@ -93,20 +111,6 @@ AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, cat
 AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, categorized_seqs_TM6, categorized_features_TM6)
 AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, categorized_seqs_TM7, categorized_features_TM7)
 
-#AA_dict = 392
-#AA_seqvar_TM3 = 392
-#AA_seqvar_TM5 = 392
-#AA_seqvar_TM6 = 392
-#AA_seqvar_TM7 = 392
-#AA_features_TM3 = 1744
-#AA_features_TM5 = 2019
-#AA_features_TM6 = 1402
-#AA_features_TM7 = 1520
-#AA_filter_TM3 = 922, 944, 1008, 990, 938
-#AA_filter_TM5 = 1126, 1121, 1113, 1134, 1120
-#AA_filter_TM6 = 759, 780, 729, 696, 711
-#AA_filter_TM7 = 882, 870, 887, 901, 858
-
 AA_filter_TM3, feat1 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3")
 AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5")
 AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6")
@@ -124,9 +128,6 @@ Di_filter_TM5, feat6 = Filtering.richness_protein(Di_features_TM5, Di_seqvar_TM5
 Di_filter_TM6, feat7 = Filtering.richness_protein(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts, "TM6")
 Di_filter_TM7, feat8 = Filtering.richness_protein(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts, "TM7")
 
-print('Total kmers:')
-print(len(AA_filter_TM3) + len(AA_filter_TM5) + len(AA_filter_TM6) + len(AA_filter_TM7) + len(Di_filter_TM3) + len(Di_filter_TM5) + len(Di_filter_TM6) + len(Di_filter_TM7))
-
 all_protein_freqs = {}
 
 AA_seqvar = [AA_seqvar_TM3, AA_seqvar_TM5, AA_seqvar_TM6, AA_seqvar_TM7]
@@ -134,25 +135,21 @@ AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
 Di_seqvar = [Di_seqvar_TM3, Di_seqvar_TM5, Di_seqvar_TM6, Di_seqvar_TM7]
 Di_feat = [Di_filter_TM3, Di_filter_TM5, Di_filter_TM6, Di_filter_TM7]
 
-unique_proteins = ReadingFasta.remove_duplicates(AA_seqvar, AA_feat, Di_seqvar, Di_feat)
+unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat)
 
 #Import dictionary matching ligands to SMILES String
 ligand_dict = Globals.initialize_ligand_dict()
 #Create ligands matrix
-ligand_features, ligand_counts, unique_ligands = SmileKmer.ligand_matrix(ligand_dict, 5, len(unique_proteins), ligands_toconsider)
+ligand_features, ligand_counts = SmileKmer.ligand_matrix(ligand_dict, 5, ligands_toconsider)
+
+#ligand_counts only has ligands from ligands_toconsider as keys
+
+lig_counts_filter = Filtering.richness_ligand(ligand_counts, pos_by_lig, neg_by_lig)
+
+unique_ligands = Duplicates.remove_ligands(ligand_counts)
+print('Unique Ligs: ' + str(len(unique_ligands)))
+
 lig_mat = []
-
-for id in unique_proteins:
-    if id in pos_dict.keys():
-        for lig in pos_dict[id]:
-            if lig in unique_ligands:
-                lig_mat.append(np.array(list(ligand_counts[lig].values())))
-
-for id in unique_proteins:
-    if id in neg_dict.keys():
-        for lig in neg_dict[id]:
-            if lig in unique_ligands:
-                lig_mat.append(np.array(list(ligand_counts[lig].values())))
 
 for id in pos_dict:
     for lig in pos_dict[id]:
@@ -163,6 +160,22 @@ for id in neg_dict:
     for lig in neg_dict[id]:
         if lig not in unique_ligands:
             neg_dict[id].remove(lig)
+
+for id in unique_proteins:
+    if id in pos_dict.keys():
+        for lig in pos_dict[id]:
+            lig_mat.append(np.array(list(ligand_counts[lig].values())))
+
+for id in unique_proteins:
+    if id in neg_dict.keys():
+        for lig in neg_dict[id]:
+            lig_mat.append(np.array(list(ligand_counts[lig].values())))
+
+print(len(lig_mat))
+
+#print(len(ligand_counts['pS6_DE_1p_4methylAC.csv']))
+#182 ligand kmers
+
 
 #801 total pairs (before selecting unique)
 #627 pairs after unique

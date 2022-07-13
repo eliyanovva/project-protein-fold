@@ -95,5 +95,6 @@ def makematrix(seqvar, feat, mat, unique, counts):
             #Add a frequency array for each protein
             for i in range(len(counts[id])):
                 mat.append(np.array(newseq))
+
     return mat
 

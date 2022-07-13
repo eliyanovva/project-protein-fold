@@ -1,6 +1,7 @@
 import logging
 import sys
 import os
+from tensorboard.plugins.hparams import api as hp
 
 # Create logging directory
 if not os.path.exists('./logs'):
@@ -52,4 +53,9 @@ PROTEIN_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data')
 PVALUE_THRESHOLD = 0.05
 # TODO: explain data file naming conventions somewhere
 
+HP_NUM_UNITS = hp.HParam('num_units', hp.Discrete([16, 32]))
+HP_DROPOUT = hp.HParam('dropout', hp.RealInterval(0.1, 0.2))
+HP_OPTIMIZER = hp.HParam('optimizer', hp.Discrete(['adam', 'sgd', 'adagrad']))
+#HP_LOSS = hp.HParam('loss', hp.Discrete(['meansquaredlogarithmicerror']))
 
+METRIC_ACCURACY = 'accuracy'
