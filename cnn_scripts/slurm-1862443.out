@@ -1,0 +1,44 @@
+/var/lib/slurm-llnl/slurmd/job1862443/slurm_script: 3: /var/lib/slurm-llnl/slurmd/job1862443/slurm_script: module: not found
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/users/bmp40/miniconda3/envs/moleculekit/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/users/bmp40/project-protein-fold/cnn_scripts/model3.py:16: DeprecationWarning: Please use `rotate` from the `scipy.ndimage` namespace, the `scipy.ndimage.interpolation` namespace is deprecated.
+  from scipy.ndimage.interpolation import rotate
+False
+0
+  0%|          | 0/11 [00:00<?, ?it/s]
+  0%|          | 0/58 [00:00<?, ?it/s][A100%|██████████| 58/58 [00:00<00:00, 201215.58it/s]
+  9%|▉         | 1/11 [00:01<00:11,  1.13s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 235106.73it/s]
+ 18%|█▊        | 2/11 [00:02<00:13,  1.51s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 205603.14it/s]
+ 27%|██▋       | 3/11 [00:04<00:13,  1.64s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 200588.43it/s]
+ 36%|███▋      | 4/11 [00:06<00:11,  1.67s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 162822.36it/s]
+ 45%|████▌     | 5/11 [00:08<00:10,  1.71s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 163075.58it/s]
+ 55%|█████▍    | 6/11 [00:09<00:08,  1.73s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 150387.38it/s]
+ 64%|██████▎   | 7/11 [00:11<00:06,  1.74s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 125427.75it/s]
+ 73%|███████▎  | 8/11 [00:13<00:05,  1.75s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 115164.85it/s]
+ 82%|████████▏ | 9/11 [00:15<00:03,  1.76s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 111788.49it/s]
+ 91%|█████████ | 10/11 [00:16<00:01,  1.74s/it]
+  0%|          | 0/100 [00:00<?, ?it/s][A100%|██████████| 100/100 [00:00<00:00, 98735.97it/s]
+100%|██████████| 11/11 [00:18<00:00,  1.75s/it]100%|██████████| 11/11 [00:18<00:00,  1.70s/it]
+  0%|          | 0/1058 [00:00<?, ?it/s]100%|██████████| 1058/1058 [00:00<00:00, 446930.57it/s]
+  0%|          | 0/846 [00:00<?, ?it/s]100%|██████████| 846/846 [00:00<00:00, 743427.86it/s]
+Traceback (most recent call last):
+  File "/home/users/bmp40/project-protein-fold/cnn_scripts/model3.py", line 184, in <module>
+    weights = make_weights_for_balanced_classes(dataset_train.x, 2)                                                                
+  File "/home/users/bmp40/project-protein-fold/cnn_scripts/model3.py", line 166, in make_weights_for_balanced_classes
+    count[item[1]] += 1                                                     
+TypeError: only integer tensors of a single element can be converted to an index

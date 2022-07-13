@@ -16,9 +16,11 @@ import random
 from scipy.ndimage.interpolation import rotate
 from tqdm import tqdm
 from pandas import *
+from torchsampler import ImbalancedDatasetSampler
+#from torchmetrics import AUROC
 
 print(torch.cuda.is_available())
-
+print(torch.cuda.device_count())
 #x_data = np.load('x_data.npy')
 #y_data = np.load('y_data.npy')
 #lig_data = np.load('lig_data.npy')
@@ -43,13 +45,13 @@ x_data = np.asarray(x_data)
 lig_data = np.asarray(lig_data)
 y_data = np.asarray(y_data)
 
-x_data = torch.from_numpy(x_data)
-lig_data = torch.from_numpy(lig_data)
-y_data = torch.from_numpy(y_data)
+#x_data = torch.from_numpy(x_data)
+#lig_data = torch.from_numpy(lig_data)
+#y_data = torch.from_numpy(y_data)
 
-print(x_data.size())
-print(lig_data.size())
-print(y_data.size())
+#print(x_data.size())
+#print(lig_data.size())
+#print(y_data.size())
 
 train_x, test_x, train_lig, test_lig, train_y, test_y = train_test_split(x_data, lig_data, y_data,  test_size = 0.2, stratify=y_data)
 
@@ -61,11 +63,18 @@ for i in tqdm(range(train_x.shape[0])):
     final_train_x.append(train_x[i])
     final_train_lig.append(train_lig[i])
     final_train_y.append(train_y[i])
-    for j in range(2):
+    for j in range(0):
         final_train_x.append(rotate(train_x[i], angle=random.randrange(-15, 15), reshape=False))
         final_train_lig.append(rotate(train_lig[i], angle=random.randrange(-15, 15), reshape=False))
         final_train_y.append(train_y[i])
 
+final_train_x = torch.from_numpy(np.asarray(final_train_x))
+final_train_lig = torch.from_numpy(np.asarray(final_train_lig))
+final_train_y = torch.from_numpy(np.asarray(final_train_y))
+
+test_x = torch.from_numpy(np.asarray(test_x))
+test_lig = torch.from_numpy(np.asarray(test_lig))
+test_y = torch.from_numpy(np.asarray(test_y))
 
 class ProtDataset(Dataset):
     def __init__(self):
@@ -152,6 +161,7 @@ class Model(nn.Module):
 
 model = Model()
 
+
 dataset_full = ProtDataset()
 train_test_split = 0.7
 train_size = int(train_test_split * len(dataset_full))
@@ -160,12 +170,27 @@ test_size = len(dataset_full) - train_size
 dataset_train = TrainDataset()
 dataset_test = TestDataset()
 
-dataloader_train = DataLoader(dataset = dataset_train, batch_size = 64, shuffle = True, num_workers = 2)
-dataloader_test = DataLoader(dataset = dataset_test, batch_size = 64, shuffle = False, num_workers = 2)
+#dataloader_train = DataLoader(dataset = dataset_train, batch_size = 4, shuffle = True, num_workers = 2)
+dataloader_train = DataLoader(dataset = dataset_train, batch_size = 4, shuffle = True, sampler=ImbalancedDatasetSampler(dataset_train), num_workers = 2)
+
+dataloader_test = DataLoader(dataset = dataset_test, batch_size = 4, shuffle = False, num_workers = 2)
 
 print('training length: ', len(dataset_train))
+#custom weighted bce for imbalanced dataset
+#def weighted_binary_cross_entropy(output, target, weights=None):
+    #output = torch.clamp(output,min=1e-8,max=1-1e-8)
+
+    #if weights is not None:
+    #   assert len(weights) == 2
+    #    loss = weights[1] * (target * torch.log(output)) + \
+    #           weights[0] * ((1 - target) * torch.log(1 - output))
+    #else:
+    #    loss = target * torch.log(output) + (1 - target) * torch.log(1 - output)
+
+    #return torch.neg(torch.mean(loss))                 
 
 criterion = nn.BCELoss()
+#criterion = weighted_binary_cross_entropy
 optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 model = model.float()
 
@@ -188,7 +213,8 @@ for epoch in tqdm(range(total_epochs)):  # loop over the dataset multiple times
         # forward + backward + optimize
         outputs = model(prot.float(), lig.float())
         labels = labels.unsqueeze(1).float()
-        loss = criterion(outputs, labels)
+        loss = criterion(outputs, labels) #switch maybe?
+
         loss.backward()
         optimizer.step()
 
@@ -208,6 +234,7 @@ model.eval()
 correct = 0
 total = 0
 
+#auroc = AUROC(pos_label=1)
 # evaluate model
 with torch.no_grad():
     for data in dataloader_test:
@@ -223,6 +250,8 @@ with torch.no_grad():
             total += 1
             if (outputs[i] == labels[i]):
                  correct += 1
+        
+        #print(auroc(outputs, labels))
         #
         #_, predicted = torch.max(outputs.data, 1)
         #total += labels.size(0)
