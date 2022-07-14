@@ -1,0 +1,10 @@
+ligand file,SMILE
+pS6_DE_1p_tbm.csv,CC(C)(C)S
+pS6_DE_p01_e2butene1thiol.csv,CC=CCS
+pS6_DE_1p_3methyl1butanethiol.csv,CC(C)CCS
+pS6_DE_500mM_2propylthietane.csv,CCCC1CCS1
+pS6_DE_p01_cyclopentanethiol.csv,C1CCC(C1)S
+pS6_DE_1p_dimethyltrisulfide.csv,CSSSC
+pS6_DE_1p_2m2t.csv,CC1=NCCS1
+pS6_DE_1p_ntmt.csv,CC1=C(SC(=N1)C)C
+pS6_DE_1p_tmt.csv,CC1=C(SC(=N1)C)C

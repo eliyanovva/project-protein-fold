@@ -36,6 +36,8 @@ def initialize_ligand_list():
                'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_2phenylAlcohol.csv', 'pS6_DE_1p_4methylAC.csv', 'pS6_DE_1p_25dmp.csv',
                'pS6_DE_1p_nCarvone.csv', 'pS6_DE_1p_nDihydrocarveol.csv', 'pS6_DE_1p_nMenthol.csv', 'pS6_DE_1p_ntmt.csv', 
                'pS6_DE_1p_pCarvone.csv', 'pS6_DE_1p_pDihydrocarveol.csv', 'pS6_DE_1p_pLimonene.csv', 'pS6_DE_1p_pMenthol.csv', 'pS6_DE_1p_sbt.csv', 'pS6_DE_1p_tmt.csv']
+    """['pS6_DE_1p_dimethyltrisulfide.csv', 'pS6_DE_1p_tbm.csv', 'pS6_DE_p01_e2butene1thiol.csv', 'pS6_DE_1p_3methyl1butanethiol.csv', 
+    'pS6_DE_500mM_2propylthietane.csv', 'pS6_DE_p01_cyclopentanethiol.csv', 'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_ntmt.csv', 'pS6_DE_1p_tmt.csv']"""
     return ligands
 
 #Function to create list of protein accessions

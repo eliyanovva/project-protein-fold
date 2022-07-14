@@ -6,6 +6,7 @@ import time
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from tensorboard.plugins.hparams import api as hp
 from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 from contextlib import redirect_stdout
@@ -36,6 +37,11 @@ def coeff_determination(y_true, y_pred):
     SS_tot = K.sum(K.square( y_true - K.mean(y_true) ) ) 
     return ( 1 - SS_res/(SS_tot + K.epsilon()) )
 
+with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
+            hp.hparams_config(
+                hparams=[config.HP_NUM_UNITS, config.HP_DROPOUT, config.HP_OPTIMIZER],
+                metrics=[hp.Metric(config.METRIC_ACCURACY, display_name='Accuracy')],
+            )
 
 class GraphCNN:
     def __init__(self):
@@ -70,7 +76,7 @@ class GraphCNN:
         return X_train, X_test, y_train, y_test
 
 
-    def createModel(self):
+    def createModel(self, hparams):
         
         prot_adj_in = tf.keras.layers.Input(
             shape=(config.PROTEIN_ADJACENCY_MAT_SIZE,
@@ -151,19 +157,16 @@ class GraphCNN:
 
 
         model.compile(
-            optimizer=tf.keras.optimizers.Adagrad(
-                learning_rate=0.0001,
-                initial_accumulator_value=0.1,
-                epsilon=1e-07),
-                #RMSprop(
-                #learning_rate=0.001,
-                #rho=0.9,
-                #momentum=0.0,
-                #epsilon=1e-07),
+            optimizer=hparams[config.HP_OPTIMIZER],
+            #tf.keras.optimizers.Adagrad(
+            #    learning_rate=0.0001,
+            #    initial_accumulator_value=0.1,
+            #    epsilon=1e-07),
             loss=tf.keras.losses.MeanSquaredLogarithmicError(),
             metrics=[tf.keras.metrics.LogCoshError(),
                 coeff_determination,
                 tf.keras.metrics.RootMeanSquaredError(),
+                tf.keras.metrics.MeanSquaredError()
                 ]
         )
         return model
@@ -237,84 +240,111 @@ class GraphCNN:
         plt.close()
         with open(os.path.join(config.MATRIX_DATA_FILES_PATH, 'outputs.csv'), 'w') as res_file:
             res_file.write(','.join([y_mem for y_mem in y]))
-        
 
-g = GraphCNN()
-g.initialize()
+def train_test_model(hparams):
+    g = GraphCNN()
+    g.initialize()
 
-start_train_test_split = time.time()
-X_train_labels, X_test_labels, y_train_labels, y_test_labels = g.trainTestSplit()
-end_train_test_split = time.time()
+    start_train_test_split = time.time()
+    X_train_labels, X_test_labels, y_train_labels, y_test_labels = g.trainTestSplit()
+    end_train_test_split = time.time()
 
-start_train_data_load = time.time()
-X_train, y_train = g.getTensors(X_train_labels, y_train_labels)
-end_train_data_load = time.time()
+    start_train_data_load = time.time()
+    X_train, y_train = g.getTensors(X_train_labels, y_train_labels)
+    end_train_data_load = time.time()
 
-start_test_data_load = time.time()
-X_test, y_test = g.getTensors(X_test_labels, y_test_labels)
-end_test_data_load = time.time()
+    start_test_data_load = time.time()
+    X_test, y_test = g.getTensors(X_test_labels, y_test_labels)
+    end_test_data_load = time.time()
 
-callbacks = [
-    tf.keras.callbacks.EarlyStopping(
-        monitor = 'val_loss',
-        patience = 2,
-        restore_best_weights = True,
-    )
-]
+    callbacks = [
+        tf.keras.callbacks.EarlyStopping(
+            monitor = 'val_loss',
+            patience = 0,
+            restore_best_weights = True,
+        ),
+        #tf.keras.callbacks.TensorBoard(hp.logdir),  # log metrics
+        #hp.KerasCallback(hp.logdir, hp.hparams),  # log hparams
+    ]
 
-start_model_fitting = time.time()
-model = g.createModel()
-log.info('model fitting started')
-mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=10, callbacks = callbacks, validation_split=0.2)
-end_model_fitting = time.time()
+    start_model_fitting = time.time()
+    model = g.createModel(hparams)
+    log.info('model fitting started')
+    #look into ideal batch size
+    mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=64, callbacks = callbacks, validation_split=0.2)
+    end_model_fitting = time.time()
 
-log.info ('model fitting finished successfully')
+    log.info ('model fitting finished successfully')
 
-timing_measures = [
-    end_train_test_split - start_train_test_split,
-    end_train_data_load - start_train_data_load,
-    end_test_data_load - start_test_data_load,
-    end_model_fitting - start_model_fitting,
-    end_model_fitting - start_train_test_split
-]
+    timing_measures = [
+        end_train_test_split - start_train_test_split,
+        end_train_data_load - start_train_data_load,
+        end_test_data_load - start_test_data_load,
+        end_model_fitting - start_model_fitting,
+        end_model_fitting - start_train_test_split
+    ]
 
-log.info('model evaluation started')
-with open('results.txt', 'a') as res_log:
-    results = model.evaluate(X_test, y_test, verbose=True)
-    res_log.write(' '.join([str(r) for r in results]) + ' \n')
-    res_log.write('Timing Benchmarks:\n')
-    res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
+    log.info('model evaluation started')
+    with open('results.txt', 'a') as res_log:
+        results = model.evaluate(X_test, y_test, verbose=True)
+        res_log.write(' '.join([str(r) for r in results]) + ' \n')
+        res_log.write('Timing Benchmarks:\n')
+        res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
 
-print(results)
-log.info('model evaluation completed')
-#returns loss value (MeanSquaredLogarithmicError) and metric values, currently LogCoshError and coeff_determination
-#and RootMeanSquaredError
+    print(results)
+    log.info('model evaluation completed')
+    #returns loss value (MeanSquaredLogarithmicError) and metric values, currently LogCoshError and coeff_determination
+    #and RootMeanSquaredError and MeanSquaredError
+    #create_visuals(mod_history)
+    return results[0]
 
-#plot the loss curve: test vs training
+def create_visuals(mod_history):
+    #plot the loss curve: test vs training
+    fig, ax1 = plt.subplots(1, figsize=(15, 5))
 
-fig, ax1 = plt.subplots(1, figsize=(15, 5))
+    ax1.plot(mod_history.history["loss"])
+    ax1.plot(mod_history.history["val_loss"])
+    ax1.legend(["train", "test"], loc="upper right")
+    ax1.set_xlabel("Epochs")
+    ax1.set_ylabel("Loss")
 
-ax1.plot(mod_history.history["loss"])
-ax1.plot(mod_history.history["val_loss"])
-ax1.legend(["train", "test"], loc="upper right")
-ax1.set_xlabel("Epochs")
-ax1.set_ylabel("Loss")
+    plt.savefig('visuals/loss_graph.png')
+    plt.close()
 
-plt.savefig('visuals/loss_graph.png')
-plt.close()
+    # Plot the results
+    #print(mod_history.history.keys())
+    #acc = mod_history.history['accuracy']
+    loss = mod_history.history['loss']
+    val_loss = mod_history.history['val_loss']
+    epochs = range(len(loss))
 
-# Plot the results
-#print(mod_history.history.keys())
-#acc = mod_history.history['accuracy']
-loss = mod_history.history['loss']
-val_loss = mod_history.history['val_loss']
-epochs = range(len(loss))
+    plt.scatter(epochs[1:], loss[1:], c='red', label='Training MSE')
+    plt.scatter(epochs[1:], val_loss[1:], c='blue', label='Validation MSE')
+    plt.title('Training accuracy')
+    plt.legend(loc=0)
 
-plt.scatter(epochs[1:], loss[1:], c='red', label='Training MSE')
-plt.scatter(epochs[1:], val_loss[1:], c='blue', label='Validation MSE')
-plt.title('Training accuracy')
-plt.legend(loc=0)
+    plt.savefig('visuals/training_accuracy.png')
+    plt.close()
 
-plt.savefig('visuals/training_accuracy.png')
-plt.close()
+def run(run_dir, hparams):
+  with tf.summary.create_file_writer(run_dir).as_default():
+    hp.hparams(hparams)  # record the values used in this trial
+    accuracy = train_test_model(hparams)
+    tf.summary.scalar(config.METRIC_ACCURACY, accuracy, step=1)
 
+def optimize_hyperparameters():
+    session_num = 0
+
+#    for num_units in config.HP_NUM_UNITS.domain.values:
+#        for dropout_rate in (config.HP_DROPOUT.domain.min_value, config.HP_DROPOUT.domain.max_value):
+    for optimizer in config.HP_OPTIMIZER.domain.values:
+        hparams = {
+            #config.HP_NUM_UNITS: num_units,
+            #config.HP_DROPOUT: dropout_rate,
+            config.HP_OPTIMIZER: optimizer,
+        }
+        run_name = "run-%d" % session_num
+        print('--- Starting trial: %s' % run_name)
+        print({h.name: hparams[h] for h in hparams})
+        run('logs/hparam_tuning/' + run_name, hparams)
+        session_num += 1

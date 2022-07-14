@@ -1,4 +1,4 @@
-# This script generates dictionaries of logFC, p-value, and classification with protein/ligand pairs as keys
+# This script generates dictionaries of logFC, FDR, and classification with protein/ligand pairs as keys
 
 import pandas as pd
 import Globals
@@ -14,7 +14,6 @@ logFC_byID = {}
 FDR_byID = {}
 cit_logFC = {}
 cit_FDR = {}
-
 
 # returns dictionaries of the logFC and p-values
 # key: protein id, value: dict (key: ligand file name, value: data label)
@@ -34,44 +33,34 @@ def labels():
         for id in acc_ids:
             ensem_id = fas_df.loc[id]['ensembl_gene_id']  # The ENSEMBLE id corresponding to the accession number
             logFC_byID[id][csv] = (curr_df.loc[ensem_id]['logFC'])  # Find logFC for the ligand-protein pair
-            FDR_byID[id][csv] = (curr_df.loc[ensem_id]['FDR'])  # Find p-value for the ligand-protein pair
+            FDR_byID[id][csv] = (curr_df.loc[ensem_id]['FDR'])  # Find FDR for the ligand-protein pair
 
-    # Return dictionaries with protein-ligand pair keys and logFC and p-value values
+    # Return dictionaries with protein-ligand pair keys and logFC and FDR values
     return logFC_byID, FDR_byID
 
 
 # Create a classification dictionary with protein-ligand pair keys and bind (1) or not bind (0) as values
 def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
-    classified = {}
-    pos_counts = {}  # key: protein id, value: number of positive protein interactions
-    neg_counts = {}  # key: protein id, value: number of negative protein interactions
+    classified = {}     # key: protein id, value: (key = ligand, value = {1 if bind, 0 if not bind})
+    pos_counts = {}     # key: protein id, value: number of positive protein interactions
+    neg_counts = {}     # key: protein id, value: number of negative protein interactions
 
-    pos_pairs = []
-    neg_pairs = []
-
-    class_by_CSV = {}
-
-    for csv in csvs:
-        class_by_CSV[csv] = 0
-
-    count = 0
+    pos_pairs = []      # list of positive protein-ligand pairs; pos_pairs[i] = [protein id, ligand]
+    neg_pairs = []      # list of negative protein-ligand pairs; neg_pairs[i] = [protein id, ligand]
 
     for id in protein_list:
-        pos = 0
-        neg = 0
+        pos = 0         #running count of pos pairs with id
+        neg = 0         #running count of neg pairs with id
         classified[id] = {}
         for csv in csvs:
             if FDR_byID[id][csv] <= .1:
-                count += 1
-
-                if logFC_byID[id][csv] >= 1:  # The protein and ligand bind
+                if logFC_byID[id][csv] >= 1:    # The protein and ligand bind
                     classified[id][csv] = 1
-                    pos += 1    #only update pos count if pair isn't removed
-                    class_by_CSV[csv] += 1
+                    pos += 1                    #only update pos count if pair isn't removed
                     pos_pairs.append([id, csv])
-                elif logFC_byID[id][csv] < 1:  # The protein and ligand do not bind
+                elif logFC_byID[id][csv] < 1:   # The protein and ligand do not bind
                     classified[id][csv] = 0
-                    neg += 1    #only update neg count if pair isn't removed
+                    neg += 1                    #only update neg count if pair isn't removed
                     neg_pairs.append([id, csv])
 
                 pos_counts[id] = pos
