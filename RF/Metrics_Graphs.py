@@ -38,6 +38,9 @@ def train(features, labels):
     for num in list(rp.keys()):
         rp[num] = statistics.mean(rp[num])
     fig1 = plt.plot(list(rp.keys()), list(rp.values()))
+    plt.xlabel("Recall")
+    plt.ylabel("Precision")
+    plt.title("Precision-Recall Curve")
     plt.savefig("Precision_Recall.png")
 
     

@@ -2,7 +2,7 @@
 import CombineLigandsProteins
 #import Sequence_only
 import FixedClassificationModel
-import Structure_only
+#import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
 import Metrics_Graphs
@@ -15,17 +15,17 @@ testY = CombineLigandsProteins.Y
 #seqX = Sequence_only.X
 #seqY = Sequence_only.Y
 
-Structure_only.import_final()
-structX = Structure_only.X
-structY = Structure_only.Y
+#Structure_only.import_final()
+#structX = Structure_only.X
+#structY = Structure_only.Y
 
 #AdjustingThreshold.train(testX, testY)
 
 #fi.importance_file(testX, testY, CombineLigandsProteins.feats)
 #FixedClassificationModel.train(testX, testY)
-#Metrics_Graphs.train(testX, testY)
+Metrics_Graphs.train(testX, testY)
 
-
+"""
 accuracy = 0
 recall = 0
 BAC = 0
@@ -50,4 +50,4 @@ print('Average Matthew: ' + str(mat/50))
 
 f.close()
 
-
+"""
