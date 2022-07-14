@@ -15,8 +15,13 @@ def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
                         Di_seqvar[i][id][kmer] = 0
 
     all_ids = []
-    for id in AA_seqvar[0]:
-        all_ids.append(id)
+    if len(AA_seqvar) > 0:
+        for id in AA_seqvar[0]:
+            all_ids.append(id)
+    else:
+        for id in Di_seqvar[0]:
+            all_ids.append(id)
+
 
     for k in range(len(all_ids)):
         id = all_ids[k]
