@@ -37,7 +37,10 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
 
     for kmer in kmers:
         pos_prop_by_kmer[kmer] = float(pos_counts_by_kmer[kmer]) / float(total_pos)
-        neg_prop_by_kmer[kmer] = float(neg_counts_by_kmer[kmer]) / float(total_neg)
+        if total_neg == 0:
+            neg_prop_by_kmer = 0
+        else:
+            neg_prop_by_kmer[kmer] = float(neg_counts_by_kmer[kmer]) / float(total_neg)
 
     richness = {}
     #dict richness stores an adapted richness measure for all kmers
@@ -70,7 +73,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
 
 
 def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig):
-    kmers = list(ligand_counts['pS6_DE_1p_nCarvone.csv'].keys())
+    kmers = list(ligand_counts['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
 
     pos_counts_by_kmer = {}             #key: kmer, value: num. of positive pairs that involve the kmer
     neg_counts_by_kmer = {}             #key: kmer, value: num. of negative pairs that involve the kmer

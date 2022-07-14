@@ -18,7 +18,7 @@ def importmatrix(ligand_dict, k, num_proteins):
 def ligand_matrix(ligand_dict, k, ligands_toconsider):
     ligand_counts = ligand_kmer_count(ligand_dict, k, ligands_toconsider)
 
-    ligfeatures = list(ligand_counts['pS6_DE_1p_citronellol.csv'].keys())
+    ligfeatures = list(ligand_counts['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
     return ligfeatures, ligand_counts
 
 #create a dictionary of the frequency counts for all kmers

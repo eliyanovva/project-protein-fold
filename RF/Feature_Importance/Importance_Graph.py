@@ -3,7 +3,7 @@
 import math as m
 import matplotlib.pyplot as plt
 
-with open('important_features.txt') as f: 
+with open('dimethyltrisulfide_importance.txt') as f: 
     lines = f.readlines()
 i=0
 values = {'ligand':0, 'sequence':0, 'structure':0}
@@ -32,10 +32,10 @@ fig,ax = plt.subplots()
 plt.bar(list(values.keys()), list(values.values()))
 ax.set_title("Feature Importance by Type")
 plt.ylabel('Mean Decrease in Impurity')
-fig.savefig('Relative_Feature_Importance.png')
+fig.savefig('Relative_Feature_Importance_Sulfur.png')
 
 fig2, ax2 = plt.subplots()
 plt.bar(list(domains.keys()), list(domains.values()))
 ax2.set_title("Feature Importance by Transmembrane Domain")
 plt.ylabel('Mean Decrease in Impurity')
-fig2.savefig('Domain_Importance.png')
+fig2.savefig('Domain_Importance_Sulfur.png')

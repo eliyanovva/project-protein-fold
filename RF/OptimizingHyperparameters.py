@@ -22,7 +22,7 @@ max_features = ['log2', 'sqrt', None]
 #Number of levels in each tree
 max_depth = [None]
 #Samples required to split a node
-min_samples_split = [int(x) for x in np.linspace(start = 10, stop = 700, num = 100)]
+min_samples_split = [int(x) for x in np.linspace(start = 1, stop = 700, num = 100)]
 #Minimum samples at each leaf
 min_samples_leaf = [int(x) for x in np.linspace(start = 1, stop = 100, num = 100)]
 #Method of selecting samples for each tree
@@ -63,7 +63,7 @@ kf = StratifiedKFold()
 
 #Define random grid
 grid = HalvingRandomSearchCV(estimator = model, param_distributions = param_grid, verbose = 2, n_jobs = -1,
-                            cv=kf, return_train_score=True, scoring = "balanced_accuracy")
+                            cv=kf, return_train_score=True, scoring = 'f1')
 
 #Train the model (performing cross validation)
 grid.fit(X_train, y_train)
