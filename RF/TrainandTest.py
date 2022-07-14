@@ -31,7 +31,7 @@ recall = 0
 BAC = 0
 MAT = 0
 
-f = open('results_true_false_vals_struct.csv', 'w')
+f = open('results_true_false_vals.csv', 'w')
 f.write('Run,TN,FN,TP,FP' + "\n")
 
 for i in range(50):
@@ -49,5 +49,4 @@ print('Average Balanced: ' + str(BAC/50))
 print('Average Matthew: ' + str(mat/50))
 
 f.close()
-
 """
