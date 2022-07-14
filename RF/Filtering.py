@@ -23,11 +23,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
     total_pos = 0                       #total num. of kmers involved in positive pairs
     total_neg = 0                       #total num. of kmers involved in negative pairs
 
-    i = 0
-
     for id in seqvar:                #id = accession id of protein
-        i += 1
-        #print(i)
         freq_dict = seqvar[id]     #freq_dict = freq. counts of all known kmers in the protein
 
         #increase total kmer counts by (num. of pairs that involve the protein) x (num. of kmers that the protein has)
@@ -134,6 +130,6 @@ def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig):
         for kmer in kmers_failed:
             ligand_counts[lig].pop(kmer)
 
-    print('Num. Kmers: ' + str(len(kmers_filtered)))
+    #print('Num. Kmers: ' + str(len(kmers_filtered)))
 
     return ligand_counts

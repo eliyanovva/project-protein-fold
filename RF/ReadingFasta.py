@@ -30,39 +30,6 @@ def featurize(seq,k,feat):
         dict[kmer] += 1
     return dict
 
-def remove_duplicates(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
-    unique_seqs = set()
-    unique_proteins = set()
-
-    for i in range(4):
-        for id in AA_seqvar[i]:
-            for kmer in AA_feat[i]:
-                if kmer not in AA_seqvar[i][id]:
-                    AA_seqvar[i][id][kmer] = 0
-    for i in range(4):
-        for id in Di_seqvar[i]:
-            for kmer in Di_feat[i]:
-                if kmer not in Di_seqvar[i][id]:
-                    Di_seqvar[i][id][kmer] = 0
-
-    all_ids = []
-    for id in AA_seqvar[0]:
-        all_ids.append(id)
-
-    for k in range(len(all_ids)):
-        id = all_ids[k]
-        freq_str = ""
-        for i in range(4):
-            for kmer in AA_feat[i]:
-                freq_str += str(AA_seqvar[i][id][kmer])
-        for i in range(4):
-            for kmer in Di_feat[i]:
-                freq_str += str(Di_seqvar[i][id][kmer])
-        if freq_str not in unique_seqs:
-            unique_seqs.add(freq_str)
-            unique_proteins.add(id)
-    return unique_proteins
-
 def make_seqvar_TMS(TM_dict, TM_num, k, seqvar, feat):
     for id in TM_dict:
         #name = id
@@ -82,18 +49,18 @@ def make_seqvar_TMS(TM_dict, TM_num, k, seqvar, feat):
 #feat = list of k-mers
 #mat = empty matrix to be populated with frequency values
 
-def makematrix(seqvar, feat, mat, unique, counts):
-    for id in unique:
-        if id in counts:
-            newseq = []
-            for kmer in feat:
+def makematrix(seqvar, feat, mat, unique_l, counts):
+    for id in counts:
+        newseq = []
+        for kmer in feat:
                 #For kmers not found in the protein, populate the matrix with zeros
-                if kmer not in seqvar[id]:
-                    seqvar[id][kmer] = 0
+            if kmer not in seqvar[id]:
+                seqvar[id][kmer] = 0
                 #Add the frequency value of the kmer
-                newseq.append(seqvar[id].get(kmer))
+            newseq.append(seqvar[id].get(kmer))
             #Add a frequency array for each protein
-            for i in range(len(counts[id])):
+        for lig in counts[id]:
+            if unique_l.count(lig) != 0:
                 mat.append(np.array(newseq))
 
     return mat
