@@ -31,7 +31,7 @@ def train(features, labels):
 def importance_file(features, labels, filter_feat):
     #Writes the features of the model in order of importance to the important_features.txt file
     importances = train(features, labels)
-    for i in range(0,1000,1):
+    for i in range(0,10000,1):
         importances += train(features,labels)
     with open("Feature_Importance/sulfur_importance.txt", "w") as f:
         while np.argmax(importances) > 0:
