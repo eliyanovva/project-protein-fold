@@ -1,6 +1,5 @@
-def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
-    unique_seqs = set()
-    unique_proteins = set()
+def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot):
+    unique_seqs = {}
 
     for i in range(4):
         for id in AA_seqvar[i]:
@@ -27,20 +26,31 @@ def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
             for kmer in Di_feat[i]:
                 freq_str += str(Di_seqvar[i][id][kmer])
         if freq_str not in unique_seqs:
-            unique_seqs.add(freq_str)
-            unique_proteins.add(id)
+            unique_seqs[freq_str] = id
+
+        else:
+            old_id = unique_seqs[freq_str]
+            if pairs_by_prot[id] > pairs_by_prot[old_id]:
+                unique_seqs[freq_str] = id
+
+    unique_proteins = list(unique_seqs.values())
+
     return unique_proteins
 
-def remove_ligands(ligand_counts):
-    unique_seqs = set()
-    unique_ligands = []
+def remove_ligands(ligand_counts, total_by_lig):
+    unique_seqs = {}
 
     for lig in ligand_counts:
         freq_str = ""
         for kmer in ligand_counts[lig]:
             freq_str += str(ligand_counts[lig][kmer])
         if freq_str not in unique_seqs:
-            unique_seqs.add(freq_str)
-            unique_ligands.append(lig)
+            unique_seqs[freq_str] = lig
+        else:
+            old_lig = unique_seqs[freq_str]
+            if total_by_lig[lig] > total_by_lig[old_lig]:
+                unique_seqs[freq_str] = lig
+
+    unique_ligands = list(unique_seqs.values())
 
     return unique_ligands
