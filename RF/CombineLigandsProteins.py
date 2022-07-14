@@ -178,7 +178,7 @@ for id in unique_proteins:
 for id in unique_proteins:
     for lig in neg_dict[id]:
         if (unique_ligands.count(lig) != 0):
-            lig_mat.append(np.array(list(ligand_counts[lig].values())))
+            lig_mat.append(np.array(list(lig_counts_filter[lig].values())))
             neg_total += 1
 
 pos_AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, categorized_matrix_TM3, unique_ligands, pos_dict)
