@@ -1,12 +1,11 @@
 #This script tests the Random Forest on the entire preprocessed data set
-
-from struct import Struct
 import CombineLigandsProteins
 #import Sequence_only
 import FixedClassificationModel
 #import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
+import Metrics_Graphs
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
@@ -24,7 +23,9 @@ testY = CombineLigandsProteins.Y
 
 #fi.importance_file(testX, testY, CombineLigandsProteins.feats)
 #FixedClassificationModel.train(testX, testY)
+Metrics_Graphs.train(testX, testY)
 
+"""
 accuracy = 0
 recall = 0
 BAC = 0
@@ -48,3 +49,5 @@ print('Average Balanced: ' + str(BAC/50))
 print('Average Matthew: ' + str(mat/50))
 
 f.close()
+
+"""

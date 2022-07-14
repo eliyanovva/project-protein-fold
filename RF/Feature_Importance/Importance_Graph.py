@@ -3,7 +3,7 @@
 import math as m
 import matplotlib.pyplot as plt
 
-with open('dimethyltrisulfide_importance.txt') as f: 
+with open('sulfur_importance.txt') as f: 
     lines = f.readlines()
 i=0
 values = {'ligand':0, 'sequence':0, 'structure':0}
