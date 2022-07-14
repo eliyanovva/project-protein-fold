@@ -29,51 +29,18 @@ for pair in neg_pairs:
 #neg_pairs = 236
 #proteins_toconsider = 392
 
-pos_dict = {}
-neg_dict = {}
+pairs_by_prot = {}
+
+for id in proteins_toconsider:
+    pairs_by_prot[id] = 0
 
 for pair in pos_pairs:
     id = pair[0]
-    if id not in pos_dict:
-        pos_dict[id] = []
-    pos_dict[id].append(pair[1])
+    pairs_by_prot[id] += 1
 
 for pair in neg_pairs:
     id = pair[0]
-    if id not in neg_dict:
-        neg_dict[id] = []
-    neg_dict[id].append(pair[1])
-
-pos_sum = 0
-neg_sum = 0
-
-for id in pos_dict:
-    pos_sum += len(pos_dict[id])
-for id in neg_dict:
-    neg_sum += len(neg_dict[id])
-
-pos_by_lig = {}
-neg_by_lig = {}
-total_by_lig = {}
-
-for lig in ligands_toconsider:
-    pos_by_lig[lig] = 0
-    neg_by_lig[lig] = 0
-    total_by_lig[lig] = 0
-
-for id in proteins_toconsider:
-    if id in pos_dict:
-        p_pairs = pos_dict[id]
-        for lig in p_pairs:
-            if lig in ligands_toconsider:
-                pos_by_lig[lig] += 1
-                total_by_lig[lig] += 1
-    if id in neg_dict:
-        n_pairs = neg_dict[id]
-        for lig in n_pairs:
-            if lig in ligands_toconsider:
-                neg_by_lig[lig] += 1
-                total_by_lig[lig] += 1
+    pairs_by_prot[id] += 1
 
 #Initialize Variables
 #categorized variables
@@ -89,19 +56,7 @@ categorized_matrix_TM6 = []
 categorized_features_TM7 = set()
 categorized_seqs_TM7 = {}
 categorized_matrix_TM7 = []
-#3Di variables
-di_features_TM3 = set()
-di_seqs_TM3 = {}
-di_matrix_TM3 = []
-di_features_TM5 = set()
-di_seqs_TM5 = {}
-di_matrix_TM5 = []
-di_features_TM6 = set()
-di_seqs_TM6 = {}
-di_matrix_TM6 = []
-di_features_TM7 = set()
-di_seqs_TM7 = {}
-di_matrix_TM7 = []
+
 
 
 #Create AA output for TMs 3,5,6,7
@@ -116,14 +71,29 @@ AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5
 AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6")
 AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7")
 
-
-all_protein_freqs = {}
-
 AA_seqvar = [AA_seqvar_TM3, AA_seqvar_TM5, AA_seqvar_TM6, AA_seqvar_TM7]
 AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
 
+unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, [], [], pairs_by_prot)
 
-unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, [], [])
+pos_dict = {}
+neg_dict = {}
+
+for id in unique_proteins:
+    pos_dict[id] = []
+    neg_dict[id] = []
+
+for pair in pos_pairs:
+    id = pair[0]
+    lig = pair[1]
+    if (id in pos_dict) & (lig in ligands_toconsider):
+        pos_dict[id].append(lig)
+
+for pair in neg_pairs:
+    id = pair[0]
+    lig = pair[1]
+    if (id in neg_dict) & (lig in ligands_toconsider):
+        neg_dict[id].append(lig)
 
 #Import dictionary matching ligands to SMILES String
 ligand_dict = Globals.initialize_ligand_dict()
@@ -132,51 +102,53 @@ ligand_features, ligand_counts = SmileKmer.ligand_matrix(ligand_dict, 5, ligands
 
 #ligand_counts only has ligands from ligands_toconsider as keys
 
+pos_by_lig = {}
+neg_by_lig = {}
+total_by_lig = {}
+
+for lig in ligands_toconsider:
+    pos_by_lig[lig] = 0
+    neg_by_lig[lig] = 0
+    total_by_lig[lig] = 0
+
+for id in unique_proteins:
+    p_pairs = pos_dict[id]
+    for lig in p_pairs:
+        pos_by_lig[lig] += 1
+        total_by_lig[lig] += 1
+
+    n_pairs = neg_dict[id]
+    for lig in n_pairs:
+        neg_by_lig[lig] += 1
+        total_by_lig[lig] += 1
+
 lig_counts_filter = Filtering.richness_ligand(ligand_counts, pos_by_lig, neg_by_lig)
+unique_ligands = Duplicates.remove_ligands(ligand_counts, total_by_lig)
 
-unique_ligands = Duplicates.remove_ligands(ligand_counts)
-print('Unique Ligs: ' + str(len(unique_ligands)))
-
+pos_total = 0
+neg_total = 0
 lig_mat = []
-
-for id in pos_dict:
+for id in unique_proteins:
     for lig in pos_dict[id]:
-        if lig not in unique_ligands:
-            pos_dict[id].remove(lig)
+        if (unique_ligands.count(lig) != 0):
+            lig_mat.append(np.array(list(ligand_counts[lig].values())))
+            pos_total += 1
 
-for id in neg_dict:
+for id in unique_proteins:
     for lig in neg_dict[id]:
-        if lig not in unique_ligands:
-            neg_dict[id].remove(lig)
-
-for id in unique_proteins:
-    if id in pos_dict.keys():
-        for lig in pos_dict[id]:
+        if (unique_ligands.count(lig) != 0):
             lig_mat.append(np.array(list(ligand_counts[lig].values())))
+            neg_total += 1
 
-for id in unique_proteins:
-    if id in neg_dict.keys():
-        for lig in neg_dict[id]:
-            lig_mat.append(np.array(list(ligand_counts[lig].values())))
+pos_AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, categorized_matrix_TM3, unique_ligands, pos_dict)
+pos_AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, categorized_matrix_TM5, unique_ligands, pos_dict)
+pos_AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, categorized_matrix_TM6, unique_ligands, pos_dict)
+pos_AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, categorized_matrix_TM7, unique_ligands, pos_dict)
 
-print(len(lig_mat))
-
-#print(len(ligand_counts['pS6_DE_1p_4methylAC.csv']))
-#182 ligand kmers
-
-
-#801 total pairs (before selecting unique)
-#627 pairs after unique
-
-pos_AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, categorized_matrix_TM3, unique_proteins, pos_dict)
-pos_AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, categorized_matrix_TM5, unique_proteins, pos_dict)
-pos_AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, categorized_matrix_TM6, unique_proteins, pos_dict)
-pos_AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, categorized_matrix_TM7, unique_proteins, pos_dict)
-
-AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, pos_AA_mat_TM3, unique_proteins, neg_dict)
-AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, pos_AA_mat_TM5, unique_proteins, neg_dict)
-AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, pos_AA_mat_TM6, unique_proteins, neg_dict)
-AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, pos_AA_mat_TM7, unique_proteins, neg_dict)
+AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, pos_AA_mat_TM3, unique_ligands, neg_dict)
+AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, pos_AA_mat_TM5, unique_ligands, neg_dict)
+AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, pos_AA_mat_TM6, unique_ligands, neg_dict)
+AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, pos_AA_mat_TM7, unique_ligands, neg_dict)
 
 AA_matrix = np.concatenate((np.array(AA_mat_TM3, dtype = np.uint8), np.array(AA_mat_TM5, dtype = np.uint8),
                             np.array(AA_mat_TM6, dtype = np.uint8), np.array(AA_mat_TM7, dtype = np.uint8)) , axis = 1)
@@ -184,19 +156,10 @@ AA_matrix = np.concatenate((np.array(AA_mat_TM3, dtype = np.uint8), np.array(AA_
 #Concatenate protein and ligand matrices
 final_matrix = np.concatenate((AA_matrix, np.array(lig_mat, dtype = np.uint8)), axis = 1)
 
-total_pos = 0
-total_neg = 0
-
-for id in unique_proteins:
-    if id in pos_dict:
-        total_pos += len(pos_dict[id])
-    if id in neg_dict:
-        total_neg += len(neg_dict[id])
-
 #Create Classification Vector
 
-pos_array = np.repeat(1, int(total_pos))
-neg_array = np.repeat(0, int(total_neg))
+pos_array = np.repeat(1, int(pos_total))
+neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
