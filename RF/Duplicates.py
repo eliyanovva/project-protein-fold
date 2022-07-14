@@ -1,17 +1,18 @@
 def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
     unique_seqs = set()
     unique_proteins = set()
-
-    for i in range(4):
-        for id in AA_seqvar[i]:
-            for kmer in AA_feat[i]:
-                if kmer not in AA_seqvar[i][id]:
-                    AA_seqvar[i][id][kmer] = 0
-    for i in range(4):
-        for id in Di_seqvar[i]:
-            for kmer in Di_feat[i]:
-                if kmer not in Di_seqvar[i][id]:
-                    Di_seqvar[i][id][kmer] = 0
+    if len(AA_seqvar) > 0:
+        for i in range(4):
+            for id in AA_seqvar[i]:
+                for kmer in AA_feat[i]:
+                    if kmer not in AA_seqvar[i][id]:
+                        AA_seqvar[i][id][kmer] = 0
+    if len(Di_seqvar) > 0:
+        for i in range(4):
+            for id in Di_seqvar[i]:
+                for kmer in Di_feat[i]:
+                    if kmer not in Di_seqvar[i][id]:
+                        Di_seqvar[i][id][kmer] = 0
 
     all_ids = []
     for id in AA_seqvar[0]:
@@ -20,12 +21,14 @@ def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat):
     for k in range(len(all_ids)):
         id = all_ids[k]
         freq_str = ""
-        for i in range(4):
-            for kmer in AA_feat[i]:
-                freq_str += str(AA_seqvar[i][id][kmer])
-        for i in range(4):
-            for kmer in Di_feat[i]:
-                freq_str += str(Di_seqvar[i][id][kmer])
+        if len(AA_feat) > 0:
+            for i in range(4):
+                for kmer in AA_feat[i]:
+                    freq_str += str(AA_seqvar[i][id][kmer])
+        if len(Di_feat) > 0:
+            for i in range(4):
+                for kmer in Di_feat[i]:
+                    freq_str += str(Di_seqvar[i][id][kmer])
         if freq_str not in unique_seqs:
             unique_seqs.add(freq_str)
             unique_proteins.add(id)
