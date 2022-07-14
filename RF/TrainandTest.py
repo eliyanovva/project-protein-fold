@@ -35,7 +35,7 @@ f.write('Run,TN,FN,TP,FP' + "\n")
 
 for i in range(50):
     print("run " + str(i))
-    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY)
+    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(structX, structY)
     accuracy += acc
     recall += rec
     BAC += bac
