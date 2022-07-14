@@ -6,7 +6,7 @@
 #richness_protein: returns a list of protein kmers that meet the filtering requirements
 
 #kmers: set of all possible kmers for the protein
-#seqvar: key = protein id, value = frequency dictionary of kmers
+#seqvar: key = protein id, value = dict (key: kmer, value: freq. of kmer in protein)
 #pos_counts: key = protein id, value = # of positive (pos) pairs with the protein
 #neg_counts: key = protein id, value = # of negative (neg) pairs with the protein
 def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
