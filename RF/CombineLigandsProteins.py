@@ -25,10 +25,6 @@ for pair in neg_pairs:
     proteins_toconsider.add(pair[0])
     ligands_toconsider.add(pair[1])
 
-#pos_pairs = 565
-#neg_pairs = 236
-#proteins_toconsider = 392
-
 pairs_by_prot = {}
 
 for id in proteins_toconsider:

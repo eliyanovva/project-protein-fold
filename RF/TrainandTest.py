@@ -2,9 +2,9 @@
 
 from struct import Struct
 import CombineLigandsProteins
-import Sequence_only
+#import Sequence_only
 import FixedClassificationModel
-import Structure_only
+#import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
 
@@ -12,13 +12,13 @@ CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 
-Sequence_only.import_final()
-seqX = Sequence_only.X
-seqY = Sequence_only.Y
+#Sequence_only.import_final()
+#seqX = Sequence_only.X
+#seqY = Sequence_only.Y
 
-Structure_only.import_final()
-structX = Structure_only.X
-structY = Structure_only.Y
+#Structure_only.import_final()
+#structX = Structure_only.X
+#structY = Structure_only.Y
 
 #AdjustingThreshold.train(testX, testY)
 
@@ -35,7 +35,7 @@ f.write('Run,TN,FN,TP,FP' + "\n")
 
 for i in range(50):
     print("run " + str(i))
-    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(structX, structY)
+    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY)
     accuracy += acc
     recall += rec
     BAC += bac
