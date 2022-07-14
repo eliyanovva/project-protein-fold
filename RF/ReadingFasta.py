@@ -32,9 +32,7 @@ def featurize(seq,k,feat):
 
 def make_seqvar_TMS(TM_dict, TM_num, k, seqvar, feat):
     for id in TM_dict:
-        #name = id
         seq = TM_dict[id][TM_num]
-        #seqvar.append(Seq(name, seq, featurize(seq, k, feat)))
         seqvar[id] = featurize(seq, k, feat)
 
     return seqvar, feat
