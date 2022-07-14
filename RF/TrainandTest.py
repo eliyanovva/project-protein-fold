@@ -24,12 +24,12 @@ recall = 0
 BAC = 0
 MAT = 0
 
-f = open('results_true_false_vals.csv', 'w')
+f = open('results_true_false_vals_seq.csv', 'w')
 f.write('Run,TN,FN,TP,FP' + "\n")
 
 for i in range(50):
     print("run " + str(i))
-    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY)
+    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(seqX, seqY)
     accuracy += acc
     recall += rec
     BAC += bac
