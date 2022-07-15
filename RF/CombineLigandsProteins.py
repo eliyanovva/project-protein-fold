@@ -107,6 +107,10 @@ AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
 Di_seqvar = [Di_seqvar_TM3, Di_seqvar_TM5, Di_seqvar_TM6, Di_seqvar_TM7]
 Di_feat = [Di_filter_TM3, Di_filter_TM5, Di_filter_TM6, Di_filter_TM7]
 
+print('Protein kmers:')
+print(len(AA_filter_TM3) + len(AA_filter_TM5) + len(AA_filter_TM6) + len(AA_filter_TM7)
+      + len(Di_filter_TM3) + len(Di_filter_TM5) + len(Di_filter_TM6) + len(Di_filter_TM7))
+
 #Extract proteins with unique AA and 3di kmer frequencies
 unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, list(proteins_toconsider))
 
@@ -164,7 +168,7 @@ for id in unique_proteins:
 #Update ligand_counts to only use filtered kmers
 lig_counts_filter = Filtering.richness_ligand(ligand_counts, pos_by_lig, neg_by_lig)
 #Extract ligands with unique kmer frequencies
-unique_ligands = Duplicates.remove_ligands(ligand_counts, total_by_lig)
+unique_ligands = Duplicates.remove_ligands(lig_counts_filter, total_by_lig)
 
 pos_total = 0           #num. of positive pairs with ligands from unique_ligands
 neg_total = 0           #num. of negative pairs with ligands from unique_ligands
@@ -180,6 +184,10 @@ for id in unique_proteins:
         if (unique_ligands.count(lig) != 0):
             lig_mat.append(np.array(list(lig_counts_filter[lig].values())))
             neg_total += 1
+
+print('Ligand Kmers: ')
+print(len(lig_mat[0]))
+print(len(lig_mat))
 
 pos_AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, categorized_matrix_TM3, unique_ligands, pos_dict)
 pos_AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, categorized_matrix_TM5, unique_ligands, pos_dict)
@@ -219,8 +227,6 @@ final_matrix = np.concatenate((intermed_matrix, np.array(lig_mat, dtype = np.uin
 pos_array = np.repeat(1, int(pos_total))
 neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
-
-print(len(lig_mat))
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
 def uniquematrix(matrix):
