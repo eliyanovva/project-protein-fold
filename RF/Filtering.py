@@ -55,7 +55,7 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain):
         else:
             richness[kmer] = pos_prop_by_kmer[kmer] / neg_prop_by_kmer[kmer]
 
-    richness_level = 10      #setting for how strict the richness filter is; increase the number to increase strictness
+    richness_level = 1      #setting for how strict the richness filter is; increase the number to increase strictness
     ret = []                #list of kmers that meet filtering conditions; to be used in final matrix
     ret2 = []               #for importances list
 
@@ -121,8 +121,9 @@ def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig):
         else:
             richness[kmer] = pos_prop_by_kmer[kmer] / neg_prop_by_kmer[kmer]
 
-    richness_level = 10      #setting for how strict the richness filter is; increase the number to increase strictness
+    richness_level = 2      #setting for how strict the richness filter is; increase the number to increase strictness
     kmers_failed = []       #list of kmers that don't meet the filtering requirements
+
 
     for kmer in kmers:
         if (richness[kmer] > (1/richness_level)) & (richness[kmer] < richness_level):
