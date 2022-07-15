@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../../project-protein-fold/RF/')
 import Globals
-from statistics import mode
+from collections import Counter
 
 AA_seqs = Globals.initialize_AA_dict(Globals.initialize_protein_list())
 Di_seqs = Globals.initialize_3Di_dict(Globals.initialize_protein_list())
@@ -17,19 +17,28 @@ def find_feature(tm, seq, dictionary):
             if index >= 0:
                 ret.append(index)
                 index += 1
-    return mode(ret)
-
-print(find_feature('7', 'aacab', AA_seqs))
-
-print(find_feature('6', 'VVLVV', Di_seqs))
-
+    residues = []
+    retcount = Counter(ret)
+    temp = retcount.most_common(1)[0][1]
+    for num in ret:
+        if ret.count(num) == temp:
+            residues.append(num)
+    return set(residues)
 
 with open('Feature_Importance/sulfur_importance.txt') as f:
     lines = f.readlines()
+    i = 0
+    ret = {}
     for line in lines:
+        if i == 50:
+            break
+        i+=1
         line = line.replace('\n', "")
         if 'TM' in line:
+            if line[-1] not in ret:
+                ret[line[-1]] = []
             if line[0].isupper():
-                find_feature(line[-1], line[0:5], Di_seqs)
+                ret[line[-1]].append(find_feature(line[-1], line[0:5], Di_seqs))
             else:
-                find_feature(line[-1], line[0:5], AA_seqs)
+                ret[line[-1]].append(find_feature(line[-1], line[0:5], AA_seqs))
+    print(ret)
