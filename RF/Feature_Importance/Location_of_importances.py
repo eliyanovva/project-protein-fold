@@ -20,6 +20,7 @@ def categorize(AA):
 
 with open('TM_alignments/TM3_align.txt') as f:
     lines = f.readlines()
+    p = open('')
     for line in lines:
         if line[0] == '>':
             protein = line[1:].replace("\n", "")
