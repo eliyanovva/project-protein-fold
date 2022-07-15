@@ -1,6 +1,7 @@
 import csv
 import os
 from os.path import exists
+import pickle
 
 symb_to_uniprot = {}
 human_path1 = '/home/users/bmp40/share/deorphanOR_human/'
@@ -41,6 +42,9 @@ symb_to_uniprot.update({'OR2W5P': 'A6NFC9'})
 set = set()
 uniprot_to_seq = {}
 uniprot_to_seq_new = {}
+
+pickle.dump(symb_to_uniprot, open( "symb_to_uniprot.p", "wb" ))
+
 
 with open('sequences.fasta', 'r') as file:
     sequence = ''
