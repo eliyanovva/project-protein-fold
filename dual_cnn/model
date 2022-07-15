@@ -1,0 +1,192 @@
+from moleculekit.molecule import Molecule
+from moleculekit.tools.voxeldescriptors import getVoxelDescriptors, viewVoxelFeatures
+from moleculekit.tools.atomtyper import prepareProteinForAtomtyping
+from moleculekit.smallmol.smallmol import SmallMol
+from moleculekit.home import home
+import os
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+from torch.utils.data import Dataset, DataLoader, random_split
+from torchmetrics.functional import precision_recall
+import re
+import pandas as pd
+import torch.optim as optim
+
+"""
+Attempting to build model in lines below; kind of shit so far
+Inspiration coming from following sources:
+- https://rosenfelder.ai/multi-input-neural-network-pytorch/
+- https://software.acellera.com/docs/latest/moleculekit/tutorials/voxelization_tutorial.html?highlight=voxelization
+- https://medium.datadriveninvestor.com/dual-input-cnn-with-keras-1e6d458cd979
+
+"""
+
+os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
+
+all_dat = pd.read_csv('all_data.csv')
+
+
+class ProtDataset(Dataset):
+    def __init__(self, data_dir):
+        self.data_dir = data_dir
+        entries = []
+        for filename in os.listdir(self.data_dir):
+            a = np.load(f'{data_dir}/{filename}', allow_pickle=True)
+            entries = np.concatenate((a, entries), axis=None)
+        self.data = entries
+
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+        entry = self.data[idx]
+        return entry
+
+
+def conv_block(input_size, output_size):
+    block = nn.Sequential(
+        nn.Conv3d(input_size, output_size, 5, stride=1, padding=1),
+        nn.LeakyReLU(),
+        nn.BatchNorm3d(output_size),
+        nn.MaxPool3d(2)
+        # Add dropout here later
+    )
+    return block
+
+class Model(nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+        self.conv1 = nn.Sequential(
+            conv_block(8, 16),
+            conv_block(16, 32),
+            conv_block(32, 64))
+        self.conv2 = nn.Sequential(
+            conv_block(8, 32),
+            conv_block(32, 64))
+
+        self.flatten = nn.Flatten()
+        self.LeakyReLU = nn.LeakyReLU()
+        self.ln1 = nn.Linear(33280, 1024)
+        self.ln2 = nn.Linear(1024, 256)
+        self.ln3 = nn.Linear(256, 1)
+
+
+    def forward(self, x1, x2):
+        # Convolution blocks to be performed on the protein
+        prot = self.conv1(x2)
+        prot = self.flatten(prot)
+        # Convolution blocks to be performed on the ligand
+        lig = self.conv2(x1)
+        lig = self.flatten(lig)
+        hybrid = torch.cat((prot, lig), dim=1)
+        hybrid = self.LeakyReLU(hybrid)
+        hybrid = self.ln1(hybrid)
+        hybrid = self.LeakyReLU(hybrid)
+        hybrid = self.ln2(hybrid)
+        hybrid = self.LeakyReLU(hybrid)
+
+        return self.ln3(hybrid)
+
+model = Model()
+dataset_full = ProtDataset(data_dir='/home/users/jvs15/project-protein-fold/moleculekit/model_files')
+train_test_split = 0.7
+train_size = int(train_test_split * len(dataset_full))
+test_size = len(dataset_full) - train_size
+dataset_train, dataset_test = torch.utils.data.random_split(dataset_full, [train_size, test_size])
+
+# #out = model.forward(lig_vox_t, prot_vox_t)
+
+print('training length: ', len(dataset_train))
+
+dataloader_train = DataLoader(dataset = dataset_train, batch_size = 4, shuffle = True, num_workers = 2)
+dataloader_test = DataLoader(dataset = dataset_test, batch_size = 4, shuffle = False, num_workers = 2)
+
+criterion = nn.L1Loss()
+optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+#optimizer = optim.Adam(model.parameters())
+model = model.float()
+epochs = 10
+
+
+# for epoch in range(epochs):
+#     running_loss = 0.0
+#     for i, data in enumerate(dataloader_train, 0):
+#         model.train()
+#         # get the inputs; data is a list of [prot, lig, labels]
+#         lig = data['Ligand Data']
+#         prot = data['Protein Data']
+#         y = data['Binding']
+
+#         # zero the parameter gradients
+#         optimizer.zero_grad()
+
+#         # forward + backward + optimize
+#         outputs = model(lig.float(), prot.float())
+#         y = y.unsqueeze(1).float()
+#         loss = criterion(outputs, y)
+#         loss.backward()
+#         optimizer.step()
+
+#         # print statistics
+#         running_loss += loss.item()
+#         if i % 10 == 0:    # print every 2000 mini-batches
+#             print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 10:.3f}')
+#             running_loss = 0.0
+    
+# Below is copied from Ben's branch
+print('finished training')
+# save model
+# PATH = './cnn.pth'
+# torch.save(model.state_dict(), PATH)
+model = Model()
+model.load_state_dict(torch.load('cnn.pth'))
+
+model.eval()
+
+correct = 0
+total = 0
+true_n = 0
+false_n = 0
+false_p = 0
+
+# evaluate model
+with torch.no_grad():
+    for data in dataloader_test:
+        lig = data['Ligand Data']
+        prot = data['Protein Data']
+        labels = data['Binding']
+
+        # calculate outputs by running images through the network
+        outputs = model(lig.float(), prot.float())
+        #print('outputs:', outputs)
+        # print('labels:', labels)
+        # the class with the highest energy is what we choose as prediction
+        outputs = torch.round(outputs)
+        # print('rounded output:', outputs)
+        for i in range(len(outputs)):
+            total += 1
+            
+            if (outputs[i] == labels[i]):
+                 correct += 1
+            if (outputs[i] == labels[i] and torch.eq(labels[i], torch.zeros([1, 1])[0])):
+                true_n += 1
+            if (outputs[i] != labels[i] and torch.eq(labels[i], torch.zeros([1, 1])[0])):
+                false_n += 1
+            if (outputs[i] != labels[i] and torch.eq(labels[i], torch.tensor([1.]))):
+                false_p += 1
+        #_, predicted = torch.max(outputs.data, 1)
+        #total += labels.size(0)
+        #correct += (predicted == labels).sum().item()
+print(correct)
+print(true_n, false_n, false_p)
+precision = true_n / (true_n + false_n)
+recall = 0 #true_n / (true_n + false_p)
+
+print(f'Precision: {precision:.3f} \n\nRecall: {recall:.3f}')
+print(f'accuracy of the network: {100 * correct // total} %')
+

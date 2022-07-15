@@ -1,0 +1,78 @@
+# Builds .mol library from list of SMILES strings
+import os
+import pandas as pd
+from openbabel import pybel
+import numpy as np
+
+def gen_output_dict(prot_dict_dir, ligand_dict_dir, mart_dir, lig_de_dir):
+    y = {}
+    prot_dict = np.load(prot_dict_dir, allow_pickle=True)
+    ligand_dict = np.load(ligand_dict_dir, allow_pickle=True)
+
+    omit = 0
+    keep = 0
+    for i in ligand_dict.item().keys():
+        for j in prot_dict.item().keys():
+            dat = get_output(j, i, mart_dir, lig_de_dir)
+            # Look at get_output fucntion because this is pretty broken
+            if dat.empty:
+                continue
+            else:
+                y[i, j] = dat
+
+    ynp = np.asarray(y)
+    os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
+    np.save('de_data.npy', ynp)
+
+def make_mol(dir, mapper):
+    os.chdir(dir)
+    #Retrieve ligand names from olfr_de to generate mol files
+    mol_names = []
+    for filename in os.listdir('olfr_de'):
+        if filename[0:3] == 'pS6':
+            chem = filename.split('_')[-1]
+            chem = chem[0:len(chem)-4]
+            smile = mapper.iat[(mapper['Name on Sheet'] == chem).idxmax(), 4]
+            if isinstance(smile, str):
+                mol = pybel.readstring("smi", smile)
+                mol.make3D()
+                print(chem)
+                print(mol.write('sdf'))
+                with open(f'mol_data_files/{chem}.mol', 'w') as f:
+                    f.write(mol.write('sdf'))
+
+def get_output(prot, ligand, mart_dir, lig_de_dir):
+    """
+    @prot: uniprot accession for a protein
+    @ligand: chemical name (from sheet) for a ligand
+    @mart: directory for uniprot to ensembl_id mapping
+    @lig_de_dir: directory for differential expression datafiles
+    """
+    os.chdir(lig_de_dir)
+
+    files = [f for f in os.listdir('.') if os.path.isfile(f)]
+    de_file = [i for i in files if ligand in i][0]
+
+    de = pd.read_csv(de_file)
+    mart = pd.read_csv(mart_dir, sep='\t')
+    ens_id = mart.iat[(mart['Entry'] == prot).idxmax(), 0]
+
+    # Exceptions here are definitely broken -- revisit
+    try:
+        y = de.loc[de['ensembl_gene_id'] == ens_id]
+    except Exception as e:
+        y = None
+    return y
+    
+if __name__ == "__main__":
+    #dir = '/home/users/jvs15/project-protein-fold'
+    #mapper = pd.read_csv('odorantsForDE.csv')
+    # prot = 'Q8VFV2'
+    # ligand = 'bIonone'
+    mart_dir = '/home/users/jvs15/project-protein-fold/pdb_data_files/uniprot-ensemble-map.tab'
+    lig_de_dir = '/home/users/jvs15/project-protein-fold/olfr_de'
+    # print(get_output(prot, ligand, mart_dir, lig_de_dir))
+    prot_dict_dir = '/home/users/jvs15/project-protein-fold/moleculekit/protein_data.npy'
+    ligand_dict_dir = '/home/users/jvs15/project-protein-fold/moleculekit/ligand_data.npy'
+    #gen_output_dict(prot_dict_dir, ligand_dict_dir, mart_dir, lig_de_dir)
+    print(np.load('/home/users/jvs15/project-protein-fold/moleculekit/de_data.npy', allow_pickle=True))

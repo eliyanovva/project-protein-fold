@@ -1,0 +1,22 @@
+/var/lib/slurm-llnl/slurmd/job1857235/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1857235/slurm_script: module: not found
+training length:  740
+[1,     1] loss: 0.121
+[1,    11] loss: 0.858
+[1,    21] loss: 0.765
+[1,    31] loss: 0.422
+[1,    41] loss: 0.600
+[1,    51] loss: 0.260
+[1,    61] loss: 0.295
+[1,    71] loss: 0.304
+[1,    81] loss: 0.311
+[1,    91] loss: 0.337
+[1,   101] loss: 0.212
+[1,   111] loss: 0.285
+[1,   121] loss: 0.397
+[1,   131] loss: 0.246
+[1,   141] loss: 0.182
+[1,   151] loss: 0.246
+[1,   161] loss: 0.261
+[1,   171] loss: 0.245
+[1,   181] loss: 0.185
+slurmstepd: error: *** JOB 1857235 ON linux2 CANCELLED AT 2022-07-11T16:49:56 ***
