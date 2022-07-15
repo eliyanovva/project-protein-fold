@@ -3,9 +3,30 @@ sys.path.append('../../project-protein-fold/RF/')
 import Globals
 from collections import Counter
 
-AA_seqs = Globals.initialize_AA_dict(Globals.initialize_protein_list())
+AA_seqs = {}
 Di_seqs = Globals.initialize_3Di_dict(Globals.initialize_protein_list())
 tmdict = {'3':0, '5':1, '6':2, '7':3}
+
+
+def categorize(AA):
+    AA = AA.replace('A', 'a').replace('G', 'a').replace('V', 'a')
+    AA = AA.replace('I', 'b').replace('L', 'b').replace('F', 'b').replace('P', 'b')
+    AA = AA.replace('Y', 'c').replace('M', 'c').replace('T', 'c').replace('S', 'c')
+    AA = AA.replace('H', 'd').replace('N', 'd').replace('Q', 'd').replace('W', 'd')
+    AA = AA.replace('R', 'e').replace('K', 'e')
+    AA = AA.replace('D', 'f').replace('E', 'f')
+    AA = AA.replace('C', 'g')
+    return AA
+
+with open('TM_alignments/TM3_align.txt') as f:
+    lines = f.readlines()
+    for line in lines:
+        if line[0] == '>':
+            protein = line[1:].replace("\n", "")
+        else:
+            sequence = line.replace("\n", "")
+            AA_seqs[protein] = categorize(sequence)
+print(AA_seqs)
 
 def find_feature(tm, seq, dictionary):
     ret = []
@@ -17,6 +38,8 @@ def find_feature(tm, seq, dictionary):
             if index >= 0:
                 ret.append(index)
                 index += 1
+    if len(ret) == 0:
+        return {}
     residues = []
     retcount = Counter(ret)
     temp = retcount.most_common(1)[0][1]
@@ -42,3 +65,7 @@ with open('Feature_Importance/sulfur_importance.txt') as f:
             else:
                 ret[line[-1]].append(find_feature(line[-1], line[0:5], AA_seqs))
     print(ret)
+
+
+
+
