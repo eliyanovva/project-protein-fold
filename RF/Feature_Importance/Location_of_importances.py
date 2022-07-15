@@ -4,7 +4,7 @@ import Globals
 from collections import Counter
 
 AA_seqs = {}
-Di_seqs = Globals.initialize_3Di_dict(Globals.initialize_protein_list())
+Di_seqs = {}
 tmdict = {'3':0, '5':1, '6':2, '7':3}
 
 
@@ -20,14 +20,40 @@ def categorize(AA):
 
 with open('TM_alignments/TM3_align.txt') as f:
     lines = f.readlines()
-    p = open('')
     for line in lines:
         if line[0] == '>':
             protein = line[1:].replace("\n", "")
         else:
             sequence = line.replace("\n", "")
-            AA_seqs[protein] = categorize(sequence)
-print(AA_seqs)
+            AA_seqs[protein] = []
+            AA_seqs[protein].append(categorize(sequence))
+
+with open('TM_alignments/TM5_align.txt') as f:
+    lines = f.readlines()
+    for line in lines:
+        if line[0] == '>':
+            protein = line[1:].replace("\n", "")
+        else:
+            sequence = line.replace("\n", "")
+            AA_seqs[protein].append(categorize(sequence))
+
+with open('TM_alignments/TM6_align.txt') as f:
+    lines = f.readlines()
+    for line in lines:
+        if line[0] == '>':
+            protein = line[1:].replace("\n", "")
+        else:
+            sequence = line.replace("\n", "")
+            AA_seqs[protein].append(categorize(sequence))
+
+with open('TM_alignments/TM7_align.txt') as f:
+    lines = f.readlines()
+    for line in lines:
+        if line[0] == '>':
+            protein = line[1:].replace("\n", "")
+        else:
+            sequence = line.replace("\n", "")
+            AA_seqs[protein].append(categorize(sequence))
 
 def find_feature(tm, seq, dictionary):
     ret = []
