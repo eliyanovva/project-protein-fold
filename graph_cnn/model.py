@@ -246,7 +246,12 @@ class GraphCNN:
         with open(os.path.join(config.MATRIX_DATA_FILES_PATH, 'outputs.csv'), 'w') as res_file:
             res_file.write(','.join([y_mem for y_mem in y]))
 
-def train_test_model(hparams):
+def train_test_model(hparams = {
+                #config.HP_NUM_UNITS: num_units,
+                #config.HP_DROPOUT: dropout_rate,
+                config.HP_BATCH_SIZE: 32,
+                config.HP_OPTIMIZER: 'adagrad',
+            }):
     g = GraphCNN()
     g.initialize()
 
