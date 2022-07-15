@@ -121,6 +121,8 @@ for id in unique_proteins:
     pos_dict[id] = []
     neg_dict[id] = []
 
+ligands_from_unip = set()       #set of ligands that form pos or neg pairs with the set of unique proteins
+
 #Iterate through all positive prot-lig pairs to update pos_dict
 for pair in pos_pairs:
     id = pair[0]
@@ -128,6 +130,7 @@ for pair in pos_pairs:
     #Check that id is from the set of unique proteins
     if (id in pos_dict):
         pos_dict[id].append(lig)
+        ligands_from_unip.add(lig)
 #Iterate through all negative prot-lig pairs to update neg_dict
 for pair in neg_pairs:
     id = pair[0]
@@ -135,21 +138,21 @@ for pair in neg_pairs:
     #Check that id is from the set of unique proteins
     if (id in neg_dict):
         neg_dict[id].append(lig)
-
+        ligands_from_unip.add(lig)
 #Import dictionary matching ligands to SMILES String
 ligand_dict = Globals.initialize_ligand_dict()
 
 #Create ligands matrix
-ligand_features, ligand_counts = SmileKmer.ligand_matrix(ligand_dict, 5, ligands_toconsider)
+ligand_features, ligand_counts = SmileKmer.ligand_matrix(ligand_dict, 5, ligands_from_unip)
 #ligand_features = list of kmers found in the ligands with pos / neg pairs
 #ligand_counts = key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
-#   ligand_counts only uses ligands from ligands_toconsider as keys
+#   ligand_counts only uses ligands from ligands_from_unip as keys
 
 pos_by_lig = {}         #key: ligand, value: # of pos. pairs with the ligand
 neg_by_lig = {}         #key: ligand, value: # of neg. pairs with the ligand
 total_by_lig = {}       #key: ligand, value: # of all pairs the involve the ligand
 
-for lig in ligands_toconsider:
+for lig in ligands_from_unip:
     pos_by_lig[lig] = 0
     neg_by_lig[lig] = 0
     total_by_lig[lig] = 0
