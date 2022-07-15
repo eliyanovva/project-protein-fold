@@ -4,7 +4,7 @@ import Globals
 from collections import Counter
 
 AA_seqs = {}
-Di_seqs = {}
+Di_seqs = Globals.initialize_3Di_dict(Globals.initialize_protein_list())
 tmdict = {'3':0, '5':1, '6':2, '7':3}
 
 
@@ -54,6 +54,20 @@ with open('TM_alignments/TM7_align.txt') as f:
         else:
             sequence = line.replace("\n", "")
             AA_seqs[protein].append(categorize(sequence))
+
+for protein in list(AA_seqs.keys()):
+    j=0
+    for i in range(len(AA_seqs[protein])):
+        newseq = ""
+        for k in range(len(AA_seqs[protein][i])):
+            if AA_seqs[protein][i][k] == "-":
+                newseq += "-"
+            else:
+                newseq += Di_seqs[protein][i][j]
+                j += 1
+        Di_seqs[protein][i] = newseq
+        j = 0
+print(Di_seqs)
 
 def find_feature(tm, seq, dictionary):
     ret = []
