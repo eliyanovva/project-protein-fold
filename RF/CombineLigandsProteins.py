@@ -20,16 +20,13 @@ classified, pos_counts, neg_counts, pos_pairs, neg_pairs = labels.classified_log
 #neg_pairs = list of negative protein-ligand pairs; neg_pairs[i] = [protein id, ligand]
 
 proteins_toconsider = set()     #proteins that can form either a positive or negative pair with a ligand
-ligands_toconsider = set()      #ligands that can form either a positive or negative pair with a protein
 
 #Extract the proteins and ligands that interact in positive or negative pairs;
 #Only these proteins and ligands can be used in the feature matrix
 for pair in pos_pairs:
     proteins_toconsider.add(pair[0])
-    ligands_toconsider.add(pair[1])
 for pair in neg_pairs:
     proteins_toconsider.add(pair[0])
-    ligands_toconsider.add(pair[1])
 
 pairs_by_prot = {}      #key = protein id, value = # of pairs involving the protein
 
