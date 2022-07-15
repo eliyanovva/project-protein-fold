@@ -53,9 +53,9 @@ PROTEIN_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data')
 PVALUE_THRESHOLD = 0.05
 # TODO: explain data file naming conventions somewhere
 
-HP_NUM_UNITS = hp.HParam('num_units', hp.Discrete([16, 32]))
+HP_BATCH_SIZE = hp.HParam('batch_size', hp.Discrete([32, 64, 128, 256]))
 HP_DROPOUT = hp.HParam('dropout', hp.RealInterval(0.1, 0.2))
 HP_OPTIMIZER = hp.HParam('optimizer', hp.Discrete(['adam', 'sgd', 'adagrad']))
-#HP_LOSS = hp.HParam('loss', hp.Discrete(['meansquaredlogarithmicerror']))
+HP_LOSS = hp.HParam('loss', hp.Discrete(['MeanSquaredLogarithmicError', 'MeanAbsoluteError', 'MeanSquaredError']))
 
 METRIC_ACCURACY = 'accuracy'
