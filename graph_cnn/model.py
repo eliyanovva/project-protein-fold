@@ -39,7 +39,7 @@ def coeff_determination(y_true, y_pred):
 
 with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
             hp.hparams_config(
-                hparams=[config.HP_NUM_UNITS, config.HP_DROPOUT, config.HP_OPTIMIZER],
+                hparams=[config.HP_BATCH_SIZE, config.HP_DROPOUT, config.HP_OPTIMIZER],
                 metrics=[hp.Metric(config.METRIC_ACCURACY, display_name='Accuracy')],
             )
 
@@ -76,7 +76,12 @@ class GraphCNN:
         return X_train, X_test, y_train, y_test
 
 
-    def createModel(self, hparams):
+    def createModel(self, hparams = {
+                #config.HP_NUM_UNITS: num_units,
+                #config.HP_DROPOUT: dropout_rate,
+                config.HP_BATCH_SIZE: 32,
+                config.HP_OPTIMIZER: 'adagrad',
+            }):
         
         prot_adj_in = tf.keras.layers.Input(
             shape=(config.PROTEIN_ADJACENCY_MAT_SIZE,
@@ -271,7 +276,7 @@ def train_test_model(hparams):
     model = g.createModel(hparams)
     log.info('model fitting started')
     #look into ideal batch size
-    mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=64, callbacks = callbacks, validation_split=0.2)
+    mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=hparams[config.HP_BATCH_SIZE], callbacks = callbacks, validation_split=0.2)
     end_model_fitting = time.time()
 
     log.info ('model fitting finished successfully')
@@ -337,14 +342,16 @@ def optimize_hyperparameters():
 
 #    for num_units in config.HP_NUM_UNITS.domain.values:
 #        for dropout_rate in (config.HP_DROPOUT.domain.min_value, config.HP_DROPOUT.domain.max_value):
-    for optimizer in config.HP_OPTIMIZER.domain.values:
-        hparams = {
-            #config.HP_NUM_UNITS: num_units,
-            #config.HP_DROPOUT: dropout_rate,
-            config.HP_OPTIMIZER: optimizer,
-        }
-        run_name = "run-%d" % session_num
-        print('--- Starting trial: %s' % run_name)
-        print({h.name: hparams[h] for h in hparams})
-        run('logs/hparam_tuning/' + run_name, hparams)
-        session_num += 1
+    for batch_size in config.HP_BATCH_SIZE.domain.values:
+        for optimizer in config.HP_OPTIMIZER.domain.values:
+            hparams = {
+                #config.HP_NUM_UNITS: num_units,
+                #config.HP_DROPOUT: dropout_rate,
+                config.HP_BATCH_SIZE: batch_size,
+                config.HP_OPTIMIZER: optimizer,
+            }
+            run_name = "run-%d" % session_num
+            print('--- Starting trial: %s' % run_name)
+            print({h.name: hparams[h] for h in hparams})
+            run('logs/hparam_tuning/' + run_name, hparams)
+            session_num += 1
