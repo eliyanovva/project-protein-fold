@@ -67,7 +67,6 @@ for protein in list(AA_seqs.keys()):
                 j += 1
         Di_seqs[protein][i] = newseq
         j = 0
-print(Di_seqs)
 
 def find_feature(tm, seq, dictionary):
     ret = []
@@ -108,5 +107,32 @@ with open('Feature_Importance/sulfur_importance.txt') as f:
     print(ret)
 
 
+#Highlighting the important regions in the TM alignments
 
+import docx
+from docx.enum.text import WD_COLOR_INDEX
+
+doc = docx.Document()
+doc.add_heading('Sulfur TM3 Important Residues', 0)
+
+with open('TM_alignments/TM3_align.txt') as f:
+    lines = f.readlines()
+    for line in lines:
+        paragraph = doc.add_paragraph()
+        if line[0] == '>':
+            paragraph.add_run(line)
+        else:
+            previous = 0
+            ret['3'].sort()
+            print(ret['3'])
+            for important_feature in ret['3']:
+                print(important_feature)
+                if len(important_feature) == 0:
+                    break
+                location = list(important_feature)[0]
+                paragraph.add_run(line[previous:location])
+                paragraph.add_run(line[location:location + 5]).font.highlight_color = WD_COLOR_INDEX.YELLOW
+                previous = location + 5
+
+doc.save('TM3_highlight.docx')
 
