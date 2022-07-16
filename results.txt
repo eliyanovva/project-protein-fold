@@ -7721,3 +7721,93 @@ Trainable params: 46,275,665
 Non-trainable params: 0
 __________________________________________________________________________________________________
 
+0.4700014591217041 108.11402130126953 -3287.30908203125 110.73136138916016 12261.43359375 
+Timing Benchmarks:
+0.034165143966674805 111.3974199295044 51.905559062957764 667.6115310192108 830.9490449428558
+Format Explanation:
+E r r o r :   e s t i m a t o r   < k e r a s . c a l l b a c k s . H i s t o r y   o b j e c t   a t   0 x 7 f e b e 3 e c b f a 0 >   i s   n o t   s u p p o r t e d
+Model: "model_44"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ Protein-Adjacency-Matrix (Inpu  [(None, 1000, 1000)  0          []                               
+ tLayer)                        ]                                                                 
+                                                                                                  
+ conv1d_24 (Conv1D)             (None, 998, 1024)    3073024     ['Protein-Adjacency-Matrix[0][0]'
+                                                                 ]                                
+                                                                                                  
+ max_pooling1d_24 (MaxPooling1D  (None, 499, 1024)   0           ['conv1d_24[0][0]']              
+ )                                                                                                
+                                                                                                  
+ conv1d_25 (Conv1D)             (None, 497, 512)     1573376     ['max_pooling1d_24[0][0]']       
+                                                                                                  
+ max_pooling1d_25 (MaxPooling1D  (None, 248, 512)    0           ['conv1d_25[0][0]']              
+ )                                                                                                
+                                                                                                  
+ conv1d_26 (Conv1D)             (None, 246, 256)     393472      ['max_pooling1d_25[0][0]']       
+                                                                                                  
+ max_pooling1d_26 (MaxPooling1D  (None, 123, 256)    0           ['conv1d_26[0][0]']              
+ )                                                                                                
+                                                                                                  
+ Protein-Feature-Matrix (InputL  [(None, 1000, 13)]  0           []                               
+ ayer)                                                                                            
+                                                                                                  
+ Ligand-Adjacency-Matrix (Input  [(None, 70, 70)]    0           []                               
+ Layer)                                                                                           
+                                                                                                  
+ Ligand-Feature-Matrix (InputLa  [(None, 70, 12)]    0           []                               
+ yer)                                                                                             
+                                                                                                  
+ flatten_32 (Flatten)           (None, 31488)        0           ['max_pooling1d_26[0][0]']       
+                                                                                                  
+ flatten_33 (Flatten)           (None, 13000)        0           ['Protein-Feature-Matrix[0][0]'] 
+                                                                                                  
+ flatten_34 (Flatten)           (None, 4900)         0           ['Ligand-Adjacency-Matrix[0][0]']
+                                                                                                  
+ flatten_35 (Flatten)           (None, 840)          0           ['Ligand-Feature-Matrix[0][0]']  
+                                                                                                  
+ dense_96 (Dense)               (None, 1024)         32244736    ['flatten_32[0][0]']             
+                                                                                                  
+ dense_98 (Dense)               (None, 512)          6656512     ['flatten_33[0][0]']             
+                                                                                                  
+ dense_100 (Dense)              (None, 64)           313664      ['flatten_34[0][0]']             
+                                                                                                  
+ dense_102 (Dense)              (None, 256)          215296      ['flatten_35[0][0]']             
+                                                                                                  
+ dropout_8 (Dropout)            multiple             0           ['dense_96[0][0]',               
+                                                                  'dense_98[0][0]',               
+                                                                  'dense_100[0][0]',              
+                                                                  'dense_102[0][0]']              
+                                                                                                  
+ dense_97 (Dense)               (None, 512)          524800      ['dropout_8[0][0]']              
+                                                                                                  
+ dense_99 (Dense)               (None, 64)           32832       ['dropout_8[1][0]']              
+                                                                                                  
+ dense_101 (Dense)              (None, 16)           1040        ['dropout_8[2][0]']              
+                                                                                                  
+ dense_103 (Dense)              (None, 64)           16448       ['dropout_8[3][0]']              
+                                                                                                  
+ concatenate_8 (Concatenate)    (None, 656)          0           ['dense_97[0][0]',               
+                                                                  'dense_99[0][0]',               
+                                                                  'dense_101[0][0]',              
+                                                                  'dense_103[0][0]']              
+                                                                                                  
+ dense_104 (Dense)              (None, 1024)         672768      ['concatenate_8[0][0]']          
+                                                                                                  
+ dense_105 (Dense)              (None, 512)          524800      ['dense_104[0][0]']              
+                                                                                                  
+ dense_106 (Dense)              (None, 64)           32832       ['dense_105[0][0]']              
+                                                                                                  
+ dense_107 (Dense)              (None, 1)            65          ['dense_106[0][0]']              
+                                                                                                  
+==================================================================================================
+Total params: 46,275,665
+Trainable params: 46,275,665
+Non-trainable params: 0
+__________________________________________________________________________________________________
+
+0.44973182678222656 1470.9046630859375 -560457.5 1475.90380859375 2178292.0 
+Timing Benchmarks:
+0.0419468879699707 119.39238381385803 51.20479774475098 650.0764820575714 820.7161030769348
+Format Explanation:
+E r r o r :   e s t i m a t o r   < k e r a s . c a l l b a c k s . H i s t o r y   o b j e c t   a t   0 x 7 f e c e 4 c f 1 6 3 0 >   i s   n o t   s u p p o r t e d
