@@ -54,8 +54,17 @@ PVALUE_THRESHOLD = 0.05
 # TODO: explain data file naming conventions somewhere
 
 HP_BATCH_SIZE = hp.HParam('batch_size', hp.Discrete([32, 64, 128, 256]))
-HP_DROPOUT = hp.HParam('dropout', hp.RealInterval(0.1, 0.2))
+#HP_DROPOUT = hp.HParam('dropout', hp.RealInterval(0.1, 0.2))
+HP_DROPOUT = hp.HParam('dropout', hp.Discrete([0.1, 0.15, 0.2]))
 HP_OPTIMIZER = hp.HParam('optimizer', hp.Discrete(['adam', 'sgd', 'adagrad']))
 HP_LOSS = hp.HParam('loss', hp.Discrete(['MeanSquaredLogarithmicError', 'MeanAbsoluteError', 'MeanSquaredError']))
+HP_LEARNINGRATE = hp.HParam('learning_rate', hp.Discrete([0.001, 0.0001, 0.00001]))
+#HP_BATCH_SIZE_OPTIMIZER_PAIR = hp.HParam('batch_size_optimizer_pair', hp.Discrete([['adam', 64], ['sgd', 64], ['adagrad', 32]]))
 
 METRIC_ACCURACY = 'accuracy'
+
+#HP_BATCH_SIZE = [32, 64, 128, 256]
+#HP_DROPOUT = [0.1, 0.15, 0.2]
+#HP_OPTIMIZER = ['adam', 'sgd', 'adagrad']
+#HP_LOSS = ['MeanSquaredLogarithmicError', 'MeanAbsoluteError', 'MeanSquaredError']
+#HP_BATCH_SIZE_OPTIMIZER_PAIR = [['adam', 64], ['sgd', 64], ['adagrad', 32]]
