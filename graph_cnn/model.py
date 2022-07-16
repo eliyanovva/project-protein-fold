@@ -1,4 +1,5 @@
 import logging as log
+from operator import mod
 import os
 import sys
 
@@ -11,6 +12,7 @@ from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 from contextlib import redirect_stdout
 import matplotlib.pyplot as plt
+import eli5
 
 # FIXME: VERY UGLY FIX FOR THE config.py
 # fix upon packaging and creating the CLI!!!!!
@@ -39,7 +41,7 @@ def coeff_determination(y_true, y_pred):
 
 with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
             hp.hparams_config(
-                hparams=[config.HP_BATCH_SIZE, config.HP_DROPOUT, config.HP_OPTIMIZER],
+                hparams=[config.HP_BATCH_SIZE, config.HP_DROPOUT, config.HP_OPTIMIZER, config.HP_LOSS, config.HP_LEARNINGRATE],
                 metrics=[hp.Metric(config.METRIC_ACCURACY, display_name='Accuracy')],
             )
 
@@ -78,9 +80,10 @@ class GraphCNN:
 
     def createModel(self, hparams = {
                 #config.HP_NUM_UNITS: num_units,
-                #config.HP_DROPOUT: dropout_rate,
+                config.HP_DROPOUT: 0.1,
                 config.HP_BATCH_SIZE: 32,
                 config.HP_OPTIMIZER: 'adagrad',
+                config.HP_LEARNINGRATE: 0.0001,
             }):
         
         prot_adj_in = tf.keras.layers.Input(
@@ -106,6 +109,8 @@ class GraphCNN:
             config.LIGAND_FEATURES_COUNT),
             name='Ligand-Feature-Matrix'
         )
+
+        dlayer = tf.keras.layers.Dropout(hparams[config.HP_DROPOUT])
  
         x = tf.keras.layers.Conv1D(
             filters=1024, kernel_size=3, activation='relu'
@@ -121,21 +126,25 @@ class GraphCNN:
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Flatten()(x)
         x = tf.keras.layers.Dense(1024, activation="relu")(x)
+        x = dlayer(inputs=x, training=True)
         x = tf.keras.layers.Dense(512, activation="relu")(x)
         x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
         
         y = tf.keras.layers.Flatten()(prot_feat_in)
         y = tf.keras.layers.Dense(512, activation="relu")(y)
+        y = dlayer(inputs=y, training=True)
         y = tf.keras.layers.Dense(64, activation="relu")(y)
         y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
 
         z = tf.keras.layers.Flatten()(ligand_adj_in)
         z = tf.keras.layers.Dense(64, activation="relu")(z)
+        z = dlayer(inputs=z, training=True)
         z = tf.keras.layers.Dense(16, activation="relu")(z)
         z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
         
         z1 = tf.keras.layers.Flatten()(ligand_feat_in)
         z1 = tf.keras.layers.Dense(256, activation="relu")(z1)
+        z1 = dlayer(inputs=z1, training=True)
         z1 = tf.keras.layers.Dense(64, activation="relu")(z1)
         z1 = tf.keras.Model(inputs=ligand_feat_in, outputs=z1)
 
@@ -162,11 +171,11 @@ class GraphCNN:
 
 
         model.compile(
-            optimizer=hparams[config.HP_OPTIMIZER],
-            #tf.keras.optimizers.Adagrad(
-            #    learning_rate=0.0001,
-            #    initial_accumulator_value=0.1,
-            #    epsilon=1e-07),
+            optimizer=tf.keras.optimizers.Adagrad(
+                learning_rate=hparams[config.HP_LEARNINGRATE],
+                initial_accumulator_value=0.1,
+                epsilon=1e-07),
+            #hparams[config.HP_BATCH_SIZE_OPTIMIZER_PAIR[0]],
             loss=tf.keras.losses.MeanSquaredLogarithmicError(),
             metrics=[tf.keras.metrics.LogCoshError(),
                 coeff_determination,
@@ -248,9 +257,10 @@ class GraphCNN:
 
 def train_test_model(hparams = {
                 #config.HP_NUM_UNITS: num_units,
-                #config.HP_DROPOUT: dropout_rate,
+                config.HP_DROPOUT: 0.1,
                 config.HP_BATCH_SIZE: 32,
                 config.HP_OPTIMIZER: 'adagrad',
+                config.HP_LEARNINGRATE: 0.0001,
             }):
     g = GraphCNN()
     g.initialize()
@@ -281,7 +291,14 @@ def train_test_model(hparams = {
     model = g.createModel(hparams)
     log.info('model fitting started')
     #look into ideal batch size
-    mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=hparams[config.HP_BATCH_SIZE], callbacks = callbacks, validation_split=0.2)
+    mod_history = model.fit(
+        X_train,
+        y_train,
+        epochs=10,
+        verbose=True,
+        batch_size=32,
+        callbacks = callbacks,
+        validation_split=0.2)
     end_model_fitting = time.time()
 
     log.info ('model fitting finished successfully')
@@ -295,11 +312,15 @@ def train_test_model(hparams = {
     ]
 
     log.info('model evaluation started')
+    explanation = eli5.explain_weights(mod_history)
     with open('results.txt', 'a') as res_log:
         results = model.evaluate(X_test, y_test, verbose=True)
         res_log.write(' '.join([str(r) for r in results]) + ' \n')
         res_log.write('Timing Benchmarks:\n')
         res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
+        text = eli5.format_as_text(explanation, show_feature_values=True)
+        res_log.write('Format Explanation:\n')
+        res_log.write(' '.join([str(r) for r in text]) + '\n')
 
     print(results)
     log.info('model evaluation completed')
@@ -346,17 +367,20 @@ def optimize_hyperparameters():
     session_num = 0
 
 #    for num_units in config.HP_NUM_UNITS.domain.values:
-#        for dropout_rate in (config.HP_DROPOUT.domain.min_value, config.HP_DROPOUT.domain.max_value):
-    for batch_size in config.HP_BATCH_SIZE.domain.values:
-        for optimizer in config.HP_OPTIMIZER.domain.values:
+    #for dropout_rate in (config.HP_DROPOUT.domain.min_value, config.HP_DROPOUT.domain.max_value):
+    for dropout_rate in config.HP_DROPOUT.domain.values:
+    #for batch_size in config.HP_BATCH_SIZE.domain.values:
+        #for optimizer in config.HP_OPTIMIZER.domain.values:
+        for learning_rate in config.HP_LEARNINGRATE.domain.values:
             hparams = {
                 #config.HP_NUM_UNITS: num_units,
-                #config.HP_DROPOUT: dropout_rate,
-                config.HP_BATCH_SIZE: batch_size,
-                config.HP_OPTIMIZER: optimizer,
+                config.HP_DROPOUT: dropout_rate,
+                #config.HP_BATCH_SIZE: batch_size,
+                #config.HP_OPTIMIZER: optimizer,
+                config.HP_LEARNINGRATE: learning_rate,
             }
             run_name = "run-%d" % session_num
-            print('--- Starting trial: %s' % run_name)
-            print({h.name: hparams[h] for h in hparams})
+            log.info('--- Starting trial: %s' % run_name)
+            log.info({h.name: hparams[h] for h in hparams})
             run('logs/hparam_tuning/' + run_name, hparams)
             session_num += 1
