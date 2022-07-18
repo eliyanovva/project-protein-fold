@@ -256,10 +256,10 @@ nAA_seqvar_TM5, ignoreAA5 = ReadingFasta.make_seqvar_TMS(nAA_dict, 1, 5, {}, set
 nAA_seqvar_TM6, ignoreAA6 = ReadingFasta.make_seqvar_TMS(nAA_dict, 2, 5, {}, set())
 nAA_seqvar_TM7, ignoreAA7 = ReadingFasta.make_seqvar_TMS(nAA_dict, 3, 5, {}, set())
 
-nDi_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(nDi_dict, 0, 5, {}, set())
-nDi_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(nDi_dict, 1, 5, {}, set())
-nDi_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(nDi_dict, 2, 5, {}, set())
-nDi_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(nDi_dict, 3, 5, {}, set())
+nDi_seqvar_TM3, ignoreDi3 = ReadingFasta.make_seqvar_TMS(nDi_dict, 0, 5, {}, set())
+nDi_seqvar_TM5, ignoreDi5 = ReadingFasta.make_seqvar_TMS(nDi_dict, 1, 5, {}, set())
+nDi_seqvar_TM6, ignoreDi6 = ReadingFasta.make_seqvar_TMS(nDi_dict, 2, 5, {}, set())
+nDi_seqvar_TM7, ignoreDi7 = ReadingFasta.make_seqvar_TMS(nDi_dict, 3, 5, {}, set())
 
 nAA_seqvar = [nAA_seqvar_TM3, nAA_seqvar_TM5, nAA_seqvar_TM6, nAA_seqvar_TM7]
 nDi_seqvar = [nDi_seqvar_TM3, nDi_seqvar_TM5, nDi_seqvar_TM6, nDi_seqvar_TM7]
@@ -272,11 +272,6 @@ n_uni_lig = Duplicates.n_remove_ligands(n_lig_counts)
 num_ligands = len(n_uni_lig)
 
 nlig_mat = []
-for lig in n_uni_lig:
-    print(lig)
-    nlig_mat.append(np.array(list(n_lig_counts[lig].values())))
-
-print()
 
 nAA_mat_TM3 = ReadingFasta.make_nmatrix(nAA_seqvar_TM3, AA_filter_TM3, [], n_unip, num_ligands)
 nAA_mat_TM5 = ReadingFasta.make_nmatrix(nAA_seqvar_TM5, AA_filter_TM5, [], n_unip, num_ligands)
@@ -284,9 +279,9 @@ nAA_mat_TM6 = ReadingFasta.make_nmatrix(nAA_seqvar_TM6, AA_filter_TM6, [], n_uni
 nAA_mat_TM7 = ReadingFasta.make_nmatrix(nAA_seqvar_TM7, AA_filter_TM7, [], n_unip, num_ligands)
 
 nDi_mat_TM3 = ReadingFasta.make_nmatrix(nDi_seqvar_TM3, Di_filter_TM3, [], n_unip, num_ligands)
-nDi_mat_TM5 = ReadingFasta.make_nmatrix(nDi_seqvar_TM5, Di_filter_TM3, [], n_unip, num_ligands)
-nDi_mat_TM6 = ReadingFasta.make_nmatrix(nDi_seqvar_TM6, Di_filter_TM3, [], n_unip, num_ligands)
-nDi_mat_TM7 = ReadingFasta.make_nmatrix(nDi_seqvar_TM7, Di_filter_TM3, [], n_unip, num_ligands)
+nDi_mat_TM5 = ReadingFasta.make_nmatrix(nDi_seqvar_TM5, Di_filter_TM5, [], n_unip, num_ligands)
+nDi_mat_TM6 = ReadingFasta.make_nmatrix(nDi_seqvar_TM6, Di_filter_TM6, [], n_unip, num_ligands)
+nDi_mat_TM7 = ReadingFasta.make_nmatrix(nDi_seqvar_TM7, Di_filter_TM7, [], n_unip, num_ligands)
 
 nAA_mat = np.concatenate((np.array(nAA_mat_TM3, dtype= np.uint8), np.array(nAA_mat_TM5, dtype= np.uint8),
                           np.array(nAA_mat_TM6, dtype= np.uint8), np.array(nAA_mat_TM7, dtype= np.uint8)), axis = 1)
@@ -297,10 +292,8 @@ nDi_mat = np.concatenate((np.array(nDi_mat_TM3, dtype= np.uint8), np.array(nDi_m
 n_intermed = np.concatenate((np.array(nAA_mat, dtype = np.uint8), np.array(nDi_mat, dtype = np.uint8)) , axis = 1)
 
 n_final_lig = np.repeat(nlig_mat, len(n_unip), axis = 0)
-n_final_mat = np.concatenate((n_intermed, n_final_lig), axis=1)
 
-print(n_unip)
-print(n_uni_lig)
+n_final_mat = np.concatenate((n_intermed, n_final_lig), axis=1)
 
 """
 print(len(n_unip))                  #49

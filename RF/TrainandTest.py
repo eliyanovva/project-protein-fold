@@ -11,6 +11,12 @@ CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 
+n_testX = CombineLigandsProteins.nMat
+n_proteins = CombineLigandsProteins.nproteins
+n_ligands = CombineLigandsProteins.nligands
+
+FixedClassificationModel.neutral_train(testX, testY, n_testX, n_proteins, n_ligands)
+
 #Sequence_only.import_final()
 #seqX = Sequence_only.X
 #seqY = Sequence_only.Y
