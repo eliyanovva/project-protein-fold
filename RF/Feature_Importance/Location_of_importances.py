@@ -89,7 +89,7 @@ def find_feature(tm, seq, dictionary):
             residues.append(num)
     return set(residues)
 
-with open('Feature_Importance/sulfur_importance.txt') as f:
+with open('Feature_Importance/important_features.txt') as f:
     lines = f.readlines()
     i = 0
     ret = {}
@@ -116,9 +116,9 @@ import docx
 from docx.enum.text import WD_COLOR_INDEX
 
 doc = docx.Document()
-doc.add_heading('Sulfur TM7 Important Residues', 0)
+doc.add_heading('TM6 Important Residues', 0)
 
-with open('TM_alignments/TM7_align.txt') as f:
+with open('TM_alignments/TM6_align.txt') as f:
     lines = f.readlines()
     for line in lines:
         paragraph = doc.add_paragraph()
@@ -126,7 +126,7 @@ with open('TM_alignments/TM7_align.txt') as f:
             paragraph.add_run(line)
         else:
             previous = 0
-            for important_feature in sorted(ret['7']):
+            for important_feature in sorted(ret['6']):
                 if previous < important_feature:
                     paragraph.add_run(line[previous:important_feature])
                     paragraph.add_run(line[important_feature:important_feature + 5]).font.highlight_color = WD_COLOR_INDEX.YELLOW
@@ -136,5 +136,5 @@ with open('TM_alignments/TM7_align.txt') as f:
                     previous = important_feature + 5
             paragraph.add_run(line[previous:])
 
-doc.save('TM7_highlight.docx')
+doc.save('TM6_highlight.docx')
 
