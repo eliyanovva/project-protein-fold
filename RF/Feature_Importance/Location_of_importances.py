@@ -102,9 +102,11 @@ with open('Feature_Importance/sulfur_importance.txt') as f:
             if line[-1] not in ret:
                 ret[line[-1]] = []
             if line[0].isupper():
-                ret[line[-1]].append(find_feature(line[-1], line[0:5], Di_seqs))
+                for num in list(find_feature(line[-1], line[0:5], Di_seqs)):
+                    ret[line[-1]].append(num)
             else:
-                ret[line[-1]].append(find_feature(line[-1], line[0:5], AA_seqs))
+                for num in list(find_feature(line[-1], line[0:5], AA_seqs)):
+                    ret[line[-1]].append(num)
     print(ret)
 
 
@@ -114,12 +116,9 @@ import docx
 from docx.enum.text import WD_COLOR_INDEX
 
 doc = docx.Document()
-doc.add_heading('Sulfur TM5 Important Residues', 0)
+doc.add_heading('Sulfur TM6 Important Residues', 0)
 
-def compare(x, y):
-    return list(x)[0] - list(y)[0]
-
-with open('TM_alignments/TM5_align.txt') as f:
+with open('TM_alignments/TM6_align.txt') as f:
     lines = f.readlines()
     for line in lines:
         paragraph = doc.add_paragraph()
@@ -127,18 +126,15 @@ with open('TM_alignments/TM5_align.txt') as f:
             paragraph.add_run(line)
         else:
             previous = 0
-            for important_feature in sorted(ret['5'], key = cmp_to_key(compare)):
-                if len(important_feature) == 0:
-                    break
-                location = list(important_feature)[0]
-                if previous < location:
-                    paragraph.add_run(line[previous:location])
-                    paragraph.add_run(line[location:location + 5]).font.highlight_color = WD_COLOR_INDEX.YELLOW
-                    previous = location + 5
+            for important_feature in sorted(ret['6']):
+                if previous < important_feature:
+                    paragraph.add_run(line[previous:important_feature])
+                    paragraph.add_run(line[important_feature:important_feature + 5]).font.highlight_color = WD_COLOR_INDEX.YELLOW
+                    previous = important_feature + 5
                 else:
-                    paragraph.add_run(line[previous:location + 5]).font.highlight_color = WD_COLOR_INDEX.YELLOW
-                    previous = location + 5
+                    paragraph.add_run(line[previous:important_feature + 5]).font.highlight_color = WD_COLOR_INDEX.YELLOW
+                    previous = important_feature + 5
             paragraph.add_run(line[previous:])
 
-doc.save('TM5_highlight.docx')
+doc.save('TM6_highlight.docx')
 
