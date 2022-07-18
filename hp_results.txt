@@ -1,0 +1,5 @@
+0.4479013681411743 1048.78076171875 1051.591064453125 1105843.75 
+Timing Benchmarks:
+0.013970136642456055 161.1694037914276 67.83285975456238 802.1592309474945 1031.1761629581451
+Format Explanation:
+E r r o r :   e s t i m a t o r   < k e r a s . e n g i n e . f u n c t i o n a l . F u n c t i o n a l   o b j e c t   a t   0 x 7 f b b c 6 c 8 1 6 0 0 >   i s   n o t   s u p p o r t e d
