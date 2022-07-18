@@ -51,21 +51,7 @@ class GraphCNN:
         return X_train, X_test, y_train, y_test
 
 
-<<<<<<< HEAD
-    def createModel(self, hp_optimizer='adagrad', hparams=False):
-=======
-    def createModel(self, hparams={
-        config.HP_OPTIMIZER: tf.keras.optimizers.Adagrad(
-            learning_rate=0.001,
-            initial_accumulator_value=0.1,
-            epsilon=1e-07,
-            name='Adagrad',
-        ),
-        config.HP_BATCH_SIZE: 32,
-        config.HP_DROPOUT: 0.15,
-        config.HP_LEARNINGRATE: 0.001,
-        }):
->>>>>>> e7b227f809061906fc1beef5913f83f23c167514
+    def createModel(self, hp_optimizer='adagrad'):
         
         prot_adj_in = tf.keras.layers.Input(
             shape=(config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_ADJACENCY_MAT_SIZE),
@@ -87,9 +73,7 @@ class GraphCNN:
             name='Ligand-Feature-Matrix'
         )
 
-        if hparams:
-            dlayer = tf.keras.layers.Dropout(hparams[config.HP_DROPOUT])
- 
+        
         x = tf.keras.layers.Conv1D(filters=1024, kernel_size=3, activation='relu')(prot_adj_in)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Conv1D(filters=512, kernel_size=3, activation='relu')(x)
@@ -98,29 +82,21 @@ class GraphCNN:
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Flatten()(x)
         x = tf.keras.layers.Dense(1024, activation="relu")(x)
-        if hparams:
-            x = dlayer(inputs=x, training=True)
         x = tf.keras.layers.Dense(512, activation="relu")(x)
         x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
         
         y = tf.keras.layers.Flatten()(prot_feat_in)
         y = tf.keras.layers.Dense(512, activation="relu")(y)
-        if hparams:
-            y = dlayer(inputs=y, training=True)
         y = tf.keras.layers.Dense(64, activation="relu")(y)
         y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
 
         z = tf.keras.layers.Flatten()(ligand_adj_in)
         z = tf.keras.layers.Dense(64, activation="relu")(z)
-        if hparams:
-            z = dlayer(inputs=z, training=True)
         z = tf.keras.layers.Dense(16, activation="relu")(z)
         z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
         
         z1 = tf.keras.layers.Flatten()(ligand_feat_in)
         z1 = tf.keras.layers.Dense(256, activation="relu")(z1)
-        if hparams:
-            z1 = dlayer(inputs=z1, training=True)
         z1 = tf.keras.layers.Dense(64, activation="relu")(z1)
         z1 = tf.keras.Model(inputs=ligand_feat_in, outputs=z1)
 
@@ -144,7 +120,7 @@ class GraphCNN:
             res_log.write('\n')
 
         model.compile(
-            optimizer=hparams[config.HP_OPTIMIZER],
+            optimizer=hp_optimizer,
             loss=tf.keras.losses.MeanSquaredLogarithmicError(),
             metrics=[tf.keras.metrics.LogCoshError(),
                 tf.keras.metrics.RootMeanSquaredError(),

@@ -7,7 +7,10 @@ sys.path.append(MAIN_PACKAGE_DIR)
 
 from cli_arguments import ModelingParser
 from graph_cnn.run_model import runModel
-from graph_cnn.hp_model import optimizeHyperparameters
+try:
+    from graph_cnn.hp_model import optimizeHyperparameters
+except:
+    pass
 import config
 
 
