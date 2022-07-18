@@ -205,90 +205,6 @@ pos_AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, categoriz
 pos_AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, categorized_matrix_TM6, unique_ligands, pos_dict)
 pos_AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, categorized_matrix_TM7, unique_ligands, pos_dict)
 
-AA_T3_kmer_totals = {}
-AA_T5_kmer_totals = {}
-AA_T6_kmer_totals = {}
-AA_T7_kmer_totals = {}
-
-Di_T3_kmer_totals = {}
-Di_T5_kmer_totals = {}
-Di_T6_kmer_totals = {}
-Di_T7_kmer_totals = {}
-
-for kmer in AA_filter_TM3:
-    AA_T3_kmer_totals[kmer] = 0
-for kmer in AA_filter_TM5:
-    AA_T5_kmer_totals[kmer] = 0
-for kmer in AA_filter_TM6:
-    AA_T6_kmer_totals[kmer] = 0
-for kmer in AA_filter_TM7:
-    AA_T7_kmer_totals[kmer] = 0
-
-for kmer in Di_filter_TM3:
-    Di_T3_kmer_totals[kmer] = 0
-for kmer in Di_filter_TM5:
-    Di_T5_kmer_totals[kmer] = 0
-for kmer in Di_filter_TM6:
-    Di_T6_kmer_totals[kmer] = 0
-for kmer in Di_filter_TM7:
-    Di_T7_kmer_totals[kmer] = 0
-    
-for id in proteins_toconsider:
-    for kmer in AA_filter_TM3:
-        AA_T3_kmer_totals[kmer] += AA_seqvar_TM3[id][kmer]
-    for kmer in AA_filter_TM5:
-        AA_T5_kmer_totals[kmer] += AA_seqvar_TM5[id][kmer]
-    for kmer in AA_filter_TM6:
-        AA_T6_kmer_totals[kmer] += AA_seqvar_TM6[id][kmer]
-    for kmer in AA_filter_TM7:
-        AA_T7_kmer_totals[kmer] += AA_seqvar_TM7[id][kmer]
-
-    for kmer in Di_filter_TM3:
-        Di_T3_kmer_totals[kmer] += Di_seqvar_TM3[id][kmer]
-    for kmer in Di_filter_TM5:
-        Di_T5_kmer_totals[kmer] += Di_seqvar_TM5[id][kmer]
-    for kmer in Di_filter_TM6:
-        Di_T6_kmer_totals[kmer] += Di_seqvar_TM6[id][kmer]
-    for kmer in Di_filter_TM7:
-        Di_T7_kmer_totals[kmer] += Di_seqvar_TM7[id][kmer]
-        
-AA_f3 = open('AA_TM3_kmer_freqs.csv', 'w')
-AA_f5 = open('AA_TM5_kmer_freqs.csv', 'w')
-AA_f6 = open('AA_TM6_kmer_freqs.csv', 'w')
-AA_f7 = open('AA_TM7_kmer_freqs.csv', 'w')
-
-Di_f3 = open('Di_TM3_kmer_freqs.csv', 'w')
-Di_f5 = open('Di_TM5_kmer_freqs.csv', 'w')
-Di_f6 = open('Di_TM6_kmer_freqs.csv', 'w')
-Di_f7 = open('Di_TM7_kmer_freqs.csv', 'w')
-
-for kmer in AA_T3_kmer_totals:
-    AA_f3.write(kmer + "," + str(AA_T3_kmer_totals[kmer]) + "\n")
-for kmer in AA_T5_kmer_totals:
-    AA_f5.write(kmer + "," + str(AA_T5_kmer_totals[kmer]) + "\n")
-for kmer in AA_T6_kmer_totals:
-    AA_f6.write(kmer + "," + str(AA_T6_kmer_totals[kmer]) + "\n")
-for kmer in AA_T7_kmer_totals:
-    AA_f7.write(kmer + "," + str(AA_T7_kmer_totals[kmer]) + "\n")
-
-for kmer in Di_T3_kmer_totals:
-    Di_f3.write(kmer + "," + str(Di_T3_kmer_totals[kmer]) + "\n")
-for kmer in Di_T5_kmer_totals:
-    Di_f5.write(kmer + "," + str(Di_T5_kmer_totals[kmer]) + "\n")
-for kmer in Di_T6_kmer_totals:
-    Di_f6.write(kmer + "," + str(Di_T6_kmer_totals[kmer]) + "\n")
-for kmer in Di_T7_kmer_totals:
-    Di_f7.write(kmer + "," + str(Di_T7_kmer_totals[kmer]) + "\n")
-
-AA_f3.close()
-AA_f5.close()
-AA_f6.close()
-AA_f7.close()
-Di_f3.close()
-Di_f5.close()
-Di_f6.close()
-Di_f7.close()
-
 AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, pos_AA_mat_TM3, unique_ligands, neg_dict)
 AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, pos_AA_mat_TM5, unique_ligands, neg_dict)
 AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, pos_AA_mat_TM6, unique_ligands, neg_dict)
@@ -323,17 +239,56 @@ pos_array = np.repeat(1, int(pos_total))
 neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
-print('Unique Obs: ')
-print(len(lig_mat))
-
-
 neutral_proteins = set()
 neutral_ligands = set()
 for pair in neutral_pairs:
     neutral_proteins.add(pair[0])
     neutral_ligands.add(pair[1])
 
+n_protein_list = []
+i = 0
 
+for id in neutral_proteins:
+    if i < 50:
+        n_protein_list.append(id)
+    else:
+        break
+
+n_categorized_matrix_TM7 = []
+n_di_matrix_TM7 = []
+
+nAA_dict = Globals.initialize_AA_dict(n_protein_list)
+nDi_dict = Globals.initialize_3Di_dict(n_protein_list)
+
+nAA_seqvar_TM3, ignoreAA3 = ReadingFasta.make_seqvar_TMS(nAA_dict, 0, 5, set(), {})
+nAA_seqvar_TM5, ignoreAA5 = ReadingFasta.make_seqvar_TMS(nAA_dict, 1, 5, set(), {})
+nAA_seqvar_TM6, ignoreAA6 = ReadingFasta.make_seqvar_TMS(nAA_dict, 2, 5, set(), {})
+nAA_seqvar_TM7, ignoreAA7 = ReadingFasta.make_seqvar_TMS(nAA_dict, 3, 5, set(), {})
+
+nDi_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(nDi_dict, 0, 5, set(), {})
+nDi_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(nDi_dict, 1, 5, set(), {})
+nDi_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(nDi_dict, 2, 5, set(), {})
+nDi_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(nDi_dict, 3, 5, set(), {})
+
+num_ligands = len(neutral_ligands)
+
+nAA_mat_TM3 = ReadingFasta.makematrix(nAA_seqvar_TM3, AA_filter_TM3, [], num_ligands)
+nAA_mat_TM5 = ReadingFasta.makematrix(nAA_seqvar_TM5, AA_filter_TM5, [], num_ligands)
+nAA_mat_TM6 = ReadingFasta.makematrix(nAA_seqvar_TM6, AA_filter_TM6, [], num_ligands)
+nAA_mat_TM7 = ReadingFasta.makematrix(nAA_seqvar_TM7, AA_filter_TM7, [], num_ligands)
+
+nDi_mat_TM3 = ReadingFasta.makematrix(nDi_seqvar_TM3, Di_filter_TM3, [], num_ligands)
+nDi_mat_TM5 = ReadingFasta.makematrix(nDi_seqvar_TM5, Di_filter_TM3, [], num_ligands)
+nDi_mat_TM6 = ReadingFasta.makematrix(nDi_seqvar_TM6, Di_filter_TM3, [], num_ligands)
+nDi_mat_TM7 = ReadingFasta.makematrix(nDi_seqvar_TM7, Di_filter_TM3, [], num_ligands)
+
+nAA_mat = np.concatenate((np.array(nAA_mat_TM3, dtype= np.uint8), np.array(nAA_mat_TM5, dtype= np.uint8),
+                          np.array(nAA_mat_TM6, dtype= np.uint8), np.array(nAA_mat_TM7, dtype= np.uint8)), axis = 1)
+
+nDi_mat = np.concatenate((np.array(nDi_mat_TM3, dtype= np.uint8), np.array(nDi_mat_TM5, dtype= np.uint8),
+                          np.array(nDi_mat_TM6, dtype= np.uint8), np.array(nDi_mat_TM7, dtype= np.uint8)), axis = 1)
+
+n_intermed = np.concatenate((np.array(nAA_mat, dtype = np.uint8), np.array(nDi_mat, dtype = np.uint8)) , axis = 1)
 
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
