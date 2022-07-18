@@ -19,17 +19,16 @@ import tensorflow as tf
 import config
 from tensorboard.plugins.hparams import api as hp
 import logging as log
+import eli5
 
 
 with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
     hp.hparams_config(
-        hparams=[config.HP_BATCH_SIZE, config.HP_DROPOUT, config.HP_OPTIMIZER],
+        hparams=[config.HP_BATCH_SIZE, config.HP_DROPOUT, config.HP_OPTIMIZER, config.HP_LEARNINGRATE, config.HP_LOSS],
         metrics=[hp.Metric(config.METRIC_ACCURACY, display_name='Accuracy')],
     )
 
 def hpBuildModel(hparams = {
-                #config.HP_NUM_UNITS: num_units,
-                #config.HP_DROPOUT: dropout_rate,
                 config.HP_BATCH_SIZE: 32,
                 config.HP_OPTIMIZER: 'adagrad',
             }):
@@ -68,11 +67,15 @@ def hpBuildModel(hparams = {
     ]
 
     log.info('model evaluation started')
+    explanation = eli5.explain_weights(mod_history)
     with open('hp_results.txt', 'a') as res_log:
         results = model.evaluate(X_test, y_test, verbose=True)
         res_log.write(' '.join([str(r) for r in results]) + ' \n')
         res_log.write('Timing Benchmarks:\n')
         res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
+        text = eli5.format_as_text(explanation, show_feature_values=True)
+        res_log.write('Format Explanation:\n')
+        res_log.write(' '.join([str(r) for r in text]) + '\n')
 
     print(results)
     log.info('model evaluation completed')

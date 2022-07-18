@@ -51,7 +51,17 @@ class GraphCNN:
         return X_train, X_test, y_train, y_test
 
 
-    def createModel(self, hp_optimizer='adagrad'):
+    def createModel(self, hparams={
+        config.HP_OPTIMIZER: tf.keras.optimizers.Adagrad(
+            learning_rate=0.001,
+            initial_accumulator_value=0.1,
+            epsilon=1e-07,
+            name='Adagrad',
+        ),
+        config.HP_BATCH_SIZE: 32,
+        config.HP_DROPOUT: 0.15,
+        config.HP_LEARNINGRATE: 0.001,
+        }):
         
         prot_adj_in = tf.keras.layers.Input(
             shape=(config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_ADJACENCY_MAT_SIZE),
@@ -125,7 +135,7 @@ class GraphCNN:
             res_log.write('\n')
 
         model.compile(
-            optimizer=hp_optimizer,
+            optimizer=hparams[config.HP_OPTIMIZER],
             loss=tf.keras.losses.MeanSquaredLogarithmicError(),
             metrics=[tf.keras.metrics.LogCoshError(),
                 tf.keras.metrics.RootMeanSquaredError(),
