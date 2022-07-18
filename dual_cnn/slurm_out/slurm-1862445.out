@@ -1,0 +1,14 @@
+/var/lib/slurm-llnl/slurmd/job1862445/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1862445/slurm_script: module: not found
+training length:  740
+Traceback (most recent call last):
+  File "/home/users/jvs15/project-protein-fold/moleculekit/model", line 131, in <module>
+    outputs = model(lig.float(), prot.float())
+  File "/home/users/jvs15/miniconda3/envs/moleculekit/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1110, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/users/jvs15/project-protein-fold/moleculekit/model", line 90, in forward
+    hybrid = self.ln1(hybrid)
+  File "/home/users/jvs15/miniconda3/envs/moleculekit/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1110, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/users/jvs15/miniconda3/envs/moleculekit/lib/python3.9/site-packages/torch/nn/modules/linear.py", line 103, in forward
+    return F.linear(input, self.weight, self.bias)
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (4x33280 and 34496x1024)

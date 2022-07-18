@@ -1,0 +1,10 @@
+/var/lib/slurm-llnl/slurmd/job1861961/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1861961/slurm_script: module: not found
+2022-07-12 10:18:46,543 - moleculekit.smallmol.smallmol - WARNING - Reading mol_data_files/4methylAC.mol with force_reading procedure
+1 molecule converted
+
+Traceback (most recent call last):
+  File "/home/users/jvs15/project-protein-fold/moleculekit/io_pairs", line 157, in <module>
+    voxelize_ligands()
+  File "/home/users/jvs15/project-protein-fold/moleculekit/io_pairs", line 39, in voxelize_ligands
+    ligand.center()
+AttributeError: 'SmallMol' object has no attribute 'center'
