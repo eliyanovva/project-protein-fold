@@ -70,6 +70,7 @@ def makematrix(seqvar, feat, mat, unique_l, counts):
 
 def make_nmatrix(seqvar, feat, mat, unique, num_ligs):
     for id in unique:
+        print(id)
         newseq = []
         for kmer in feat:
             #For kmers not found in the protein, populate the matrix with zeros
@@ -81,5 +82,6 @@ def make_nmatrix(seqvar, feat, mat, unique, num_ligs):
         # Add a frequency array for each protein
         for i in range(num_ligs):
                 mat.append(np.array(newseq))
+    print()
     return mat
 

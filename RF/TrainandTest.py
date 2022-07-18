@@ -25,6 +25,7 @@ testY = CombineLigandsProteins.Y
 #FixedClassificationModel.train(testX, testY)
 #Metrics_Graphs.train(testX, testY)
 
+"""
 accuracy = 0
 recall = 0
 BAC = 0
@@ -47,3 +48,4 @@ print('Average Recall: ' + str(recall/50))
 print('Average Balanced: ' + str(BAC/50))
 #print('Average Matthew: ' + str(mat/50))
 #f.close()
+"""
