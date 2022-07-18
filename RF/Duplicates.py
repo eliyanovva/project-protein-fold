@@ -69,6 +69,53 @@ def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, all_i
         # list of proteins that are associated with the unique kmer frequencies
         return unique_proteins
 
+def n_remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, all_ids):
+    unique_seqs = {}
+    # key: AA and 3di kmer frequencies (formatted as string), value: protein with those frequencies
+    # will only store unique kmer frequencies as keys
+
+    if (len(AA_seqvar) == 0) | (len(Di_seqvar) == 0):
+        print('Invalid Sequence dictionaries')
+        return []
+
+    else:
+        #check that AA_seqvar[i] has a frequency value for all kmers in AA_feat[i], for all i
+        #ensures standardization when the freq_str are created later on
+        for i in range(4):
+            for id in AA_seqvar[i]:
+                for kmer in AA_feat[i]:
+                    #if the kmer isn't stored in AA_seqvar[i], initialize the kmer frequency as 0
+                    if kmer not in AA_seqvar[i][id]:
+                        AA_seqvar[i][id][kmer] = 0
+
+        # check that Di_seqvar[i] has a frequency value for all kmers in Di_feat[i], for all i
+        for i in range(4):
+            for id in Di_seqvar[i]:
+                for kmer in Di_feat[i]:
+                    # if the kmer isn't stored in Di_seqvar[i], initialize the kmer frequency as 0
+                    if kmer not in Di_seqvar[i][id]:
+                        Di_seqvar[i][id][kmer] = 0
+
+        for k in range(len(all_ids)):
+            id = all_ids[k]
+            #format the AA and 3di kmer frequencies of id as a single string: freq_str
+            #freq_str will include the frequencies from all the TMs: TM3, TM5, TM6, and TM7
+            freq_str = ""
+            for i in range(4):
+                for kmer in AA_feat[i]:
+                    freq_str += str(AA_seqvar[i][id][kmer])
+            for i in range(4):
+                for kmer in Di_feat[i]:
+                    freq_str += str(Di_seqvar[i][id][kmer])
+
+            # if freq_str is unique, automatically store it in unique_seqs
+            if freq_str not in unique_seqs:
+                unique_seqs[freq_str] = id
+
+        unique_proteins = list(unique_seqs.values())
+        # list of proteins that are associated with the unique kmer frequencies
+        return unique_proteins
+
 #remove_ligands: returns a list of ligands with unique frequencies
 
 #ligand_counts: key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
@@ -92,6 +139,25 @@ def remove_ligands(ligand_counts, total_by_lig):
             old_lig = unique_seqs[freq_str]
             if total_by_lig[lig] > total_by_lig[old_lig]:
                 unique_seqs[freq_str] = lig
+
+    unique_ligands = list(unique_seqs.values())
+    #set of proteins that are associated with the unique kmer frequencies
+
+    return unique_ligands
+
+def n_remove_ligands(ligand_counts):
+    unique_seqs = {}
+    #key: kmer frequencies (formatted as string), value: ligand with those frequencies
+    #will only store unique kmer frequencies as keys
+
+    for lig in ligand_counts:
+        #format the kmer frequencies of lig as a string: freq_str
+        freq_str = ""
+        for kmer in ligand_counts[lig]:
+            freq_str += str(ligand_counts[lig][kmer])
+        #if freq_str is unique, automatically store it in unique_seqs
+        if freq_str not in unique_seqs:
+            unique_seqs[freq_str] = lig
 
     unique_ligands = list(unique_seqs.values())
     #set of proteins that are associated with the unique kmer frequencies
