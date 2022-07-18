@@ -6,7 +6,7 @@ import abc
 
 import config
 
-from data_prep.data_handlers import DataHandlers
+from graph_cnn.data_prep.data_handlers import DataHandlers
 
 
 class ProteinAdjacencyData(DataHandlers):
