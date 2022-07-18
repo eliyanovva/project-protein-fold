@@ -68,8 +68,8 @@ def makematrix(seqvar, feat, mat, unique_l, counts):
                 mat.append(np.array(newseq))
     return mat
 
-def make_nmatrix(seqvar, feat, mat, num_ligs):
-    for id in seqvar:
+def make_nmatrix(seqvar, feat, mat, unique, num_ligs):
+    for id in unique:
         newseq = []
         for kmer in feat:
             #For kmers not found in the protein, populate the matrix with zeros
