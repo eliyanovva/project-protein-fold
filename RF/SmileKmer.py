@@ -15,18 +15,22 @@ def importmatrix(ligand_dict, k, num_proteins):
     ligmat = ligand_matrix(ligand_dict, k, num_proteins)
 
 #initializes a matrix of ligand features
-def ligand_matrix(ligand_dict, k, ligands_toconsider):
-    ligand_counts = ligand_kmer_count(ligand_dict, k, ligands_toconsider)
+def ligand_matrix(ligand_dict, k, ligands):
+    ligand_counts = ligand_kmer_count(ligand_dict, k, ligands)
 
     ligfeatures = list(ligand_counts['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
     return ligfeatures, ligand_counts
 
+def n_ligand_matrix(ligand_dict, k, ligands, filter_kmers):
+    ligand_counts = n_ligand_kmer_count(ligand_dict, k, ligands, filter_kmers)
+    return ligand_counts
+
 #create a dictionary of the frequency counts for all kmers
 #key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
-def ligand_kmer_count(ligand_dict, k, ligands_toconsider):
+def ligand_kmer_count(ligand_dict, k, ligands):
     ligand_counts = {}
-    total_kmers = find_total_kmers(ligand_dict, k, ligands_toconsider)      #list of kmers found in ALL the ligands
-    for lig in ligands_toconsider:
+    total_kmers = find_total_kmers(ligand_dict, k, ligands)      #list of kmers found in ALL the ligands
+    for lig in ligands:
         lig_dict = {}                                   #freq. dict of ALL kmers for a given ligand
         #ensures that the ligand has a freq. measure for all kmers, even kmers that weren't
         #found in the ligand; leads to easier formatting for the final matrix
@@ -38,11 +42,29 @@ def ligand_kmer_count(ligand_dict, k, ligands_toconsider):
         ligand_counts[lig] = lig_dict
     return ligand_counts
 
+
+#key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
+def n_ligand_kmer_count(ligand_dict, k, ligands, filter_kmers):
+    ligand_counts = {}
+
+    for lig in ligands:
+        lig_dict = {}                                   #freq. dict of ALL kmers for a given ligand
+        #ensures that the ligand has a freq. measure for all kmers, even kmers that weren't
+        #found in the ligand; leads to easier formatting for the final matrix
+        for kmer in filter_kmers:
+            lig_dict[kmer] = 0
+        freq_dict = smile_dict(ligand_dict[lig], k)     #freq. dict of the kmers that DID occur in the ligand
+        for kmer in filter_kmers:
+            if kmer in freq_dict:
+                lig_dict[kmer] = freq_dict[kmer]            #if the kmer occured in the ligand, lig_dict is updated accordingly
+        ligand_counts[lig] = lig_dict
+    return ligand_counts
+
 #creates a list of all kmers that can be found in the ligands
-def find_total_kmers(ligand_dict, k, ligands_toconsider):
+def find_total_kmers(ligand_dict, k, ligands):
     kmers = []
     # iterates thru all ligands
-    for lig in ligands_toconsider:
+    for lig in ligands:
         k_list = smile_list(ligand_dict[lig], k)    #list of kmers that can be found in a given ligand
         #creates a unique list of the kmers that can be found in all the ligands
         for kmer in k_list:

@@ -18,9 +18,9 @@ class ModelingParser(argparse.ArgumentParser):
         #self.add_argument(
         #    '--big', help = 'Makes the side of the shape 100 pixels.', action = 'store_true'
         #)
-        self.add_argument(
-            '--hptuning', help = 'Try the GNN with various hyperparameters.', action = 'store_true'
-        )
+        #self.add_argument(
+        #    '--hptuning', help = 'Try the GNN with various hyperparameters.', action = 'store_true'
+        #)
         self.add_argument(
             '--batch_size',
             help = 'Sets the size of the dataset to be used.',
@@ -39,3 +39,35 @@ class ModelingParser(argparse.ArgumentParser):
             'model',
             help = 'Specifies the type of model to be used. Choose between "cnn", "gnn", or "rf".'
         )
+
+        # run - splits the set into training/testing, and runs the model on that
+        # hptuning - runs the hptuning script
+        # eval_tuple - takes a protein and ligand, converts them to matrices and runs them through the model
+        # eval_protein - takes a protein and evaluates its binding coefficients with all available ligands
+        # eval_ligand - takes a ligand and evaluates its binding coefficient with all available proteins.
+        self.add_argument(
+            '--gnn_mode',
+            help = 'Choose between "run", "hptuning", "eval_tuple", "eval_ligand", "eval_protein". The program defaults to the "run" mode.'
+        )
+
+        self.add_argument(
+            '--pdb_file',
+            help = 'File path to the protein pdb file which will be converted to temporary stored matrices.'
+        )
+
+        self.add_argument(
+            '--mol_file',
+            help = "File path to the ligand mol file which will be converted to temporary stored matrices."
+        )
+
+        self.add_argument(
+            '--interaction',
+            help = "Input interaction coefficient between the protein and ligand inputs."
+        )
+
+        self.add_argument(
+            '--verbose',
+            help = "If used, the program will output and preserve DEBUG level logs."
+        )
+
+        

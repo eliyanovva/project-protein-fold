@@ -48,6 +48,8 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
     pos_pairs = []      # list of positive protein-ligand pairs; pos_pairs[i] = [protein id, ligand]
     neg_pairs = []      # list of negative protein-ligand pairs; neg_pairs[i] = [protein id, ligand]
 
+    neutral_pairs = []  # list of neutral protein-ligand pairs; neutral_pairs[i] = [protein id, ligand]
+
     for id in protein_list:
         pos = 0         #running count of pos pairs with id
         neg = 0         #running count of neg pairs with id
@@ -65,5 +67,7 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
 
                 pos_counts[id] = pos
                 neg_counts[id] = neg
+            else:
+                neutral_pairs.append([id, csv])
 
-    return classified, pos_counts, neg_counts, pos_pairs, neg_pairs
+    return classified, pos_counts, neg_counts, pos_pairs, neg_pairs, neutral_pairs

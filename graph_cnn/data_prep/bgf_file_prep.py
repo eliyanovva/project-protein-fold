@@ -16,7 +16,7 @@ class BGFDataFile:
         log.info('Class initialized!')
         
 
-    def getAdjacencyMatrix(self):
+    def getAdjacencyMatrix(self, target_folder=config.PROTEIN_ADJACENCY_PATH):
         log.info('Initiated creation of BGF Adjacency matrix for protein ' + self.protein_name)
         adjacency_matrix = np.zeros((self.atom_count, self.atom_count))
         with open(self.bgf_filename, 'r') as bgf_file:
@@ -27,11 +27,11 @@ class BGFDataFile:
                 for bond in data:
                     adjacency_matrix[int(bond[0])][int(bond[1])] = bond[2]    
         log.info('Initiated saving of adjacency matrix')
-        np.save(os.path.join(config.PROTEIN_ADJACENCY_PATH, self.protein_name + '_adj_mat'), adjacency_matrix)
+        np.save(os.path.join(target_folder, self.protein_name + '_adj_mat'), adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
 
 
-    def getFeatureMatrix(self):
+    def getFeatureMatrix(self, target_folder=config.PROTEIN_FEATURE_PATH):
         # current number of features - 5: 
         # atom type, max covalent bonds, number of lone pairs, atomic charge, alphafold score
         log.info('Initiated creation of BGF Feature matrix for protein ' + self.protein_name)
@@ -50,7 +50,7 @@ class BGFDataFile:
             atom_index += 1
 
         log.info('Initiated saving of feature matrix')
-        np.save(os.path.join(config.PROTEIN_FEATURE_PATH, self.protein_name + '_feat_mat'), feature_matrix)
+        np.save(os.path.join(target_folder, self.protein_name + '_feat_mat'), feature_matrix)
         log.info('The features matrix has been saved!')
 
 

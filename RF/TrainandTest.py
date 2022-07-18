@@ -30,8 +30,8 @@ recall = 0
 BAC = 0
 MAT = 0
 
-#f = open('results_true_false_vals_struct.csv', 'w')
-#f.write('Run,TN,FN,TP,FP' + "\n")
+f = open('results_true_false_vals_struct.csv', 'w')
+f.write('Run,TN,FN,TP,FP' + "\n")
 
 for i in range(50):
     print("run " + str(i))
@@ -40,10 +40,10 @@ for i in range(50):
     recall += rec
     BAC += bac
     MAT += mat
-    #f.write(str(i+1) + ", " + str(TN) + ", " + str(FN) + ", " + str(TP) + ", " + str(FP) + "\n")
+    f.write(str(i+1) + ", " + str(TN) + ", " + str(FN) + ", " + str(TP) + ", " + str(FP) + "\n")
 
 print('Average Accuracy: ' + str(accuracy/50))
 print('Average Recall: ' + str(recall/50))
 print('Average Balanced: ' + str(BAC/50))
-print('Average Matthew: ' + str(mat/50))
+#print('Average Matthew: ' + str(mat/50))
 #f.close()
