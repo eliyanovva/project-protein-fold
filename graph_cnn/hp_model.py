@@ -51,7 +51,7 @@ def hpBuildModel(hparams = {
     callbacks = run_model.createCallbacks()
 
     start_model_fitting = time.time()
-    model = g.createModel(hparams[config.HP_OPTIMIZER])
+    model = g.createModel(hparams[config.HP_OPTIMIZER], hparams=True)
     log.info('model fitting started')
     #look into ideal batch size
     mod_history = model.fit(X_train, y_train, epochs=10, verbose=True, batch_size=hparams[config.HP_BATCH_SIZE], callbacks = callbacks, validation_split=0.2)
