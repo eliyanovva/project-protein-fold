@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 #SBATCH --job-name=monomer_cnag_csplus2_100G_1gpu_16xCPU_xla_memf_5.0_nocontainer       #Job Name
@@ -41,9 +40,9 @@ unset PYTHONPATH
 
  
 
-proteinName=new_mouse_with_mut                            #Set protein name, this will be folder title with output
+proteinName=AER304C                          #Set protein name, this will be folder title with output
 
-faFile=/usr/xtmp/derf/alphafold/data/test/${proteinName}.fasta    #Set path to fasta file
+faFile=/usr/xtmp/derf/alphafold/data/test/${proteinName}    #Set path to fasta file
 
 outputPath=/usr/xtmp/derf/alphafold/output               #Set path to output
 
@@ -77,7 +76,7 @@ echo "The job is getting started..."
 
             --uniref90_database_path=$ALPHAFOLD_DATA_PATH/uniref90/uniref90.fasta \
 
-            --mgnify_database_path=$ALPHAFOLD_DATA_PATH/mgnify/mgy_clusters.fa \
+            --mgnify_database_path=$ALPHAFOLD_DATA_PATH/mgnify/mgy_clusters_2018_12.fa \
 
             --uniclust30_database_path=$ALPHAFOLD_DATA_PATH/uniclust30/uniclust30_2018_08/uniclust30_2018_08 \
 

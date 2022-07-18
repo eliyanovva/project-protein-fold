@@ -44,7 +44,7 @@ uniprot_to_seq = {}
 uniprot_to_seq_new = {}
 
 pickle.dump(symb_to_uniprot, open( "symb_to_uniprot.p", "wb" ))
-
+existing = dict()
 
 with open('sequences.fasta', 'r') as file:
     sequence = ''
@@ -56,6 +56,7 @@ with open('sequences.fasta', 'r') as file:
                 if not exists(os.path.join(human_path1,'AF-' + uniprot + '-F1-model_v2.pdb')) and not exists(os.path.join(human_path2,'AF-' + uniprot + '-F1-model_v2.pdb')):
                     uniprot_to_seq_new.update({uniprot: sequence})
 
+
             sequence = ''
             uniprot = line.split('|')[1]
         else:
@@ -65,6 +66,7 @@ with open('sequences.fasta', 'r') as file:
 
 print(len(uniprot_to_seq))
 print(len(uniprot_to_seq_new))
+print(','.join(existing))
 
 def dict_to_fasta(d, name):
     """
@@ -92,6 +94,8 @@ def mutate(seq, mut):
         ret[index] = m[-1]
     return ''.join(ret)
 
+existing_symb_to_unip = dict()
+
 with open('odorants_ORs_paper.csv') as csv_file:
     for row in csv.reader(csv_file, delimiter=','):
         mutation = ''
@@ -113,6 +117,9 @@ with open('odorants_ORs_paper.csv') as csv_file:
                     uniprot_to_seq.update({unip + '_' + mutation: mutate(uniprot_to_seq[unip], mutation)})
                     if unip in uniprot_to_seq_new:
                         uniprot_to_seq_new.update({unip + '_' + mutation: mutate(uniprot_to_seq[unip], mutation)})
+            if exists(os.path.join(human_path1,'AF-' + unip + '-F1-model_v2.pdb')) or exists(os.path.join(human_path2,'AF-' + unip + '-F1-model_v2.pdb')):
+                if symbol not in existing_symb_to_unip.keys():
+                    existing_symb_to_unip.update({symbol: unip})
 
 
 
@@ -121,7 +128,10 @@ print(len(uniprot_to_seq))
 print(len(uniprot_to_seq_new))
 dict_to_fasta(uniprot_to_seq, 'seq_dict')
 dict_to_fasta(uniprot_to_seq_new, 'new_seq_dict')
+print(existing_symb_to_unip)
 
 #print(symb_to_uniprot)
 
 
+with open('existing_symb_to_unip.p', 'wb') as file:
+    pickle.dump(existing_symb_to_unip, file)

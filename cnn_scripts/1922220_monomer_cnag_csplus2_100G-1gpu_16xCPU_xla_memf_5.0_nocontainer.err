@@ -1,0 +1,26 @@
+FATAL Flags parsing error:
+  flag --fasta_paths=None: Flag --fasta_paths must have a value other than None.
+  flag --output_dir=None: Flag --output_dir must have a value other than None.
+  flag --data_dir=None: Flag --data_dir must have a value other than None.
+  flag --uniref90_database_path=None: Flag --uniref90_database_path must have a value other than None.
+  flag --mgnify_database_path=None: Flag --mgnify_database_path must have a value other than None.
+  flag --template_mmcif_dir=None: Flag --template_mmcif_dir must have a value other than None.
+  flag --max_template_date=None: Flag --max_template_date must have a value other than None.
+  flag --obsolete_pdbs_path=None: Flag --obsolete_pdbs_path must have a value other than None.
+  flag --use_gpu_relax=None: Flag --use_gpu_relax must have a value other than None.
+Pass --helpshort or --helpfull to see help on flags.
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 64: --fasta_paths=/usr/xtmp/derf/alphafold/data/test/a6ndl8_a45t.fasta.fasta: No such file or directory
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 66: --data_dir=/usr/project/csplus2/dietrich/datadir/: No such file or directory
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 68: --run_relax=True: command not found
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 70: --use_gpu_relax=True: command not found
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 72: --model_preset=monomer: command not found
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 74: --db_preset=full_dbs: command not found
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 76: --max_template_date=2021-11-01: command not found
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 78: --uniref90_database_path=/usr/project/csplus2/dietrich/datadir//uniref90/uniref90.fasta: No such file or directory
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 80: --mgnify_database_path=/usr/project/csplus2/dietrich/datadir//mgnify/mgy_clusters.fa: No such file or directory
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 82: --uniclust30_database_path=/usr/project/csplus2/dietrich/datadir//uniclust30/uniclust30_2018_08/uniclust30_2018_08: No such file or directory
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 84: --bfd_database_path=/usr/project/csplus2/dietrich/datadir//bfd/bfd_metaclust_clu_complete_id30_c90_final_seq.sorted_opt: No such file or directory
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 86: --template_mmcif_dir=/usr/project/csplus2/dietrich/datadir//pdb_mmcif/mmcif_files: No such file or directory
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 88: --obsolete_pdbs_path=/usr/project/csplus2/dietrich/datadir//pdb_mmcif/obsolete.dat: No such file or directory
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 90: --pdb70_database_path=/usr/project/csplus2/dietrich/datadir//pdb70/pdb70: No such file or directory
+/var/lib/slurm-llnl/slurmd/job1922220/slurm_script: line 91: --output_dir=/usr/xtmp/derf/alphafold/output: No such file or directory
