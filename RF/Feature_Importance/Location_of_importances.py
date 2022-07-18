@@ -1,3 +1,4 @@
+from functools import cmp_to_key
 import sys
 sys.path.append('../../project-protein-fold/RF/')
 import Globals
@@ -113,9 +114,12 @@ import docx
 from docx.enum.text import WD_COLOR_INDEX
 
 doc = docx.Document()
-doc.add_heading('Sulfur TM3 Important Residues', 0)
+doc.add_heading('Sulfur TM5 Important Residues', 0)
 
-with open('TM_alignments/TM3_align.txt') as f:
+def compare(x, y):
+    return list(x)[0] - list(y)[0]
+
+with open('TM_alignments/TM5_align.txt') as f:
     lines = f.readlines()
     for line in lines:
         paragraph = doc.add_paragraph()
@@ -123,16 +127,18 @@ with open('TM_alignments/TM3_align.txt') as f:
             paragraph.add_run(line)
         else:
             previous = 0
-            ret['3'].sort()
-            print(ret['3'])
-            for important_feature in ret['3']:
-                print(important_feature)
+            for important_feature in sorted(ret['5'], key = cmp_to_key(compare)):
                 if len(important_feature) == 0:
                     break
                 location = list(important_feature)[0]
-                paragraph.add_run(line[previous:location])
-                paragraph.add_run(line[location:location + 5]).font.highlight_color = WD_COLOR_INDEX.YELLOW
-                previous = location + 5
+                if previous < location:
+                    paragraph.add_run(line[previous:location])
+                    paragraph.add_run(line[location:location + 5]).font.highlight_color = WD_COLOR_INDEX.YELLOW
+                    previous = location + 5
+                else:
+                    paragraph.add_run(line[previous:location + 5]).font.highlight_color = WD_COLOR_INDEX.YELLOW
+                    previous = location + 5
+            paragraph.add_run(line[previous:])
 
-doc.save('TM3_highlight.docx')
+doc.save('TM5_highlight.docx')
 
