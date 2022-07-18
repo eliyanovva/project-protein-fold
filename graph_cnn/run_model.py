@@ -72,6 +72,15 @@ def testGNN(model, X_test, y_test):
     return results
 
 
+def runGNN(model, X_run):
+    """Runs the trained model with new data.
+
+    Args:
+        model (tf.keras.Model): The pretrained GNN model.
+        X_run (List[tf.Tensor]): The 4 tensors corresponding to the input data
+    """
+    return model.predict(X_run)
+
 def storeResults(results, timing_measures):
     with open('results.txt', 'a') as res_log:
         res_log.write(' '.join([str(r) for r in results]) + ' \n')
@@ -89,12 +98,13 @@ def evaluateTuple(model, X_val):
     pass
 
 
-def runModel(batch_size=-1):
+def runModel(batch_size=-1, test_frac=0.3):
     gnn = GraphCNN()
     gnn.initialize()
     
     start_train_test_split = time.time()
-    X_train_labels, X_test_labels, y_train_labels, y_test_labels = gnn.trainTestSplit(batch_size=batch_size)
+    X_train_labels, X_test_labels, y_train_labels, y_test_labels = gnn.trainTestSplit(
+        model_test_size=test_frac, batch_size=batch_size)
     end_train_test_split = time.time()
 
     start_train_data_load = time.time()
@@ -123,4 +133,7 @@ def runModel(batch_size=-1):
 
     storeResults(results, timing_measures)
 
+
+def evalNewData(new_X):
+    pass
 #runModel()

@@ -7,11 +7,6 @@ from openbabel import pybel
 
 import config
 
-
-# so far creates an adjacency matrix from a single pdb file
-# TODO: Figure out how/whether you need to save adjacencies to empty
-# places as 0s or as current distances or as -1
-
 class MolDataFile:
     def __init__(self, mol_filename):
         log.info('Class initialized!')
@@ -20,7 +15,7 @@ class MolDataFile:
         self.__getSizes()
         
 
-    def getAdjacencyMatrix(self):
+    def getAdjacencyMatrix(self, target_folder=config.MOL_ADJACENCY_PATH):
     # the adjacency matrix is created with the size of the constant set up in config.py
         log.info('Initiated creation of Mol Adjacency matrix for the compound ' + self.compound_name)
         adjacency_matrix = np.zeros((self.atom_count, self.atom_count))
@@ -29,12 +24,12 @@ class MolDataFile:
             adjacency_matrix[bond_data[i][0] - 1][bond_data[i][1] - 1] = bond_data[i][2]
         
         log.info('Initiated saving of adjacency matrix')
-        file_name = os.path.join(config.MOL_ADJACENCY_PATH, self.compound_name + '_adj_mat')
+        file_name = os.path.join(target_folder, self.compound_name + '_adj_mat')
         np.save(file_name, adjacency_matrix)
         log.info('The adjacency matrix has been saved!')
 
 
-    def getFeatureMatrix(self):
+    def getFeatureMatrix(self, target_folder=config.LIGAND_FEATURE_PATH):
     #building feature matrix for mol file
         log.info('Initiated creation of Mol Feature matrix for the compound ' + self.compound_name)
         feature_matrix = np.zeros((self.atom_count, config.LIGAND_FEATURES_COUNT), dtype='float')
@@ -50,7 +45,7 @@ class MolDataFile:
             atom_index += 1
 
         log.info('Initiated saving of feature matrix')
-        np.save(os.path.join(config.LIGAND_FEATURE_PATH, self.compound_name + '_feat_mat'), feature_matrix)
+        np.save(os.path.join(target_folder, self.compound_name + '_feat_mat'), feature_matrix)
         log.info('The features matrix has been saved!')
 
 
