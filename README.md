@@ -9,6 +9,7 @@ The model input includes amino acid sequence, protein tertiary structure (repres
 ## ProteinFold CNN
 
 ## ProteinFold GCN
+This model has been trained specifically on mouse olfactory receptor data, and outputs the binding coefficient between proteins and ligands based on experimentally measured logFC score. The model uses a multi-input graph neural network, which represents both the protein and the ligand as a graph with an adjacency and a feature matrix. 
 
 ## References
 
