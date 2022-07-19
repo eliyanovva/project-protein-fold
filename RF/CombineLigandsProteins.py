@@ -236,6 +236,8 @@ pos_array = np.repeat(1, int(pos_total))
 neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
+
+print(len(final_matrix))
 print('Finished Part 1')
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
@@ -287,7 +289,7 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
-    #For pair_prediction.py
+    #For PredictPosPairs.py
     global logFC_data
     logFC_data = logFC
     global FDR_data
@@ -310,3 +312,26 @@ def import_final():
     Di7_kmers = Di_filter_TM7
     global filter_kmers
     filter_kmers = list(lig_counts_filter['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
+    #For PredictNewCombos
+    global uni_prot
+    uni_prot = unique_proteins
+    global uni_lig
+    uni_lig = unique_ligands
+    global AA3_seqs
+    AA3_seqs = AA_seqvar_TM3
+    global AA5_seqs
+    AA5_seqs = AA_seqvar_TM5
+    global AA6_seqs
+    AA6_seqs = AA_seqvar_TM6
+    global AA7_seqs
+    AA7_seqs = AA_seqvar_TM7
+    global Di3_seqs
+    Di3_seqs = Di_seqvar_TM3
+    global Di5_seqs
+    Di5_seqs = Di_seqvar_TM5
+    global Di6_seqs
+    Di6_seqs = Di_seqvar_TM6
+    global Di7_seqs
+    Di7_seqs = Di_seqvar_TM7
+    global lig_counts
+    lig_counts = lig_counts_filter

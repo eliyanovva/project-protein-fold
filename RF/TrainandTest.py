@@ -2,7 +2,7 @@
 import CombineLigandsProteins
 #import Sequence_only
 import FixedClassificationModel
-import pair_prediction
+import PredictNewCombos
 #import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
@@ -11,6 +11,48 @@ import pair_prediction
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
+"""
+PredictNewCombos.import_final()
+newX = PredictNewCombos.X
+new_combos = PredictNewCombos.combos
+all_ligs = set()
+
+combo_list = []
+for id in new_combos:
+    for lig in new_combos[id]:
+        combo_list.append([id, lig])
+        all_ligs.add(lig)
+
+combo_dict = {}
+for id in new_combos:
+    row = {}
+    for lig in new_combos[id]:
+        row[lig] = 0
+    combo_dict[id] = row
+
+for i in range(50):
+    print('run ' + str(i))
+    n_pred = FixedClassificationModel.neutral_train(testX, testY, newX)
+
+    for j in range(len(n_pred)):
+        combo = combo_list[j]
+        combo_dict[combo[0]][combo[1]] += n_pred[j]
+
+f = open('new_combo_prediction.csv', 'w')
+
+f.write('Protein')
+for lig in all_ligs:
+    f.write("," + lig)
+f.write("\n")
+
+for id in new_combos:
+    f.write(id)
+    for lig in all_ligs:
+        if new_combos[id].count(lig) == 0:
+            f.write(",-")
+        else:
+            f.write("," + str(combo_dict[id][lig]))
+    f.write("\n")
 
 pair_prediction.import_final()
 n_testX = pair_prediction.nMat
@@ -66,7 +108,6 @@ for id in n_proteins:
 #fi.importance_file(testX, testY, CombineLigandsProteins.feats)
 #FixedClassificationModel.train(testX, testY)
 #Metrics_Graphs.train(testX, testY)
-
 """
 accuracy = 0
 recall = 0
@@ -90,4 +131,3 @@ print('Average Recall: ' + str(recall/50))
 print('Average Balanced: ' + str(BAC/50))
 #print('Average Matthew: ' + str(mat/50))
 #f.close()
-"""

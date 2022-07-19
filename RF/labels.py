@@ -56,6 +56,17 @@ def extract_highvals(logFC_byID, FDR_byID, ligands):
 
     return possible
 
+def extract_new_combos(FDR_byID, proteins, ligands):
+    new_combos = {}
+
+    for id in proteins:
+        new_combos[id] = []
+        for lig in ligands:
+            FDR = FDR_byID[id][lig]
+            if (FDR > .1):
+                new_combos[id].append(lig)
+    return new_combos
+
 
 # Create a classification dictionary with protein-ligand pair keys and bind (1) or not bind (0) as values
 def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
