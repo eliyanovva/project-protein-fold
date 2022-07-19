@@ -58,7 +58,7 @@ def matthew_counts(y_test, y_pred):
             FP += 1
     return TN, FN, TP, FP
 
-def neutral_train(features, labels, n_features, proteins, ligands):
+def neutral_train(features, labels, n_features):
     X = features
     Y = labels
     X_n = n_features
@@ -69,18 +69,9 @@ def neutral_train(features, labels, n_features, proteins, ligands):
 
     n_pred = clf.predict(X_n)
 
-    num_proteins = len(proteins)
-    num_ligands = len(ligands)
+    #f = open('neutral_pair_predictions.txt', "w")
 
-    f = open('neutral_pair_predictions.txt', "w")
-
-    i = 0
-    for p in n_pred:
-        p_ind = i // num_ligands
-        l_ind = i % p_ind
-
-        f.write(proteins[p_ind] + "\t" + ligands[l_ind] + "\t" + str(p) + "\n")
-        i += 1
+    return n_pred
 
 
 

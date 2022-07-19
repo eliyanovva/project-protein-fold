@@ -15,12 +15,12 @@ import Duplicates
 #otherwise, input an integer value to select the filter strength
 
 #prot_filter_strength = 'None'
-#prot_filter_strength = 6
-prot_filter_strength = 'All'
+prot_filter_strength = 6
+#prot_filter_strength = 'All'
 
 #lig_filter_strength = 'None'
-#lig_filter_strength = 6
-lig_filter_strength = 'All'
+lig_filter_strength = 6
+#lig_filter_strength = 'All'
 
 #Create classification dictionary
 acc_ids = Globals.initialize_protein_list()
@@ -235,17 +235,15 @@ pos_array = np.repeat(1, int(pos_total))
 neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
-neutral_proteins = set()
-n_ligands = set()
-for pair in neutral_pairs:
-    neutral_proteins.add(pair[0])
-    n_ligands.add(pair[1])
+print('Finished Part 1')
 
-n_list = list(neutral_proteins)
-n_list.sort(reverse=True)
-n_protein_list = n_list[:50]
+acc_set = set(acc_ids)
+neutral_proteins = acc_set.difference(proteins_toconsider) #https://www.w3schools.com/python/ref_set_difference.asp
 
-neutral_ligands = list(n_ligands)
+n_protein_list = list(neutral_proteins)
+n_protein_list.sort(reverse=True)
+
+neutral_ligands = Globals.initialize_ligand_list()
 neutral_ligands.sort()
 
 nAA_dict = Globals.initialize_AA_dict(n_protein_list)
@@ -272,6 +270,8 @@ n_uni_lig = Duplicates.n_remove_ligands(n_lig_counts)
 num_ligands = len(n_uni_lig)
 
 nlig_mat = []
+for lig in n_uni_lig:
+    nlig_mat.append(np.array(list(n_lig_counts[lig].values())))
 
 nAA_mat_TM3 = ReadingFasta.make_nmatrix(nAA_seqvar_TM3, AA_filter_TM3, [], n_unip, num_ligands)
 nAA_mat_TM5 = ReadingFasta.make_nmatrix(nAA_seqvar_TM5, AA_filter_TM5, [], n_unip, num_ligands)
@@ -290,21 +290,22 @@ nDi_mat = np.concatenate((np.array(nDi_mat_TM3, dtype= np.uint8), np.array(nDi_m
                           np.array(nDi_mat_TM6, dtype= np.uint8), np.array(nDi_mat_TM7, dtype= np.uint8)), axis = 1)
 
 n_intermed = np.concatenate((np.array(nAA_mat, dtype = np.uint8), np.array(nDi_mat, dtype = np.uint8)) , axis = 1)
-
 n_final_lig = np.repeat(nlig_mat, len(n_unip), axis = 0)
 
 n_final_mat = np.concatenate((n_intermed, n_final_lig), axis=1)
-
 """
-print(len(n_unip))                  #49
+print(len(n_unip))                  #404
 print(len(neutral_ligands))         #55
-print(len(filter_kmers))            #81
-print(len(n_intermed))              #1372
-print(len(n_intermed[0]))           #3789
-print(len(n_uni_lig))               #28
-print(len(n_final_lig))             #1372
-print(len(n_final_lig[0]))          #81
+print(len(filter_kmers))            #182
+print(len(n_intermed))              #21412
+print(len(n_intermed[0]))           #10547
+print(len(n_uni_lig))               #53
+print(len(n_final_lig))             #21412
+print(len(n_final_lig[0]))          #182
 """
+
+for lig in n_uni_lig:
+    print(lig)
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
 def uniquematrix(matrix):

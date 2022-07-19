@@ -15,7 +15,41 @@ n_testX = CombineLigandsProteins.nMat
 n_proteins = CombineLigandsProteins.nproteins
 n_ligands = CombineLigandsProteins.nligands
 
-FixedClassificationModel.neutral_train(testX, testY, n_testX, n_proteins, n_ligands)
+neutral_dict = {}
+for protein in n_proteins:
+    row = {}
+    for lig in n_ligands:
+        row[lig] = 0
+    neutral_dict[protein] = row
+
+num_ligands = len(n_ligands)
+
+for i in range(50):
+    print('run ' + str(i))
+    n_pred = FixedClassificationModel.neutral_train(testX, testY, n_testX)
+
+    j = 0
+    for p in n_pred:
+        p_ind = j // num_ligands
+        if p_ind == 0:
+            l_ind = j
+        else:
+            l_ind = j % num_ligands
+        neutral_dict[n_proteins[p_ind]][n_ligands[l_ind]] += p
+        j += 1
+
+f = open('neutral_predict_none.csv', 'w')
+
+f.write('Protein,')
+for lig in n_ligands:
+    f.write(lig + ",")
+f.write("\n")
+
+for id in n_proteins:
+    f.write(id + ",")
+    for lig in n_ligands:
+        f.write(str(neutral_dict[id][lig]) + ',')
+    f.write("\n")
 
 #Sequence_only.import_final()
 #seqX = Sequence_only.X
