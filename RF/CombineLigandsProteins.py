@@ -3,6 +3,7 @@
 #Imports
 import SmileKmer
 import numpy as np
+import pandas as pd
 import ReadingFasta
 import labels
 import Globals
@@ -87,24 +88,7 @@ di_matrix_TM7 = []
 
 #Create dict of AA sequences only with proteins from pos or neg pairs
 AA_dict = Globals.initialize_AA_dict(list(proteins_toconsider))
-"""
-f3 = open('T3_consider.txt', 'w')
-f5 = open('T5_consider.txt', 'w')
-f6 = open('T6_consider.txt', 'w')
-f7 = open('T7_consider.txt', 'w')
 
-for id in proteins_toconsider:
-    f3.write(">" + id + "\n")
-    f5.write(">" + id + "\n")
-    f6.write(">" + id + "\n")
-    f7.write(">" + id + "\n")
-
-    f3.write(AA_dict[id][0] + "\n")
-    f5.write(AA_dict[id][1] + "\n")
-    f6.write(AA_dict[id][2] + "\n")
-    f7.write(AA_dict[id][3] + "\n")
-
-"""
 #Create AA output for TMs 3,5,6,7
 AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
 AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, categorized_seqs_TM5, categorized_features_TM5)
@@ -135,9 +119,6 @@ AA_seqvar = [AA_seqvar_TM3, AA_seqvar_TM5, AA_seqvar_TM6, AA_seqvar_TM7]
 AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
 Di_seqvar = [Di_seqvar_TM3, Di_seqvar_TM5, Di_seqvar_TM6, Di_seqvar_TM7]
 Di_feat = [Di_filter_TM3, Di_filter_TM5, Di_filter_TM6, Di_filter_TM7]
-
-print(len(AA_filter_TM3) + len(AA_filter_TM5) + len(AA_filter_TM6) + len(AA_filter_TM7) + len(Di_filter_TM3) +
-      len(Di_filter_TM5) + len(Di_filter_TM6) + len(Di_filter_TM7))
 
 #Extract proteins with unique AA and 3di kmer frequencies
 unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, list(proteins_toconsider))
@@ -201,8 +182,6 @@ lig_counts_filter = Filtering.richness_ligand(ligand_counts, pos_by_lig, neg_by_
 #Extract ligands with unique kmer frequencies
 unique_ligands = Duplicates.remove_ligands(lig_counts_filter, total_by_lig)
 
-print(len(lig_counts_filter['pS6_DE_1p_dimethyltrisulfide.csv'].keys()))
-
 pos_total = 0           #num. of positive pairs with ligands from unique_ligands
 neg_total = 0           #num. of negative pairs with ligands from unique_ligands
 lig_mat = []            #matrix to store ligand features
@@ -257,79 +236,9 @@ pos_array = np.repeat(1, int(pos_total))
 neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
+
+print(len(final_matrix))
 print('Finished Part 1')
-
-"""
-neutral_proteins = set()
-neutral_ligands = set()
-for pair in neutral_pairs:
-    neutral_proteins.add(pair[0])
-    neutral_ligands.add(pair[1])
-
-n_protein_list = []
-i = 0
-
-for id in neutral_proteins:
-    if i < 50:
-        n_protein_list.append(id)
-    else:
-        break
-
-nAA_dict = Globals.initialize_AA_dict(n_protein_list)
-nDi_dict = Globals.initialize_3Di_dict(n_protein_list)
-
-nAA_seqvar_TM3, ignoreAA3 = ReadingFasta.make_seqvar_TMS(nAA_dict, 0, 5, {}, set())
-nAA_seqvar_TM5, ignoreAA5 = ReadingFasta.make_seqvar_TMS(nAA_dict, 1, 5, {}, set())
-nAA_seqvar_TM6, ignoreAA6 = ReadingFasta.make_seqvar_TMS(nAA_dict, 2, 5, {}, set())
-nAA_seqvar_TM7, ignoreAA7 = ReadingFasta.make_seqvar_TMS(nAA_dict, 3, 5, {}, set())
-
-nDi_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(nDi_dict, 0, 5, {}, set())
-nDi_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(nDi_dict, 1, 5, {}, set())
-nDi_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(nDi_dict, 2, 5, {}, set())
-nDi_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(nDi_dict, 3, 5, {}, set())
-
-nAA_seqvar = [nAA_seqvar_TM3, nAA_seqvar_TM5, nAA_seqvar_TM6, nAA_seqvar_TM7]
-nDi_seqvar = [nDi_seqvar_TM3, nDi_seqvar_TM5, nDi_seqvar_TM6, nDi_seqvar_TM7]
-n_unip = Duplicates.n_remove_proteins(nAA_seqvar, AA_feat, nDi_seqvar, Di_feat, n_protein_list)
-
-filter_kmers = list(lig_counts_filter['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
-n_lig_counts = SmileKmer.n_ligand_matrix(ligand_dict, 5, neutral_ligands, filter_kmers)
-n_uni_lig = Duplicates.n_remove_ligands(n_lig_counts)
-num_ligands = len(n_unip)
-
-nlig_mat = []
-for lig in n_uni_lig:
-    nlig_mat.append(np.array(list(n_lig_counts[lig].values())))
-
-nAA_mat_TM3 = ReadingFasta.make_nmatrix(nAA_seqvar_TM3, AA_filter_TM3, [], n_unip, num_ligands)
-nAA_mat_TM5 = ReadingFasta.make_nmatrix(nAA_seqvar_TM5, AA_filter_TM5, [], n_unip, num_ligands)
-nAA_mat_TM6 = ReadingFasta.make_nmatrix(nAA_seqvar_TM6, AA_filter_TM6, [], n_unip, num_ligands)
-nAA_mat_TM7 = ReadingFasta.make_nmatrix(nAA_seqvar_TM7, AA_filter_TM7, [], n_unip, num_ligands)
-
-nDi_mat_TM3 = ReadingFasta.make_nmatrix(nDi_seqvar_TM3, Di_filter_TM3, [], n_unip, num_ligands)
-nDi_mat_TM5 = ReadingFasta.make_nmatrix(nDi_seqvar_TM5, Di_filter_TM3, [], n_unip, num_ligands)
-nDi_mat_TM6 = ReadingFasta.make_nmatrix(nDi_seqvar_TM6, Di_filter_TM3, [], n_unip, num_ligands)
-nDi_mat_TM7 = ReadingFasta.make_nmatrix(nDi_seqvar_TM7, Di_filter_TM3, [], n_unip, num_ligands)
-
-nAA_mat = np.concatenate((np.array(nAA_mat_TM3, dtype= np.uint8), np.array(nAA_mat_TM5, dtype= np.uint8),
-                          np.array(nAA_mat_TM6, dtype= np.uint8), np.array(nAA_mat_TM7, dtype= np.uint8)), axis = 1)
-
-nDi_mat = np.concatenate((np.array(nDi_mat_TM3, dtype= np.uint8), np.array(nDi_mat_TM5, dtype= np.uint8),
-                          np.array(nDi_mat_TM6, dtype= np.uint8), np.array(nDi_mat_TM7, dtype= np.uint8)), axis = 1)
-
-n_intermed = np.concatenate((np.array(nAA_mat, dtype = np.uint8), np.array(nDi_mat, dtype = np.uint8)) , axis = 1)
-
-n_final_lig = np.repeat(nlig_mat, len(n_unip), axis = 0)
-n_final_mat = np.concatenate((n_intermed, n_final_lig), axis=1)
-
-print(len(neutral_ligands))         #
-print(len(filter_kmers))            #
-print(len(n_intermed))              #
-print(len(n_intermed[0]))           #
-print(len(n_uni_lig))               #
-print(len(n_final_lig))             #
-print(len(n_final_lig[0]))          #
-"""
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
 def uniquematrix(matrix):
@@ -370,8 +279,6 @@ def import_final():
     X = final_matrix
     global Y
     Y = logFCmat
-    global nMat
-    nMat = n_final_mat
     global feats
     feat1.extend(feat2)
     feat1.extend(feat3)
@@ -382,3 +289,49 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
+    #For PredictPosPairs.py
+    global logFC_data
+    logFC_data = logFC
+    global FDR_data
+    FDR_data = FDR
+    global AA3_kmers
+    AA3_kmers = AA_filter_TM3
+    global AA5_kmers
+    AA5_kmers = AA_filter_TM5
+    global AA6_kmers
+    AA6_kmers = AA_filter_TM6
+    global AA7_kmers
+    AA7_kmers = AA_filter_TM7
+    global Di3_kmers
+    Di3_kmers = Di_filter_TM3
+    global Di5_kmers
+    Di5_kmers = Di_filter_TM5
+    global Di6_kmers
+    Di6_kmers = Di_filter_TM6
+    global Di7_kmers
+    Di7_kmers = Di_filter_TM7
+    global filter_kmers
+    filter_kmers = list(lig_counts_filter['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
+    #For PredictNewCombos
+    global uni_prot
+    uni_prot = unique_proteins
+    global uni_lig
+    uni_lig = unique_ligands
+    global AA3_seqs
+    AA3_seqs = AA_seqvar_TM3
+    global AA5_seqs
+    AA5_seqs = AA_seqvar_TM5
+    global AA6_seqs
+    AA6_seqs = AA_seqvar_TM6
+    global AA7_seqs
+    AA7_seqs = AA_seqvar_TM7
+    global Di3_seqs
+    Di3_seqs = Di_seqvar_TM3
+    global Di5_seqs
+    Di5_seqs = Di_seqvar_TM5
+    global Di6_seqs
+    Di6_seqs = Di_seqvar_TM6
+    global Di7_seqs
+    Di7_seqs = Di_seqvar_TM7
+    global lig_counts
+    lig_counts = lig_counts_filter

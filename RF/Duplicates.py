@@ -111,6 +111,10 @@ def n_remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, all_ids):
             # if freq_str is unique, automatically store it in unique_seqs
             if freq_str not in unique_seqs:
                 unique_seqs[freq_str] = id
+            else:
+                old_id = unique_seqs[freq_str]
+                if old_id < id:
+                    unique_seqs[freq_str] = id
 
         unique_proteins = list(unique_seqs.values())
         # list of proteins that are associated with the unique kmer frequencies
@@ -158,6 +162,10 @@ def n_remove_ligands(ligand_counts):
         #if freq_str is unique, automatically store it in unique_seqs
         if freq_str not in unique_seqs:
             unique_seqs[freq_str] = lig
+        else:
+            old_lig = unique_seqs[freq_str]
+            if old_lig < lig:
+                unique_seqs[freq_str] = lig
 
     unique_ligands = list(unique_seqs.values())
     #set of proteins that are associated with the unique kmer frequencies
