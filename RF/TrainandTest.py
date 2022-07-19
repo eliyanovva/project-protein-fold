@@ -2,6 +2,7 @@
 import CombineLigandsProteins
 #import Sequence_only
 import FixedClassificationModel
+import pair_prediction
 #import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
@@ -11,9 +12,10 @@ CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 
-n_testX = CombineLigandsProteins.nMat
-n_proteins = CombineLigandsProteins.nproteins
-n_ligands = CombineLigandsProteins.nligands
+pair_prediction.import_final()
+n_testX = pair_prediction.nMat
+n_proteins = pair_prediction.nproteins
+n_ligands = pair_prediction.nligands
 
 neutral_dict = {}
 for protein in n_proteins:
@@ -38,7 +40,7 @@ for i in range(50):
         neutral_dict[n_proteins[p_ind]][n_ligands[l_ind]] += p
         j += 1
 
-f = open('neutral_predict_none.csv', 'w')
+f = open('pos_pair_prediction_all.csv', 'w')
 
 f.write('Protein,')
 for lig in n_ligands:

@@ -54,7 +54,7 @@ def initialize_AA_dict(p_list):
     protein_list = p_list
 
     TMs_by_id = {}
-    num_rows = df.shape[0]
+    num_rows = df.shape[0]      #https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html
 
     for i in range(num_rows):
         id = df.at[i, 'protein']

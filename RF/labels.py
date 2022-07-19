@@ -38,6 +38,24 @@ def labels():
     # Return dictionaries with protein-ligand pair keys and logFC and FDR values
     return logFC_byID, FDR_byID
 
+def extract_highvals(logFC_byID, FDR_byID, ligands):
+    f = open('high_logFC_FDR.csv', 'w')
+    f.write('protein,ligand,logFC,FDR' + "\n")
+
+    possible = {}
+
+    for id in acc_ids:
+        possible[id] = []
+        for lig in ligands:
+            FDR = FDR_byID[id][lig]
+            logFC = logFC_byID[id][lig]
+            if (FDR > .1) & (logFC >= 1):
+                f.write(id + "," + lig + "," + str(logFC) + "," + str(FDR) + "\n")
+                possible[id].append(lig)
+    f.close()
+
+    return possible
+
 
 # Create a classification dictionary with protein-ligand pair keys and bind (1) or not bind (0) as values
 def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):

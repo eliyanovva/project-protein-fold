@@ -3,6 +3,7 @@
 #Imports
 import SmileKmer
 import numpy as np
+import pandas as pd
 import ReadingFasta
 import labels
 import Globals
@@ -15,12 +16,12 @@ import Duplicates
 #otherwise, input an integer value to select the filter strength
 
 #prot_filter_strength = 'None'
-prot_filter_strength = 6
-#prot_filter_strength = 'All'
+#prot_filter_strength = 6
+prot_filter_strength = 'All'
 
 #lig_filter_strength = 'None'
-lig_filter_strength = 6
-#lig_filter_strength = 'All'
+#lig_filter_strength = 6
+lig_filter_strength = 'All'
 
 #Create classification dictionary
 acc_ids = Globals.initialize_protein_list()
@@ -237,76 +238,6 @@ logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
 print('Finished Part 1')
 
-acc_set = set(acc_ids)
-neutral_proteins = acc_set.difference(proteins_toconsider) #https://www.w3schools.com/python/ref_set_difference.asp
-
-n_protein_list = list(neutral_proteins)
-n_protein_list.sort(reverse=True)
-
-neutral_ligands = Globals.initialize_ligand_list()
-neutral_ligands.sort()
-
-nAA_dict = Globals.initialize_AA_dict(n_protein_list)
-nDi_dict = Globals.initialize_3Di_dict(n_protein_list)
-
-nAA_seqvar_TM3, ignoreAA3 = ReadingFasta.make_seqvar_TMS(nAA_dict, 0, 5, {}, set())
-nAA_seqvar_TM5, ignoreAA5 = ReadingFasta.make_seqvar_TMS(nAA_dict, 1, 5, {}, set())
-nAA_seqvar_TM6, ignoreAA6 = ReadingFasta.make_seqvar_TMS(nAA_dict, 2, 5, {}, set())
-nAA_seqvar_TM7, ignoreAA7 = ReadingFasta.make_seqvar_TMS(nAA_dict, 3, 5, {}, set())
-
-nDi_seqvar_TM3, ignoreDi3 = ReadingFasta.make_seqvar_TMS(nDi_dict, 0, 5, {}, set())
-nDi_seqvar_TM5, ignoreDi5 = ReadingFasta.make_seqvar_TMS(nDi_dict, 1, 5, {}, set())
-nDi_seqvar_TM6, ignoreDi6 = ReadingFasta.make_seqvar_TMS(nDi_dict, 2, 5, {}, set())
-nDi_seqvar_TM7, ignoreDi7 = ReadingFasta.make_seqvar_TMS(nDi_dict, 3, 5, {}, set())
-
-nAA_seqvar = [nAA_seqvar_TM3, nAA_seqvar_TM5, nAA_seqvar_TM6, nAA_seqvar_TM7]
-nDi_seqvar = [nDi_seqvar_TM3, nDi_seqvar_TM5, nDi_seqvar_TM6, nDi_seqvar_TM7]
-n_unip = Duplicates.n_remove_proteins(nAA_seqvar, AA_feat, nDi_seqvar, Di_feat, n_protein_list)
-
-filter_kmers = list(lig_counts_filter['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
-n_lig_counts = SmileKmer.n_ligand_matrix(ligand_dict, 5, neutral_ligands, filter_kmers)
-n_uni_lig = Duplicates.n_remove_ligands(n_lig_counts)
-
-num_ligands = len(n_uni_lig)
-
-nlig_mat = []
-for lig in n_uni_lig:
-    nlig_mat.append(np.array(list(n_lig_counts[lig].values())))
-
-nAA_mat_TM3 = ReadingFasta.make_nmatrix(nAA_seqvar_TM3, AA_filter_TM3, [], n_unip, num_ligands)
-nAA_mat_TM5 = ReadingFasta.make_nmatrix(nAA_seqvar_TM5, AA_filter_TM5, [], n_unip, num_ligands)
-nAA_mat_TM6 = ReadingFasta.make_nmatrix(nAA_seqvar_TM6, AA_filter_TM6, [], n_unip, num_ligands)
-nAA_mat_TM7 = ReadingFasta.make_nmatrix(nAA_seqvar_TM7, AA_filter_TM7, [], n_unip, num_ligands)
-
-nDi_mat_TM3 = ReadingFasta.make_nmatrix(nDi_seqvar_TM3, Di_filter_TM3, [], n_unip, num_ligands)
-nDi_mat_TM5 = ReadingFasta.make_nmatrix(nDi_seqvar_TM5, Di_filter_TM5, [], n_unip, num_ligands)
-nDi_mat_TM6 = ReadingFasta.make_nmatrix(nDi_seqvar_TM6, Di_filter_TM6, [], n_unip, num_ligands)
-nDi_mat_TM7 = ReadingFasta.make_nmatrix(nDi_seqvar_TM7, Di_filter_TM7, [], n_unip, num_ligands)
-
-nAA_mat = np.concatenate((np.array(nAA_mat_TM3, dtype= np.uint8), np.array(nAA_mat_TM5, dtype= np.uint8),
-                          np.array(nAA_mat_TM6, dtype= np.uint8), np.array(nAA_mat_TM7, dtype= np.uint8)), axis = 1)
-
-nDi_mat = np.concatenate((np.array(nDi_mat_TM3, dtype= np.uint8), np.array(nDi_mat_TM5, dtype= np.uint8),
-                          np.array(nDi_mat_TM6, dtype= np.uint8), np.array(nDi_mat_TM7, dtype= np.uint8)), axis = 1)
-
-n_intermed = np.concatenate((np.array(nAA_mat, dtype = np.uint8), np.array(nDi_mat, dtype = np.uint8)) , axis = 1)
-n_final_lig = np.repeat(nlig_mat, len(n_unip), axis = 0)
-
-n_final_mat = np.concatenate((n_intermed, n_final_lig), axis=1)
-"""
-print(len(n_unip))                  #404
-print(len(neutral_ligands))         #55
-print(len(filter_kmers))            #182
-print(len(n_intermed))              #21412
-print(len(n_intermed[0]))           #10547
-print(len(n_uni_lig))               #53
-print(len(n_final_lig))             #21412
-print(len(n_final_lig[0]))          #182
-"""
-
-for lig in n_uni_lig:
-    print(lig)
-
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
 def uniquematrix(matrix):
     rowCount = len(matrix)
@@ -346,12 +277,6 @@ def import_final():
     X = final_matrix
     global Y
     Y = logFCmat
-    global nMat
-    nMat = n_final_mat
-    global nproteins
-    nproteins = n_unip
-    global nligands
-    nligands = n_uni_lig
     global feats
     feat1.extend(feat2)
     feat1.extend(feat3)
@@ -362,3 +287,26 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
+    #For pair_prediction.py
+    global logFC_data
+    logFC_data = logFC
+    global FDR_data
+    FDR_data = FDR
+    global AA3_kmers
+    AA3_kmers = AA_filter_TM3
+    global AA5_kmers
+    AA5_kmers = AA_filter_TM5
+    global AA6_kmers
+    AA6_kmers = AA_filter_TM6
+    global AA7_kmers
+    AA7_kmers = AA_filter_TM7
+    global Di3_kmers
+    Di3_kmers = Di_filter_TM3
+    global Di5_kmers
+    Di5_kmers = Di_filter_TM5
+    global Di6_kmers
+    Di6_kmers = Di_filter_TM6
+    global Di7_kmers
+    Di7_kmers = Di_filter_TM7
+    global filter_kmers
+    filter_kmers = list(lig_counts_filter['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
