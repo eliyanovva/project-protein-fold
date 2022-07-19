@@ -58,5 +58,7 @@ HP_DROPOUT = hp.HParam('dropout', hp.Discrete([0.1, 0.15, 0.2]))
 HP_OPTIMIZER = hp.HParam('optimizer', hp.Discrete(['adam', 'sgd', 'adagrad']))
 HP_LOSS = hp.HParam('loss', hp.Discrete(['MeanSquaredLogarithmicError', 'MeanAbsoluteError', 'MeanSquaredError']))
 HP_LEARNINGRATE = hp.HParam('learning_rate', hp.Discrete([0.001, 0.0001, 0.00001]))
+HP_VALIDATION_SPLIT = hp.HParam('validation_split', hp.Discrete([0.1, 0.15, 0.2]))
+HP_TEST_TRAIN_SPLIT = hp.HParam('test_train_split', hp.Discrete([0.1, 0.15, 0.2]))
 
 METRIC_ACCURACY = 'accuracy'
