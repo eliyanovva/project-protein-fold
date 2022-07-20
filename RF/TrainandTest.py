@@ -13,6 +13,7 @@ testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 logFC = CombineLigandsProteins.logFC_data
 FDR = CombineLigandsProteins.FDR_data
+BALANCE = CombineLigandsProteins.balance
 
 PredictNewCombos.import_final()
 newX = PredictNewCombos.X
@@ -34,7 +35,7 @@ for id in new_combos:
 
 for i in range(50):
     print('run ' + str(i))
-    n_pred = FixedClassificationModel.neutral_train(testX, testY, newX)
+    n_pred = FixedClassificationModel.neutral_train(testX, testY, newX, BALANCE)
 
     for j in range(len(n_pred)):
         combo = combo_list[j]
@@ -89,7 +90,7 @@ f.close()
 #AdjustingThreshold.train(testX, testY)
 
 #fi.importance_file(testX, testY, CombineLigandsProteins.feats)
-#FixedClassificationModel.train(testX, testY)
+#FixedClassificationModel.train(testX, testY, BALANCE)
 #Metrics_Graphs.train(testX, testY)
 
 accuracy = 0

@@ -330,6 +330,8 @@ def import_final():
     feat1.extend(feat8)
     feat1.extend(ligand_features)
     feats = feat1
+    global balance
+    balance = BALANCED
     #For PredictPosPairs.py
     global logFC_data
     logFC_data = logFC
