@@ -63,10 +63,9 @@ def extract_new_combos(FDR_byID, proteins, ligands):
         new_combos[id] = []
         for lig in ligands:
             FDR = FDR_byID[id][lig]
-            if (FDR > .15) & (FDR <= .6):        #.5 => 31, .6 => 43
+            if (FDR > .15) & (FDR <= .4):        #.5 => 31, .6 => 43
                 new_combos[id].append(lig)
                 i += 1
-        print(id + ": " + str(i))
     return new_combos
 
 # Create a classification dictionary with protein-ligand pair keys and bind (1) or not bind (0) as values

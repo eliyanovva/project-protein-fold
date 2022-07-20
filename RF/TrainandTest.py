@@ -14,7 +14,6 @@ testY = CombineLigandsProteins.Y
 logFC = CombineLigandsProteins.logFC_data
 FDR = CombineLigandsProteins.FDR_data
 
-"""
 PredictNewCombos.import_final()
 newX = PredictNewCombos.X
 new_combos = PredictNewCombos.combos
@@ -58,14 +57,14 @@ for id in new_combos:
     f.write("\n")
 f.close()
 
-f = open('high_FDR6_pairs.txt', 'w')
+f = open('high_FDR4_pairs.txt', 'w')
 f.write("Protein,Ligand,logFC,FDR,Positive Obs,Classification" + "\n")
 
 for id in new_combos:
     for csv in new_combos[id]:
         FC_val = logFC[id][csv]
         pos_obs = combo_dict[id][csv]
-        if (FDR[id][csv] > .15) & (FDR[id][csv] <= .6):
+        if (FDR[id][csv] > .15) & (FDR[id][csv] <= .4):
             f.write(id + "," + csv + "," + str(logFC[id][csv]) +
                     "," + str(FDR[id][csv]) + "," + str(combo_dict[id][csv]))
             if (FC_val < 1) & (pos_obs <= 25):
@@ -99,7 +98,7 @@ recall = 0
 BAC = 0
 MAT = 0
 
-f = open('results_true_false_vals_struct.csv', 'w')
+f = open('results_true_false_vals.csv', 'w')
 f.write('Run,TN,FN,TP,FP' + "\n")
 
 for i in range(50):

@@ -81,9 +81,8 @@ def richness_protein(kmers, seqvar, pos_counts, neg_counts, domain, richness_lev
 #ligand_counts: key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
 #pos_by_lig: key = ligand, value = # of pos. pairs with the ligand
 #neg_by_lig: key = ligand, value = # of neg. pairs with the ligand
-def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig, richness_level):
-    #kmers = list of all potential kmers for ligand
-    kmers = list(ligand_counts['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
+#kmers = list of all potential kmers for ligand
+def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig, richness_level, kmers):
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs
     neg_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in neg. pairs
@@ -129,22 +128,28 @@ def richness_ligand(ligand_counts, pos_by_lig, neg_by_lig, richness_level):
         else:
             richness[kmer] = pos_prop_by_kmer[kmer] / neg_prop_by_kmer[kmer]
 
+    kmers_success = []          #list of kmers that meet the filtering requirements
     kmers_failed = []           #list of kmers that don't meet the filtering requirements
 
     if richness_level == 'All':
         for kmer in kmers:
             if (richness[kmer] != 10000) & (richness[kmer] != 0):
                 kmers_failed.append(kmer)
+            else:
+                kmers_success.append(kmer)
     elif richness_level == 'None':
         kmers_failed = []
+        kmers_success = kmers
     else:
         for kmer in kmers:
             if (richness[kmer] > (1/richness_level)) & (richness[kmer] < richness_level):
                 kmers_failed.append(kmer)
+            else:
+                kmers_success.append(kmer)
 
     #Remove all kmers from ligand_counts that didn't meet the filtering requirements
     for lig in ligand_counts:
         for kmer in kmers_failed:
             ligand_counts[lig].pop(kmer)
 
-    return ligand_counts
+    return ligand_counts, kmers_success

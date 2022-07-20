@@ -120,8 +120,14 @@ AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
 Di_seqvar = [Di_seqvar_TM3, Di_seqvar_TM5, Di_seqvar_TM6, Di_seqvar_TM7]
 Di_feat = [Di_filter_TM3, Di_filter_TM5, Di_filter_TM6, Di_filter_TM7]
 
+print(len(proteins_toconsider))     #482
+
+proteins = list(proteins_toconsider)
+proteins.sort()
+
 #Extract proteins with unique AA and 3di kmer frequencies
-unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, list(proteins_toconsider))
+unique_proteins = list(Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, proteins))
+unique_proteins.sort()
 
 pos_dict = {}       #key = protein id, value = list of ligands that the protein binds with
 neg_dict = {}       #key = protein id, value = list of ligands that the protein does not bind with
@@ -130,24 +136,29 @@ for id in unique_proteins:
     pos_dict[id] = []
     neg_dict[id] = []
 
-ligands_from_unip = set()       #set of ligands that form pos or neg pairs with the set of unique proteins
+unil = set()       #set of ligands that form pos or neg pairs with the set of unique proteins
 
 #Iterate through all positive prot-lig pairs to update pos_dict
 for pair in pos_pairs:
     id = pair[0]
     lig = pair[1]
     #Check that id is from the set of unique proteins
-    if (id in pos_dict):
+    if (id in unique_proteins):
         pos_dict[id].append(lig)
-        ligands_from_unip.add(lig)
+        unil.add(lig)
+
 #Iterate through all negative prot-lig pairs to update neg_dict
 for pair in neg_pairs:
     id = pair[0]
     lig = pair[1]
     #Check that id is from the set of unique proteins
-    if (id in neg_dict):
+    if (id in unique_proteins):
         neg_dict[id].append(lig)
-        ligands_from_unip.add(lig)
+        unil.add(lig)
+
+ligands_from_unip = list(unil)
+ligands_from_unip.sort()
+
 #Import dictionary matching ligands to SMILES String
 ligand_dict = Globals.initialize_ligand_dict()
 
@@ -177,8 +188,26 @@ for id in unique_proteins:
         neg_by_lig[lig] += 1
         total_by_lig[lig] += 1
 
+"""
+55
+
+
+53
+
+"""
+
 #Update ligand_counts to only use filtered kmers
-lig_counts_filter = Filtering.richness_ligand(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength)
+lig_counts_filter, filter_kmers = Filtering.richness_ligand(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
+
+freq_str = ""
+print(len(ligand_features))
+print(len(filter_kmers))
+print(len(lig_counts_filter['pS6_DE_1p_diacetyl.csv']))
+
+for kmer in filter_kmers:
+    freq_str += str(lig_counts_filter['pS6_DE_1p_diacetyl.csv'][kmer])
+print(freq_str)
+
 #Extract ligands with unique kmer frequencies
 unique_ligands = Duplicates.remove_ligands(lig_counts_filter, total_by_lig)
 
@@ -236,8 +265,13 @@ pos_array = np.repeat(1, int(pos_total))
 neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
+print(len(unique_proteins))     #340
+print(len(unique_ligands))      #18
 
-print(len(final_matrix))
+print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 117
+print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 141
+
+print(len(final_matrix))    #258
 print('Finished Part 1')
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
