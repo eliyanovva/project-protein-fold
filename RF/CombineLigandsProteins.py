@@ -23,6 +23,13 @@ prot_filter_strength = 'All'
 #lig_filter_strength = 6
 lig_filter_strength = 'All'
 
+#boolean value that describes whether or not the input dataset is balanced;
+#in other words, if there are far more / fewer positive observations than there are negative
+#BALANCED = True => balanced dataset
+#BALANCED = False => imbalanced dataset
+#affects the training algorithm and filtering protocol used
+BALANCED = False
+
 #Create classification dictionary
 acc_ids = Globals.initialize_protein_list()
 logFC, FDR = labels.labels()
@@ -102,10 +109,16 @@ AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, cat
 AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, categorized_seqs_TM7, categorized_features_TM7)
 
 #Filter the AA kmers for TMs 3,5,6,7
-AA_filter_TM3, feat1 = Filtering.richness_protein(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3", prot_filter_strength)
-AA_filter_TM5, feat2 = Filtering.richness_protein(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5", prot_filter_strength)
-AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6", prot_filter_strength)
-AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
+if BALANCED == True:
+    AA_filter_TM3, feat1 = Filtering.richness_prot_balance(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3", prot_filter_strength)
+    AA_filter_TM5, feat2 = Filtering.richness_prot_balance(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5", prot_filter_strength)
+    AA_filter_TM6, feat3 = Filtering.richness_prot_balance(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6", prot_filter_strength)
+    AA_filter_TM7, feat4 = Filtering.richness_prot_balance(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
+elif BALANCED == False:
+    AA_filter_TM3, feat1 = Filtering.richness_prot_imbalance(AA_features_TM3, AA_seqvar_TM3, pos_counts, neg_counts, "TM3", prot_filter_strength)
+    AA_filter_TM5, feat2 = Filtering.richness_prot_imbalance(AA_features_TM5, AA_seqvar_TM5, pos_counts, neg_counts, "TM5", prot_filter_strength)
+    AA_filter_TM6, feat3 = Filtering.richness_prot_imbalance(AA_features_TM6, AA_seqvar_TM6, pos_counts, neg_counts, "TM6", prot_filter_strength)
+    AA_filter_TM7, feat4 = Filtering.richness_prot_imbalance(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
 
 #Create dict of 3Di sequences only with proteins from pos or neg pairs
 Di_dict = Globals.initialize_3Di_dict(proteins_tc)
@@ -116,10 +129,16 @@ Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5, di_
 Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 5, di_seqs_TM7, di_features_TM7)
 
 #Filter the 3Di kmers for TMs 3,5,6,7
-Di_filter_TM3, feat5 = Filtering.richness_protein(Di_features_TM3, Di_seqvar_TM3, pos_counts, neg_counts, "TM3", prot_filter_strength)
-Di_filter_TM5, feat6 = Filtering.richness_protein(Di_features_TM5, Di_seqvar_TM5, pos_counts, neg_counts, "TM5", prot_filter_strength)
-Di_filter_TM6, feat7 = Filtering.richness_protein(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts, "TM6", prot_filter_strength)
-Di_filter_TM7, feat8 = Filtering.richness_protein(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
+if BALANCED == True:
+    Di_filter_TM3, feat5 = Filtering.richness_prot_balance(Di_features_TM3, Di_seqvar_TM3, pos_counts, neg_counts, "TM3", prot_filter_strength)
+    Di_filter_TM5, feat6 = Filtering.richness_prot_balance(Di_features_TM5, Di_seqvar_TM5, pos_counts, neg_counts, "TM5", prot_filter_strength)
+    Di_filter_TM6, feat7 = Filtering.richness_prot_balance(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts, "TM6", prot_filter_strength)
+    Di_filter_TM7, feat8 = Filtering.richness_prot_balance(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
+elif BALANCED == False:
+    Di_filter_TM3, feat5 = Filtering.richness_prot_imbalance(Di_features_TM3, Di_seqvar_TM3, pos_counts, neg_counts, "TM3", prot_filter_strength)
+    Di_filter_TM5, feat6 = Filtering.richness_prot_imbalance(Di_features_TM5, Di_seqvar_TM5, pos_counts, neg_counts, "TM5", prot_filter_strength)
+    Di_filter_TM6, feat7 = Filtering.richness_prot_imbalance(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts, "TM6", prot_filter_strength)
+    Di_filter_TM7, feat8 = Filtering.richness_prot_imbalance(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
 
 AA_seqvar = [AA_seqvar_TM3, AA_seqvar_TM5, AA_seqvar_TM6, AA_seqvar_TM7]
 AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
@@ -190,7 +209,10 @@ for id in unique_proteins:
         total_by_lig[lig] += 1
 
 #Update ligand_counts to only use filtered kmers
-lig_counts_filter, filter_kmers = Filtering.richness_ligand(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
+if BALANCED == True:
+    lig_counts_filter, filter_kmers = Filtering.richness_lig_balance(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
+if BALANCED == False:
+    lig_counts_filter, filter_kmers = Filtering.richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
 
 #Extract ligands with unique kmer frequencies
 unique_ligands = Duplicates.remove_ligands(lig_counts_filter, total_by_lig)
