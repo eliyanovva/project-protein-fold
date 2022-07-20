@@ -14,6 +14,9 @@ def train(features, labels):
     #split into training and test set
     X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,test_size=0.1) # 90% training and 10% test
 
+    print(len(X_train))
+    print(len(X_test))
+
     #compare to random undersampling
 
     #Create a Gaussian Regression
