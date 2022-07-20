@@ -11,6 +11,9 @@ import PredictNewCombos
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
+logFC = CombineLigandsProteins.logFC_data
+FDR = CombineLigandsProteins.FDR_data
+
 """
 PredictNewCombos.import_final()
 newX = PredictNewCombos.X
@@ -53,47 +56,29 @@ for id in new_combos:
         else:
             f.write("," + str(combo_dict[id][lig]))
     f.write("\n")
+f.close()
 
-pair_prediction.import_final()
-n_testX = pair_prediction.nMat
-n_proteins = pair_prediction.nproteins
-n_ligands = pair_prediction.nligands
+f = open('high_FDR6_pairs.txt', 'w')
+f.write("Protein,Ligand,logFC,FDR,Positive Obs,Classification" + "\n")
 
-neutral_dict = {}
-for protein in n_proteins:
-    row = {}
-    for lig in n_ligands:
-        row[lig] = 0
-    neutral_dict[protein] = row
+for id in new_combos:
+    for csv in new_combos[id]:
+        FC_val = logFC[id][csv]
+        pos_obs = combo_dict[id][csv]
+        if (FDR[id][csv] > .15) & (FDR[id][csv] <= .6):
+            f.write(id + "," + csv + "," + str(logFC[id][csv]) +
+                    "," + str(FDR[id][csv]) + "," + str(combo_dict[id][csv]))
+            if (FC_val < 1) & (pos_obs <= 25):
+                f.write(", TN" + "\n")
+            elif (FC_val >= 1) & (pos_obs <= 25):
+                f.write(", FN" + "\n")
+            elif (FC_val < 1) & (pos_obs > 25):
+                f.write(", FP" + "\n")
+            elif (FC_val >= 1) & (pos_obs > 25):
+                f.write(", TP" + "\n")
+f.close()
 
-num_ligands = len(n_ligands)
-
-for i in range(50):
-    print('run ' + str(i))
-    n_pred = FixedClassificationModel.neutral_train(testX, testY, n_testX)
-
-    j = 0
-    for p in n_pred:
-        p_ind = j // num_ligands
-        if p_ind == 0:
-            l_ind = j
-        else:
-            l_ind = j % num_ligands
-        neutral_dict[n_proteins[p_ind]][n_ligands[l_ind]] += p
-        j += 1
-
-f = open('pos_pair_prediction_all.csv', 'w')
-
-f.write('Protein,')
-for lig in n_ligands:
-    f.write(lig + ",")
-f.write("\n")
-
-for id in n_proteins:
-    f.write(id + ",")
-    for lig in n_ligands:
-        f.write(str(neutral_dict[id][lig]) + ',')
-    f.write("\n")
+"""
 
 #Sequence_only.import_final()
 #seqX = Sequence_only.X
@@ -108,7 +93,7 @@ for id in n_proteins:
 #fi.importance_file(testX, testY, CombineLigandsProteins.feats)
 #FixedClassificationModel.train(testX, testY)
 #Metrics_Graphs.train(testX, testY)
-"""
+
 accuracy = 0
 recall = 0
 BAC = 0
@@ -131,3 +116,4 @@ print('Average Recall: ' + str(recall/50))
 print('Average Balanced: ' + str(BAC/50))
 #print('Average Matthew: ' + str(mat/50))
 #f.close()
+"""
