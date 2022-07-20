@@ -2,6 +2,7 @@
 import CombineLigandsProteins
 #import Sequence_only
 import FixedClassificationModel
+import PredictNewCombos
 #import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
@@ -10,6 +11,89 @@ import FixedClassificationModel
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
+"""
+PredictNewCombos.import_final()
+newX = PredictNewCombos.X
+new_combos = PredictNewCombos.combos
+all_ligs = set()
+
+combo_list = []
+for id in new_combos:
+    for lig in new_combos[id]:
+        combo_list.append([id, lig])
+        all_ligs.add(lig)
+
+combo_dict = {}
+for id in new_combos:
+    row = {}
+    for lig in new_combos[id]:
+        row[lig] = 0
+    combo_dict[id] = row
+
+for i in range(50):
+    print('run ' + str(i))
+    n_pred = FixedClassificationModel.neutral_train(testX, testY, newX)
+
+    for j in range(len(n_pred)):
+        combo = combo_list[j]
+        combo_dict[combo[0]][combo[1]] += n_pred[j]
+
+f = open('new_combo_prediction.csv', 'w')
+
+f.write('Protein')
+for lig in all_ligs:
+    f.write("," + lig)
+f.write("\n")
+
+for id in new_combos:
+    f.write(id)
+    for lig in all_ligs:
+        if new_combos[id].count(lig) == 0:
+            f.write(",-")
+        else:
+            f.write("," + str(combo_dict[id][lig]))
+    f.write("\n")
+
+pair_prediction.import_final()
+n_testX = pair_prediction.nMat
+n_proteins = pair_prediction.nproteins
+n_ligands = pair_prediction.nligands
+
+neutral_dict = {}
+for protein in n_proteins:
+    row = {}
+    for lig in n_ligands:
+        row[lig] = 0
+    neutral_dict[protein] = row
+
+num_ligands = len(n_ligands)
+
+for i in range(50):
+    print('run ' + str(i))
+    n_pred = FixedClassificationModel.neutral_train(testX, testY, n_testX)
+
+    j = 0
+    for p in n_pred:
+        p_ind = j // num_ligands
+        if p_ind == 0:
+            l_ind = j
+        else:
+            l_ind = j % num_ligands
+        neutral_dict[n_proteins[p_ind]][n_ligands[l_ind]] += p
+        j += 1
+
+f = open('pos_pair_prediction_all.csv', 'w')
+
+f.write('Protein,')
+for lig in n_ligands:
+    f.write(lig + ",")
+f.write("\n")
+
+for id in n_proteins:
+    f.write(id + ",")
+    for lig in n_ligands:
+        f.write(str(neutral_dict[id][lig]) + ',')
+    f.write("\n")
 
 #Sequence_only.import_final()
 #seqX = Sequence_only.X
@@ -24,7 +108,7 @@ testY = CombineLigandsProteins.Y
 #fi.importance_file(testX, testY, CombineLigandsProteins.feats)
 #FixedClassificationModel.train(testX, testY)
 #Metrics_Graphs.train(testX, testY)
-
+"""
 accuracy = 0
 recall = 0
 BAC = 0

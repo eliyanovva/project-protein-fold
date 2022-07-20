@@ -89,12 +89,12 @@ def find_feature(tm, seq, dictionary):
             residues.append(num)
     return set(residues)
 
-with open('Feature_Importance/sulfur_importance.txt') as f:
+with open('Feature_Importance/important_features.txt') as f:
     lines = f.readlines()
     i = 0
     ret = {}
     for line in lines:
-        if i == 50:
+        if i == 10:
             break
         i+=1
         line = line.replace('\n', "")
@@ -116,7 +116,7 @@ import docx
 from docx.enum.text import WD_COLOR_INDEX
 
 doc = docx.Document()
-doc.add_heading('Sulfur TM6 Important Residues', 0)
+doc.add_heading('TM6 Important Residues', 0)
 
 with open('TM_alignments/TM6_align.txt') as f:
     lines = f.readlines()

@@ -68,6 +68,22 @@ def makematrix(seqvar, feat, mat, unique_l, counts):
                 mat.append(np.array(newseq))
     return mat
 
+def make_combomatrix(seqvar, feat, mat, new_combos):
+    for id in new_combos:
+        newseq = []
+        for kmer in feat:
+            #For kmers not found in the protein, populate the matrix with zeros
+            if kmer not in seqvar[id]:
+                seqvar[id][kmer] = 0
+            #Add the frequency value of the kmer
+            newseq.append(seqvar[id].get(kmer))
+
+        # Add a frequency array for each protein
+        for i in range(len(new_combos[id])):
+            # Add an array for each unique ligand the protein can pair with
+            mat.append(np.array(newseq))
+    return mat
+
 def make_nmatrix(seqvar, feat, mat, unique, num_ligs):
     for id in unique:
         newseq = []
