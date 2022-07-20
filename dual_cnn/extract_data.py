@@ -10,8 +10,8 @@ import re
 from openbabel import pybel
 
 def run():
-    os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
-    or_dat = pd.read_csv('odorants_ORs_paper.csv')
+    os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn')
+    #or_dat = pd.read_csv('odorants_ORs_paper.csv')
     ligand_dat = pd.read_csv('odorants_paper.csv', encoding='latin-1')
     dir = 'mol_cid_files'
 

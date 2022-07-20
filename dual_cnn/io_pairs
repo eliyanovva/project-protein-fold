@@ -26,7 +26,7 @@ def voxelize_ligands(mol_dir):
     os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
 
     # Specifies box size and center for the ligand
-    box = [20, 20, 20]
+    box = [15, 15, 15]
 
     for filename in os.listdir(mol_dir):
         # Following preprocessing step on Acellera page: 

@@ -9,3 +9,4 @@ pickle_file = open('existing_symb_to_unip.p', 'rb')
 # Keys = gene name | Values = UNIPROT
 d = pickle.load(pickle_file)
 
+print(d)
