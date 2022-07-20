@@ -1,6 +1,6 @@
 import sys
 from contextlib import redirect_stdout
-import telnetlib
+#import telnetlib
 sys.path.append('../')
 
 from graph_cnn.model import GraphCNN
@@ -10,20 +10,21 @@ import tensorflow as tf
 import config
 from tensorboard.plugins.hparams import api as hp
 import logging as log
-import eli5
-from sklearn.base import BaseEstimator
+#import eli5
+#from sklearn.base import BaseEstimator
 #from sklearn.utils.multiclass import unique_labels
 #from sklearn.utils.validation import check_X_y
 
 
 with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
     hp.hparams_config(
-        hparams=[config.HP_BATCH_SIZE,
-        config.HP_DROPOUT,
-        config.HP_OPTIMIZER,
-        config.HP_LEARNINGRATE,
-        config.HP_LOSS,
-        config.HP_VALIDATION_SPLIT
+        hparams=[#config.HP_BATCH_SIZE,
+        #config.HP_DROPOUT,
+        #config.HP_OPTIMIZER,
+        #config.HP_LEARNINGRATE,
+        #config.HP_LOSS,
+        config.HP_VALIDATION_SPLIT,
+        config.HP_TEST_TRAIN_SPLIT
         ],
         metrics=[hp.Metric(config.METRIC_ACCURACY, display_name='Accuracy')],
     )
@@ -33,7 +34,7 @@ class hp_GraphCNN(GraphCNN):
     def hp_createModel(self, hparams={
         #config.HP_OPTIMIZER: 'adagrad',
         #config.HP_BATCH_SIZE: 32,
-        config.HP_DROPOUT: 0.15,
+        #config.HP_DROPOUT: 0.15,
         #config.HP_LEARNINGRATE: 0.001,
         config.HP_VALIDATION_SPLIT: 0.15,
         config.HP_TEST_TRAIN_SPLIT: 0.15,
@@ -59,7 +60,7 @@ class hp_GraphCNN(GraphCNN):
             name='Ligand-Feature-Matrix'
         )
 
-        dlayer = tf.keras.layers.Dropout(hparams[config.HP_DROPOUT])
+        dlayer = tf.keras.layers.Dropout(0.15)#hparams[config.HP_DROPOUT])
  
         x = tf.keras.layers.Conv1D(filters=1024, kernel_size=3, activation='relu')(prot_adj_in)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
