@@ -42,6 +42,12 @@ for pair in pos_pairs:
     proteins_toconsider.add(pair[0])
 for pair in neg_pairs:
     proteins_toconsider.add(pair[0])
+                                                                    #All                        None
+#print('Total Pos Pairs: ' + str(len(pos_pairs)))        #FDR<.15: 600, FDR<.1: 565 | FDR<.15: 600, FDR<.1: 565
+#print('Total Neg Pairs: ' + str(len(neg_pairs)))        #FDR<.15: 491, FDR<.1: 236 | FDR<.15: 491, FDR<.1: 236
+
+proteins_tc = list(proteins_toconsider)
+proteins_tc.sort()
 
 pairs_by_prot = {}      #key = protein id, value = # of pairs involving the protein
 
@@ -87,7 +93,7 @@ di_seqs_TM7 = {}
 di_matrix_TM7 = []
 
 #Create dict of AA sequences only with proteins from pos or neg pairs
-AA_dict = Globals.initialize_AA_dict(list(proteins_toconsider))
+AA_dict = Globals.initialize_AA_dict(proteins_tc)
 
 #Create AA output for TMs 3,5,6,7
 AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
@@ -102,7 +108,7 @@ AA_filter_TM6, feat3 = Filtering.richness_protein(AA_features_TM6, AA_seqvar_TM6
 AA_filter_TM7, feat4 = Filtering.richness_protein(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
 
 #Create dict of 3Di sequences only with proteins from pos or neg pairs
-Di_dict = Globals.initialize_3Di_dict(list(proteins_toconsider))
+Di_dict = Globals.initialize_3Di_dict(proteins_tc)
 #Create 3Di output for TMs 3,5,6,7
 Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
 Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_seqs_TM5, di_features_TM5)
@@ -120,13 +126,8 @@ AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
 Di_seqvar = [Di_seqvar_TM3, Di_seqvar_TM5, Di_seqvar_TM6, Di_seqvar_TM7]
 Di_feat = [Di_filter_TM3, Di_filter_TM5, Di_filter_TM6, Di_filter_TM7]
 
-print(len(proteins_toconsider))     #482
-
-proteins = list(proteins_toconsider)
-proteins.sort()
-
 #Extract proteins with unique AA and 3di kmer frequencies
-unique_proteins = list(Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, proteins))
+unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, proteins_tc)
 unique_proteins.sort()
 
 pos_dict = {}       #key = protein id, value = list of ligands that the protein binds with
@@ -188,25 +189,8 @@ for id in unique_proteins:
         neg_by_lig[lig] += 1
         total_by_lig[lig] += 1
 
-"""
-55
-
-
-53
-
-"""
-
 #Update ligand_counts to only use filtered kmers
 lig_counts_filter, filter_kmers = Filtering.richness_ligand(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
-
-freq_str = ""
-print(len(ligand_features))
-print(len(filter_kmers))
-print(len(lig_counts_filter['pS6_DE_1p_diacetyl.csv']))
-
-for kmer in filter_kmers:
-    freq_str += str(lig_counts_filter['pS6_DE_1p_diacetyl.csv'][kmer])
-print(freq_str)
 
 #Extract ligands with unique kmer frequencies
 unique_ligands = Duplicates.remove_ligands(lig_counts_filter, total_by_lig)
@@ -265,13 +249,14 @@ pos_array = np.repeat(1, int(pos_total))
 neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
-print(len(unique_proteins))     #340
-print(len(unique_ligands))      #18
+print(len(unique_proteins))     #FDR<.1: 313, FDR<.15: 340
+print(len(unique_ligands))      #FDR<.1: 26, FDR<.15: 17
 
-print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 117
-print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 141
+                                                        #All                            #None
+print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 113 | FDR<.1: 545, FDR<.15: 579
+print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 140  | FDR<.1: 236, FDR<.15: 490
 
-print(len(final_matrix))    #258
+print(len(final_matrix))    #FDR<.1: 273, FDR<.15: 253
 print('Finished Part 1')
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/

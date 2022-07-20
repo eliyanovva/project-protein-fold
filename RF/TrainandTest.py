@@ -13,7 +13,7 @@ testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 logFC = CombineLigandsProteins.logFC_data
 FDR = CombineLigandsProteins.FDR_data
-
+"""
 PredictNewCombos.import_final()
 newX = PredictNewCombos.X
 new_combos = PredictNewCombos.combos
@@ -98,7 +98,7 @@ recall = 0
 BAC = 0
 MAT = 0
 
-f = open('results_true_false_vals.csv', 'w')
+f = open('results_true_false_FiltAll.csv', 'w')
 f.write('Run,TN,FN,TP,FP' + "\n")
 
 for i in range(50):
@@ -115,4 +115,3 @@ print('Average Recall: ' + str(recall/50))
 print('Average Balanced: ' + str(BAC/50))
 #print('Average Matthew: ' + str(mat/50))
 #f.close()
-"""
