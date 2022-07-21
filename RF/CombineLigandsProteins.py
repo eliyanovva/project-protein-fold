@@ -26,13 +26,12 @@ lig_filter_strength = 'All'
 #Create classification dictionary
 acc_ids = Globals.initialize_protein_list()
 logFC, FDR = labels.labels()
-classified, pos_counts, neg_counts, pos_pairs, neg_pairs, neutral_pairs = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
+classified, pos_counts, neg_counts, pos_pairs, neg_pairs = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
 #classified = key: protein id, value: (key = ligand, value = {1 if bind, 0 if not bind})
 #pos_counts = key: protein id, value: number of positive protein interactions
 #neg_counts = key: protein id, value: number of negative protein interactions
 #pos_pairs = list of positive protein-ligand pairs; pos_pairs[i] = [protein id, ligand]
 #neg_pairs = list of negative protein-ligand pairs; neg_pairs[i] = [protein id, ligand]
-#neutral_pairs = list of neutral protein-ligand pairs; neutral_pairs[i] = [protein id, ligand]
 
 proteins_toconsider = set()     #proteins that can form either a positive or negative pair with a ligand
 
@@ -58,7 +57,7 @@ else:
     BALANCED = True
 """
 
-BALANCED = False
+BALANCED = False        #hardcoded for now; can uncomment the lines above
 
 proteins_tc = list(proteins_toconsider)
 proteins_tc.sort()
