@@ -226,6 +226,9 @@ if BALANCED == True:
 if BALANCED == False:
     lig_counts_filter, filter_kmers = Filtering.richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
 
+for kmer in filter_kmers:
+    print(kmer)
+
 #Extract ligands with unique kmer frequencies
 unique_ligands = Duplicates.remove_ligands(lig_counts_filter, total_by_lig)
 
