@@ -51,10 +51,14 @@ for pair in neg_pairs:
 #BALANCED = True => balanced dataset
 #BALANCED = False => imbalanced dataset
 #affects the training algorithm and filtering protocol used
+"""
 if (len(pos_pairs) / len(neg_pairs) > 2) | (len(neg_pairs) / len(pos_pairs) > 2):
     BALANCED = False
 else:
     BALANCED = True
+"""
+
+BALANCED = False
 
 proteins_tc = list(proteins_toconsider)
 proteins_tc.sort()
@@ -148,6 +152,9 @@ AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
 Di_seqvar = [Di_seqvar_TM3, Di_seqvar_TM5, Di_seqvar_TM6, Di_seqvar_TM7]
 Di_feat = [Di_filter_TM3, Di_filter_TM5, Di_filter_TM6, Di_filter_TM7]
 
+print(len(AA_filter_TM3) + len(AA_filter_TM5) + len(AA_filter_TM6) + len(AA_filter_TM7))
+print(len(Di_filter_TM3) + len(Di_filter_TM5) + len(Di_filter_TM6) + len(Di_filter_TM7))
+
 #Extract proteins with unique AA and 3di kmer frequencies
 unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, proteins_tc)
 unique_proteins.sort()
@@ -216,6 +223,8 @@ if BALANCED == True:
     lig_counts_filter, filter_kmers = Filtering.richness_lig_balance(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
 if BALANCED == False:
     lig_counts_filter, filter_kmers = Filtering.richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
+
+print(len(filter_kmers))
 
 #Extract ligands with unique kmer frequencies
 unique_ligands = Duplicates.remove_ligands(lig_counts_filter, total_by_lig)

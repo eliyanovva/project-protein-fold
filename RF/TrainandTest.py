@@ -98,8 +98,8 @@ recall = 0
 BAC = 0
 MAT = 0
 
-#f = open('results_true_false_Filt2.csv', 'w')
-#f.write('Run,TN,FN,TP,FP' + "\n")
+f = open('results_true_false_Filt6.csv', 'w')
+f.write('Run,TN,FN,TP,FP' + "\n")
 
 for i in range(50):
     print("run " + str(i))
@@ -108,7 +108,7 @@ for i in range(50):
     recall += rec
     BAC += bac
     MAT += mat
-    #f.write(str(i+1) + ", " + str(TN) + ", " + str(FN) + ", " + str(TP) + ", " + str(FP) + "\n")
+    f.write(str(i+1) + ", " + str(TN) + ", " + str(FN) + ", " + str(TP) + ", " + str(FP) + "\n")
 
 print('Average Accuracy: ' + str(accuracy/50))
 print('Average Recall: ' + str(recall/50))
