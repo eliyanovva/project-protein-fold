@@ -70,7 +70,7 @@ for filename in os.listdir(directory):
         #Select important Amino Acids
         printstatement1 = ""
         i = 0
-        for sequence in uncat('aacab'):
+        for sequence in uncat('eccbc'):
             if i > 0:
                 printstatement1 += ' or '
             printstatement1 += 'pepseq ' + sequence
@@ -79,7 +79,7 @@ for filename in os.listdir(directory):
 
         printstatement2 = ""
         i = 0
-        for sequence in uncat('baaaf'):
+        for sequence in uncat('acecc'):
             if i > 0:
                 printstatement2 += ' or '
             printstatement2 += 'pepseq ' + sequence
@@ -88,7 +88,7 @@ for filename in os.listdir(directory):
 
         printstatement3 = ""
         i = 0
-        for sequence in uncat('aacab'):
+        for sequence in uncat('gcace'):
             if i > 0:
                 printstatement3 += ' or '
             printstatement3 += 'pepseq ' + sequence
@@ -97,7 +97,7 @@ for filename in os.listdir(directory):
 
         printstatement4 = ""
         i = 0
-        for sequence in uncat('cdbab'):
+        for sequence in uncat('cacec'):
             if i > 0:
                 printstatement4 += ' or '
             printstatement4 += 'pepseq ' + sequence
@@ -106,7 +106,7 @@ for filename in os.listdir(directory):
 
         printstatement5 = ""
         i = 0
-        for sequence in uncat('acdba'):
+        for sequence in uncat('faacd'):
             if i > 0:
                 printstatement5 += ' or '
             printstatement5 += 'pepseq ' + sequence
@@ -115,7 +115,7 @@ for filename in os.listdir(directory):
 
         printstatement6 = ""
         i = 0
-        for sequence in uncat('afgca'):
+        for sequence in uncat('bdbbd'):
             if i > 0:
                 printstatement6 += ' or '
             printstatement6 += 'pepseq ' + sequence
@@ -124,7 +124,7 @@ for filename in os.listdir(directory):
 
         printstatement7 = ""
         i = 0
-        for sequence in uncat('aagac'):
+        for sequence in uncat('aacfc'):
             if i > 0:
                 printstatement7 += ' or '
             printstatement7 += 'pepseq ' + sequence
@@ -133,7 +133,7 @@ for filename in os.listdir(directory):
 
         printstatement8 = ""
         i = 0
-        for sequence in uncat('cfdae'):
+        for sequence in uncat('dbbdc'):
             if i > 0:
                 printstatement8 += ' or '
             printstatement8 += 'pepseq ' + sequence
@@ -142,7 +142,7 @@ for filename in os.listdir(directory):
 
         printstatement9 = ""
         i = 0
-        for sequence in uncat('gccdc'):
+        for sequence in uncat('bdaaa'):
             if i > 0:
                 printstatement9 += ' or '
             printstatement9 += 'pepseq ' + sequence
@@ -151,7 +151,7 @@ for filename in os.listdir(directory):
 
         printstatement10 = ""
         i = 0
-        for sequence in uncat('cabac'):
+        for sequence in uncat('daaaa'):
             if i > 0:
                 printstatement10 += ' or '
             printstatement10 += 'pepseq ' + sequence
@@ -165,12 +165,12 @@ for filename in os.listdir(directory):
         TM7 = "Res 240-350"
         
         #Color important Amino Acids
-        cmd.select("AA1", printstatement1 + " and " + TM7)
+        cmd.select("AA1", printstatement1 + " and " + TM6)
         cmd.create("obj1","AA1")
         cmd.color("red", "obj1")
         cmd.set("cartoon_transparency",  "0", "obj1")
 
-        cmd.select("AA2", printstatement2 + " and " + TM3)
+        cmd.select("AA2", printstatement2 + " and " + TM6)
         cmd.create("obj2","AA2")
         cmd.color("orange", "obj2")
         cmd.set("cartoon_transparency",  "0", "obj2")
@@ -180,44 +180,44 @@ for filename in os.listdir(directory):
         cmd.color("yellow", "obj3")
         cmd.set("cartoon_transparency",  "0", "obj3")
 
-        cmd.select("AA4", printstatement4 + " and " + TM3)
+        cmd.select("AA4", printstatement4 + " and " + TM6)
         cmd.create("obj4","AA4")
         cmd.color("green", "obj4")
         cmd.set("cartoon_transparency",  "0", "obj4")
 
-        cmd.select("AA5", printstatement5 + " and " + TM3)
+        cmd.select("AA5", printstatement5 + " and " + TM7)
         cmd.create("obj5","AA5")
         cmd.color("blue", "obj5")
         cmd.set("cartoon_transparency",  "0", "obj5")
 
-        cmd.select("AA6", printstatement6 + " and " + TM3)
+        cmd.select("AA6", printstatement6 + " and " + TM6)
         cmd.create("obj6","AA6")
         cmd.color("pink", "obj6")
         cmd.set("cartoon_transparency",  "0", "obj6")
 
-        cmd.select("AA7", printstatement7 + " and " + TM3)
+        cmd.select("AA7", printstatement7 + " and " + TM5)
         cmd.create("obj7","AA7")
         cmd.color("cyan", "obj7")
         cmd.set("cartoon_transparency",  "0", "obj7")
 
-        cmd.select("AA8", printstatement8 + " and " + TM7)
+        cmd.select("AA8", printstatement8 + " and " + TM6)
         cmd.create("obj8","AA8")
         cmd.color("white", "obj8")
         cmd.set("cartoon_transparency",  "0", "obj8")
 
-        cmd.select("AA9", printstatement9 + " and " + TM6)
+        cmd.select("AA9", printstatement9 + " and " + TM5)
         cmd.create("obj9","AA9")
         cmd.color("brown", "obj9")
         cmd.set("cartoon_transparency",  "0", "obj9")
 
-        cmd.select("AA10", printstatement10 + " and " + TM6)
+        cmd.select("AA10", printstatement10 + " and " + TM5)
         cmd.create("obj10","AA10")
         cmd.color("gray40", "obj10")
         cmd.set("cartoon_transparency",  "0", "obj10")
 
         #Save as png
         cmd.deselect()
-        savelocation = "../../Sulfur_Images/" + name_of_protein + ".png"
+        savelocation = "../../Images/" + name_of_protein + ".png"
         cmd.png(savelocation)
         
         #Hide protein
