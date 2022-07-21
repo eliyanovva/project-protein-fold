@@ -14,7 +14,7 @@ testY = CombineLigandsProteins.Y
 logFC = CombineLigandsProteins.logFC_data
 FDR = CombineLigandsProteins.FDR_data
 BALANCE = CombineLigandsProteins.balance
-
+"""
 PredictNewCombos.import_final()
 newX = PredictNewCombos.X
 new_combos = PredictNewCombos.combos
@@ -103,7 +103,7 @@ MAT = 0
 
 for i in range(50):
     print("run " + str(i))
-    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY)
+    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY, BALANCE)
     accuracy += acc
     recall += rec
     BAC += bac
@@ -112,7 +112,6 @@ for i in range(50):
 
 print('Average Accuracy: ' + str(accuracy/50))
 print('Average Recall: ' + str(recall/50))
-print('Average Balanced: ' + str(BAC/50))
+#print('Average Balanced: ' + str(BAC/50))
 #print('Average Matthew: ' + str(mat/50))
 #f.close()
-"""

@@ -23,13 +23,6 @@ prot_filter_strength = 'All'
 #lig_filter_strength = 6
 lig_filter_strength = 'All'
 
-#boolean value that describes whether or not the input dataset is balanced;
-#in other words, if there are far more / fewer positive observations than there are negative
-#BALANCED = True => balanced dataset
-#BALANCED = False => imbalanced dataset
-#affects the training algorithm and filtering protocol used
-BALANCED = False
-
 #Create classification dictionary
 acc_ids = Globals.initialize_protein_list()
 logFC, FDR = labels.labels()
@@ -52,6 +45,16 @@ for pair in neg_pairs:
                                                                     #All                        None
 #print('Total Pos Pairs: ' + str(len(pos_pairs)))        #FDR<.15: 600, FDR<.1: 565 | FDR<.15: 600, FDR<.1: 565
 #print('Total Neg Pairs: ' + str(len(neg_pairs)))        #FDR<.15: 491, FDR<.1: 236 | FDR<.15: 491, FDR<.1: 236
+
+#boolean value that describes whether or not the input dataset is balanced;
+#in other words, if there are far more / fewer positive observations than there are negative
+#BALANCED = True => balanced dataset
+#BALANCED = False => imbalanced dataset
+#affects the training algorithm and filtering protocol used
+if (len(pos_pairs) / len(neg_pairs) > 2) | (len(neg_pairs) / len(pos_pairs) > 2):
+    BALANCED = False
+else:
+    BALANCED = True
 
 proteins_tc = list(proteins_toconsider)
 proteins_tc.sort()
