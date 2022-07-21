@@ -176,7 +176,7 @@ class GraphCNN:
         return model
 
 
-    def getTensors(self, X, y):
+    def getTensors(self, X, y, folders=config.MATRIX_FOLDERS):
         """Generates data tensors from the training and testing lists of labels.
 
         Args:
@@ -193,29 +193,33 @@ class GraphCNN:
         """
         X_proteins = [row[0] for row in X]
         X_ligands = [row[1] for row in X]
-
+        
         tf_prot_adjacency = self.__getTensor(self.prot_adj_data_handler,
             X_proteins, 
             (config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_ADJACENCY_MAT_SIZE),
-            np.int8
+            np.int8,
+            folder=folders[0]
         )
 
         tf_prot_features = self.__getTensor(self.prot_feat_data_handler,
             X_proteins, 
             (config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_FEATURES_COUNT),
-            float
+            float,
+            folder=folders[1]
         )
 
         tf_lig_adjacency = self.__getTensor(self.lig_adj_data_handler,
             X_ligands, 
             (config.LIGAND_ADJACENCY_MAT_SIZE, config.LIGAND_ADJACENCY_MAT_SIZE),
-            np.int8
+            np.int8,
+            folder=folders[2]
         )
         
         tf_lig_features = self.__getTensor(self.lig_feat_data_handler,
             X_ligands, 
             (config.LIGAND_ADJACENCY_MAT_SIZE, config.LIGAND_FEATURES_COUNT),
-            float
+            float,
+            folder=folders[3]
         )
 
         tf_logfc = tf.strings.to_number(
@@ -226,11 +230,12 @@ class GraphCNN:
         return [tf_prot_adjacency, tf_prot_features, tf_lig_adjacency, tf_lig_features], tf_logfc
 
 
-    def __getTensor(self, obj, data, size, data_type):
+    def __getTensor(self, obj, data, size, data_type, folder):
         obj.initialize(
             data, 
             size,
-            data_type
+            data_type,
+            folder
         )
         tf_obj_features = obj.getTensor()
         return tf_obj_features
