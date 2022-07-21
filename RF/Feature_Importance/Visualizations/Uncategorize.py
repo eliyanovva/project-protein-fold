@@ -53,7 +53,7 @@ def uncat(feature):
                 ret[i] += 'C'
     return ret
 
-directory = '../../../../data_files/pdb_data_files'
+directory = '../../../../../data_files/pdb_data_files'
 
 #Iterate through each pdb
 for filename in os.listdir(directory):
@@ -217,7 +217,7 @@ for filename in os.listdir(directory):
 
         #Save as png
         cmd.deselect()
-        savelocation = "../../Images/" + name_of_protein + ".png"
+        savelocation = "../../Visualizations/Images/" + name_of_protein + ".png"
         cmd.png(savelocation)
         
         #Hide protein

@@ -2,7 +2,7 @@
 #Script must be run while pwd is in the RF directory
 
 import sys
-sys.path.append('../../project-protein-fold/RF/')
+sys.path.append('../../../project-protein-fold/RF/')
 import Globals
 import CombineLigandsProteins
 import os
@@ -120,7 +120,7 @@ for filename in os.listdir(directory):
         #Save as png
         if save:
             cmd.deselect()
-            savelocation = "Feature_Importance/Images/" + "Di_" + name_of_protein + ".png"
+            savelocation = "Feature_Importance/Visualizations/Images/" + "Di_" + name_of_protein + ".png"
             cmd.png(savelocation)
         
         #Hide protein
