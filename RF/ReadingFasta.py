@@ -93,7 +93,6 @@ def make_nmatrix(seqvar, feat, mat, unique, num_ligs):
                 seqvar[id][kmer] = 0
             #Add the frequency value of the kmer
             newseq.append(seqvar[id].get(kmer))
-
         # Add a frequency array for each protein
         for i in range(num_ligs):
                 mat.append(np.array(newseq))

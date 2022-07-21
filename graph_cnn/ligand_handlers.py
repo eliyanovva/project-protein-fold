@@ -1,3 +1,4 @@
+from xml.sax.handler import feature_external_ges
 import tensorflow as tf
 import numpy as np
 import os
@@ -15,7 +16,7 @@ class LigandAdjacencyData(DataHandlers):
         # the protein name should be from the train/test X data.
         adjacency_file_name = self.__getLigandFileNames(label_name)
         ligand_adjacency_matrix = np.load(
-            os.path.join(self.folder, adjacency_file_name)
+            os.path.join(self.folder, adjacency_file_name)#adjacency_file_name)
         )
         return ligand_adjacency_matrix 
     
@@ -29,8 +30,12 @@ class LigandAdjacencyData(DataHandlers):
         """
 
         mylist = os.listdir(self.folder)
-        left_index = ligand_name.rfind('_')
-        r = re.compile(".*"+ ligand_name[left_index:] + "_adj_mat.npy")
+        print('ADJACENCY LIST', mylist, '\n**********\n', repr(ligand_name))
+        ligand_name=ligand_name.replace('(', '\(')
+        ligand_name=ligand_name.replace(')', '\)') 
+        #print(ligand_name)   
+        #left_index = ligand_name.rfind('_')
+        r = re.compile(".*"+ ligand_name + ".*npy")
         adjacency_matrix_filename = list(filter(r.match, mylist))
         return adjacency_matrix_filename[0]
 
@@ -55,7 +60,10 @@ class LigandFeatureData(DataHandlers):
         """
 
         mylist = os.listdir(self.folder)
-        left_index = ligand_name.rfind('_')
-        r = re.compile(".*"+ ligand_name[left_index:] + ".*_feat_mat.npy")
-        adjacency_matrix_filename = list(filter(r.match, mylist))
-        return adjacency_matrix_filename[0]
+        print('FEATURES LIST', mylist, '\n**********\n', repr(ligand_name))
+        ligand_name=ligand_name.replace('(', '\(')
+        ligand_name=ligand_name.replace(')', '\)')    
+        
+        r = re.compile(".*"+ ligand_name + ".*npy")
+        feature_matrix_filename = list(filter(r.match, mylist))
+        return feature_matrix_filename[0]

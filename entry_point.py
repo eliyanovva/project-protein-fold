@@ -42,16 +42,16 @@ def removeTemporaryDirectories():
     shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_protein_feat_npy'))
     
 
-def generateNpyMatrices():
+def generateNpyMatrices(protein_path='input_protein_pdb', ligand_path='input_ligand_mol'):
     data_generator.generateProteinMatrices(
-        pdb_path='input_protein_pdb',
+        pdb_path=protein_path,
         bgf_path='temp_protein_bgf',
         target_adj_path='temp_protein_adj_npy',
         target_feat_path='temp_protein_feat_npy'
     )
     
     data_generator.generateLigandMatrices(
-        mol_path='input_ligand_mol',
+        mol_path=ligand_path,
         target_adj_path='temp_ligand_adj_npy',
         target_feat_path='temp_ligand_feat_npy'
     )
@@ -69,6 +69,13 @@ def generateLabelsList(protein_folder='input_protein_pdb', ligand_folder='input_
 
     return X_list 
 
+
+def savePredictions(label_list, results):
+    with open('predeicted_results.txt', 'w') as results_file:
+        for i in range(len(label_list)):
+            results_file.write(
+                str(label_list[i][0]) + ',' + str(label_list[i][1]) + ',' + str(results[i]) + '\n'
+                )
 
 def ppp():    
     parser = ModelingParser()
@@ -113,7 +120,31 @@ def ppp():
 
             
         elif args.gnn_mode == 'eval_protein':
-            pass
+            
+            X = generateLabelsList(ligand_folder=config.MOL_FILES_PATH)
+            createTemporaryDirectories()
+            try:
+                generateNpyMatrices(ligand_path=config.MOL_FILES_PATH)
+                log.info('Generated NPY arrays')
+                
+                temp_folders=[
+                    'temp_protein_adj_npy',
+                    'temp_protein_feat_npy',
+                    'temp_ligand_adj_npy',
+                    'temp_ligand_feat_npy'
+                ]
+                g = GraphCNN()
+                g.initialize()
+                temp_tensors, dummy_y = g.getTensors(X, ['0']*len(X), temp_folders)
+                
+                model = runModel(batch_size=batch_size)
+                predicted_values = runGNN(model, temp_tensors)
+                log.info('The predicted binding affinity is ' + str(predicted_values))
+                print('The predicted value is ', predicted_values)
+                savePredictions(X, predicted_values)
+            finally:
+#                pass
+                removeTemporaryDirectories()
         elif args.gnn_mode == 'eval_ligand':
             pass
         else:
@@ -125,9 +156,5 @@ def ppp():
     elif args.model == 'rf':
         print('RF CLI is not implemented yet!')
 
-#createTemporaryDirectories()
-#createTempMOLfile("/home/users/tep18/new_ppp/project-protein-fold/data_files/mol_files/pyridine_pyridine.mol")
-
-#removeTemporaryDirectories()
 ppp()
 

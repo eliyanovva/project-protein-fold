@@ -63,18 +63,21 @@ def matthew_counts(y_test, y_pred):
             FP += 1
     return TN, FN, TP, FP
 
-def neutral_train(features, labels, n_features):
+def train_new_pairs(features, labels, new_features, balance):
     X = features
     Y = labels
-    X_n = n_features
-    clf = RandomForestClassifier(n_estimators=100, class_weight="balanced")  # add in , class_weight="balanced"
-    X_train, X_test, y_train, y_test = train_test_split(X, Y, stratify=Y, test_size=0.1)  # 90% training and 10% test
+    X_n = new_features
+
+    if balance == False:
+        clf = RandomForestClassifier(n_estimators=100, class_weight="balanced")  # add in , class_weight="balanced"
+        X_train, X_test, y_train, y_test = train_test_split(X, Y, stratify=Y, test_size=0.1)  # 90% training and 10% test
+    else:
+        clf = RandomForestClassifier(n_estimators=100)
+        X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)  # 90% training and 10% test
     # Train the model
     clf.fit(X_train, y_train)
 
     n_pred = clf.predict(X_n)
-
-    #f = open('neutral_pair_predictions.txt', "w")
 
     return n_pred
 

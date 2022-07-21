@@ -35,7 +35,7 @@ for id in new_combos:
 
 for i in range(50):
     print('run ' + str(i))
-    n_pred = FixedClassificationModel.neutral_train(testX, testY, newX, BALANCE)
+    n_pred = FixedClassificationModel.train_new_pairs(testX, testY, newX, BALANCE)
 
     for j in range(len(n_pred)):
         combo = combo_list[j]
@@ -98,7 +98,6 @@ recall = 0
 BAC = 0
 MAT = 0
 
-#f = open('results_true_false_Filt2.csv', 'w')
 #f.write('Run,TN,FN,TP,FP' + "\n")
 
 for i in range(50):
