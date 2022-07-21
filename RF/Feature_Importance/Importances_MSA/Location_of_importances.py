@@ -1,14 +1,28 @@
-from functools import cmp_to_key
+#This script utilizes the features determined by SRF to be most important in binding to find the most important 
+#conserved locations across proteins in a multiple sequence alignment. The output to this script is stored in 
+#documents within the Importances_MSA folder, highlighting the most important residues. 
+
+#Imports
 import sys
-sys.path.append('../../project-protein-fold/RF/')
+sys.path.append('../../../project-protein-fold/RF/')
 import Globals
 from collections import Counter
 
+#Initialize dictionaries to be populated with categorized and 3Di sequences for each TM multiple sequence alignment
 AA_seqs = {}
 Di_seqs = Globals.initialize_3Di_dict(Globals.initialize_protein_list())
+#Initialize dictionary mapping each TM domain to an index
 tmdict = {'3':0, '5':1, '6':2, '7':3}
 
-
+#Function to categorize amino acids (AA) into their 7 categories
+#Amino Acid Codes:
+#a: {Ala, Gly, Val} => {A, G, V}
+#b: {Ile, Leu, Phe, Pro} => {I, L, F, P}
+#c: {Tyr, Met, Thr, Ser} => {Y, M, T, S}
+#d: {His, Asn, Gln, Trp} => {H, N, Q, W}
+#e: {Arg, Lys} => {R, K}
+#f: {Asp, Glu} => {D, E}
+#g: {Cys} => {C}
 def categorize(AA):
     AA = AA.replace('A', 'a').replace('G', 'a').replace('V', 'a')
     AA = AA.replace('I', 'b').replace('L', 'b').replace('F', 'b').replace('P', 'b')
@@ -19,6 +33,7 @@ def categorize(AA):
     AA = AA.replace('C', 'g')
     return AA
 
+#Populate the amino acid dictionary with categorized sequences from each TM multiple sequence alignment
 with open('TM_alignments/TM3_align.txt') as f:
     lines = f.readlines()
     for line in lines:
@@ -56,6 +71,7 @@ with open('TM_alignments/TM7_align.txt') as f:
             sequence = line.replace("\n", "")
             AA_seqs[protein].append(categorize(sequence))
 
+#Populate the 3Di dictionary with 3Di sequences from each multiple sequence alignment
 for protein in list(AA_seqs.keys()):
     j=0
     for i in range(len(AA_seqs[protein])):
@@ -69,6 +85,13 @@ for protein in list(AA_seqs.keys()):
         Di_seqs[protein][i] = newseq
         j = 0
 
+#Identify the most common residue locations for a feature
+#Input Variables:
+#tm: TM domain upon which the feature resides
+#seq: kmer of interest
+#dictionary: AA or 3Di based on the type of feature
+#Output: 
+#Set of most common residue locations
 def find_feature(tm, seq, dictionary):
     ret = []
     tmind = tmdict[tm]
@@ -89,21 +112,24 @@ def find_feature(tm, seq, dictionary):
             residues.append(num)
     return set(residues)
 
+#Finds the residue locations of the most important features
 with open('Feature_Importance/important_features.txt') as f:
     lines = f.readlines()
     i = 0
     ret = {}
     for line in lines:
-        if i == 10:
+        if i == 10: #Determines the number of features considered
             break
         i+=1
         line = line.replace('\n', "")
         if 'TM' in line:
             if line[-1] not in ret:
                 ret[line[-1]] = []
+            #3Di kmers
             if line[0].isupper():
                 for num in list(find_feature(line[-1], line[0:5], Di_seqs)):
                     ret[line[-1]].append(num)
+            #AA kmers
             else:
                 for num in list(find_feature(line[-1], line[0:5], AA_seqs)):
                     ret[line[-1]].append(num)
@@ -111,7 +137,6 @@ with open('Feature_Importance/important_features.txt') as f:
 
 
 #Highlighting the important regions in the TM alignments
-
 import docx
 from docx.enum.text import WD_COLOR_INDEX
 
