@@ -1,0 +1,21 @@
+/var/lib/slurm-llnl/slurmd/job1939674/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1939674/slurm_script: module: not found
+2022-07-21 19:03:08,142 - moleculekit.readers - WARNING - Element guessing failed for atom with name  ALA as the guessed element "A" was not found in the periodic table. Check for incorrect column alignment in the PDB file or report to moleculekit issue tracker.
+2022-07-21 19:03:08,142 - moleculekit.readers - WARNING - Element guessing failed for atom with name  ARG as the guessed element "A" was not found in the periodic table. Check for incorrect column alignment in the PDB file or report to moleculekit issue tracker.
+2022-07-21 19:03:08,143 - moleculekit.readers - WARNING - Element guessing failed for atom with name  GLU as the guessed element "G" was not found in the periodic table. Check for incorrect column alignment in the PDB file or report to moleculekit issue tracker.
+2022-07-21 19:03:08,143 - moleculekit.readers - WARNING - Element guessing failed for atom with name  LYS as the guessed element "L" was not found in the periodic table. Check for incorrect column alignment in the PDB file or report to moleculekit issue tracker.
+2022-07-21 19:03:08,143 - moleculekit.readers - WARNING - Element guessing failed for atom with name  MET as the guessed element "M" was not found in the periodic table. Check for incorrect column alignment in the PDB file or report to moleculekit issue tracker.
+2022-07-21 19:03:08,143 - moleculekit.readers - WARNING - Element guessing failed for atom with name  TRP as the guessed element "T" was not found in the periodic table. Check for incorrect column alignment in the PDB file or report to moleculekit issue tracker.
+Traceback (most recent call last):
+  File "/home/users/jvs15/project-protein-fold/dual_cnn/io_pairs", line 159, in <module>
+    voxelize_proteins()
+  File "/home/users/jvs15/project-protein-fold/dual_cnn/io_pairs", line 77, in voxelize_proteins
+    prot = Molecule(f'OR_alignment/ORs_centered/{filename}')
+  File "/home/users/jvs15/miniconda3/envs/moleculekit/lib/python3.9/site-packages/moleculekit/molecule.py", line 300, in __init__
+    self.read(filename, **kwargs)
+  File "/home/users/jvs15/miniconda3/envs/moleculekit/lib/python3.9/site-packages/moleculekit/molecule.py", line 1150, in read
+    mol = rr(fname, frame=frame, topoloc=tmppdb, **kwargs)
+  File "/home/users/jvs15/miniconda3/envs/moleculekit/lib/python3.9/site-packages/moleculekit/readers.py", line 1099, in PDBread
+    idx, newelem = pdbGuessElementByName(parsedtopo.element, parsedtopo.name)
+  File "/home/users/jvs15/miniconda3/envs/moleculekit/lib/python3.9/site-packages/moleculekit/readers.py", line 790, in pdbGuessElementByName
+    elem = elem.strip()
+AttributeError: 'NoneType' object has no attribute 'strip'

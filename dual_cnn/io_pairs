@@ -23,7 +23,7 @@ def voxelize_ligands(mol_dir):
     Makes a dictionary of ligand names and voxelized ligand objects
     """
     x1 = {}
-    os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
+    os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn')
 
     # Specifies box size and center for the ligand
     box = [15, 15, 15]
@@ -53,13 +53,13 @@ def voxelize_proteins():
     """
     x2 = {}
     num = 1
-    os.chdir('/home/users/jvs15/project-protein-fold')
+    os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn')
 
     box = [32, 32, 32]
     cent = [0., 0., 0.]
 
     # Chunk .pdb files for processing
-    filenames = os.listdir('pdb_data_files')
+    filenames = os.listdir('OR_alignment/ORs_centered')
     groups = list(chunks(filenames, 100))
 
     for chunk in groups:
@@ -67,27 +67,31 @@ def voxelize_proteins():
             # Check that file is in right format
             if (filename[0:3] == 'AF-' and filename[len(filename)-4:len(filename)] == '.pdb'):
                 a, b = filename.find('AF-')+3, filename.find('-F1')
-                uniprot = filename[a:b]
+                pid = filename[a:b]
+            elif 'olfr' in filename.lower():
+                pid = filename.split('_')[0]
+                if '.pdb' in filename:
+                    pid = filename.split('_')[0]
 
-                # Voxelize protein
-                prot = Molecule(f'pdb_data_files/{filename}')
-                prot.filter("protein or water or element {}".format(" ".join(metal_atypes)))
-                prot = prepareProteinForAtomtyping(prot)
-                prot.center()
-                prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, buffer = 1, boxsize=box, center=cent)
+            # Voxelize protein
+            prot = Molecule(f'OR_alignment/ORs_centered/{filename}')
+            prot.filter("protein or water or element {}".format(" ".join(metal_atypes)))
+            prot = prepareProteinForAtomtyping(prot)
+            prot.center()
+            prot_vox, prot_centers, prot_N = getVoxelDescriptors(prot, buffer = 1, boxsize=box, center=cent)
 
-                # Make tensor from voxelized format
-                prot_vox_t = prot_vox.transpose().reshape([8, prot_N[0], prot_N[1], prot_N[2]])
-                prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
+            # Make tensor from voxelized format
+            prot_vox_t = prot_vox.transpose().reshape([8, prot_N[0], prot_N[1], prot_N[2]])
+            prot_vox_t = torch.tensor(prot_vox_t.astype(np.float32))
 
-                # Add tensor to dict
-                x2[uniprot] = prot_vox_t
+            # Add tensor to dict
+            x2[pid] = prot_vox_t
 
-        os.chdir('/home/users/jvs15/project-protein-fold/moleculekit/prot_files')
+        os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn/new_prot_files')
         x2np = np.asarray(x2)
         np.save(f'protein_data_tensors{num}.npy', x2np)
         x2 = {}
-        os.chdir('/home/users/jvs15/project-protein-fold')
+        os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn')
         num += 1
     return
 
@@ -100,7 +104,7 @@ def gen_outputs(fdr, logfc):
     Makes a dataframe containing protein and ligand names, their tensors, and output
     """
 
-    os.chdir('/home/users/jvs15/project-protein-fold/moleculekit')
+    os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn')
     lig = np.load('ligand_data_tensors.npy', allow_pickle=True)
     lig = lig.item()
     print('Ligand data loaded')
@@ -118,7 +122,7 @@ def gen_outputs(fdr, logfc):
 
     ret = []
     num = 1
-    os.chdir('/home/users/jvs15/project-protein-fold/moleculekit/model_files')
+    os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn/new_model_files')
     for i in lig.keys():
         for j in prot.keys():
             a = de.get((i, j))
@@ -152,7 +156,7 @@ def chunks(lst, n):
 
 
 if __name__ == "__main__":
-    voxelize_ligands('mol_cid_files')
+    voxelize_proteins()
     
     
 

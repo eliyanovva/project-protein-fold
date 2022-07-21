@@ -1,3 +1,3 @@
 #!/bin/sh
 module load python
-python model
+python io_pairs

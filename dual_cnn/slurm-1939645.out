@@ -1,0 +1,11 @@
+/var/lib/slurm-llnl/slurmd/job1939645/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1939645/slurm_script: module: not found
+Traceback (most recent call last):
+  File "/home/users/jvs15/project-protein-fold/dual_cnn/io_pairs", line 155, in <module>
+    voxelize_proteins()
+  File "/home/users/jvs15/project-protein-fold/dual_cnn/io_pairs", line 73, in voxelize_proteins
+    prot = Molecule(f'OR_alignment/ORs_centered{filename}')
+  File "/home/users/jvs15/miniconda3/envs/moleculekit/lib/python3.9/site-packages/moleculekit/molecule.py", line 300, in __init__
+    self.read(filename, **kwargs)
+  File "/home/users/jvs15/miniconda3/envs/moleculekit/lib/python3.9/site-packages/moleculekit/molecule.py", line 1121, in read
+    raise FileNotFoundError(f"File {ff} was not found.")
+FileNotFoundError: File OR_alignment/ORs_centeredAF-Q9NQN1-F1-model_v2.pdb was not found.

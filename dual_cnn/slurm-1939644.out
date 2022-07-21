@@ -1,0 +1,5 @@
+/var/lib/slurm-llnl/slurmd/job1939644/slurm_script: 2: /var/lib/slurm-llnl/slurmd/job1939644/slurm_script: module: not found
+Traceback (most recent call last):
+  File "/home/users/jvs15/project-protein-fold/dual_cnn/io_pairs", line 1, in <module>
+    from moleculekit.molecule import Molecule
+ModuleNotFoundError: No module named 'moleculekit'
