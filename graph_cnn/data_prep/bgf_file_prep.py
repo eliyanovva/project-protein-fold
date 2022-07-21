@@ -9,8 +9,9 @@ import config
 
 #adjacency matrix from bgf file, feature matrix from pdb and bgf file
 class BGFDataFile:
-    def __init__(self, bgf_filename):
+    def __init__(self, bgf_filename, pdb_filename):
         self.bgf_filename = bgf_filename
+        self.pdb_filename = pdb_filename
         self.__setProteinName()
         self.__getSizes()
         log.info('Class initialized!')
@@ -39,7 +40,7 @@ class BGFDataFile:
         confidence_scores = self.__getConfidenceScores()
         atom_types = self.__getAtomTypes()
        
-        prefile = next(pybel.readfile('pdb', self.pdb_file_name))
+        prefile = next(pybel.readfile('pdb', self.pdb_filename))
         molecule = pybel.Molecule(prefile)
 
         atom_index = 0
@@ -74,13 +75,19 @@ class BGFDataFile:
 
 
     def __setProteinName(self):
-        left_index = self.bgf_filename.rfind('/AF-') + 4
-        right_index = self.bgf_filename.find('-F1')
-        self.protein_name = self.bgf_filename[left_index : right_index]
-        self.pdb_file_name = os.path.join(
-                config.PDB_FILES_PATH,
-                'AF-' + self.protein_name + '-F1-model_v2.pdb'
-            )
+        #left_index = self.bgf_filename.rfind('/AF-') + 4
+        #right_index = self.bgf_filename.find('-F1')
+        #print("***********", left_index, right_index, self.bgf_filename)
+        #FIXME: Temporary fix for naming convention; fix naming conventions and make them 
+        # independent of the training set.
+        #if left_index == 3 and right_index == -1:
+        left_index = self.bgf_filename.rfind('/')
+        right_index = self.bgf_filename.rfind('.')
+
+        #print("***********", left_index, right_index)
+        
+        self.protein_name = self.bgf_filename[max(0, left_index + 1) : right_index]  
+        #print('*(*(*(*(* PROTEIN NAEM', self.protein_name)
 
 
     def __getSizes(self):
@@ -93,7 +100,7 @@ class BGFDataFile:
             self.atom_count = 0
             self.bond_count = 0
             if len(lines) == 0:
-                raise Exception('The bgf file ' + self.compound_name + ' is empty')
+                raise Exception('The bgf file ' + self.bgf_filename + ' is empty')
             for line in lines:
                 if line.startswith('HETATM'):
                     self.atom_count += 1
@@ -135,7 +142,7 @@ class BGFDataFile:
     def __getConfidenceScores(self):
         log.info('Initiated extracting of confidence scores from PDB file for ' + self.protein_name)
         confidence_scores = np.zeros(self.atom_count, dtype='float')
-        with open(self.pdb_file_name) as pdb_file:
+        with open(self.pdb_filename) as pdb_file:
             lines = pdb_file.readlines()
             index = 0
             for line in lines:
@@ -150,7 +157,7 @@ class BGFDataFile:
     def __getAtomTypes(self):
         log.info('Initiated extracting of atom types from PDB file for ' + self.protein_name)
         atom_types = np.zeros(self.atom_count, dtype='float')
-        with open(self.pdb_file_name) as pdb_file:
+        with open(self.pdb_filename) as pdb_file:
             lines = pdb_file.readlines()
             index = 0
             for line in lines:

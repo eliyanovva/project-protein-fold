@@ -6,18 +6,23 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
-def train(features, labels):
+def train(features, labels, BALANCE):
     #define features and labels
     X = features #Kmers
     y = labels #Binds or not
 
-    #split into training and test set
-    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,test_size=0.1) # 90% training and 10% test
 
     #compare to random undersampling
 
     #Create a Gaussian Regression
-    clf=RandomForestClassifier(n_estimators=100, class_weight="balanced") #add in , class_weight="balanced"
+    if BALANCE == True:
+        # split into training and test set
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)  # 90% training and 10% test
+        clf=RandomForestClassifier(n_estimators=100) #add in , class_weight="balanced"
+    elif BALANCE == False:
+        # split into training and test set
+        X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.1)  # 90% training and 10% test
+        clf = RandomForestClassifier(n_estimators=100, class_weight="balanced")  # add in , class_weight="balanced"
     #Train the model
     clf.fit(X_train,y_train)
 

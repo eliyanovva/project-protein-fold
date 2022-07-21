@@ -31,20 +31,18 @@ Di_filter_TM6 = CombineLigandsProteins.Di6_kmers
 Di_filter_TM7 = CombineLigandsProteins.Di7_kmers
 filter_kmers = CombineLigandsProteins.filter_kmers
 unique_proteins = list(CombineLigandsProteins.uni_prot)
-unique_ligands = CombineLigandsProteins.uni_lig
+unique_ligands = list(CombineLigandsProteins.uni_lig)
 lig_counts_filter = CombineLigandsProteins.lig_counts_filter
 
 print(len(unique_proteins))         #313
 print(len(unique_ligands))          #26
 
-#https://www.geeksforgeeks.org/randomly-select-n-elements-from-list-in-python/
-unip = []
-for i in range(20):
-    id = random.choice(unique_proteins)
-    unip.append(id)
-    unique_proteins.remove(id)
+unique_proteins.sort()
+unique_ligands.sort()
 
-new_combos = labels.extract_new_combos(FDR, unip, unique_ligands)
+#https://www.geeksforgeeks.org/randomly-select-n-elements-from-list-in-python/
+
+new_combos = labels.extract_new_combos(FDR, unique_proteins, unique_ligands)
 
 AA_mat_TM3 = ReadingFasta.make_combomatrix(AA_seqvar_TM3, AA_filter_TM3, [], new_combos)
 AA_mat_TM5 = ReadingFasta.make_combomatrix(AA_seqvar_TM5, AA_filter_TM5, [], new_combos)
@@ -63,13 +61,13 @@ Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_
                             np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
 
 lig_mat = []            #matrix to store ligand features
-for id in unip:
+for id in new_combos:
     for lig in new_combos[id]:
             lig_mat.append(np.array(list(lig_counts_filter[lig].values())))
 
-print(len(AA_matrix))           #499
-print(len(Di_matrix))           #499
-print(len(lig_mat))             #499
+print(len(AA_matrix))           #584
+print(len(Di_matrix))           #584
+print(len(lig_mat))             #584
 
 intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
 final_matrix = np.concatenate((intermed_matrix, np.array(lig_mat, dtype = np.uint8)), axis = 1)

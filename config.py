@@ -19,7 +19,7 @@ logging.basicConfig(
 )
 
 
-PROTEIN_ADJACENCY_MAT_SIZE = 1000
+PROTEIN_ADJACENCY_MAT_SIZE = 3000
 LIGAND_ADJACENCY_MAT_SIZE = 70
 PROTEIN_FEATURES_COUNT = 13
 LIGAND_FEATURES_COUNT = 12
@@ -48,6 +48,9 @@ MOL_ADJACENCY_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_adjacency_data')
 LIGAND_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'mol_feature_data')
 PROTEIN_ADJACENCY_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_adjacency_data')
 PROTEIN_FEATURE_PATH = os.path.join(MATRIX_DATA_FILES_PATH, 'pdb_features_data')
+MATRIX_FOLDERS = [
+    PROTEIN_ADJACENCY_PATH, PROTEIN_FEATURE_PATH, MOL_ADJACENCY_PATH, LIGAND_FEATURE_PATH
+]
 
 #TODO: fix constants and logging setup throughout the entire package
 PVALUE_THRESHOLD = 0.05
@@ -58,5 +61,7 @@ HP_DROPOUT = hp.HParam('dropout', hp.Discrete([0.1, 0.15, 0.2]))
 HP_OPTIMIZER = hp.HParam('optimizer', hp.Discrete(['adam', 'sgd', 'adagrad']))
 HP_LOSS = hp.HParam('loss', hp.Discrete(['MeanSquaredLogarithmicError', 'MeanAbsoluteError', 'MeanSquaredError']))
 HP_LEARNINGRATE = hp.HParam('learning_rate', hp.Discrete([0.001, 0.0001, 0.00001]))
+HP_VALIDATION_SPLIT = hp.HParam('validation_split', hp.Discrete([0.1, 0.15, 0.2]))
+HP_TEST_TRAIN_SPLIT = hp.HParam('test_train_split', hp.Discrete([0.1, 0.15, 0.2]))
 
 METRIC_ACCURACY = 'accuracy'
