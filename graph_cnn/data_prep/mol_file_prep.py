@@ -150,7 +150,6 @@ class MolDataFile:
             index = 0
             for line in lines[4:4 + self.atom_count]:
                 line_list = [x for x in line.split() if x != '']
-                print(line_list)
                 #FIXME: add check if it is a valid key; assign non-valid to a key for others
                 atom_types[index] = config.ATOM_DICT[line_list[3]]
                 index += 1

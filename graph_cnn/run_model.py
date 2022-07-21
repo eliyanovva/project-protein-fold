@@ -133,6 +133,8 @@ def runModel(batch_size=-1, test_frac=0.3):
 
     storeResults(results, timing_measures)
 
+    return model
+
 
 def evalNewData(new_X):
     pass

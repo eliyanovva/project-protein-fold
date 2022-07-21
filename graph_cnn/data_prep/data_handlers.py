@@ -24,7 +24,7 @@ class DataHandlers(ABC):
         pass
 
 
-    def initialize(self, labels_list, dimensions, data_type):
+    def initialize(self, labels_list, dimensions, data_type, folder):
         """Initialization method for the DataHandlers class.
 
         Args:
@@ -35,6 +35,7 @@ class DataHandlers(ABC):
         self.labels_list = labels_list
         self.dimensions = dimensions
         self.type = data_type
+        self.folder = folder
         log.debug('Initialized data handler class')
 
 

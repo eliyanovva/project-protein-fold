@@ -51,16 +51,6 @@ class ModelingParser(argparse.ArgumentParser):
         )
 
         self.add_argument(
-            '--pdb_file',
-            help = 'File path to the protein pdb file which will be converted to temporary stored matrices.'
-        )
-
-        self.add_argument(
-            '--mol_file',
-            help = "File path to the ligand mol file which will be converted to temporary stored matrices."
-        )
-
-        self.add_argument(
             '--interaction',
             help = "Input interaction coefficient between the protein and ligand inputs."
         )
