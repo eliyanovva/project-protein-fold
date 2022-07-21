@@ -1,3 +1,4 @@
+from operator import index
 import shutil
 import os
 import re
@@ -38,4 +39,4 @@ for k in d.keys():
         print(f'Could not find pdb file {d[k]}')
         continue
 
-names.to_csv('Gene_FileName_map.csv')
+names.to_csv('Gene_FileName_map.csv', index=False)

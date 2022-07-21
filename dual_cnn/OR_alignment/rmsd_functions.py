@@ -3,6 +3,68 @@ import numpy as np
 import plotly.graph_objects as go
 import copy 
 import pandas as pd 
+import os
+
+
+def adj_coordinates(uncentered_dir, df, out_dir):
+    """
+    Generate new pdb files with corrected coordinates stored in coord_file
+    @coord_file: dataframe output from rmsd.dict_to_pdDataFrame
+    @uncentered_dir: folder containing uncentered pdb files
+    @out_dir: directory to store new .pdb files
+    """
+
+    os.chdir(uncentered_dir)
+    for filename in os.listdir('.'):
+        print(f'Working on {filename}')
+        with open(filename, 'r') as f:
+            x_column = None
+            lines = f.readlines()
+            
+            if 'olfr' in filename.lower():
+                pid = filename.split('_')[0]
+                if '.pdb' in pid:
+                    pid = pid.split('.pdb')[0]
+            elif 'AF' in filename:
+                pid = filename.split('-')[1]
+
+            startind = (df.models.values == pid).argmax()
+            idx = startind
+            
+            with open(f'{out_dir}/{filename}', 'w') as fout:
+                for line in lines:
+                    if line.startswith("TER") or line.startswith("END"):
+                        break
+                    if line.startswith("ATOM"):
+                        # Might need to be fixed for lowercase entries
+                        tokens = line.split()
+                        if x_column is None:
+                            try:
+                                # look for x column
+                                for i, x in enumerate(tokens):
+                                    if "." in x and "." in tokens[i + 1] and "." in tokens[i + 2]:
+                                        x_column = i
+                                        break
+
+                            except IndexError:
+                                msg = f"error: Parsing coordinates for {line} in {filename}"
+                                exit(msg)
+
+                        # If statement is a safeguard
+                        if df.iloc[[idx]].models.iloc[0] != pid:
+                            print(f'Lines do not match length of pdb')
+                            break
+                        else:
+                            tokens[x_column] = df.iloc[[idx]].x.iloc[0]
+                            tokens[x_column + 1] = df.iloc[[idx]].y.iloc[0]
+                            tokens[x_column + 2] = df.iloc[[idx]].z.iloc[0]
+                        for i in range(len(tokens)):
+                            if i == len(tokens) - 1:
+                                fout.write(str(tokens[i]) + '\n')
+                            else:
+                                fout.write(str(tokens[i]) + '  ')
+                        idx += 1
+
 
 def get_coordinates_pdb(filename, is_gzip=False, return_atoms_as_int=False):
     """
