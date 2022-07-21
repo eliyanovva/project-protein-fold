@@ -193,7 +193,7 @@ class GraphCNN:
         """
         X_proteins = [row[0] for row in X]
         X_ligands = [row[1] for row in X]
-
+        
         tf_prot_adjacency = self.__getTensor(self.prot_adj_data_handler,
             X_proteins, 
             (config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_ADJACENCY_MAT_SIZE),
