@@ -7,6 +7,12 @@ import ReadingFasta
 import SmileKmer
 import random
 
+#Additional coding help from:
+#https://www.w3schools.com/python/ref_list_sort.asp
+#https://www.geeksforgeeks.org/python-convert-set-into-a-list/
+#https://www.geeksforgeeks.org/python-dictionary-values/
+#https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html
+
 #Import dictionary matching ligands to SMILES String
 ligand_dict = Globals.initialize_ligand_dict()
 
@@ -33,9 +39,6 @@ filter_kmers = CombineLigandsProteins.filter_kmers
 unique_proteins = list(CombineLigandsProteins.uni_prot)
 unique_ligands = list(CombineLigandsProteins.uni_lig)
 lig_counts_filter = CombineLigandsProteins.lig_counts_filter
-
-print(len(unique_proteins))         #313
-print(len(unique_ligands))          #26
 
 unique_proteins.sort()
 unique_ligands.sort()
@@ -64,10 +67,6 @@ lig_mat = []            #matrix to store ligand features
 for id in new_combos:
     for lig in new_combos[id]:
             lig_mat.append(np.array(list(lig_counts_filter[lig].values())))
-
-print(len(AA_matrix))           #584
-print(len(Di_matrix))           #584
-print(len(lig_mat))             #584
 
 intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
 final_matrix = np.concatenate((intermed_matrix, np.array(lig_mat, dtype = np.uint8)), axis = 1)

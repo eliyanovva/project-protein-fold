@@ -2,6 +2,13 @@
 
 import numpy as np
 
+#Additional coding help from:
+#https://www.geeksforgeeks.org/remove-all-the-occurrences-of-an-element-from-a-list-in-python/
+#https://www.geeksforgeeks.org/python-count-occurrences-element-list/
+#https://www.w3schools.com/python/ref_list_sort.asp
+#https://www.geeksforgeeks.org/python-convert-set-into-a-list/
+
+
 #Input Variables:
 #ligand_dict ~ key: odorant / ligand name, value = SMILE formula
 #k: int, length of the ligand k-mers
@@ -151,8 +158,8 @@ def form_letters(smile):
                 letters[i] = (smile[i])
 
     #remove indices from letters that were not used
+
     c = letters.count(0)
     for i in range(0, c):
         letters.remove(0)
-        
     return letters

@@ -3,12 +3,18 @@
 #Imports
 import SmileKmer
 import numpy as np
-import pandas as pd
 import ReadingFasta
 import labels
 import Globals
 import Filtering
 import Duplicates
+
+#Additional coding help from:
+#https://numpy.org/doc/stable/reference/generated/numpy.repeat.html
+#https://www.w3schools.com/python/ref_list_sort.asp
+#https://www.geeksforgeeks.org/python-convert-set-into-a-list/
+#https://www.geeksforgeeks.org/python-dictionary-values/
+#https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html
 
 #filter_strength = variable to set strength of the kmer filter
 #use 'None' to select no filter
@@ -16,11 +22,11 @@ import Duplicates
 #otherwise, input an integer value to select the filter strength
 
 #prot_filter_strength = 'None'
-#prot_filter_strength = 6
+#prot_filter_strength = 12
 prot_filter_strength = 'All'
 
 #lig_filter_strength = 'None'
-#lig_filter_strength = 6
+#lig_filter_strength = 12
 lig_filter_strength = 'All'
 
 #Create classification dictionary
@@ -51,7 +57,7 @@ for pair in neg_pairs:
 #BALANCED = False => imbalanced dataset
 #affects the training algorithm and filtering protocol used
 """
-if (len(pos_pairs) / len(neg_pairs) > 2) | (len(neg_pairs) / len(pos_pairs) > 2):
+if (len(pos_pairs) / len(neg_pairs) > 1.5) | (len(neg_pairs) / len(pos_pairs) > 1.5):
     BALANCED = False
 else:
     BALANCED = True
@@ -151,9 +157,6 @@ AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
 Di_seqvar = [Di_seqvar_TM3, Di_seqvar_TM5, Di_seqvar_TM6, Di_seqvar_TM7]
 Di_feat = [Di_filter_TM3, Di_filter_TM5, Di_filter_TM6, Di_filter_TM7]
 
-print(len(AA_filter_TM3) + len(AA_filter_TM5) + len(AA_filter_TM6) + len(AA_filter_TM7))
-print(len(Di_filter_TM3) + len(Di_filter_TM5) + len(Di_filter_TM6) + len(Di_filter_TM7))
-
 #Extract proteins with unique AA and 3di kmer frequencies
 unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, proteins_tc)
 unique_proteins.sort()
@@ -223,8 +226,6 @@ if BALANCED == True:
 if BALANCED == False:
     lig_counts_filter, filter_kmers = Filtering.richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
 
-print(len(filter_kmers))
-
 #Extract ligands with unique kmer frequencies
 unique_ligands = Duplicates.remove_ligands(lig_counts_filter, total_by_lig)
 
@@ -282,14 +283,14 @@ pos_array = np.repeat(1, int(pos_total))
 neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
-print(len(unique_proteins))     #FDR<.1: 313, FDR<.15: 340
-print(len(unique_ligands))      #FDR<.1: 26, FDR<.15: 17
+#print(len(unique_proteins))     #FDR<.1: 313, FDR<.15: 340
+#print(len(unique_ligands))      #FDR<.1: 26, FDR<.15: 17
 
                                                         #All                            #None
-print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 113 | FDR<.1: 545, FDR<.15: 579
-print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 140  | FDR<.1: 236, FDR<.15: 490
+#print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 113 | FDR<.1: 545, FDR<.15: 579
+#print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 140  | FDR<.1: 236, FDR<.15: 490
 
-print(len(final_matrix))    #FDR<.1: 273, FDR<.15: 253
+#print(len(final_matrix))    #FDR<.1: 273, FDR<.15: 253
 print('Finished Part 1')
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
@@ -343,7 +344,7 @@ def import_final():
     feats = feat1
     global balance
     balance = BALANCED
-    #For PredictPosPairs.py
+    #For PredictNewCombos.py
     global logFC_data
     logFC_data = logFC
     global FDR_data
@@ -364,8 +365,8 @@ def import_final():
     Di6_kmers = Di_filter_TM6
     global Di7_kmers
     Di7_kmers = Di_filter_TM7
-    global filter_kmers
-    filter_kmers = list(lig_counts_filter['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
+    global kmers
+    kmers = filter_kmers
     #For PredictNewCombos
     global uni_prot
     uni_prot = unique_proteins
