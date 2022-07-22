@@ -12,7 +12,7 @@ from graph_cnn.data_prep import data_generator
 from cli_arguments import ModelingParser
 from graph_cnn.model import GraphCNN
 from graph_cnn.run_model import runModel, runGNN
-from data_files.TMdomains.UniprotScrape import 
+from data_files.TMdomains.UniprotScrape import scrape_TMs
 
 
 try:
@@ -85,6 +85,15 @@ def savePredictions(label_list, results):
             results_file.write(
                 str(label_list[i][0]) + ',' + str(label_list[i][1]) + ',' + str(results[i]) + '\n'
                 )
+
+def make_accession_list(proteins, protein_structure_folder):
+    with open(proteins, 'w') as f:
+                protein_files = os.listdir(protein_structure_folder)
+                for p_file in protein_files:
+                    if p_file.endswith('.pdb'):
+                        printline = p_file.replace('AF-', '')
+                        printline = printline.replace('-F1-model_v2.pdb')
+                        print(printline, f)
 
 def ppp():    
     parser = ModelingParser()
@@ -169,8 +178,14 @@ def ppp():
             protein_structure_folder='input_protein_pdb'
             protein_sequence_folder='input_protein_fasta'
             ligand_folder='input_ligand_smiles'
+            proteins = 'temp_TMs/accessions.txt'
+            TMs = 'temp_TMs/TM.txt'
+            TM_csv = 'temp_TMs/TM.csv'
+
+            make_accession_list(proteins, protein_structure_folder)
 
             try:
+                scrape_TMs(proteins, TMs, TM_csv)
 
             try:
                 convert_to_3di()

@@ -2,7 +2,7 @@
 
 import json
 
-def scrape_TMs(proteins):
+def scrape_TMs(proteins, writefile, csv):
   #Create comma-separated list of accession numbers
   with open(proteins) as f: #TODO: Try with all accessions
       lines = f.readlines()
@@ -27,7 +27,7 @@ def scrape_TMs(proteins):
 
   import requests, sys
 
-  with open("TM.txt", "w") as f:
+  with open(writefile, "w") as f:
     for set in query:
       requestURL = "https://www.ebi.ac.uk/proteins/api/features?offset=0&size=100&accession=" + set + "&types=TRANSMEM"
 
@@ -48,5 +48,25 @@ def scrape_TMs(proteins):
           print((accession['sequence'][int(accession["features"][4]['begin'])-6:int(accession["features"][4]['end'])+5]+','+str(int(accession["features"][4]['begin'])-5)+','+str(int(accession["features"][4]['end'])+5)), file=f)
           print((accession['sequence'][int(accession["features"][5]['begin'])-6:int(accession["features"][5]['end'])+5]+','+str(int(accession["features"][5]['begin'])-5)+','+str(int(accession["features"][5]['end'])+5)), file=f)
           print((accession['sequence'][int(accession["features"][6]['begin'])-6:int(accession["features"][6]['end'])+5]+','+str(int(accession["features"][6]['begin'])-5)+','+str(int(accession["features"][6]['end'])+5)), file=f)
+  
+  #Convert to csv
+  with open(writefile) as f:
+    lines = f.readlines()
 
-scrape_TMs('all_accessions.txt')
+  with open(csv, 'w') as f:
+      printstatement = 'protein,TM3,s3,e3,TM5,s5,e5,TM6,s6,e6,TM7,s7,e7'
+      for line in lines:
+          if line[0] == '>':
+              print('stop')
+              print(printstatement)
+              print(printstatement, file = f)
+              print('start')
+              line = line.replace('>', '')
+              printstatement = line.replace('\n', '')
+              print(printstatement)
+          else:
+              printstatement += ',' + line.replace('\n', '')
+
+      print(printstatement, file = f)
+
+scrape_TMs('all_accessions.txt', 'TM.txt', 'TM.csv')
