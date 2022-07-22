@@ -20,6 +20,7 @@ except:
     pass
 import config
 
+#Create temporary folders to house user-input necessary files
 def createTemporaryDirectories():
     os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_protein_bgf'))
     os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_ligand_adj_npy'))
@@ -27,7 +28,12 @@ def createTemporaryDirectories():
     os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_protein_adj_npy'))
     os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_protein_feat_npy'))
 
+def createRFDirectories():
+    os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_aa'))
+    os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_3Di'))
+    os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_smiles'))
 
+#Remove temporary folders
 def removeTemporaryDirectories():
     # FIXME make it catch exception when the directory doesn't exist
     shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_protein_bgf'))
@@ -35,6 +41,11 @@ def removeTemporaryDirectories():
     shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_ligand_feat_npy'))
     shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_protein_adj_npy'))
     shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_protein_feat_npy'))
+
+def removeRFDirectories():
+    shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_aa'))
+    shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_3Di'))
+    shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_smiles'))
     
 
 def generateNpyMatrices(protein_path='input_protein_pdb', ligand_path='input_ligand_mol'):
@@ -51,7 +62,7 @@ def generateNpyMatrices(protein_path='input_protein_pdb', ligand_path='input_lig
         target_feat_path='temp_ligand_feat_npy'
     )
 
-
+#Create a list of every protein-ligand pair in the folders
 def generateLabelsList(protein_folder='input_protein_pdb', ligand_folder='input_ligand_mol'):
     protein_files = os.listdir(protein_folder)
     mol_files = os.listdir(ligand_folder)
@@ -149,5 +160,31 @@ def ppp():
     
     elif args.model == 'rf':
         print('RF CLI is not implemented yet!')
+
+        if args.rf_mode == 'eval_pairs':
+            X = generateLabelsList()
+            createTemporaryDirectories()
+            log.info('Generated BGF and MOL files in temp directories.')
+            
+            try:
+                generateNpyMatrices()
+                log.info('Generated NPY arrays')
+                
+                temp_folders=[
+                    'temp_protein_adj_npy',
+                    'temp_protein_feat_npy',
+                    'temp_ligand_adj_npy',
+                    'temp_ligand_feat_npy'
+                ]
+                g = GraphCNN()
+                g.initialize()
+                temp_tensors, dummy_y = g.getTensors(X, ['0']*len(X), temp_folders)
+                
+                model = runModel(batch_size=batch_size, classification=classification)
+                predicted_value = runGNN(model, temp_tensors)
+                log.info('The predicted binding affinity is ' + str(predicted_value))
+                print('The predicted value is ', predicted_value)
+            finally:
+                removeTemporaryDirectories()
 
 ppp()

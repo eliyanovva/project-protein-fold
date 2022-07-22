@@ -54,4 +54,9 @@ class ModelingParser(argparse.ArgumentParser):
             help = "If used, the program will output and preserve DEBUG level logs."
         )
 
+        self.add_argument(
+            '--rf_mode',
+            help = 'Choose between "run", "eval_pairs", "eval_ligands", "eval_proteins". The program defaults to the "run" mode.'
+        )
+
         
