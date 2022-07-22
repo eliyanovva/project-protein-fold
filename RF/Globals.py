@@ -13,10 +13,11 @@ import pandas as pd
 
 
 #Function to create a dictionary of ligands matched to SMILES strings
-def initialize_ligand_dict():
+def initialize_ligand_dict(ligand_csv):
     ligand_dict = {}
-    df = pd.read_csv('../Ligands_withSMILE/ligand_SMILEs.csv')
-    files = df['ligand file'].tolist()
+    df = pd.read_csv(ligand_csv)
+    files = df['Ligands'].tolist()
+
     smiles = df['SMILE'].tolist()
     for i in range(len(files)):
         ligand_dict[files[i]] = smiles[i]
@@ -25,7 +26,10 @@ def initialize_ligand_dict():
 
 #List of filenames for ligands that we have matched SMILES strings to
 #Cannot distinguish chirality
-def initialize_ligand_list():
+def initialize_ligand_list(ligand_csv):
+    df = pd.read_csv(ligand_csv)
+    ligands = df['Ligands'].tolist()
+    """
     ligands = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_ethylTiglate.csv',
                'pS6_DE_1p_bIonone.csv', 'pS6_DE_1p_butyricAcid.csv',
                'pS6_DE_1p_paraCresol.csv', 'pS6_DE_1p_bCaryophyllene.csv', 'pS6_DE_p1_isovalericAcid.csv',
@@ -45,8 +49,9 @@ def initialize_ligand_list():
                'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_2phenylAlcohol.csv', 'pS6_DE_1p_4methylAC.csv', 'pS6_DE_1p_25dmp.csv',
                'pS6_DE_1p_nCarvone.csv', 'pS6_DE_1p_nDihydrocarveol.csv', 'pS6_DE_1p_nMenthol.csv', 'pS6_DE_1p_ntmt.csv', 
                'pS6_DE_1p_pCarvone.csv', 'pS6_DE_1p_pDihydrocarveol.csv', 'pS6_DE_1p_pLimonene.csv', 'pS6_DE_1p_pMenthol.csv', 'pS6_DE_1p_sbt.csv', 'pS6_DE_1p_tmt.csv']
-    """['pS6_DE_1p_dimethyltrisulfide.csv', 'pS6_DE_1p_tbm.csv', 'pS6_DE_p01_e2butene1thiol.csv', 'pS6_DE_1p_3methyl1butanethiol.csv', 
-    'pS6_DE_500mM_2propylthietane.csv', 'pS6_DE_p01_cyclopentanethiol.csv', 'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_ntmt.csv', 'pS6_DE_1p_tmt.csv']"""
+    ['pS6_DE_1p_dimethyltrisulfide.csv', 'pS6_DE_1p_tbm.csv', 'pS6_DE_p01_e2butene1thiol.csv', 'pS6_DE_1p_3methyl1butanethiol.csv', 
+    'pS6_DE_500mM_2propylthietane.csv', 'pS6_DE_p01_cyclopentanethiol.csv', 'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_ntmt.csv', 'pS6_DE_1p_tmt.csv']
+    """
     return ligands
 
 #Function to create list of protein accessions
@@ -57,31 +62,27 @@ def initialize_protein_list():
     return protein_list
 
 
-def initialize_AA_dict(p_list):
-    df = pd.read_csv("../data_files/TMdomains/TM.csv")
-    #protein_list = initialize_protein_list()
-    protein_list = p_list
+def initialize_AA_dict(proteins, TM_csv):
+    df = pd.read_csv(TM_csv)
 
     TMs_by_id = {}
     num_rows = df.shape[0]
     for i in range(num_rows):
         id = df.at[i, 'protein']
-        if id in protein_list:
+        if id in proteins:
             TMs = [str(df.at[i, 'TM3']), str(df.at[i, 'TM5']), str(df.at[i, 'TM6']), str(df.at[i, 'TM7'])]
             TMs_by_id[id] = TMs
 
     return categorize(TMs_by_id)
 
-def initialize_indices(p_list):
-    df = pd.read_csv("../data_files/TMdomains/TM.csv")
-    #protein_list = initialize_protein_list()
-    protein_list = p_list
+def initialize_indices(proteins, TM_csv):
+    df = pd.read_csv(TM_csv)
 
     TM_indices = {}
     num_rows = df.shape[0]
     for i in range(num_rows):
         id = df.at[i, 'protein']
-        if id in protein_list:
+        if id in proteins:
             indices = [int(df.at[i,'s3']), int(df.at[i,'e3']), int(df.at[i,'s5']), int(df.at[i,'e5']),
                        int(df.at[i,'s6']), int(df.at[i,'e6']), int(df.at[i,'s7']), int(df.at[i,'e7'])]
             TM_indices[id] = indices
@@ -93,6 +94,7 @@ def initialize_3Di_dict(p_list):
     Di_dict = {}
     Di = open("../data_files/3DiSequences/fullset_ss.fasta", "r")
     lines = Di.readlines()
+
     for i in range(len(lines)):
         if i % 2 == 0:
             id = lines[i][1:-1]
