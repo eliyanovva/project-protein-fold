@@ -7,14 +7,17 @@ import Globals
 import CombineLigandsProteins
 import os
 
-plist = CombineLigandsProteins.import_plist()
+plist = Globals.initialize_protein_list()
 Di_dict = Globals.initialize_3Di_dict(list(plist))
 indices = Globals.initialize_indices(list(plist))
+print(indices)
 
 directory = '../data_files/pdb_data_files'
 
 #Find the location of the 3Di kmer
 def resinumber(protein, threeDi, domain): #domain is 1, 2, 3, or 4 corresponding to 3, 5, 6, or 7
+    print(indices[protein])
+    print(domain*2-2)
     start = indices[protein][domain*2-2]
     seq = Di_dict[protein][domain-1]
     spot_in_seq = []
@@ -47,10 +50,10 @@ for filename in os.listdir(directory):
 
         if name in Di_dict:
             #Visualize the 3Di features
-            if len(resinumber(name,'SVVVV', 4)) > 0:
+            if len(resinumber(name,'VVLVV', 2)) > 0:
                 printstatement1 = ""
                 i = 0
-                for structure in resinumber(name,'SVVVV', 4):
+                for structure in resinumber(name, 'VVLVV', 2):
                     if i > 0:
                         printstatement1 += ' or '
                     printstatement1 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -61,10 +64,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj1")
                 save = True
             
-            if len(resinumber(name,'LSVQS', 3)) > 0:
+            if len(resinumber(name,'VCCVV', 3)) > 0:
                 printstatement2 = ""
                 i = 0
-                for structure in resinumber(name,'LSVQS', 3):
+                for structure in resinumber(name,'VCCVV', 3):
                     if i > 0:
                         printstatement2 += ' or '
                     printstatement2 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -75,10 +78,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj2")
                 save = True
             
-            if len(resinumber(name,'PPPPS', 3)) > 0:
+            if len(resinumber(name,'SSNNV', 4)) > 0:
                 printstatement3 = ""
                 i = 0
-                for structure in resinumber(name,'PPPPS', 3):
+                for structure in resinumber(name,'SSNNV', 4):
                     if i > 0:
                         printstatement3 += ' or '
                     printstatement3 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -89,10 +92,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj3")
                 save = True
             
-            if len(resinumber(name,'CCQAS', 3)) > 0:
+            if len(resinumber(name,'VVSVC', 2)) > 0:
                 printstatement4 = ""
                 i = 0
-                for structure in resinumber(name,'CCQAS', 3):
+                for structure in resinumber(name,'VVSVC', 2):
                     if i > 0:
                         printstatement4 += ' or '
                     printstatement4 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -103,10 +106,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj4")
                 save = True
 
-            if len(resinumber(name,'VVVNV', 3)) > 0:
+            if len(resinumber(name,'SPQVP', 4)) > 0:
                 printstatement5 = ""
                 i = 0
-                for structure in resinumber(name,'VVVNV', 3):
+                for structure in resinumber(name,'SPQVP', 4):
                     if i > 0:
                         printstatement5 += ' or '
                     printstatement5 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -120,7 +123,7 @@ for filename in os.listdir(directory):
         #Save as png
         if save:
             cmd.deselect()
-            savelocation = "Feature_Importance/Visualizations/Images/" + "Di_" + name_of_protein + ".png"
+            savelocation = "Feature_Importance/Visualizations/Sulfur_Images/" + "Di_" + name_of_protein + ".png"
             cmd.png(savelocation)
         
         #Hide protein

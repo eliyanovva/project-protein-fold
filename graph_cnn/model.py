@@ -120,8 +120,10 @@ class GraphCNN:
         )
 
         
-        x = tf.keras.layers.Conv1D(filters=1024, kernel_size=3, activation='relu')(prot_adj_in)
+        x = tf.keras.layers.Conv1D(filters=1024, kernel_size=5, activation='relu')(prot_adj_in)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        #x = tf.keras.layers.Conv1D(filters=1024, kernel_size=3, activation='relu')(x)
+        #x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Conv1D(filters=512, kernel_size=3, activation='relu')(x)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Conv1D(filters=256, kernel_size=3, activation='relu')(x)
@@ -132,11 +134,16 @@ class GraphCNN:
         x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
         
         y = tf.keras.layers.Flatten()(prot_feat_in)
+        y = tf.keras.layers.Dense(1024, activation="relu")(y)
         y = tf.keras.layers.Dense(512, activation="relu")(y)
         y = tf.keras.layers.Dense(64, activation="relu")(y)
         y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
 
-        z = tf.keras.layers.Flatten()(ligand_adj_in)
+        z = tf.keras.layers.Conv1D(filters=64, kernel_size=3, activation='relu')(ligand_adj_in)
+        z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)
+        z = tf.keras.layers.Conv1D(filters=32, kernel_size=3, activation='relu')(z)
+        z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)        
+        z = tf.keras.layers.Flatten()(z)
         z = tf.keras.layers.Dense(64, activation="relu")(z)
         z = tf.keras.layers.Dense(16, activation="relu")(z)
         z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
@@ -167,7 +174,7 @@ class GraphCNN:
 
         model.compile(
             optimizer=hp_optimizer,
-            loss=tf.keras.losses.MeanSquaredLogarithmicError(),
+            loss=tf.keras.losses.MeanSquaredError(),
             metrics=[tf.keras.metrics.LogCoshError(),
                 tf.keras.metrics.RootMeanSquaredError(),
                 tf.keras.metrics.MeanSquaredError()
@@ -175,6 +182,103 @@ class GraphCNN:
         )
         return model
 
+
+    def classificationModel(self, hp_optimizer='adagrad'):
+        """This function conatins the main model architecture. It initializes the data Tensors
+        to be used for training the model, then creates and compiles the model. The real data is
+        NOT accessed by this function.
+
+        Args:
+            hp_optimizer (str, optional): The optimizer to be used for the model.
+            Defaults to 'adagrad'.
+
+        Returns:
+            tf.keras.Model: The neural network model.
+        """
+        
+        prot_adj_in = tf.keras.layers.Input(
+            shape=(config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_ADJACENCY_MAT_SIZE),
+            name='Protein-Adjacency-Matrix'
+        )
+        
+        prot_feat_in = tf.keras.layers.Input(
+            shape=(config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_FEATURES_COUNT),
+            name='Protein-Feature-Matrix'
+        )
+
+        ligand_adj_in = tf.keras.layers.Input(
+            shape=(config.LIGAND_ADJACENCY_MAT_SIZE, config.LIGAND_ADJACENCY_MAT_SIZE),
+            name='Ligand-Adjacency-Matrix'
+        )
+
+        ligand_feat_in = tf.keras.layers.Input(
+            shape=(config.LIGAND_ADJACENCY_MAT_SIZE, config.LIGAND_FEATURES_COUNT),
+            name='Ligand-Feature-Matrix'
+        )
+
+        
+        x = tf.keras.layers.Conv1D(filters=1024, kernel_size=5, activation='relu')(prot_adj_in)
+        x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        #x = tf.keras.layers.Conv1D(filters=1024, kernel_size=3, activation='relu')(x)
+        #x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.Conv1D(filters=512, kernel_size=3, activation='relu')(x)
+        x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.Conv1D(filters=256, kernel_size=3, activation='relu')(x)
+        x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.Flatten()(x)
+        x = tf.keras.layers.Dense(1024, activation="relu")(x)
+        x = tf.keras.layers.Dense(512, activation="relu")(x)
+        x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
+        
+        y = tf.keras.layers.Flatten()(prot_feat_in)
+        y = tf.keras.layers.Dense(1024, activation="relu")(y)
+        y = tf.keras.layers.Dense(512, activation="relu")(y)
+        y = tf.keras.layers.Dense(64, activation="relu")(y)
+        y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
+
+        z = tf.keras.layers.Conv1D(filters=64, kernel_size=3, activation='relu')(ligand_adj_in)
+        z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)
+        z = tf.keras.layers.Conv1D(filters=32, kernel_size=3, activation='relu')(z)
+        z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)        
+        z = tf.keras.layers.Flatten()(z)
+        z = tf.keras.layers.Dense(64, activation="relu")(z)
+        z = tf.keras.layers.Dense(16, activation="relu")(z)
+        z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
+        
+        z1 = tf.keras.layers.Flatten()(ligand_feat_in)
+        z1 = tf.keras.layers.Dense(256, activation="relu")(z1)
+        z1 = tf.keras.layers.Dense(64, activation="relu")(z1)
+        z1 = tf.keras.Model(inputs=ligand_feat_in, outputs=z1)
+
+        combined = tf.keras.layers.concatenate([x.output, y.output, z.output, z1.output])
+        
+        out = tf.keras.layers.Dense(1024, activation="relu")(combined)
+        out = tf.keras.layers.Dense(512, activation="relu")(out)
+        out = tf.keras.layers.Dense(64, activation="relu")(out)
+        #out_regression = tf.keras.layers.Dense(1, activation="linear")(out)
+        #FIXME: Add the classification layers
+        out_classification = tf.keras.layers.Dense(1, activation='sigmoid')(out)
+        
+        model = tf.keras.Model(
+            inputs=[x.input, y.input, z.input, z1.input],
+            outputs= out_classification#, out_classification]
+        )
+        
+        with open('results.txt', 'a') as res_log:
+            with redirect_stdout(res_log):
+                model.summary()
+            res_log.write('\n')
+
+        model.compile(
+            optimizer=hp_optimizer,
+            loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+            metrics=[tf.keras.metrics.AUC(),
+                tf.keras.metrics.Accuracy(),
+                tf.keras.metrics.FalseNegatives(),
+                tf.keras.metrics.FalsePositives(),
+                ]
+        )
+        return model
 
     def getTensors(self, X, y, folders=config.MATRIX_FOLDERS):
         """Generates data tensors from the training and testing lists of labels.
@@ -253,3 +357,4 @@ class GraphCNN:
             logfc = row[2]
 
         return protein_ligand_list, logfc
+

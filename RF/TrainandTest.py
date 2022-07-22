@@ -1,21 +1,24 @@
-#This script tests the Random Forest on the entire preprocessed data set
+#This script trains and test the Random Forest 
+
+#Imports
 import CombineLigandsProteins
 #import Sequence_only
-import FixedClassificationModel
-import PredictNewCombos
+#import FixedClassificationModel
+#import PredictNewCombos
 #import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
-#import Metrics_Graphs
+import Metrics.Metrics_Graphs as Metrics_Graphs
 
-#Reminder: add documentation for using sci-kit
-
+#Initialize matrices
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
 logFC = CombineLigandsProteins.logFC_data
 FDR = CombineLigandsProteins.FDR_data
 BALANCE = CombineLigandsProteins.balance
+
+#Predicting with new combinations
 """
 PredictNewCombos.import_final()
 newX = PredictNewCombos.X
@@ -80,36 +83,55 @@ print(j)
                 f1.write(", TP" + "\n")
             
 #f1.close()
+"""
 
+#Test with protein sequence only
 #Sequence_only.import_final()
 #seqX = Sequence_only.X
 #seqY = Sequence_only.Y
 
+#Test with protein structure only
 #Structure_only.import_final()
 #structX = Structure_only.X
 #structY = Structure_only.Y
 
+#Find the best threshold for classification
 #AdjustingThreshold.train(testX, testY)
 
+#Find the most important features
 #fi.importance_file(testX, testY, CombineLigandsProteins.feats)
+
+#Perform classic training and testing of the model
 #FixedClassificationModel.train(testX, testY, BALANCE)
-#Metrics_Graphs.train(testX, testY)
+
+#Create graphs of Precision-Recall and Receiver Operating Characteristic curves
+Metrics_Graphs.train(testX, testY)
+
+#Examine TP and FN rates
 """
 accuracy = 0
 recall = 0
 BAC = 0
 MAT = 0
 
+f1 = open('FiltAll_FDR1_ROC.csv', 'w')
+f2 = open('FiltAll_FDR1_PreRec.csv', 'w')
+
+f1.write('Run,TN,FP' + "\n")
+f2.write('Run,Precision,Recall' + "\n")
+
 for i in range(50):
     print("run " + str(i))
-    acc, rec, bac, precision, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY, BALANCE)
+    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY, BALANCE)
     accuracy += acc
     recall += rec
     BAC += bac
     MAT += mat
-
+    #f2.write(str(i+1) + ", " + str(TN) + ", " + str(FN) + ", " + str(TP) + ", " + str(FP) + "\n")
+    #f2.write(str(i+1)+","+str(acc) + "\n")
 print('Average Accuracy: ' + str(accuracy/50))
 print('Average Recall: ' + str(recall/50))
 #print('Average Balanced: ' + str(BAC/50))
 #print('Average Matthew: ' + str(mat/50))
 #f2.close()
+"""

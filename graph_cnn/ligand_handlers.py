@@ -30,11 +30,8 @@ class LigandAdjacencyData(DataHandlers):
         """
 
         mylist = os.listdir(self.folder)
-        print('ADJACENCY LIST', mylist, '\n**********\n', repr(ligand_name))
         ligand_name=ligand_name.replace('(', '\(')
         ligand_name=ligand_name.replace(')', '\)') 
-        #print(ligand_name)   
-        #left_index = ligand_name.rfind('_')
         r = re.compile(".*"+ ligand_name + ".*npy")
         adjacency_matrix_filename = list(filter(r.match, mylist))
         return adjacency_matrix_filename[0]
@@ -60,7 +57,6 @@ class LigandFeatureData(DataHandlers):
         """
 
         mylist = os.listdir(self.folder)
-        print('FEATURES LIST', mylist, '\n**********\n', repr(ligand_name))
         ligand_name=ligand_name.replace('(', '\(')
         ligand_name=ligand_name.replace(')', '\)')    
         

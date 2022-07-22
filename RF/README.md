@@ -1,9 +1,8 @@
-# Random Forest Model
+# SRF: String-Based Random Forest Model
 
-This folder contains all scripts for processing the amino acid sequences, 3Di sequences, and SMILES strings into the input matrix for the random forest model. It also contains scripts to create the vector of classification values for the model. Finally, it contains the Random Forest Algorithm, Optimization scripts, and Metrics functions. 
+SRF is a novel machine learning architecture for the fast, accurate, and interpretable prediction of pairings between Olfactory Receptors and odors. SRF formats protein and ligand structure and sequence as strings, with features input into the model being k-mers of these strings. SRF is unique in its ability to account for protein structure without requiring the co-crystal structure of the protein and ligand bound together.
 
-Our Random Forest model balances the data through Oversampling and optimizes hyperparameters through cross validation. 
+SRF has achieved significant success with an average Receiver Operator Characteristic - Area Under the Curve (ROC-AUC) of 
+0.9975, average Precision-Recall AUC of 0.9995, and average Balanced Accuracy of 0.9459.
 
-At the moment, the algorithm is performing at an acceptable level with impressive speed. The ROC AUC is consistently around 0.8. 
-
-WARNING: In the FixedClassificationModel.py and FeatureImportance.py files, there is an option to edit the number of processors used in the undersampling method. Reduce processors if running on a personal machine. 
+This folder contains functions to train and test the model, predict protein-ligand pairs, and analyze the important features associated with protein-ligand binding. 
