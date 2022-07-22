@@ -50,10 +50,10 @@ for filename in os.listdir(directory):
 
         if name in Di_dict:
             #Visualize the 3Di features
-            if len(resinumber(name,'VCCLN', 3)) > 0:
+            if len(resinumber(name,'VVLVV', 2)) > 0:
                 printstatement1 = ""
                 i = 0
-                for structure in resinumber(name, 'VCCLN', 3):
+                for structure in resinumber(name, 'VVLVV', 2):
                     if i > 0:
                         printstatement1 += ' or '
                     printstatement1 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -64,10 +64,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj1")
                 save = True
             
-            if len(resinumber(name,'CLNVP', 3)) > 0:
+            if len(resinumber(name,'VCCVV', 3)) > 0:
                 printstatement2 = ""
                 i = 0
-                for structure in resinumber(name,'CLNVP', 3):
+                for structure in resinumber(name,'VCCVV', 3):
                     if i > 0:
                         printstatement2 += ' or '
                     printstatement2 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -78,10 +78,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj2")
                 save = True
             
-            if len(resinumber(name,'NVPDP', 3)) > 0:
+            if len(resinumber(name,'SSNNV', 4)) > 0:
                 printstatement3 = ""
                 i = 0
-                for structure in resinumber(name,'NVPDP', 3):
+                for structure in resinumber(name,'SSNNV', 4):
                     if i > 0:
                         printstatement3 += ' or '
                     printstatement3 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -92,10 +92,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj3")
                 save = True
             
-            if len(resinumber(name,'LNVPD', 3)) > 0:
+            if len(resinumber(name,'VVSVC', 2)) > 0:
                 printstatement4 = ""
                 i = 0
-                for structure in resinumber(name,'LNVPD', 3):
+                for structure in resinumber(name,'VVSVC', 2):
                     if i > 0:
                         printstatement4 += ' or '
                     printstatement4 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -106,10 +106,10 @@ for filename in os.listdir(directory):
                 cmd.set("cartoon_transparency",  "0", "obj4")
                 save = True
 
-            if len(resinumber(name,'DPPSS', 3)) > 0:
+            if len(resinumber(name,'SPQVP', 4)) > 0:
                 printstatement5 = ""
                 i = 0
-                for structure in resinumber(name,'DPPSS', 3):
+                for structure in resinumber(name,'SPQVP', 4):
                     if i > 0:
                         printstatement5 += ' or '
                     printstatement5 += 'Resi ' + str(structure) + '-' + str(structure+5)
@@ -123,7 +123,7 @@ for filename in os.listdir(directory):
         #Save as png
         if save:
             cmd.deselect()
-            savelocation = "Feature_Importance/Visualizations/Images/" + "Di_" + name_of_protein + ".png"
+            savelocation = "Feature_Importance/Visualizations/Sulfur_Images/" + "Di_" + name_of_protein + ".png"
             cmd.png(savelocation)
         
         #Hide protein
