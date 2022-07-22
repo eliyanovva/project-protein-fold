@@ -13,6 +13,9 @@ from cli_arguments import ModelingParser
 from graph_cnn.model import GraphCNN
 from graph_cnn.run_model import runModel, runGNN
 from data_files.TMdomains.UniprotScrape import scrape_TMs
+import Globals
+
+
 
 import RF.CombineLigandsProteins
 
@@ -179,11 +182,18 @@ def ppp():
             protein_structure_folder='input_protein_pdb'
             protein_sequence_folder='input_protein_fasta'
             ligand_folder='input_ligand_smiles'
+            ligand_csv = 'input_ligand_smiles/smiles.csv'
             proteins = 'temp_TMs/accessions.txt'
             TMs = 'temp_TMs/TM.txt'
             TM_csv = 'temp_TMs/TM.csv'
 
             make_accession_list(proteins, protein_structure_folder)
+
+            ligand_dict = Globals.initialize_ligand_dict(ligand_csv)
+            ligand_list = Globals.initialize_ligand_list(ligand_csv)
+            #AA_dict = Globals.initialize_AA_dict(p_list, TM_csv); called with the list of proteins to consider
+            #indices = Globals.initialize_indices(p_list, TM_csv)
+            #initialize_3D_dict needs a fasta of the 3Di sequences
 
             try:
                 scrape_TMs(proteins, TMs, TM_csv)
