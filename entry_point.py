@@ -14,6 +14,7 @@ from graph_cnn.model import GraphCNN
 from graph_cnn.run_model import runModel, runGNN
 from data_files.TMdomains.UniprotScrape import scrape_TMs
 
+import RF.CombineLigandsProteins
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
@@ -186,6 +187,10 @@ def ppp():
 
             try:
                 scrape_TMs(proteins, TMs, TM_csv)
+                log.info('Scraped TMs')
+            
+            except:
+                print('Unable to scrape TMs')
 
             try:
                 convert_to_3di()

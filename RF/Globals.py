@@ -13,9 +13,9 @@ import pandas as pd
 
 
 #Function to create a dictionary of ligands matched to SMILES strings
-def initialize_ligand_dict():
+def initialize_ligand_dict(ligand_location):
     ligand_dict = {}
-    df = pd.read_csv('../Ligands_withSMILE/ligand_SMILEs.csv')
+    df = pd.read_csv(ligand_location)
     files = df['ligand file'].tolist()
     smiles = df['SMILE'].tolist()
     for i in range(len(files)):
