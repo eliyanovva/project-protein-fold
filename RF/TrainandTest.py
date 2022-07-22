@@ -65,8 +65,7 @@ print('New Neg Pairs: ' + str(new_neg))
 print(i)
 print(j)
 
-"""
-        if (FDR[id][csv] > .15) & (FDR[id][csv] <= .4):
+        if (FDR[id][csv] > .1) & (FDR[id][csv] <= .4):
             f1.write(id + "," + csv + "," + str(logFC[id][csv]) +
                     "," + str(FDR[id][csv]) + "," + str(combo_dict[id][csv]))
             if (FC_val < 1) & (pos_obs <= 25):
@@ -77,7 +76,7 @@ print(j)
                 f1.write(", FP" + "\n")
             elif (FC_val >= 1) & (pos_obs > 25):
                 f1.write(", TP" + "\n")
-            """
+            
 #f1.close()
 
 #Sequence_only.import_final()
