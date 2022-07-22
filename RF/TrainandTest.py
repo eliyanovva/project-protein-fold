@@ -1,12 +1,12 @@
 #This script tests the Random Forest on the entire preprocessed data set
 import CombineLigandsProteins
 #import Sequence_only
-import FixedClassificationModel
-import PredictNewCombos
+#import FixedClassificationModel
+#import PredictNewCombos
 #import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
-#import Metrics_Graphs
+import Metrics_Graphs
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
@@ -91,7 +91,9 @@ print(j)
 
 #fi.importance_file(testX, testY, CombineLigandsProteins.feats)
 #FixedClassificationModel.train(testX, testY, BALANCE)
-#Metrics_Graphs.train(testX, testY)
+"""
+Metrics_Graphs.train(testX, testY)
+
 """
 accuracy = 0
 recall = 0
@@ -118,3 +120,4 @@ print('Average Recall: ' + str(recall/50))
 #print('Average Balanced: ' + str(BAC/50))
 #print('Average Matthew: ' + str(mat/50))
 #f2.close()
+"""
