@@ -13,11 +13,7 @@ from cli_arguments import ModelingParser
 from graph_cnn.model import GraphCNN
 from graph_cnn.run_model import runModel, runGNN
 from data_files.TMdomains.UniprotScrape import scrape_TMs
-import Globals
-
-
-
-import RF.CombineLigandsProteins
+from RF.CombineLigandsProteins import develop_matrices
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
@@ -189,12 +185,6 @@ def ppp():
 
             make_accession_list(proteins, protein_structure_folder)
 
-            ligand_dict = Globals.initialize_ligand_dict(ligand_csv)
-            ligand_list = Globals.initialize_ligand_list(ligand_csv)
-            #AA_dict = Globals.initialize_AA_dict(p_list, TM_csv); called with the list of proteins to consider
-            #indices = Globals.initialize_indices(p_list, TM_csv)
-            #initialize_3D_dict needs a fasta of the 3Di sequences
-
             try:
                 scrape_TMs(proteins, TMs, TM_csv)
                 log.info('Scraped TMs')
@@ -203,15 +193,14 @@ def ppp():
                 print('Unable to scrape TMs')
 
             try:
-                convert_to_3di()
+                convert_to_3di(Di_fasta) #TODO: Create the function to make a fasta file with all of the 3Di sequences
                 log.info('Created 3Di sequences')
                 
             except: 
                 print("Please download foldseek from https://github.com/steineggerlab/foldseek")
 
             try:
-                categorize()
-                log.info('Categorized amino acids')
+                develop_matrices(ligand_csv, TM_csv, Di_fasta)
             
             except:
                 print("Sequences could not be categorized")
