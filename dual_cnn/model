@@ -33,6 +33,13 @@ class ProtDataset(Dataset):
             a = np.load(f'{data_dir}/{filename}', allow_pickle=True)
             entries = np.concatenate((a, entries), axis=None)
         self.data = entries
+        for i in entries:
+            for j in i.keys():
+                if i[j] is None:
+                    print(i[j])
+                    print(i['Ligand Name'])
+                    print(j)
+                    break
 
 
     def __len__(self):
@@ -68,7 +75,7 @@ class Model(nn.Module):
 
         self.flatten = nn.Flatten()
         self.LeakyReLU = nn.LeakyReLU()
-        self.ln1 = nn.Linear(33280, 1024)
+        self.ln1 = nn.Linear(14336, 1024)
         self.ln2 = nn.Linear(1024, 256)
         self.ln3 = nn.Linear(256, 1)
 
@@ -137,7 +144,7 @@ for epoch in range(epochs):
     
 # Below is copied from Ben's branch
 print('finished training')
-save model
+# save model
 PATH = './cnn.pth'
 torch.save(model.state_dict(), PATH)
 model = Model()
