@@ -17,6 +17,7 @@ import Globals
 
 
 
+import RF.CombineLigandsProteins
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
@@ -196,6 +197,10 @@ def ppp():
 
             try:
                 scrape_TMs(proteins, TMs, TM_csv)
+                log.info('Scraped TMs')
+            
+            except:
+                print('Unable to scrape TMs')
 
             try:
                 convert_to_3di()
