@@ -39,11 +39,12 @@ def train(features, labels, BALANCE):
 
     mat = (metrics.matthews_corrcoef(y_test, y_pred))
     bac = metrics.balanced_accuracy_score(y_test, y_pred)
+
     #print('Balanced Accuracy Score: ' + str(bac))
 
     TN, FN, TP, FP = matthew_counts(y_test, y_pred)
 
-    return acc,rec,bac,mat,TN, FN, TP, FP
+    return acc,rec,bac,precision,mat,TN, FN, TP, FP
 
 #Examine TP and TN rates
 def matthew_counts(y_test, y_pred):

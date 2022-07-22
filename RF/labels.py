@@ -32,6 +32,7 @@ def labels():
 
         for id in acc_ids:
             ensem_id = fas_df.loc[id]['ensembl_gene_id']  # The ENSEMBLE id corresponding to the accession number
+
             logFC_byID[id][csv] = (curr_df.loc[ensem_id]['logFC'])  # Find logFC for the ligand-protein pair
             FDR_byID[id][csv] = (curr_df.loc[ensem_id]['FDR'])  # Find FDR for the ligand-protein pair
 
@@ -78,3 +79,5 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
                 neg_counts[id] = neg
 
     return classified, pos_counts, neg_counts, pos_pairs, neg_pairs
+
+labels()
