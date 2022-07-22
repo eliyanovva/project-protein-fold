@@ -38,24 +38,6 @@ def labels():
     # Return dictionaries with protein-ligand pair keys and logFC and FDR values
     return logFC_byID, FDR_byID
 
-def extract_highvals(logFC_byID, FDR_byID, ligands):
-    f = open('high_logFC_FDR.csv', 'w')
-    f.write('protein,ligand,logFC,FDR' + "\n")
-
-    possible = {}
-
-    for id in acc_ids:
-        possible[id] = []
-        for lig in ligands:
-            FDR = FDR_byID[id][lig]
-            logFC = logFC_byID[id][lig]
-            if (FDR > .15) & (logFC >= 1):
-                f.write(id + "," + lig + "," + str(logFC) + "," + str(FDR) + "\n")
-                possible[id].append(lig)
-    f.close()
-
-    return possible
-
 def extract_new_combos(FDR_byID, proteins, ligands):
     new_combos = {}
     i = 0
@@ -63,7 +45,7 @@ def extract_new_combos(FDR_byID, proteins, ligands):
         new_combos[id] = []
         for lig in ligands:
             FDR = FDR_byID[id][lig]
-            if (FDR > .15) & (FDR <= .4):        #.5 => 31, .6 => 43
+            if (FDR > .1) & (FDR <= .4):        #.5 => 31, .6 => 43
                 new_combos[id].append(lig)
                 i += 1
     return new_combos
@@ -82,7 +64,7 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
         neg = 0         #running count of neg pairs with id
         classified[id] = {}
         for csv in csvs:
-            if FDR_byID[id][csv] <= .15:
+            if FDR_byID[id][csv] <= .1:
                 if logFC_byID[id][csv] >= 1:    # The protein and ligand bind
                     classified[id][csv] = 1
                     pos += 1                    #only update pos count if pair isn't removed
