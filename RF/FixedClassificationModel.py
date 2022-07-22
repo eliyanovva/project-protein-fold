@@ -1,4 +1,4 @@
-#This script is a Classification Random Forest Model with Undersampling
+#This script is a Classification Random Forest Model with Cost Sensitive Learning
 #Code adapted from: https://www.datacamp.com/tutorial/random-forests-classifier-python 
 
 #imports
@@ -11,18 +11,17 @@ def train(features, labels, BALANCE):
     X = features #Kmers
     y = labels #Binds or not
 
-
-    #compare to random undersampling
-
     #Create a Gaussian Regression
+    #For balanced datasets
     if BALANCE == True:
         # split into training and test set
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)  # 90% training and 10% test
-        clf=RandomForestClassifier(n_estimators=100) #add in , class_weight="balanced"
+        clf=RandomForestClassifier(n_estimators=100)
+        #for unbalanced datasets
     elif BALANCE == False:
         # split into training and test set
         X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.1)  # 90% training and 10% test
-        clf = RandomForestClassifier(n_estimators=100, class_weight="balanced")  # add in , class_weight="balanced"
+        clf = RandomForestClassifier(n_estimators=100, class_weight="balanced")  # cost-sensitive learning
     #Train the model
     clf.fit(X_train,y_train)
 
@@ -46,6 +45,7 @@ def train(features, labels, BALANCE):
 
     return acc,rec,bac,mat,TN, FN, TP, FP
 
+#Examine TP and TN rates
 def matthew_counts(y_test, y_pred):
     TN = 0
     FN = 0
@@ -63,6 +63,7 @@ def matthew_counts(y_test, y_pred):
             FP += 1
     return TN, FN, TP, FP
 
+#For training the model on new pairs
 def train_new_pairs(features, labels, new_features, balance):
     X = features
     Y = labels

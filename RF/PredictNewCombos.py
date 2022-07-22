@@ -1,3 +1,5 @@
+#Script creates new pairings out of the unused pairings (logFC > 0.1) to test the model on
+
 import numpy as np
 import Duplicates
 import CombineLigandsProteins
