@@ -1,30 +1,27 @@
 import sys
 from contextlib import redirect_stdout
-#import telnetlib
 sys.path.append('../')
+import time
+import logging as log
+
+import tensorflow as tf
+from tensorboard.plugins.hparams import api as hp
 
 from graph_cnn.model import GraphCNN
 import graph_cnn.run_model as run_model
-import time
-import tensorflow as tf
 import config
-from tensorboard.plugins.hparams import api as hp
-import logging as log
-#import eli5
-#from sklearn.base import BaseEstimator
-#from sklearn.utils.multiclass import unique_labels
-#from sklearn.utils.validation import check_X_y
 
 
 with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
     hp.hparams_config(
-        hparams=[#config.HP_BATCH_SIZE,
-        #config.HP_DROPOUT,
-        #config.HP_OPTIMIZER,
-        #config.HP_LEARNINGRATE,
-        #config.HP_LOSS,
-        config.HP_VALIDATION_SPLIT,
-        config.HP_TEST_TRAIN_SPLIT
+        hparams=[
+            config.HP_BATCH_SIZE,
+            config.HP_DROPOUT,
+            config.HP_OPTIMIZER,
+            config.HP_LEARNINGRATE,
+            config.HP_LOSS,
+            config.HP_VALIDATION_SPLIT,
+            config.HP_TEST_TRAIN_SPLIT
         ],
         metrics=[hp.Metric(config.METRIC_ACCURACY, display_name='Accuracy')],
     )
@@ -60,8 +57,8 @@ class hp_GraphCNN(GraphCNN):
             name='Ligand-Feature-Matrix'
         )
 
-        dlayer = tf.keras.layers.Dropout(0.15)#hparams[config.HP_DROPOUT])
- 
+        dlayer = tf.keras.layers.Dropout(hparams[config.HP_DROPOUT])
+
         x = tf.keras.layers.Conv1D(filters=1024, kernel_size=3, activation='relu')(prot_adj_in)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Conv1D(filters=512, kernel_size=3, activation='relu')(x)
@@ -112,56 +109,21 @@ class hp_GraphCNN(GraphCNN):
             res_log.write('\n')
 
         model.compile(
-            optimizer= 'adagrad', #hparams[config.HP_OPTIMIZER],
+            optimizer= hparams[config.HP_OPTIMIZER],
             loss=tf.keras.losses.MeanSquaredLogarithmicError(),
             metrics=[tf.keras.metrics.LogCoshError(),
                 tf.keras.metrics.RootMeanSquaredError(),
-                tf.keras.metrics.MeanSquaredError()
+                tf.keras.metrics.MeanSquaredError(),
+                #tf.keras.metrics.MeanSquaredLogarithmicError(),
                 ]
         )
         return model
 
-"""
-class myEstimator(BaseEstimator):
-    def __init__(self,
-        epochs=10,
-        verbose=True,
-        batch_size=32,
-        callbacks=run_model.createCallbacks(),
-        validation_split=0.2,
-    ):
-        self.epochs = epochs,
-        self.verbose = verbose,
-        self.batch_size = batch_size,
-        self.callbacks = callbacks,
-        self.validation_split = validation_split,
-
-    
-    def fit(self, X, y, epochs,
-        verbose,
-        batch_size,
-        callbacks,
-        validation_split):
-
-        # Check that X and y have correct shape
-        X, y = check_X_y(X, y)
-        log.info('X and y have the correct shape')
-        # Store the classes seen during fit
-        self.classes_ = unique_labels(y)
-        self.X_ = X
-        self.y_ = y
-        # Return the classifier
-        return self
-
-# (X_train, y_train, epochs=10, verbose=True, 
-# batch_size=hparams[config.HP_BATCH_SIZE], 
-# callbacks = callbacks, validation_split=0.2)
-"""
-def hpBuildModel(hparams={
-        #config.HP_OPTIMIZER: 'adagrad',
-        #config.HP_BATCH_SIZE: 32,
+def hpBuildModel(params, hparams={
+        config.HP_OPTIMIZER: 'adagrad',
+        config.HP_BATCH_SIZE: 32,
         config.HP_DROPOUT: 0.15,
-        #config.HP_LEARNINGRATE: 0.001,
+        config.HP_LEARNINGRATE: 0.001,
         config.HP_VALIDATION_SPLIT: 0.15,
         config.HP_TEST_TRAIN_SPLIT: 0.15,
         }):
@@ -185,12 +147,11 @@ def hpBuildModel(hparams={
     start_model_fitting = time.time()
     model = g.hp_createModel(hparams)
     log.info('model fitting started')
-    #used to be model.fit
     mod_history = model.fit(X_train,
         y_train,
         epochs=10,
         verbose=True,
-        batch_size=32, #hparams[config.HP_BATCH_SIZE],
+        batch_size=hparams[config.HP_BATCH_SIZE],
         callbacks = callbacks,
         validation_split=hparams[config.HP_VALIDATION_SPLIT])
     end_model_fitting = time.time()
@@ -209,6 +170,7 @@ def hpBuildModel(hparams={
     #explanation = eli5.explain_weights(estimator)
     with open('hp_results.txt', 'a') as res_log:
         results = model.evaluate(X_test, y_test, verbose=True)
+        res_log.write('trial for '.join(params) + '\n')
         res_log.write(' '.join([str(r) for r in results]) + ' \n')
         res_log.write('Timing Benchmarks:\n')
         res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
@@ -225,24 +187,30 @@ def hpBuildModel(hparams={
     #returns loss value
 
 
-def hpRunModel(run_dir, hparams):
+def hpRunModel(run_dir, hparams, params):
   with tf.summary.create_file_writer(run_dir).as_default():
     hp.hparams(hparams)  # record the values used in this trial
-    accuracy = hpBuildModel(hparams)
+    accuracy = hpBuildModel(params, hparams)
     tf.summary.scalar(config.METRIC_ACCURACY, accuracy, step=1)
 
 
 def optimizeHyperparameters():
     session_num = 0
 
-    for validation_split in config.HP_VALIDATION_SPLIT.domain.values:
-        for test_train_split in config.HP_TEST_TRAIN_SPLIT.domain.values:
+    for dropout in config.HP_DROPOUT.domain.values:
+        for batch_size in config.HP_BATCH_SIZE.domain.values:
+    #        for dropout in config.HP_DROPOUT.domain.values:
             hparams = {
-                config.HP_VALIDATION_SPLIT: validation_split,
-                config.HP_TEST_TRAIN_SPLIT: test_train_split,
+                config.HP_OPTIMIZER: 'sgd', #optimizer,
+                config.HP_LEARNINGRATE: 0.01,
+                config.HP_BATCH_SIZE: batch_size,
+                config.HP_DROPOUT: dropout,
+                config.HP_TEST_TRAIN_SPLIT: 0.15,
+                config.HP_VALIDATION_SPLIT: 0.15,
             }
             run_name = "run-%d" % session_num
             print('--- Starting trial: %s' % run_name)
-            print({h.name: hparams[h] for h in hparams})
-            hpRunModel('logs/hparam_tuning/' + run_name, hparams)
+            parameters = {h.name: hparams[h] for h in hparams}
+            print(parameters)
+            hpRunModel('logs/hparam_tuning/' + run_name, hparams, parameters)
             session_num += 1
