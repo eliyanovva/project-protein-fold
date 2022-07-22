@@ -1,10 +1,18 @@
+from lib2to3.pytree import convert
 import time
 from graph_cnn.model import GraphCNN
 import config
 import logging as log
+import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import visuals
+
+def convertYClassification(y):
+    new_y = np.zeros(len(y), dtype=bool)
+    for i in range(len(y)):
+        new_y[i] = abs(y[i]) >= 1
+    return tf.convert_to_tensor(new_y, dtype=bool)
 
 
 def createPlot(mod_history):
@@ -23,8 +31,6 @@ def createPlot(mod_history):
 
 def createScatterPlot(mod_history):
     # Plot the results
-    #print(mod_history.history.keys())
-    #acc = mod_history.history['accuracy']
     loss = mod_history.history['loss']
     val_loss = mod_history.history['val_loss']
     epochs = range(len(loss))
@@ -50,10 +56,13 @@ def createCallbacks():
     return callbacks
 
 
-def trainGNN(gnn, X_train, y_train, tr_batch_size=32, tr_optimizer='adagrad'):
-    model = gnn.createModel(hp_optimizer=tr_optimizer)
+def trainGNN(gnn, X_train, y_train, tr_batch_size=32, tr_optimizer='adagrad', classification=False):
+    if classification:
+        model = gnn.classificationModel(hp_optimizer=tr_optimizer)
+        y_train = convertYClassification(y_train)
+    else:
+        model = gnn.createModel(hp_optimizer=tr_optimizer)
     callbacks = createCallbacks()
-
     log.info('model fitting started')
     mod_history = model.fit(
         X_train, y_train, epochs=10, verbose=True,
@@ -64,8 +73,10 @@ def trainGNN(gnn, X_train, y_train, tr_batch_size=32, tr_optimizer='adagrad'):
     return model, mod_history
 
 
-def testGNN(model, X_test, y_test):
+def testGNN(model, X_test, y_test, classification=False):
     log.info('model evaluation started')
+    if classification:
+        y_test = convertYClassification(y_test)
     results = model.evaluate(X_test, y_test, verbose=True)
     log.info('The results of the test run are:' + ' '.join([str(r) for r in results]))
     log.info('model evaluation completed')
@@ -98,7 +109,7 @@ def evaluateTuple(model, X_val):
     pass
 
 
-def runModel(batch_size=-1, test_frac=0.3):
+def runModel(batch_size=-1, test_frac=0.3, classification=False):
     gnn = GraphCNN()
     gnn.initialize()
     
@@ -116,11 +127,11 @@ def runModel(batch_size=-1, test_frac=0.3):
     end_test_data_load = time.time()
 
     start_model_fitting = time.time()
-    model, training_history = trainGNN(gnn, X_train, y_train)
+    model, training_history = trainGNN(gnn, X_train, y_train, classification=classification)
     end_model_fitting = time.time()
 
     start_model_fitting = time.time()
-    results = testGNN(model, X_test, y_test)
+    results = testGNN(model, X_test, y_test, classification=classification)
     end_model_fitting = time.time()
 
     timing_measures = [
@@ -133,6 +144,7 @@ def runModel(batch_size=-1, test_frac=0.3):
 
     storeResults(results, timing_measures)
 
+    
     return model
 
 
