@@ -12,6 +12,7 @@ from graph_cnn.data_prep import data_generator
 from cli_arguments import ModelingParser
 from graph_cnn.model import GraphCNN
 from graph_cnn.run_model import runModel, runGNN
+from data_files.TMdomains.UniprotScrape import 
 
 
 try:
@@ -32,6 +33,7 @@ def createRFDirectories():
     os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_aa'))
     os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_3Di'))
     os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_smiles'))
+    os.mkdir(os.path.join(MAIN_PACKAGE_DIR, 'temp_TMs'))
 
 #Remove temporary folders
 def removeTemporaryDirectories():
@@ -46,6 +48,7 @@ def removeRFDirectories():
     shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_aa'))
     shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_3Di'))
     shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_smiles'))
+    shutil.rmtree(os.path.join(MAIN_PACKAGE_DIR, 'temp_TMs'))
     
 
 def generateNpyMatrices(protein_path='input_protein_pdb', ligand_path='input_ligand_mol'):
@@ -162,29 +165,29 @@ def ppp():
         print('RF CLI is not implemented yet!')
 
         if args.rf_mode == 'eval_pairs':
-            X = generateLabelsList()
-            createTemporaryDirectories()
-            log.info('Generated BGF and MOL files in temp directories.')
-            
+            createRFDirectories()
+            protein_structure_folder='input_protein_pdb'
+            protein_sequence_folder='input_protein_fasta'
+            ligand_folder='input_ligand_smiles'
+
             try:
-                generateNpyMatrices()
-                log.info('Generated NPY arrays')
+
+            try:
+                convert_to_3di()
+                log.info('Created 3Di sequences')
                 
-                temp_folders=[
-                    'temp_protein_adj_npy',
-                    'temp_protein_feat_npy',
-                    'temp_ligand_adj_npy',
-                    'temp_ligand_feat_npy'
-                ]
-                g = GraphCNN()
-                g.initialize()
-                temp_tensors, dummy_y = g.getTensors(X, ['0']*len(X), temp_folders)
-                
-                model = runModel(batch_size=batch_size, classification=classification)
-                predicted_value = runGNN(model, temp_tensors)
-                log.info('The predicted binding affinity is ' + str(predicted_value))
-                print('The predicted value is ', predicted_value)
+            except: 
+                print("Please download foldseek from https://github.com/steineggerlab/foldseek")
+
+            try:
+                categorize()
+                log.info('Categorized amino acids')
+            
+            except:
+                print("Sequences could not be categorized")
+
+
             finally:
-                removeTemporaryDirectories()
+                removeRFDirectories()
 
 ppp()
