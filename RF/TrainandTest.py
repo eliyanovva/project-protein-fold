@@ -8,6 +8,8 @@ import PredictNewCombos
 #import Feature_Importance.FeatureImportance as fi
 #import Metrics_Graphs
 
+#Reminder: add documentation for using sci-kit
+
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
 testY = CombineLigandsProteins.Y
@@ -98,21 +100,14 @@ recall = 0
 BAC = 0
 MAT = 0
 
-f1 = open('FiltAll_FDR1_ROC.csv', 'w')
-f2 = open('FiltAll_FDR1_PreRec.csv', 'w')
-
-f1.write('Run,TN,FP' + "\n")
-f2.write('Run,Precision,Recall' + "\n")
-
 for i in range(50):
     print("run " + str(i))
-    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY, BALANCE)
+    acc, rec, bac, precision, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY, BALANCE)
     accuracy += acc
     recall += rec
     BAC += bac
     MAT += mat
-    #f2.write(str(i+1) + ", " + str(TN) + ", " + str(FN) + ", " + str(TP) + ", " + str(FP) + "\n")
-    #f2.write(str(i+1)+","+str(acc) + "\n")
+
 print('Average Accuracy: ' + str(accuracy/50))
 print('Average Recall: ' + str(recall/50))
 #print('Average Balanced: ' + str(BAC/50))
