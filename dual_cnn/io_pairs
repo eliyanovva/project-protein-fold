@@ -43,7 +43,6 @@ def voxelize_ligands(mol_dir):
 
     x1np = np.asarray(x1)
     np.save('ligand_cid_data_tensors.npy', x1np)
-
     print('Wrote ligand data')
     return
 
@@ -121,7 +120,7 @@ def gen_outputs(fdr, logfc):
 
     ret = []
     num = 1
-    os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn/new_model_files')
+    os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn/model_files')
     for i in lig.keys():
         for j in prot.keys():
             a = de.get((i, j))
@@ -153,9 +152,91 @@ def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i+n]
 
+def gen_outputs_new():
+    # There are about 49k total interactions from listed ligands and proteins so far;
+    # 2% of those have FDR < 0.05 and 4% have FDR < 0.25
+    """
+    @fdr: fdr cutoff threshold
+    @logfc: logfc cutoff threshold
+    Makes a dataframe containing protein and ligand names, their tensors, and output
+    """
+
+    os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn')
+    lig = np.load('ligand_cid_data_tensors.npy', allow_pickle=True)
+    lig = lig.item()
+    print('Ligand data loaded')
+
+    prot = {}
+    for filename in os.listdir('new_prot_files'):
+        d = np.load(f'new_prot_files/{filename}', allow_pickle=True)
+        d = d.item()
+        prot = {**d, **prot}
+    print('Protein data loaded')
+
+    dat = pd.read_csv('odorants_ORs_paper.csv')
+    print('Master Dataset Loaded')
+
+    mapper = pd.read_csv('Gene_FileName_map.csv')
+    print('Gene to File Name Mappings Loaded')
+
+    ret = []
+    num = 1
+    os.chdir('/home/users/jvs15/project-protein-fold/dual_cnn/new_model_files')
+
+    for idx in range(len(dat)):
+        gene = dat['Gene'][idx]
+        cid = str(dat['CID'][idx])
+        y = dat['Responsive'][idx]
+        
+        # Change yes/no to 1/0
+        if y == 'yes':
+            y = 1
+        elif y == 'no':
+            y = 0
+        else:
+            print(f'Error in dataset at row {idx}')
+        
+        filename = mapper.loc[mapper['Gene'] == gene, 'File Names'].iloc[0]
+
+        # Skip nan filenames
+        if isinstance(filename, float):
+            continue
+        else:
+            # Find protein label from filename
+            if (filename[0:3] == 'AF-' and filename[len(filename)-4:len(filename)] == '.pdb'):
+                a, b = filename.find('AF-')+3, filename.find('-F1')
+                pid = filename[a:b]
+            elif 'olfr' in filename.lower():
+                pid = filename.split('_')[0]
+                if '.pdb' in filename:
+                    pid = filename.split('_')[0]
+
+            # If no protein structure in nparray, skip that entry
+            if pid not in prot.keys():
+                continue
+            else:
+            # Match protein label to key in protein dict
+                entry = {'Ligand Name' : f'lig_{cid}',
+                'Ligand Data' : lig.get(f'lig_{cid}'),
+                'Protein Name' : pid,
+                'Protein Data' : prot.get(pid),
+                'Binding' : y}
+
+                ret.append(entry)
+                if len(ret) == 100:
+                    ret_np = np.asarray(ret)
+                    np.save(f'all_data{num}.npy', ret_np)
+                    ret = []
+                    num+=1
+
+    ret_np = np.asarray(ret)
+    np.save(f'all_data{num}.npy', ret_np)
+
+    return
 
 if __name__ == "__main__":
-    voxelize_proteins()
+    #voxelize_ligands('/home/users/jvs15/project-protein-fold/dual_cnn/mol_cid_files')
+    gen_outputs_new()
     
     
 
