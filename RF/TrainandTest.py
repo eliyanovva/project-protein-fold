@@ -6,7 +6,7 @@ import CombineLigandsProteins
 #import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
-import Metrics_Graphs
+import RF.Metrics.Metrics_Graphs as Metrics_Graphs
 
 CombineLigandsProteins.import_final()
 testX = CombineLigandsProteins.X
