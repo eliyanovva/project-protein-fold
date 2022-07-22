@@ -1,8 +1,6 @@
 import os
 import shutil
 import sys
-import subprocess
-import string
 import logging as log
 import numpy as np
 
@@ -10,14 +8,11 @@ import numpy as np
 MAIN_PACKAGE_DIR = os.path.abspath(os.curdir)    
 sys.path.append(MAIN_PACKAGE_DIR)
 
-from graph_cnn.data_prep.data_generator import generateLigandMatrices
-
 from graph_cnn.data_prep import data_generator
 from cli_arguments import ModelingParser
 from graph_cnn.model import GraphCNN
 from graph_cnn.run_model import runModel, runGNN
-#from graph_cnn.ligand_handlers import LigandAdjacencyData, LigandFeatureData
-#from graph_cnn.protein_handlers import ProteinAdjacencyData, ProteinFeatureData
+
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
@@ -86,9 +81,9 @@ def ppp():
         batch_size = args.batch_size
     else:
         batch_size = -1
-    
-    if args.model == 'gnn':
 
+    if args.model == 'gnn':
+        classification = args.gnn_cl == True
         if args.gnn_mode == 'hptuning':
             optimizeHyperparameters()
         
@@ -111,7 +106,7 @@ def ppp():
                 g.initialize()
                 temp_tensors, dummy_y = g.getTensors(X, ['0']*len(X), temp_folders)
                 
-                model = runModel(batch_size=batch_size)
+                model = runModel(batch_size=batch_size, classification=classification)
                 predicted_value = runGNN(model, temp_tensors)
                 log.info('The predicted binding affinity is ' + str(predicted_value))
                 print('The predicted value is ', predicted_value)
@@ -137,18 +132,17 @@ def ppp():
                 g.initialize()
                 temp_tensors, dummy_y = g.getTensors(X, ['0']*len(X), temp_folders)
                 
-                model = runModel(batch_size=batch_size)
+                model = runModel(batch_size=batch_size, classification=classification)
                 predicted_values = runGNN(model, temp_tensors)
                 log.info('The predicted binding affinity is ' + str(predicted_values))
                 print('The predicted value is ', predicted_values)
                 savePredictions(X, predicted_values)
             finally:
-#                pass
                 removeTemporaryDirectories()
         elif args.gnn_mode == 'eval_ligand':
             pass
         else:
-            model = runModel(batch_size)
+            model = runModel(batch_size, classification=classification)
     
     elif args.model == 'cnn':
         print('CNN CLI is not implemented yet!')
@@ -157,4 +151,3 @@ def ppp():
         print('RF CLI is not implemented yet!')
 
 ppp()
-
