@@ -72,7 +72,6 @@ def voxelize_proteins():
                 pid = filename.split('_')[0]
                 if '.pdb' in filename:
                     pid = filename.split('_')[0]
-
             # Voxelize protein
             prot = Molecule(f'OR_alignment/ORs_centered/{filename}')
             prot.filter("protein or water or element {}".format(" ".join(metal_atypes)))

@@ -58,11 +58,19 @@ def adj_coordinates(uncentered_dir, df, out_dir):
                             tokens[x_column] = df.iloc[[idx]].x.iloc[0]
                             tokens[x_column + 1] = df.iloc[[idx]].y.iloc[0]
                             tokens[x_column + 2] = df.iloc[[idx]].z.iloc[0]
-                        for i in range(len(tokens)):
-                            if i == len(tokens) - 1:
-                                fout.write(str(tokens[i]) + '\n')
-                            else:
-                                fout.write(str(tokens[i]) + '  ')
+                        #Dumb complicated formatting
+                        fout.write(str(tokens[0]).ljust(7))
+                        fout.write(str(tokens[1]).rjust(4) + '  ')
+                        fout.write(str(tokens[2]).ljust(3) + ' ')
+                        fout.write(str(tokens[3]).ljust(4))
+                        fout.write(str(tokens[4]).ljust(2))
+                        fout.write(str(tokens[5]).rjust(3))
+                        fout.write(str(tokens[6]).rjust(12))
+                        fout.write(str(tokens[7]).rjust(8))
+                        fout.write(str(tokens[8]).rjust(8))
+                        fout.write(str(tokens[9]).rjust(6))
+                        fout.write(str(tokens[10]).rjust(6))
+                        fout.write(str(tokens[11]).rjust(12) + '  ' + '\n')
                         idx += 1
 
 
