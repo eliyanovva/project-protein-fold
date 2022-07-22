@@ -50,6 +50,7 @@ def createCallbacks():
             monitor = 'val_loss',
             patience = 0,
             restore_best_weights = True,
+            mode = 'min',
         )
     ]
 

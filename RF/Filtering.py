@@ -3,6 +3,10 @@
 #Methodology for filtering out kmers is based on 'String-Based Models for Predicting RNA-Protein Interaction',
 #https://dl.acm.org/doi/10.1145/3107411.3107508
 
+#Additional coding help from:
+#https://www.geeksforgeeks.org/python-program-to-find-sum-of-elements-in-list/
+#https://www.geeksforgeeks.org/python-dictionary-values/
+
 #richness_protein: returns a list of protein kmers that meet the filtering requirements
 
 #kmers: set of all possible kmers for the protein
@@ -128,8 +132,9 @@ def richness_prot_balance(kmers, seqvar, pos_counts, neg_counts, domain, richnes
 
     return ret, ret2
 
-#richness_ligand: returns an updated version of ligand_counts; the dictionary will now only use kmers
-#that meet the filtering requirements
+#richness_ligand_imbalance: returns an updated version of ligand_counts;
+# the dictionary will now only use kmers that meet the filtering requirements
+# ligand filtering for imblanced dataset
 
 #ligand_counts: key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
 #pos_by_lig: key = ligand, value = # of pos. pairs with the ligand
@@ -167,13 +172,6 @@ def richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, richness_level
         neg_prop_by_kmer[kmer] = float(neg_counts_by_kmer[kmer]) / float(total_neg)
 
     richness = {}
-    #key: kmer, value: richness measure of kmer
-    #richness measures whether a kmer was more frequent in pos. or neg. pairs
-    #richness << 1 indicates higher frequency in neg. pairs
-    #richness >> 1 indicates higher frequency in pos. pairs
-    #Will remove kmers with a richness ~1 (occur approx. equally in pos. and neg. pairs)
-    #the formula for richness has been adapted to account for imbalances in the dataset
-    #(ie, basing it off the prop. of a kmer in pos / neg counts, rather than the pure frequency counts for the kmer)
 
     for kmer in kmers:
         if neg_counts_by_kmer[kmer] == 0:       #kmer only occurs in positive pairs
@@ -207,6 +205,7 @@ def richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, richness_level
 
     return ligand_counts, kmers_success
 
+#Ligand filtering for balanced dataset
 def richness_lig_balance(ligand_counts, pos_by_lig, neg_by_lig, richness_level, kmers):
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs
@@ -226,13 +225,6 @@ def richness_lig_balance(ligand_counts, pos_by_lig, neg_by_lig, richness_level, 
             neg_counts_by_kmer[kmer] += neg_by_lig[lig] * freq_dict[kmer]
 
     richness = {}
-    #key: kmer, value: richness measure of kmer
-    #richness measures whether a kmer was more frequent in pos. or neg. pairs
-    #richness << 1 indicates higher frequency in neg. pairs
-    #richness >> 1 indicates higher frequency in pos. pairs
-    #Will remove kmers with a richness ~1 (occur approx. equally in pos. and neg. pairs)
-    #the formula for richness has been adapted to account for imbalances in the dataset
-    #(ie, basing it off the prop. of a kmer in pos / neg counts, rather than the pure frequency counts for the kmer)
 
     for kmer in kmers:
         if neg_counts_by_kmer[kmer] == 0:       #kmer only occurs in positive pairs
@@ -259,7 +251,6 @@ def richness_lig_balance(ligand_counts, pos_by_lig, neg_by_lig, richness_level, 
             else:
                 kmers_success.append(kmer)
 
-    #Remove all kmers from ligand_counts that didn't meet the filtering requirements
     for lig in ligand_counts:
         for kmer in kmers_failed:
             ligand_counts[lig].pop(kmer)

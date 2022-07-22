@@ -3,6 +3,11 @@
 #For example, if both proteins P1 and P2 have 'unique frequencies',
 #then P1 and P2 must have different frequencies of 1 or more kmers
 
+#Additional coding help from:
+#https://www.w3schools.com/python/ref_list_sort.asp
+#https://www.geeksforgeeks.org/python-convert-set-into-a-list/
+#https://www.geeksforgeeks.org/python-dictionary-values/
+#https://www.w3schools.com/python/ref_dictionary_keys.asp
 
 #remove_protein: returns a list of proteins with unique frequencies
 

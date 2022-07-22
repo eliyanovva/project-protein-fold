@@ -3,6 +3,15 @@
 #Imports
 import pandas as pd
 
+#Additional coding help from:
+#https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html
+#https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.at.html
+#https://stackoverflow.com/questions/23748995/pandas-dataframe-column-to-list
+#https://www.geeksforgeeks.org/writing-to-file-in-python/
+#https://www.geeksforgeeks.org/how-to-read-from-a-file-in-python/
+#https://www.w3schools.com/python/ref_string_replace.asp
+
+
 #Function to create a dictionary of ligands matched to SMILES strings
 def initialize_ligand_dict():
     ligand_dict = {}
@@ -42,20 +51,19 @@ def initialize_ligand_list():
 
 #Function to create list of protein accessions
 def initialize_protein_list():
-    df = pd.read_csv("TMs.csv")
+    df = pd.read_csv("../data_files/TMdomains/TM.csv")
     protein_list = list(df.iloc[:, 0])
 
     return protein_list
 
 
 def initialize_AA_dict(p_list):
-    df = pd.read_csv("TMs.csv")
+    df = pd.read_csv("../data_files/TMdomains/TM.csv")
     #protein_list = initialize_protein_list()
     protein_list = p_list
 
     TMs_by_id = {}
-    num_rows = df.shape[0]      #https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html
-
+    num_rows = df.shape[0]
     for i in range(num_rows):
         id = df.at[i, 'protein']
         if id in protein_list:
@@ -65,7 +73,7 @@ def initialize_AA_dict(p_list):
     return categorize(TMs_by_id)
 
 def initialize_indices(p_list):
-    df = pd.read_csv("TMs.csv")
+    df = pd.read_csv("../data_files/TMdomains/TM.csv")
     #protein_list = initialize_protein_list()
     protein_list = p_list
 

@@ -1,3 +1,5 @@
+#This file determines the time to process data and train and test the model
+
 import time
 import CombineLigandsProteins
 from sklearn.model_selection import train_test_split

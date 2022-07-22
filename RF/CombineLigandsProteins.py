@@ -3,12 +3,18 @@
 #Imports
 import SmileKmer
 import numpy as np
-import pandas as pd
 import ReadingFasta
 import labels
 import Globals
 import Filtering
 import Duplicates
+
+#Additional coding help from:
+#https://numpy.org/doc/stable/reference/generated/numpy.repeat.html
+#https://www.w3schools.com/python/ref_list_sort.asp
+#https://www.geeksforgeeks.org/python-convert-set-into-a-list/
+#https://www.geeksforgeeks.org/python-dictionary-values/
+#https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html
 
 #filter_strength = variable to set strength of the kmer filter
 #use 'None' to select no filter
@@ -16,23 +22,22 @@ import Duplicates
 #otherwise, input an integer value to select the filter strength
 
 #prot_filter_strength = 'None'
-#prot_filter_strength = 6
+#prot_filter_strength = 8
 prot_filter_strength = 'All'
 
 #lig_filter_strength = 'None'
-#lig_filter_strength = 6
+#lig_filter_strength = 8
 lig_filter_strength = 'All'
 
 #Create classification dictionary
 acc_ids = Globals.initialize_protein_list()
 logFC, FDR = labels.labels()
-classified, pos_counts, neg_counts, pos_pairs, neg_pairs, neutral_pairs = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
+classified, pos_counts, neg_counts, pos_pairs, neg_pairs = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
 #classified = key: protein id, value: (key = ligand, value = {1 if bind, 0 if not bind})
 #pos_counts = key: protein id, value: number of positive protein interactions
 #neg_counts = key: protein id, value: number of negative protein interactions
 #pos_pairs = list of positive protein-ligand pairs; pos_pairs[i] = [protein id, ligand]
 #neg_pairs = list of negative protein-ligand pairs; neg_pairs[i] = [protein id, ligand]
-#neutral_pairs = list of neutral protein-ligand pairs; neutral_pairs[i] = [protein id, ligand]
 
 proteins_toconsider = set()     #proteins that can form either a positive or negative pair with a ligand
 
@@ -51,10 +56,14 @@ for pair in neg_pairs:
 #BALANCED = True => balanced dataset
 #BALANCED = False => imbalanced dataset
 #affects the training algorithm and filtering protocol used
-if (len(pos_pairs) / len(neg_pairs) > 2) | (len(neg_pairs) / len(pos_pairs) > 2):
+"""
+if (len(pos_pairs) / len(neg_pairs) > 1.5) | (len(neg_pairs) / len(pos_pairs) > 1.5):
     BALANCED = False
 else:
     BALANCED = True
+"""
+
+BALANCED = False        #hardcoded for now; can uncomment the lines above
 
 proteins_tc = list(proteins_toconsider)
 proteins_tc.sort()
@@ -274,14 +283,14 @@ pos_array = np.repeat(1, int(pos_total))
 neg_array = np.repeat(0, int(neg_total))
 logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 
-print(len(unique_proteins))     #FDR<.1: 313, FDR<.15: 340
-print(len(unique_ligands))      #FDR<.1: 26, FDR<.15: 17
+#print(len(unique_proteins))     #FDR<.1: 313, FDR<.15: 340
+#print(len(unique_ligands))      #FDR<.1: 26, FDR<.15: 17
 
                                                         #All                            #None
 print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 113 | FDR<.1: 545, FDR<.15: 579
 print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 140  | FDR<.1: 236, FDR<.15: 490
 
-print(len(final_matrix))    #FDR<.1: 273, FDR<.15: 253
+#print(len(final_matrix))    #FDR<.1: 273, FDR<.15: 253
 print('Finished Part 1')
 
 #Return the number of repeated entries. Adapted from: https://www.geeksforgeeks.org/print-unique-rows/
@@ -335,7 +344,7 @@ def import_final():
     feats = feat1
     global balance
     balance = BALANCED
-    #For PredictPosPairs.py
+    #For PredictNewCombos.py
     global logFC_data
     logFC_data = logFC
     global FDR_data
@@ -356,8 +365,8 @@ def import_final():
     Di6_kmers = Di_filter_TM6
     global Di7_kmers
     Di7_kmers = Di_filter_TM7
-    global filter_kmers
-    filter_kmers = list(lig_counts_filter['pS6_DE_1p_dimethyltrisulfide.csv'].keys())
+    global kmers
+    kmers = filter_kmers
     #For PredictNewCombos
     global uni_prot
     uni_prot = unique_proteins

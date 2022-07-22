@@ -1,4 +1,4 @@
-#This script creates the protein matrix and ligand matrix to train and test the Random Forest Algorithm
+#This script creates matrices containing only protein sequence and ligand data
 
 #Imports
 import SmileKmer
