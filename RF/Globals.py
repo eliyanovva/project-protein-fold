@@ -51,14 +51,14 @@ def initialize_ligand_list():
 
 #Function to create list of protein accessions
 def initialize_protein_list():
-    df = pd.read_csv("TMs.csv")
+    df = pd.read_csv("../data_files/TMdomains/TM.csv")
     protein_list = list(df.iloc[:, 0])
 
     return protein_list
 
 
 def initialize_AA_dict(p_list):
-    df = pd.read_csv("TMs.csv")
+    df = pd.read_csv("../data_files/TMdomains/TM.csv")
     #protein_list = initialize_protein_list()
     protein_list = p_list
 
@@ -73,7 +73,7 @@ def initialize_AA_dict(p_list):
     return categorize(TMs_by_id)
 
 def initialize_indices(p_list):
-    df = pd.read_csv("TMs.csv")
+    df = pd.read_csv("../data_files/TMdomains/TM.csv")
     #protein_list = initialize_protein_list()
     protein_list = p_list
 

@@ -55,7 +55,7 @@ def train(features, labels):
     plt.xlabel("Recall")
     plt.ylabel("Precision")
     plt.title("Precision-Recall Curve")
-    plt.savefig("Precision_Recall.png")
+    plt.savefig("Metrics/Precision_Recall.png")
 
     #Receiver Operating Characteristic
     plt.clf()
@@ -63,6 +63,6 @@ def train(features, labels):
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
     plt.title("ROC Curve")
-    plt.savefig("ROC.png")
+    plt.savefig("Metrics/ROC.png")
 
     
