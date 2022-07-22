@@ -1,8 +1,9 @@
 import sys
-sys.path.append('../')
 import logging as log
 import math
 import os
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(os.path.dirname(CURRENT_DIR)))
 
 import numpy as np
 from openbabel import pybel

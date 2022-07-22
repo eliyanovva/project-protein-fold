@@ -1,14 +1,15 @@
 import sys
 from contextlib import redirect_stdout
 sys.path.append('../')
+import time
+import logging as log
+
+import tensorflow as tf
+from tensorboard.plugins.hparams import api as hp
 
 from graph_cnn.model import GraphCNN
 import graph_cnn.run_model as run_model
-import time
-import tensorflow as tf
 import config
-from tensorboard.plugins.hparams import api as hp
-import logging as log
 
 
 with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
