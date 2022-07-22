@@ -16,7 +16,7 @@ import Duplicates
 #https://www.geeksforgeeks.org/python-dictionary-values/
 #https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html
 
-def develop_matrices(ligand_location):
+def develop_matrices(ligand_location, TM_location, Di_location):
     #filter_strength = variable to set strength of the kmer filter
     #use 'None' to select no filter
     #use 'All' to only select kmers that occur exclusively in positive or negative pairs
@@ -31,7 +31,7 @@ def develop_matrices(ligand_location):
     lig_filter_strength = 'All'
 
     #Create classification dictionary
-    acc_ids = Globals.initialize_protein_list()
+    acc_ids = Globals.initialize_protein_list(TM_location)
     logFC, FDR = labels.labels()
     classified, pos_counts, neg_counts, pos_pairs, neg_pairs = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
     #classified = key: protein id, value: (key = ligand, value = {1 if bind, 0 if not bind})
@@ -113,7 +113,7 @@ def develop_matrices(ligand_location):
     di_matrix_TM7 = []
 
     #Create dict of AA sequences only with proteins from pos or neg pairs
-    AA_dict = Globals.initialize_AA_dict(proteins_tc)
+    AA_dict = Globals.initialize_AA_dict(proteins_tc, TM_location)
 
     #Create AA output for TMs 3,5,6,7
     AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
@@ -134,7 +134,7 @@ def develop_matrices(ligand_location):
         AA_filter_TM7, feat4 = Filtering.richness_prot_imbalance(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
 
     #Create dict of 3Di sequences only with proteins from pos or neg pairs
-    Di_dict = Globals.initialize_3Di_dict(proteins_tc)
+    Di_dict = Globals.initialize_3Di_dict(proteins_tc, TM_location, Di_location)
     #Create 3Di output for TMs 3,5,6,7
     Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
     Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_seqs_TM5, di_features_TM5)
@@ -311,4 +311,5 @@ def develop_matrices(ligand_location):
     'Di3_seqs':Di_seqvar_TM3, 'Di5_seqs':Di_seqvar_TM5, 'Di6_seqs':Di_seqvar_TM6, 'Di7_seqs':Di_seqvar_TM7,
     'lig_counts':lig_counts_filter}
 
-result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', )
+result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv", 
+                        "../data_files/3DiSequences/fullset_ss.fasta")
