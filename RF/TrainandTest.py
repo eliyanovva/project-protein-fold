@@ -41,44 +41,45 @@ for i in range(50):
         combo = combo_list[j]
         combo_dict[combo[0]][combo[1]] += n_pred[j]
 
-f = open('new_combo_prediction.csv', 'w')
+#f1 = open('results_true_false_newpairs_FDR1.csv', 'w')
+#f1.write("Protein,Ligand,logFC,FDR,Positive Obs,Classification" + "\n")
 
-f.write('Protein')
-for lig in all_ligs:
-    f.write("," + lig)
-f.write("\n")
-
-for id in new_combos:
-    f.write(id)
-    for lig in all_ligs:
-        if new_combos[id].count(lig) == 0:
-            f.write(",-")
-        else:
-            f.write("," + str(combo_dict[id][lig]))
-    f.write("\n")
-f.close()
-
-f = open('filtAll_newpairs.txt', 'w')
-f.write("Protein,Ligand,logFC,FDR,Positive Obs,Classification" + "\n")
-
+i = 0
+j = 0
+new_pos = 0
+new_neg = 0
 for id in new_combos:
     for csv in new_combos[id]:
+        i += 1
         FC_val = logFC[id][csv]
         pos_obs = combo_dict[id][csv]
         if (FDR[id][csv] > .15) & (FDR[id][csv] <= .4):
-            f.write(id + "," + csv + "," + str(logFC[id][csv]) +
-                    "," + str(FDR[id][csv]) + "," + str(combo_dict[id][csv]))
-            if (FC_val < 1) & (pos_obs <= 25):
-                f.write(", TN" + "\n")
-            elif (FC_val >= 1) & (pos_obs <= 25):
-                f.write(", FN" + "\n")
-            elif (FC_val < 1) & (pos_obs > 25):
-                f.write(", FP" + "\n")
-            elif (FC_val >= 1) & (pos_obs > 25):
-                f.write(", TP" + "\n")
-f.close()
+            j += 1
+            if FC_val >= 1:
+                new_pos += 1
+            else:
+                new_neg += 1
+
+print('New Pos Pairs: ' + str(new_pos))
+print('New Neg Pairs: ' + str(new_neg))
+print(i)
+print(j)
 
 """
+        if (FDR[id][csv] > .15) & (FDR[id][csv] <= .4):
+            f1.write(id + "," + csv + "," + str(logFC[id][csv]) +
+                    "," + str(FDR[id][csv]) + "," + str(combo_dict[id][csv]))
+            if (FC_val < 1) & (pos_obs <= 25):
+                f1.write(", TN" + "\n")
+            elif (FC_val >= 1) & (pos_obs <= 25):
+                f1.write(", FN" + "\n")
+            elif (FC_val < 1) & (pos_obs > 25):
+                f1.write(", FP" + "\n")
+            elif (FC_val >= 1) & (pos_obs > 25):
+                f1.write(", TP" + "\n")
+            """
+#f1.close()
+
 #Sequence_only.import_final()
 #seqX = Sequence_only.X
 #seqY = Sequence_only.Y
@@ -92,13 +93,17 @@ f.close()
 #fi.importance_file(testX, testY, CombineLigandsProteins.feats)
 #FixedClassificationModel.train(testX, testY, BALANCE)
 #Metrics_Graphs.train(testX, testY)
-
+"""
 accuracy = 0
 recall = 0
 BAC = 0
 MAT = 0
 
-#f.write('Run,TN,FN,TP,FP' + "\n")
+f1 = open('FiltAll_FDR1_ROC.csv', 'w')
+f2 = open('FiltAll_FDR1_PreRec.csv', 'w')
+
+f1.write('Run,TN,FP' + "\n")
+f2.write('Run,Precision,Recall' + "\n")
 
 for i in range(50):
     print("run " + str(i))
@@ -107,10 +112,10 @@ for i in range(50):
     recall += rec
     BAC += bac
     MAT += mat
-    #f.write(str(i+1) + ", " + str(TN) + ", " + str(FN) + ", " + str(TP) + ", " + str(FP) + "\n")
-
+    #f2.write(str(i+1) + ", " + str(TN) + ", " + str(FN) + ", " + str(TP) + ", " + str(FP) + "\n")
+    #f2.write(str(i+1)+","+str(acc) + "\n")
 print('Average Accuracy: ' + str(accuracy/50))
 print('Average Recall: ' + str(recall/50))
 #print('Average Balanced: ' + str(BAC/50))
 #print('Average Matthew: ' + str(mat/50))
-#f.close()
+#f2.close()

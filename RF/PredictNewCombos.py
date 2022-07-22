@@ -71,6 +71,8 @@ for id in new_combos:
 intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
 final_matrix = np.concatenate((intermed_matrix, np.array(lig_mat, dtype = np.uint8)), axis = 1)
 
+print(len(final_matrix))
+
 def import_final():
     global X
     X = final_matrix

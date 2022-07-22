@@ -22,11 +22,11 @@ import Duplicates
 #otherwise, input an integer value to select the filter strength
 
 #prot_filter_strength = 'None'
-#prot_filter_strength = 12
+#prot_filter_strength = 8
 prot_filter_strength = 'All'
 
 #lig_filter_strength = 'None'
-#lig_filter_strength = 12
+#lig_filter_strength = 8
 lig_filter_strength = 'All'
 
 #Create classification dictionary
@@ -226,9 +226,6 @@ if BALANCED == True:
 if BALANCED == False:
     lig_counts_filter, filter_kmers = Filtering.richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, lig_filter_strength, ligand_features)
 
-for kmer in filter_kmers:
-    print(kmer)
-
 #Extract ligands with unique kmer frequencies
 unique_ligands = Duplicates.remove_ligands(lig_counts_filter, total_by_lig)
 
@@ -290,8 +287,8 @@ logFCmat = np.concatenate((pos_array, neg_array), axis=0)
 #print(len(unique_ligands))      #FDR<.1: 26, FDR<.15: 17
 
                                                         #All                            #None
-#print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 113 | FDR<.1: 545, FDR<.15: 579
-#print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 140  | FDR<.1: 236, FDR<.15: 490
+print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 113 | FDR<.1: 545, FDR<.15: 579
+print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 140  | FDR<.1: 236, FDR<.15: 490
 
 #print(len(final_matrix))    #FDR<.1: 273, FDR<.15: 253
 print('Finished Part 1')
