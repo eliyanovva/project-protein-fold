@@ -46,8 +46,8 @@ class BGFDataFile:
         atom_index = 0
         for atom in molecule:
             feature_matrix[atom_index][:-2] = self.__getMoleculeDataRow(atom)
-            feature_matrix[atom_index][-2] = atom_types[atom_index]
-            feature_matrix[atom_index][-1] = confidence_scores[atom_index]
+            feature_matrix[atom_index][-2] = normalize(atom_types[atom_index], 4.0)
+            feature_matrix[atom_index][-1] = normalize(confidence_scores[atom_index], 100.0)
             atom_index += 1
 
         log.info('Initiated saving of feature matrix')
@@ -57,20 +57,20 @@ class BGFDataFile:
 
     def __getMoleculeDataRow(self, atom):
         features_arr = np.zeros((config.PROTEIN_FEATURES_COUNT - 2))
-        features_arr[0] = atom.atomicmass
-        features_arr[1] = atom.exactmass
-        features_arr[2] = atom.formalcharge
-        features_arr[3] = atom.heavydegree
-        features_arr[4] = atom.heterodegree
-        features_arr[5] = atom.hyb
+        features_arr[0] = normalize(atom.atomicmass, 32.065)
+        features_arr[1] = normalize(atom.exactmass, 31.972071)
+        #features_arr[2] = atom.formalcharge
+        features_arr[2] = normalize(atom.heavydegree, 4.0)
+        features_arr[3] = normalize(atom.heterodegree, 3.0)
+        features_arr[4] = normalize(atom.hyb, 3.0)
         # FIXME: create a classification index which is based on where in the protein can we find the atom
-        features_arr[6] = atom.idx
-        features_arr[7] = atom.isotope
-        features_arr[8] = atom.partialcharge
-        features_arr[9] = atom.spin
+        features_arr[5] = normalize(atom.idx, 3500.0)
+        #features_arr[7] = atom.isotope
+        features_arr[6] = normalize(atom.partialcharge, 0.6, -0.6)
+        #features_arr[9] = atom.spin
         #FIXME: EXTRACT TYPE FROM ELSEWHERE
         #features_arr[10] = x.type
-        features_arr[10] = atom.degree
+        features_arr[7] = normalize(atom.degree, 4.0)
         return features_arr
 
 
@@ -168,3 +168,8 @@ class BGFDataFile:
                     index += 1
         log.info('Extraction of atom types from PDB completed!')
         return atom_types
+
+
+def normalize(x, max, min=0.0):
+    y = (float(x) - float(min))/(float(max) - float(min))
+    return y
