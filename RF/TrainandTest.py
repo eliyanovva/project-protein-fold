@@ -118,25 +118,32 @@ a_TN = 0
 a_FN = 0
 a_TP = 0
 a_FP = 0
+
+loss = 0
 for i in range(50):
     print("run " + str(i))
-    acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY, BALANCE)
+    acc, rec, bac, mat, TN, FN, TP, FP, log_loss = FixedClassificationModel.train(testX, testY, BALANCE)
     accuracy += acc
     recall += rec
     BAC += bac
     MAT += mat
+    loss += log_loss
 
     a_TN += TN
     a_FN += FN
     a_TP += TP
     a_FP += FP
 
+
+
 print('Average Accuracy: ' + str(accuracy/50))
 print('Average Recall: ' + str(recall/50))
 print('Average Balanced: ' + str(BAC/50))
 
 print('Average TN: ' + str(a_TN/50))
-print('Average FN: ' + str(FN/50))
-print('Average TP: ' + str(TP/50))
-print('Average FP: ' + str(FP/50))
+print('Average FN: ' + str(a_FN/50))
+print('Average TP: ' + str(a_TP/50))
+print('Average FP: ' + str(a_FP/50))
+
+print('Average Log Loss: ' + str(loss/50))
 

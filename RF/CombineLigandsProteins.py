@@ -200,7 +200,7 @@ def develop_matrices(smile_location, TM_location, Di_location):
     ligand_dict = Globals.initialize_ligand_dict(smile_location)
 
     #Create ligands matrix
-    ligand_features, ligand_counts = SmileKmer.ligand_matrix(ligand_dict, 5, ligands_from_unip)
+    ligand_features, ligand_counts = SmileKmer.ligand_kmer_count(ligand_dict, 5, ligands_from_unip)
     #ligand_features = list of kmers found in the ligands with pos / neg pairs
     #ligand_counts = key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
     #   ligand_counts only uses ligands from ligands_from_unip as keys
@@ -315,5 +315,5 @@ def develop_matrices(smile_location, TM_location, Di_location):
     'Di3_seqs':Di_seqvar_TM3, 'Di5_seqs':Di_seqvar_TM5, 'Di6_seqs':Di_seqvar_TM6, 'Di7_seqs':Di_seqvar_TM7,
     'lig_counts':lig_counts_filter}
 
-result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv", 
-                        "../data_files/3DiSequences/fullset_ss.fasta")
+#result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
+#                        "../data_files/3DiSequences/fullset_ss.fasta")
