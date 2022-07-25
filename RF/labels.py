@@ -4,8 +4,10 @@ import pandas as pd
 import Globals
 
 # Generate lists of proteins and ligands
-acc_ids = Globals.initialize_protein_list()
-csvs = Globals.initialize_ligand_list()
+TM_location = "../data_files/TMdomains/TM.csv"
+smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
+acc_ids = Globals.initialize_protein_list(TM_location)
+csvs = Globals.initialize_ligand_list(smile_location)
 
 # Initialize variables
 num_proteins = len(acc_ids)

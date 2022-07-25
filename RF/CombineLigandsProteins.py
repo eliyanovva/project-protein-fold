@@ -16,7 +16,11 @@ import Duplicates
 #https://www.geeksforgeeks.org/python-dictionary-values/
 #https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html
 
-def develop_matrices(ligand_location, TM_location, Di_location):
+TM_location = "../data_files/TMdomains/TM.csv"
+Di_location = "../data_files/3DiSequences/fullset_ss.fasta"
+smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
+
+def develop_matrices(smile_location, TM_location, Di_location):
     #filter_strength = variable to set strength of the kmer filter
     #use 'None' to select no filter
     #use 'All' to only select kmers that occur exclusively in positive or negative pairs
@@ -193,7 +197,7 @@ def develop_matrices(ligand_location, TM_location, Di_location):
     ligands_from_unip.sort()
 
     #Import dictionary matching ligands to SMILES String
-    ligand_dict = Globals.initialize_ligand_dict(ligand_location)
+    ligand_dict = Globals.initialize_ligand_dict(smile_location)
 
     #Create ligands matrix
     ligand_features, ligand_counts = SmileKmer.ligand_matrix(ligand_dict, 5, ligands_from_unip)

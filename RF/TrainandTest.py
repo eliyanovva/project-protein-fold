@@ -3,20 +3,21 @@
 #Imports
 import CombineLigandsProteins
 #import Sequence_only
-#import FixedClassificationModel
+import FixedClassificationModel
 #import PredictNewCombos
 #import Structure_only
 #import AdjustingThreshold
 #import Feature_Importance.FeatureImportance as fi
-import Metrics.Metrics_Graphs as Metrics_Graphs
+#import Metrics.Metrics_Graphs as Metrics_Graphs
 
 #Initialize matrices
-CombineLigandsProteins.import_final()
-testX = CombineLigandsProteins.X
-testY = CombineLigandsProteins.Y
-logFC = CombineLigandsProteins.logFC_data
-FDR = CombineLigandsProteins.FDR_data
-BALANCE = CombineLigandsProteins.balance
+CLP_vars = CombineLigandsProteins.develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
+                        "../data_files/3DiSequences/fullset_ss.fasta")
+testX = CLP_vars['X']
+testY = CLP_vars['Y']
+logFC = CLP_vars['logFC_data']
+FDR = CLP_vars['FDR_data']
+BALANCE = CLP_vars['balance']
 
 #Predicting with new combinations
 """
@@ -46,7 +47,6 @@ for i in range(50):
         combo = combo_list[j]
         combo_dict[combo[0]][combo[1]] += n_pred[j]
 
-#f1 = open('results_true_false_newpairs_FDR1.csv', 'w')
 #f1.write("Protein,Ligand,logFC,FDR,Positive Obs,Classification" + "\n")
 
 i = 0
@@ -105,21 +105,19 @@ print(j)
 #FixedClassificationModel.train(testX, testY, BALANCE)
 
 #Create graphs of Precision-Recall and Receiver Operating Characteristic curves
-Metrics_Graphs.train(testX, testY)
+#Metrics_Graphs.train(testX, testY)
 
 #Examine TP and FN rates
-"""
+
 accuracy = 0
 recall = 0
 BAC = 0
 MAT = 0
 
-f1 = open('FiltAll_FDR1_ROC.csv', 'w')
-f2 = open('FiltAll_FDR1_PreRec.csv', 'w')
-
-f1.write('Run,TN,FP' + "\n")
-f2.write('Run,Precision,Recall' + "\n")
-
+a_TN = 0
+a_FN = 0
+a_TP = 0
+a_FP = 0
 for i in range(50):
     print("run " + str(i))
     acc, rec, bac, mat, TN, FN, TP, FP = FixedClassificationModel.train(testX, testY, BALANCE)
@@ -127,11 +125,18 @@ for i in range(50):
     recall += rec
     BAC += bac
     MAT += mat
-    #f2.write(str(i+1) + ", " + str(TN) + ", " + str(FN) + ", " + str(TP) + ", " + str(FP) + "\n")
-    #f2.write(str(i+1)+","+str(acc) + "\n")
+
+    a_TN += TN
+    a_FN += FN
+    a_TP += TP
+    a_FP += FP
+
 print('Average Accuracy: ' + str(accuracy/50))
 print('Average Recall: ' + str(recall/50))
-#print('Average Balanced: ' + str(BAC/50))
-#print('Average Matthew: ' + str(mat/50))
-#f2.close()
-"""
+print('Average Balanced: ' + str(BAC/50))
+
+print('Average TN: ' + str(a_TN/50))
+print('Average FN: ' + str(FN/50))
+print('Average TP: ' + str(TP/50))
+print('Average FP: ' + str(FP/50))
+
