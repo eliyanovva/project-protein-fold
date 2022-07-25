@@ -44,7 +44,7 @@ class MolDataFile:
         atom_index = 0
         for atom in molecule:
             feature_matrix[atom_index][:-1] = self.__getMoleculeDataRow(atom)
-            feature_matrix[atom_index][-1] = atom_types[atom_index]
+            feature_matrix[atom_index][-1] = normalize(atom_types[atom_index], 4.0)
             atom_index += 1
 
         log.info('Initiated saving of feature matrix')
@@ -88,20 +88,20 @@ class MolDataFile:
 
     def __getMoleculeDataRow(self, atom):
         features_arr = np.zeros((config.LIGAND_FEATURES_COUNT - 1))
-        features_arr[0] = atom.atomicmass
-        features_arr[1] = atom.exactmass
-        features_arr[2] = atom.formalcharge
-        features_arr[3] = atom.heavydegree
-        features_arr[4] = atom.heterodegree
-        features_arr[5] = atom.hyb
+        features_arr[0] = normalize(atom.atomicmass, 32.065)
+        features_arr[1] = normalize(atom.exactmass, 31.972071)
+        #features_arr[2] = atom.formalcharge
+        features_arr[2] = normalize(atom.heavydegree, 4.0)
+        features_arr[3] = normalize(atom.heterodegree, 3.0)
+        features_arr[4] = normalize(atom.hyb, 3.0)
         # FIXME: create a classification index which is based on where in the protein can we find the atom
-        features_arr[6] = atom.idx
-        features_arr[7] = atom.isotope
-        features_arr[8] = atom.partialcharge
-        features_arr[9] = atom.spin
+        features_arr[5] = normalize(atom.idx, 50.0)
+        #features_arr[7] = atom.isotope
+        features_arr[6] = normalize(atom.partialcharge, 0.6, -0.6)
+        #features_arr[9] = atom.spin
         #FIXME: EXTRACT TYPE FROM ELSEWHERE
         #features_arr[10] = x.type
-        features_arr[10] = atom.degree
+        features_arr[7] = normalize(atom.degree, 4.0)
         return features_arr
 
 
@@ -178,6 +178,11 @@ class MolDataFile:
                     data_index += 1
         log.info('Bond data has been succesfully generated')
         return data
+    
+
+def normalize(x, max, min=0.0):
+    y = (float(x) - float(min))/(float(max) - float(min))
+    return y
 
 
 
