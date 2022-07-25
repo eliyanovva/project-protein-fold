@@ -84,17 +84,3 @@ def make_combomatrix(seqvar, feat, mat, new_combos):
             mat.append(np.array(newseq))
     return mat
 
-def make_nmatrix(seqvar, feat, mat, unique, num_ligs):
-    for id in unique:
-        newseq = []
-        for kmer in feat:
-            #For kmers not found in the protein, populate the matrix with zeros
-            if kmer not in seqvar[id]:
-                seqvar[id][kmer] = 0
-            #Add the frequency value of the kmer
-            newseq.append(seqvar[id].get(kmer))
-        # Add a frequency array for each protein
-        for i in range(num_ligs):
-                mat.append(np.array(newseq))
-    return mat
-

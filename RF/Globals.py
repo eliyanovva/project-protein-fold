@@ -13,11 +13,10 @@ import pandas as pd
 
 
 #Function to create a dictionary of ligands matched to SMILES strings
-def initialize_ligand_dict(ligand_location):
+def initialize_ligand_dict(smile_location):
     ligand_dict = {}
-    ligands = []
-    df = pd.read_csv(ligand_location)
-    files = df['ligand file'].tolist()
+    df = pd.read_csv(smile_location)
+    files = initialize_ligand_list(smile_location)
     smiles = df['SMILE'].tolist()
     for i in range(len(files)):
         ligand_dict[files[i]] = smiles[i]
@@ -26,8 +25,8 @@ def initialize_ligand_dict(ligand_location):
 
 #List of filenames for ligands that we have matched SMILES strings to
 #Cannot distinguish chirality
-def initialize_ligand_list(ligand_csv):
-    df = pd.read_csv(ligand_csv)
+def initialize_ligand_list(smile_location):
+    df = pd.read_csv(smile_location)
     ligands = df['Ligands'].tolist()
     """
     ligands = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_ethylTiglate.csv',
