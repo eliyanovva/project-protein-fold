@@ -206,7 +206,7 @@ def ppp():
 
             try:
                 make_accession_list(proteins, protein_structure_folder)
-                print("Made list of accessions")
+                log.info("Made list of accessions")
             except:
                 print('Failed to create list of protein accessions')
                 if not os.path.exists(protein_structure_folder):
@@ -227,6 +227,7 @@ def ppp():
 
             try:
                 develop_matrices(ligand_csv, TM_csv, Di_fasta)
+                log.info('Created input matrices')
             
             except:
                 print('Unable to create input matrices')
@@ -240,5 +241,6 @@ def ppp():
 
             finally:
                 removeRFDirectories()
+                log.info('Removed temporary directories')
 
 ppp()
