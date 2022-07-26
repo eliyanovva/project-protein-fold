@@ -6,7 +6,8 @@ import numpy as np
 
 def make_seqvar_TMS(TM_dict, TM_num, k):
     """
-    This function extracts a kmer frequency dictionary for a single transmembrane (TM) domain
+    This function extracts a kmer frequency dictionary for a single transmembrane (TM) domain.
+
     Args:
         TM_dict (dict): a dictionary mapping a protein id to a list of input sequences for each TM
             ex: TM_dict[id] = [sequence for TM3, sequence for TM5, sequence for TM6, sequence for TM7]
@@ -28,7 +29,8 @@ def make_seqvar_TMS(TM_dict, TM_num, k):
 
 def featurize(seq,k,feat):
     """
-    This function extracts kmers and kmer frequencies from seq
+    This function extracts kmers and kmer frequencies from seq.
+
     Args:
         seq (str): sequence of amino acids or 3di input
         k (int): desired kmer length
@@ -55,7 +57,8 @@ def featurize(seq,k,feat):
 
 def makematrix(seqvar, feat, mat, unique_l, counts):
     """
-    This function creates a 2-D matrix of frequency values
+    This function creates a 2-D matrix of frequency values.
+
     Args:
         seqvar (dict): dictionary mapping a protein id to a frequency dictionary
             ex: seqvar[id]: key = (str) kmer, value = (int) freq. of kmer in id
