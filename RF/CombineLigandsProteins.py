@@ -36,25 +36,11 @@ def develop_matrices(smile_location, TM_location, Di_location):
 
     #Create classification dictionary
     acc_ids = Globals.initialize_protein_list(TM_location)
-    logFC, FDR = labels.labels()
-    classified, pos_counts, neg_counts, pos_pairs, neg_pairs = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
-    #classified = key: protein id, value: (key = ligand, value = {1 if bind, 0 if not bind})
-    #pos_counts = key: protein id, value: number of positive protein interactions
-    #neg_counts = key: protein id, value: number of negative protein interactions
-    #pos_pairs = list of positive protein-ligand pairs; pos_pairs[i] = [protein id, ligand]
-    #neg_pairs = list of negative protein-ligand pairs; neg_pairs[i] = [protein id, ligand]
-
-    proteins_toconsider = set()     #proteins that can form either a positive or negative pair with a ligand
-
-    #Extract the proteins and ligands that interact in positive or negative pairs;
-    #Only these proteins and ligands can be used in the feature matrix
-    for pair in pos_pairs:
-        proteins_toconsider.add(pair[0])
-    for pair in neg_pairs:
-        proteins_toconsider.add(pair[0])
+    logFC, FDR = labels.labels('../olfr_de/')
+    classified, pos_counts, neg_counts, pos_pairs, neg_pairs, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
                                                                         #All                        None
-    #print('Total Pos Pairs: ' + str(len(pos_pairs)))        #FDR<.15: 600, FDR<.1: 565 | FDR<.15: 600, FDR<.1: 565
-    #print('Total Neg Pairs: ' + str(len(neg_pairs)))        #FDR<.15: 491, FDR<.1: 236 | FDR<.15: 491, FDR<.1: 236
+    print('Total Pos Pairs: ' + str(len(pos_pairs)))        #FDR<.15: 600, FDR<.1: 565 | FDR<.15: 600, FDR<.1: 565
+    print('Total Neg Pairs: ' + str(len(neg_pairs)))        #FDR<.15: 491, FDR<.1: 236 | FDR<.15: 491, FDR<.1: 236
 
     #boolean value that describes whether or not the input dataset is balanced;
     #in other words, if there are far more / fewer positive observations than there are negative
@@ -70,23 +56,14 @@ def develop_matrices(smile_location, TM_location, Di_location):
 
     BALANCED = False        #hardcoded for now; can uncomment the lines above
 
-    proteins_tc = list(proteins_toconsider)
-    proteins_tc.sort()
-
     pairs_by_prot = {}      #key = protein id, value = # of pairs involving the protein
 
-    #Iterate through all positive and negative prot-lig pairs to update pairs_by_prot
-    for pair in pos_pairs:
-        id = pair[0]
-        if id not in pairs_by_prot:
-            pairs_by_prot[id] = 0
-        pairs_by_prot[id] += 1
-
-    for pair in neg_pairs:
-        id = pair[0]
-        if id not in pairs_by_prot:
-            pairs_by_prot[id] = 0
-        pairs_by_prot[id] += 1
+    for id in proteins_toconsider:
+        pairs_by_prot[id] = 0
+    for id in pos_counts:
+        pairs_by_prot[id] += pos_counts[id]
+    for id in neg_counts:
+        pairs_by_prot[id] += neg_counts[id]
 
     #Initialize Variables
     #categorized variables
@@ -117,7 +94,7 @@ def develop_matrices(smile_location, TM_location, Di_location):
     di_matrix_TM7 = []
 
     #Create dict of AA sequences only with proteins from pos or neg pairs
-    AA_dict = Globals.initialize_AA_dict(proteins_tc, TM_location)
+    AA_dict = Globals.initialize_AA_dict(proteins_toconsider, TM_location)
 
     #Create AA output for TMs 3,5,6,7
     AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
@@ -138,7 +115,7 @@ def develop_matrices(smile_location, TM_location, Di_location):
         AA_filter_TM7, feat4 = Filtering.richness_prot_imbalance(AA_features_TM7, AA_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
 
     #Create dict of 3Di sequences only with proteins from pos or neg pairs
-    Di_dict = Globals.initialize_3Di_dict(proteins_tc, TM_location, Di_location)
+    Di_dict = Globals.initialize_3Di_dict(proteins_toconsider, TM_location, Di_location)
     #Create 3Di output for TMs 3,5,6,7
     Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
     Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_seqs_TM5, di_features_TM5)
@@ -163,7 +140,7 @@ def develop_matrices(smile_location, TM_location, Di_location):
     Di_feat = [Di_filter_TM3, Di_filter_TM5, Di_filter_TM6, Di_filter_TM7]
 
     #Extract proteins with unique AA and 3di kmer frequencies
-    unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, proteins_tc)
+    unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, proteins_toconsider)
     unique_proteins.sort()
 
     pos_dict = {}       #key = protein id, value = list of ligands that the protein binds with
@@ -287,16 +264,9 @@ def develop_matrices(smile_location, TM_location, Di_location):
     pos_array = np.repeat(1, int(pos_total))
     neg_array = np.repeat(0, int(neg_total))
     logFCmat = np.concatenate((pos_array, neg_array), axis=0)
-
-    #print(len(unique_proteins))     #FDR<.1: 313, FDR<.15: 340
-    #print(len(unique_ligands))      #FDR<.1: 26, FDR<.15: 17
-
                                                             #All                            #None
     print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 113 | FDR<.1: 545, FDR<.15: 579
     print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 140  | FDR<.1: 236, FDR<.15: 490
-
-    #print(len(final_matrix))    #FDR<.1: 273, FDR<.15: 253
-    print('Finished Part 1')
 
     feat1.extend(feat2)
     feat1.extend(feat3)
@@ -315,5 +285,5 @@ def develop_matrices(smile_location, TM_location, Di_location):
     'Di3_seqs':Di_seqvar_TM3, 'Di5_seqs':Di_seqvar_TM5, 'Di6_seqs':Di_seqvar_TM6, 'Di7_seqs':Di_seqvar_TM7,
     'lig_counts':lig_counts_filter}
 
-#result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
-#                        "../data_files/3DiSequences/fullset_ss.fasta")
+result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
+                        "../data_files/3DiSequences/fullset_ss.fasta")
