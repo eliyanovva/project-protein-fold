@@ -13,7 +13,6 @@ This model has been trained specifically on mouse olfactory receptor data, and o
 
 ## References
 
-References
 Bioinformatics, 34(21), 2018, 3666–3674, doi: 10.1093/bioinformatics/bty374, Advance Access Publication Date: 10 May 2018, Original Paper
 
 Claire A. de March, Yiqun Yu, Mengjue J. Ni, Kaylin A. Adipietro, Hiroaki Matsunami, Minghong Ma, and Jérôme Golebiowski. Conserved Residues Control Activation of Mammalian G Protein-Coupled Odorant Receptors. Journal of the American Chemical Society 2015 137 (26), 8611-8616, DOI: 10.1021/jacs.5b04659
@@ -63,6 +62,4 @@ Wikipedia contributors. (2022, July 23). Carvone. In Wikipedia, The Free Encyclo
 
 Yasi EA, Eisen SL, Wang H, Sugianto W, Minniefield AR, Hoover KA, Branham PJ, Peralta-Yahya P. Rapid Deorphanization of Human Olfactory Receptors in Yeast. Biochemistry. 2019 Apr 23;58(16):2160-2166. doi: 10.1021/acs.biochem.8b01208. Epub 2019 Apr 12. PMID: 30977365; PMCID: PMC6482435.
 
-Yuan, S., Dahoun, T., Brugarolas, M. et al. Computational modeling of the olfactory receptor Olfr73 suggests a molecular basis for low potency of olfactory receptor-activating compounds. Commun Biol 2, 141 (2019). https://doi.org/10.1038/s42003-019-0384-8
-
-![image](https://user-images.githubusercontent.com/77795920/181049125-6e2b5c42-657f-48ed-badf-5fff64a4ffa2.png)
+Yuan, S., Dahoun, T., Brugarolas, M. et al. Computational modeling of the olfactory receptor Olfr73 suggests a molecular basis for low potency of olfactory receptor-activating compounds. Commun Biol 2, 141 (2019). https://doi.org/10.1038/s42003-019-0384-8]
