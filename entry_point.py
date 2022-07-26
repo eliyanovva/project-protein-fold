@@ -247,8 +247,8 @@ def ppp():
                 elif not os.path.exists(accession_to_ensemble):
                     print("Please input a file mapping ensemble id to accession id named ensemble_to_accession.csv")
 
-            finally:
+            """finally:
                 removeRFDirectories()
-                log.info('Removed temporary directories')
+                log.info('Removed temporary directories')"""
 
 ppp()
