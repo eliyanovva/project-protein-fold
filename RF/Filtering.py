@@ -7,13 +7,24 @@
 #https://www.geeksforgeeks.org/python-program-to-find-sum-of-elements-in-list/
 #https://www.geeksforgeeks.org/python-dictionary-values/
 
-#richness_protein: returns a list of protein kmers that meet the filtering requirements
-
-#kmers: set of all possible kmers for the protein
-#seqvar: key = protein id, value = dict (key: kmer, value: freq. of kmer in protein)
-#pos_counts: key = protein id, value = # of positive (pos) pairs with the protein
-#neg_counts: key = protein id, value = # of negative (neg) pairs with the protein
 def richness_prot_imbalance(kmers, seqvar, pos_counts, neg_counts, domain, richness_level):
+    """
+    This function returns a list of protein kmers from a given TM domain that meet the filtering requirements.
+    It's meant to be used with an imbalanced dataset.
+    Args:
+        kmers (list): list of kmers found from all proteins in domain
+        seqvar (dict): key = (string) id,
+            value = (dict) key = (string) kmer, value = (int) freq. of kmer in id
+        pos_counts (dict): key = (string) id, value = (int) # of pos protein-ligand pairs with id as the protein
+        neg_counts (dict): key = (string) id, value = (int) # of neg protein-ligand pairs with id as the protein
+        domain (string): indicates which TM domain the proteins are from
+        richness_level (int or string): indicator of how strict the filter should be
+
+    Returns:
+        ret (list): list of protein kmers from a given TM domain that meet the filtering requirements
+        ret2 (list): list of protein kmers from a given TM domain that meet the filtering requirements, annotated
+            with the domain they come from
+    """
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs
     neg_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in neg. pairs
@@ -80,6 +91,23 @@ def richness_prot_imbalance(kmers, seqvar, pos_counts, neg_counts, domain, richn
     return ret, ret2
 
 def richness_prot_balance(kmers, seqvar, pos_counts, neg_counts, domain, richness_level):
+    """
+    This function returns a list of protein kmers from a given TM domain that meet the filtering requirements.
+    It's meant to be used with an balanced dataset.
+    Args:
+        kmers (list): list of kmers found from all proteins in domain
+        seqvar (dict): key = (string) id,
+            value = (dict) key = (string) kmer, value = (int) freq. of kmer in id
+        pos_counts (dict): key = (string) id, value = (int) # of pos protein-ligand pairs with id as the protein
+        neg_counts (dict): key = (string) id, value = (int) # of neg protein-ligand pairs with id as the protein
+        domain (string): indicates which TM domain the proteins are from
+        richness_level (int or string): indicator of how strict the filter should be
+
+    Returns:
+        ret (list): list of protein kmers from a given TM domain that meet the filtering requirements
+        ret2 (list): list of protein kmers from a given TM domain that meet the filtering requirements, annotated
+            with the domain they come from
+    """
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs
     neg_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in neg. pairs
@@ -132,15 +160,22 @@ def richness_prot_balance(kmers, seqvar, pos_counts, neg_counts, domain, richnes
 
     return ret, ret2
 
-#richness_ligand_imbalance: returns an updated version of ligand_counts;
-# the dictionary will now only use kmers that meet the filtering requirements
-# ligand filtering for imblanced dataset
-
-#ligand_counts: key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
-#pos_by_lig: key = ligand, value = # of pos. pairs with the ligand
-#neg_by_lig: key = ligand, value = # of neg. pairs with the ligand
-#kmers = list of all potential kmers for ligand
 def richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, richness_level, kmers):
+    """
+    This function returns a list of ligand kmers that meet the filtering requirements.
+    It's meant to be used with an imbalanced dataset.
+    Args:
+        ligand_counts (dict): key = (string) ligand,
+            value = (dict) key = (string) kmer, value = (int) freq. of kmer in ligand
+        pos_by_lig (dict): key = (string) lig, value = (int) # of pos protein-ligand pairs with lig as the ligand
+        neg_by_lig (dict): key = (string) lig, value = (int) # of neg protein-ligand pairs with lig as the ligand
+        richness_level: richness_level (int or string): indicator of how strict the filter should be
+        kmers: list of kmers found from every ligand in ligand_counts
+
+    Returns:
+        ligand_counts (dict): updated version of the parameter ligand_counts; keys are kmers from kmers_success
+        kmers_success (list): list of ligand kmers that meet the filtering requirements
+    """
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs
     neg_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in neg. pairs
@@ -207,6 +242,22 @@ def richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, richness_level
 
 #Ligand filtering for balanced dataset
 def richness_lig_balance(ligand_counts, pos_by_lig, neg_by_lig, richness_level, kmers):
+    """
+    This function returns a list of ligand kmers that meet the filtering requirements.
+    It's meant to be used with an balanced dataset.
+    Args:
+        ligand_counts (dict): key = (string) ligand,
+            value = (dict) key = (string) kmer, value = (int) freq. of kmer in ligand
+        pos_by_lig (dict): key = (string) lig, value = (int) # of pos protein-ligand pairs with lig as the ligand
+        neg_by_lig (dict): key = (string) lig, value = (int) # of neg protein-ligand pairs with lig as the ligand
+        richness_level: richness_level (int or string): indicator of how strict the filter should be
+        kmers: list of kmers found from every ligand in ligand_counts
+
+    Returns:
+        ligand_counts (dict): updated version of the parameter ligand_counts; keys are kmers from kmers_success
+        kmers_success (list): list of ligand kmers that meet the filtering requirements
+
+    """
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs
     neg_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in neg. pairs

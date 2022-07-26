@@ -26,6 +26,10 @@ def train(features, labels, BALANCE):
     #Train the model
     clf.fit(X_train,y_train)
 
+    print(len(X_train))
+    print(len(X_test))
+    print()
+
     #Form predictions
     y_pred=clf.predict_proba(X_test)[:,1]
     print(y_pred)
