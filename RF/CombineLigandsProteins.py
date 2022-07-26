@@ -37,10 +37,14 @@ def develop_matrices(smile_location, TM_location, Di_location):
     #Create classification dictionary
     acc_ids = Globals.initialize_protein_list(TM_location)
     logFC, FDR = labels.labels('../olfr_de/')
-    classified, pos_counts, neg_counts, pos_pairs, neg_pairs, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
-                                                                        #All                        None
-    print('Total Pos Pairs: ' + str(len(pos_pairs)))        #FDR<.15: 600, FDR<.1: 565 | FDR<.15: 600, FDR<.1: 565
-    print('Total Neg Pairs: ' + str(len(neg_pairs)))        #FDR<.15: 491, FDR<.1: 236 | FDR<.15: 491, FDR<.1: 236
+    classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
+
+    total_pos = 0
+    total_neg = 0
+    for id in pos_counts:
+        total_pos += pos_counts[id]
+    for id in neg_counts:
+        total_neg += neg_counts[id]
 
     #boolean value that describes whether or not the input dataset is balanced;
     #in other words, if there are far more / fewer positive observations than there are negative
@@ -48,7 +52,7 @@ def develop_matrices(smile_location, TM_location, Di_location):
     #BALANCED = False => imbalanced dataset
     #affects the training algorithm and filtering protocol used
     """
-    if (len(pos_pairs) / len(neg_pairs) > 1.5) | (len(neg_pairs) / len(pos_pairs) > 1.5):
+    if (total_pos / total_neg > 1.5) | (total_pos / total_neg > 1.5):
         BALANCED = False
     else:
         BALANCED = True
@@ -143,62 +147,50 @@ def develop_matrices(smile_location, TM_location, Di_location):
     unique_proteins = Duplicates.remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, proteins_toconsider)
     unique_proteins.sort()
 
-    pos_dict = {}       #key = protein id, value = list of ligands that the protein binds with
-    neg_dict = {}       #key = protein id, value = list of ligands that the protein does not bind with
+    pos_keys = list(pos_dict.keys())
+    neg_keys = list(neg_dict.keys())
+    ligands_from_unip = set()  # set of ligands that form pos or neg pairs with the set of unique proteins
 
-    for id in unique_proteins:
-        pos_dict[id] = []
-        neg_dict[id] = []
+    pos_by_lig = {}  # key: ligand, value: # of pos. pairs with the ligand
+    neg_by_lig = {}  # key: ligand, value: # of neg. pairs with the ligand
+    total_by_lig = {}  # key: ligand, value: # of all pairs the involve the ligand
 
-    unil = set()       #set of ligands that form pos or neg pairs with the set of unique proteins
+    for i in range(len(pos_keys)):
+        key = pos_keys[i]
+        if key not in unique_proteins:
+            pos_dict.pop(key)
+        else:
+            for lig in pos_dict[key]:
+                ligands_from_unip.add(lig)
 
-    #Iterate through all positive prot-lig pairs to update pos_dict
-    for pair in pos_pairs:
-        id = pair[0]
-        lig = pair[1]
-        #Check that id is from the set of unique proteins
-        if (id in unique_proteins):
-            pos_dict[id].append(lig)
-            unil.add(lig)
+    for i in range(len(neg_keys)):
+        key = neg_keys[i]
+        if key not in unique_proteins:
+            neg_dict.pop(key)
+        else:
+            for lig in neg_dict[key]:
+                ligands_from_unip.add(lig)
 
-    #Iterate through all negative prot-lig pairs to update neg_dict
-    for pair in neg_pairs:
-        id = pair[0]
-        lig = pair[1]
-        #Check that id is from the set of unique proteins
-        if (id in unique_proteins):
-            neg_dict[id].append(lig)
-            unil.add(lig)
-
-    ligands_from_unip = list(unil)
+    ligands_from_unip = list(ligands_from_unip)
     ligands_from_unip.sort()
 
     #Import dictionary matching ligands to SMILES String
     ligand_dict = Globals.initialize_ligand_dict(smile_location)
-
     #Create ligands matrix
     ligand_features, ligand_counts = SmileKmer.ligand_kmer_count(ligand_dict, 5, ligands_from_unip)
-    #ligand_features = list of kmers found in the ligands with pos / neg pairs
-    #ligand_counts = key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
-    #   ligand_counts only uses ligands from ligands_from_unip as keys
-
-    pos_by_lig = {}         #key: ligand, value: # of pos. pairs with the ligand
-    neg_by_lig = {}         #key: ligand, value: # of neg. pairs with the ligand
-    total_by_lig = {}       #key: ligand, value: # of all pairs the involve the ligand
 
     for lig in ligands_from_unip:
         pos_by_lig[lig] = 0
         neg_by_lig[lig] = 0
         total_by_lig[lig] = 0
 
-    for id in unique_proteins:
-        p_pairs = pos_dict[id]
-        for lig in p_pairs:
+    for id in pos_dict:
+        for lig in pos_dict[id]:
             pos_by_lig[lig] += 1
             total_by_lig[lig] += 1
 
-        n_pairs = neg_dict[id]
-        for lig in n_pairs:
+    for id in neg_dict:
+        for lig in neg_dict[id]:
             neg_by_lig[lig] += 1
             total_by_lig[lig] += 1
 
@@ -214,13 +206,13 @@ def develop_matrices(smile_location, TM_location, Di_location):
     pos_total = 0           #num. of positive pairs with ligands from unique_ligands
     neg_total = 0           #num. of negative pairs with ligands from unique_ligands
     lig_mat = []            #matrix to store ligand features
-    for id in unique_proteins:
+    for id in pos_dict:
         for lig in pos_dict[id]:
             if (unique_ligands.count(lig) != 0):
                 lig_mat.append(np.array(list(lig_counts_filter[lig].values())))
                 pos_total += 1
 
-    for id in unique_proteins:
+    for id in neg_dict:
         for lig in neg_dict[id]:
             if (unique_ligands.count(lig) != 0):
                 lig_mat.append(np.array(list(lig_counts_filter[lig].values())))

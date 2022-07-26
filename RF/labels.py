@@ -9,7 +9,6 @@ smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
 acc_ids = Globals.initialize_protein_list(TM_location)
 ligands = Globals.initialize_ligand_list(smile_location)
 
-# key: protein id, value: dict (key: ligand file name, value: data label)
 def labels(ligand_folder):
     """
     This function extracts the experimental logFC and FDR values for the protein-ligand pairs
@@ -74,10 +73,8 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
             value = (dict) key = (string) lig, value = (int) {1 if id and lig bind, 0 if they do not}
         pos_counts (dict): key = (string) id, value = (int) # of positive protein-ligand pairs with id as the protein
         neg_counts (dict): key = (string) id, value = (int) # of positive protein-ligand pairs with id as the protein
-        pos_pairs (list): list of positive protein-ligand pairs;
-            pos_pairs[i] = [id, ligand]
-        neg_pairs (list): list of negative protein-ligand pairs
-            neg_pairs[i] = [protein id, ligand]
+        pos_dict (dict): key = (string) id, value = (list) list of ligands that id binds with
+        neg_dict (dict): key = (string) id, value = (list) list of ligands that id does not bind with
         proteins_toconsider (list): sorted list of proteins that have at least 1 positive or negative interaction
             with a ligand
 
@@ -85,8 +82,8 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
     classified = {}
     pos_counts = {}
     neg_counts = {}
-    pos_pairs = []
-    neg_pairs = []
+    pos_dict = {}
+    neg_dict = {}
     proteins_toconsider = set()
 
     for id in protein_list:
@@ -98,12 +95,21 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
                 if logFC_byID[id][lig] >= 1:    # The protein and ligand bind
                     classified[id][lig] = 1
                     pos += 1                    #only update pos count if pair isn't removed
-                    pos_pairs.append([id, lig])
+
+                    if id not in pos_dict:
+                        pos_dict[id] = []
+                    pos_dict[id].append(lig)
+
                     proteins_toconsider.add(id)
+
                 elif logFC_byID[id][lig] < 1:   # The protein and ligand do not bind
                     classified[id][lig] = 0
                     neg += 1                    #only update neg count if pair isn't removed
-                    neg_pairs.append([id, lig])
+
+                    if id not in neg_dict:
+                        neg_dict[id] = []
+                    neg_dict[id].append(lig)
+
                     proteins_toconsider.add(id)
 
                 pos_counts[id] = pos
@@ -112,6 +118,6 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
     proteins_toconsider = list(proteins_toconsider)
     proteins_toconsider.sort()
 
-    return classified, pos_counts, neg_counts, pos_pairs, neg_pairs, proteins_toconsider
+    return classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider
 
 #labels('../olfr_de/')
