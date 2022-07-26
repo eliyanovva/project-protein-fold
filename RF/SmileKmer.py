@@ -11,6 +11,7 @@ import numpy as np
 def ligand_kmer_count(ligand_dict, k, Ligands):
     """
     This functions creates a dictionary of the frequency counts for all kmers.
+
     Args:
         ligand_dict (dict): dictionary mapping a (str) ligand to its (str) SMILE formula
         k (int): desired kmer length
@@ -40,6 +41,7 @@ def ligand_kmer_count(ligand_dict, k, Ligands):
 def find_total_kmers(ligand_dict, k, Ligands):
     """
     This function creates a set of all kmers found from every ligand in Ligands.
+
     Args:
         ligand_dict (dict): dictionary mapping a (str) ligand to its (str) SMILE formula
         k (int): desired kmer length
@@ -60,13 +62,14 @@ def find_total_kmers(ligand_dict, k, Ligands):
 
 def smile_dict(smile, k):
     """
-    This function creates a frequency dictionary of kmers found within smile
+    This function creates a frequency dictionary of kmers found within smile.
+
     Args:
         smile (string): SMILE formula
         k (int): desired kmer length
 
     Returns:
-        kmer_dict (dictionary): key = (string) kmer, value = (int) freq. of kmer in smile
+        kmer_dict (dictionary): dictionary mapping a (str) kmer to its frequency in smile
     """
     kmer_dict = {}              #stores freq. counts for kmers found in the ligand
     letters = form_letters(smile)
@@ -86,6 +89,7 @@ def smile_dict(smile, k):
 def smile_list(smile, k):
     """
     This function creates a list of all kmers found within smile.
+
     Args:
         smile (string): SMILE formula
         k (int): desired kmer length
@@ -125,6 +129,7 @@ def smile_list(smile, k):
 def form_letters(smile):
     """
     This function partitions smile into a list of 'letters' to be used while forming kmers.
+
     Args:
         smile (str): SMILE formula
 
