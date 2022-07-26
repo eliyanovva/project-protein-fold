@@ -217,14 +217,12 @@ def develop_matrices(smile_location, TM_location, Di_location):
                                 np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
 
     #Concatenate AA and 3Di matrices
-    #intermed_matrix = np.concatenate((np.array(AA_mat, dtype = np.uint8), np.array(Di_mat, dtype = np.uint8)) , axis = 1)
     intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
 
     #Concatenate protein and ligand matrices
     final_matrix = np.concatenate((intermed_matrix, np.array(lig_mat, dtype = np.uint8)), axis = 1)
 
     #Create Classification Vector
-
     pos_array = np.repeat(1, int(pos_total))
     neg_array = np.repeat(0, int(neg_total))
     logFCmat = np.concatenate((pos_array, neg_array), axis=0)

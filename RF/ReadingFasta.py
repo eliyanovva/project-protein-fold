@@ -4,17 +4,19 @@
 #Imports
 import numpy as np
 
-#make_seqvar_TMS: extracts a kmer frequency dictionary for a single transmembrane domain (TM)
-#Return:
-#   seqvar: key = protein id, value = dict (key: kmer, value: freq. of kmer in protein)
-#   feat: list of all kmers for a given TM
-
-#TM_dict: key = protein id, value = list(seq for TM3, seq for TM5, seq for TM6, seq for TM7)
-#TM_num: int, index to extract desired TM
-#k: int, kmer length
-#seqvar: initialized empty dictionary
-#feat: initialized empty set
 def make_seqvar_TMS(TM_dict, TM_num, k):
+    """
+    This function extracts a kmer frequency dictionary for a single transmembrane (TM) domain
+    Args:
+        TM_dict (dict): key = (string) id,
+            value = (list) [sequence for TM3, sequence for TM5, sequence for TM6, sequence for TM7]
+        TM_num (int): index to extract desired TM
+        k (int): k (int): desired kmer length
+
+    Returns:
+        seqvar (dict): key = (string) id,
+            value = (dict) key = (string) kmer, value = (int) freq. of kmer in id
+    """
     seqvar = {}
     feat = set()
 
@@ -24,15 +26,18 @@ def make_seqvar_TMS(TM_dict, TM_num, k):
 
     return seqvar, feat
 
-#featurize: function to extract kmers and kmer frequencies from a sequence
-#Return:
-#   dict: key = kmer, value = freq. of kmer in sequence
-
-#seq: string of either Amino Acid or 3di input
-#k: length of kmer
-#feat: set of kmers found from all seq passed to featurize
 def featurize(seq,k,feat):
-    dict = {}
+    """
+    This function extracts kmers and kmer frequencies from seq
+    Args:
+        seq (string): sequence of amino acids or 3di input
+        k (int): desired kmer length
+        feat (set): set of kmers found in previous calls to featurize
+
+    Returns:
+        freq_dict (dict): key = (string) kmer, value = (int) freq. of kmer in seq
+    """
+    freq_dict = {}
 
     for i in range(0, len(seq) - k + 1):
         kmer = ""
@@ -41,22 +46,29 @@ def featurize(seq,k,feat):
             kmer += seq[i + j]
         #update frequency of the kmer in dict
         if kmer not in dict:
-            dict[kmer] = 0
+            freq_dict[kmer] = 0
             #add new kmers to feat
             feat.add(kmer)
-        dict[kmer] += 1
+        freq_dict[kmer] += 1
 
-    return dict
+    return freq_dict
 
-#Return: 2 dimensional matrix (accession number by k-mer) of frequency values
-#seqvar: key = protein id, value = dict (key: kmer, value: freq. of kmer in protein)
-#feat: list of k-mers
-#mat: empty matrix to be populated with frequency values
-#unique_l: unique ligands to use in the final matrix
-#counts: key = protein id, value = list of ligands that the protein can pair with
-#   Depending on the variable passed, counts can refer to positive or negative pairs
 def makematrix(seqvar, feat, mat, unique_l, counts):
+    """
+    This function creates a 2-D matrix of frequency values
+    Args:
+        seqvar (dict): key = (string) id,
+            value = (dict) key = (string) kmer, value = (int) freq. of kmer in id
+        feat (list): list of kmers for all the protein ids in seqvar
+        mat (list): matrix to add the frequency values to; can be empty or already have values
+        unique_l (list): list of unique ligands to use in the final matrix
+        counts (dict): key = (string) id, value = (list) list of ligand that the protein can pair with
+            counts will refer exclusively either to positive or negative pairs
 
+    Returns:
+        mat (list) = matrix of frequency values
+            mat[i][j] = freq. of kmer j in protein i
+    """
     for id in counts:
         newseq = []
         for kmer in feat:
