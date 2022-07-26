@@ -69,42 +69,14 @@ def develop_matrices(smile_location, TM_location, Di_location):
     for id in neg_counts:
         pairs_by_prot[id] += neg_counts[id]
 
-    #Initialize Variables
-    #categorized variables
-    categorized_features_TM3 = set()
-    categorized_seqs_TM3 = {}
-    categorized_matrix_TM3 = []
-    categorized_features_TM5 = set()
-    categorized_seqs_TM5 = {}
-    categorized_matrix_TM5 = []
-    categorized_features_TM6 = set()
-    categorized_seqs_TM6 = {}
-    categorized_matrix_TM6 = []
-    categorized_features_TM7 = set()
-    categorized_seqs_TM7 = {}
-    categorized_matrix_TM7 = []
-    #3Di variables
-    di_features_TM3 = set()
-    di_seqs_TM3 = {}
-    di_matrix_TM3 = []
-    di_features_TM5 = set()
-    di_seqs_TM5 = {}
-    di_matrix_TM5 = []
-    di_features_TM6 = set()
-    di_seqs_TM6 = {}
-    di_matrix_TM6 = []
-    di_features_TM7 = set()
-    di_seqs_TM7 = {}
-    di_matrix_TM7 = []
-
     #Create dict of AA sequences only with proteins from pos or neg pairs
     AA_dict = Globals.initialize_AA_dict(proteins_toconsider, TM_location)
 
     #Create AA output for TMs 3,5,6,7
-    AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5, categorized_seqs_TM3, categorized_features_TM3)
-    AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5, categorized_seqs_TM5, categorized_features_TM5)
-    AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5, categorized_seqs_TM6, categorized_features_TM6)
-    AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5, categorized_seqs_TM7, categorized_features_TM7)
+    AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5)
+    AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5)
+    AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5)
+    AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5)
 
     #Filter the AA kmers for TMs 3,5,6,7
     if BALANCED == True:
@@ -121,10 +93,10 @@ def develop_matrices(smile_location, TM_location, Di_location):
     #Create dict of 3Di sequences only with proteins from pos or neg pairs
     Di_dict = Globals.initialize_3Di_dict(proteins_toconsider, TM_location, Di_location)
     #Create 3Di output for TMs 3,5,6,7
-    Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5, di_seqs_TM3, di_features_TM3)
-    Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5, di_seqs_TM5, di_features_TM5)
-    Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5, di_seqs_TM6, di_features_TM6)
-    Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 5, di_seqs_TM7, di_features_TM7)
+    Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5)
+    Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5)
+    Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5)
+    Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 5)
 
     #Filter the 3Di kmers for TMs 3,5,6,7
     if BALANCED == True:
@@ -218,10 +190,10 @@ def develop_matrices(smile_location, TM_location, Di_location):
                 lig_mat.append(np.array(list(lig_counts_filter[lig].values())))
                 neg_total += 1
 
-    pos_AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, categorized_matrix_TM3, unique_ligands, pos_dict)
-    pos_AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, categorized_matrix_TM5, unique_ligands, pos_dict)
-    pos_AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, categorized_matrix_TM6, unique_ligands, pos_dict)
-    pos_AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, categorized_matrix_TM7, unique_ligands, pos_dict)
+    pos_AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, [], unique_ligands, pos_dict)
+    pos_AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, [], unique_ligands, pos_dict)
+    pos_AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_filter_TM6, [], unique_ligands, pos_dict)
+    pos_AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_filter_TM7, [], unique_ligands, pos_dict)
 
     AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_filter_TM3, pos_AA_mat_TM3, unique_ligands, neg_dict)
     AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_filter_TM5, pos_AA_mat_TM5, unique_ligands, neg_dict)
@@ -231,10 +203,10 @@ def develop_matrices(smile_location, TM_location, Di_location):
     AA_matrix = np.concatenate((np.array(AA_mat_TM3, dtype = np.uint8), np.array(AA_mat_TM5, dtype = np.uint8),
                                 np.array(AA_mat_TM6, dtype = np.uint8), np.array(AA_mat_TM7, dtype = np.uint8)) , axis = 1)
 
-    pos_Di_mat_TM3 = ReadingFasta.makematrix(Di_seqvar_TM3, Di_filter_TM3, di_matrix_TM3, unique_ligands, pos_dict)
-    pos_Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_filter_TM5, di_matrix_TM5, unique_ligands, pos_dict)
-    pos_Di_mat_TM6 = ReadingFasta.makematrix(Di_seqvar_TM6, Di_filter_TM6, di_matrix_TM6, unique_ligands, pos_dict)
-    pos_Di_mat_TM7 = ReadingFasta.makematrix(Di_seqvar_TM7, Di_filter_TM7, di_matrix_TM7, unique_ligands, pos_dict)
+    pos_Di_mat_TM3 = ReadingFasta.makematrix(Di_seqvar_TM3, Di_filter_TM3, [], unique_ligands, pos_dict)
+    pos_Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_filter_TM5, [], unique_ligands, pos_dict)
+    pos_Di_mat_TM6 = ReadingFasta.makematrix(Di_seqvar_TM6, Di_filter_TM6, [], unique_ligands, pos_dict)
+    pos_Di_mat_TM7 = ReadingFasta.makematrix(Di_seqvar_TM7, Di_filter_TM7, [], unique_ligands, pos_dict)
 
     Di_mat_TM3 = ReadingFasta.makematrix(Di_seqvar_TM3, Di_filter_TM3, pos_Di_mat_TM3, unique_ligands, neg_dict)
     Di_mat_TM5 = ReadingFasta.makematrix(Di_seqvar_TM5, Di_filter_TM5, pos_Di_mat_TM5, unique_ligands, neg_dict)

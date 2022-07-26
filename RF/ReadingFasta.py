@@ -14,7 +14,10 @@ import numpy as np
 #k: int, kmer length
 #seqvar: initialized empty dictionary
 #feat: initialized empty set
-def make_seqvar_TMS(TM_dict, TM_num, k, seqvar, feat):
+def make_seqvar_TMS(TM_dict, TM_num, k):
+    seqvar = {}
+    feat = set()
+
     for id in TM_dict:
         seq = TM_dict[id][TM_num]
         seqvar[id] = featurize(seq, k, feat)
@@ -42,6 +45,7 @@ def featurize(seq,k,feat):
             #add new kmers to feat
             feat.add(kmer)
         dict[kmer] += 1
+
     return dict
 
 #Return: 2 dimensional matrix (accession number by k-mer) of frequency values
@@ -52,6 +56,7 @@ def featurize(seq,k,feat):
 #counts: key = protein id, value = list of ligands that the protein can pair with
 #   Depending on the variable passed, counts can refer to positive or negative pairs
 def makematrix(seqvar, feat, mat, unique_l, counts):
+
     for id in counts:
         newseq = []
         for kmer in feat:
