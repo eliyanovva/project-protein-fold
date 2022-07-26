@@ -28,29 +28,7 @@ def initialize_ligand_dict(smile_location):
 def initialize_ligand_list(smile_location):
     df = pd.read_csv(smile_location)
     ligands = df['Ligands'].tolist()
-    """
-    ligands = ['pS6_DE_1p_citronellol.csv', 'pS6_DE_1p_isoamylAcetate.csv', 'pS6_DE_1p_ethylTiglate.csv',
-               'pS6_DE_1p_bIonone.csv', 'pS6_DE_1p_butyricAcid.csv',
-               'pS6_DE_1p_paraCresol.csv', 'pS6_DE_1p_bCaryophyllene.csv', 'pS6_DE_p1_isovalericAcid.csv',
-               'pS6_DE_1p_Octanal.csv', 'pS6_DE_1p_heptanal.csv',
-               'pS6_DE_1p_tbm.csv', 'pS6_DE_1p_bDamascone.csv', 'pS6_DE_1p_pyridine.csv', 'pS6_DE_1p_propionicAcid.csv',
-               'pS6_DE_1p_methylSalicylate.csv',
-               'pS6_DE_p01_e2butene1thiol.csv', 'pS6_DE_1p_3methyl1butanethiol.csv', 'pS6_DE_1p_ethylButyrate.csv',
-               'pS6_DE_1p_hexylTiglate.csv', 'pS6_DE_1p_indole.csv',
-               'pS6_DE_500mM_2propylthietane.csv', 'pS6_DE_1p_2heptanone.csv', 'pS6_DE_p01_cyclopentanethiol.csv',
-               'pS6_DE_1p_dimethyltrisulfide.csv',
-               'pS6_DE_1p_guaiacol.csv', 'pS6_DE_1p_Benzaldehyde.csv', 'pS6_DE_p01_citral.csv',
-               'pS6_DE_3mM_androstenone.csv', 'pS6_DE_100p_ebFarnesene.csv',
-               'pS6_DE_1p_acetophenone.csv', 'pS6_DE_1p_transCinnamaldehyde.csv', 'pS6_DE_1p_linalool.csv',
-               'pS6_DE_1p_2hexanone.csv', 'pS6_DE_1p_isopropylTiglate.csv',
-               'pS6_DE_1p_aPinene.csv', 'pS6_DE_1p_diacetyl.csv', 'pS6_DE_1p_geranoil.csv',
-               'pS6_DE_1p_heptanoicAcid.csv', 'pS6_DE_1p_2e3mp.csv', 'pS6_DE_1p_2hac.csv', 'pS6_DE_1p_2m2p.csv', 
-               'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_2phenylAlcohol.csv', 'pS6_DE_1p_4methylAC.csv', 'pS6_DE_1p_25dmp.csv',
-               'pS6_DE_1p_nCarvone.csv', 'pS6_DE_1p_nDihydrocarveol.csv', 'pS6_DE_1p_nMenthol.csv', 'pS6_DE_1p_ntmt.csv', 
-               'pS6_DE_1p_pCarvone.csv', 'pS6_DE_1p_pDihydrocarveol.csv', 'pS6_DE_1p_pLimonene.csv', 'pS6_DE_1p_pMenthol.csv', 'pS6_DE_1p_sbt.csv', 'pS6_DE_1p_tmt.csv']
-    ['pS6_DE_1p_dimethyltrisulfide.csv', 'pS6_DE_1p_tbm.csv', 'pS6_DE_p01_e2butene1thiol.csv', 'pS6_DE_1p_3methyl1butanethiol.csv', 
-    'pS6_DE_500mM_2propylthietane.csv', 'pS6_DE_p01_cyclopentanethiol.csv', 'pS6_DE_1p_2m2t.csv', 'pS6_DE_1p_ntmt.csv', 'pS6_DE_1p_tmt.csv']
-    """
+
     return ligands
 
 #Function to create list of protein accessions
