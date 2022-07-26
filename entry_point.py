@@ -24,14 +24,9 @@ try:
     from graph_cnn.run_model import runModel, runGNN
 except:
     pass
-try:
-    from data_files.TMdomains.UniprotScrape import scrape_TMs
-except:
-    pass
-try:
-    from RF.CombineLigandsProteins import develop_matrices
-except:
-    pass
+
+from data_files.TMdomains.UniprotScrape import scrape_TMs
+from RF.CombineLigandsProteins import develop_matrices
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
@@ -223,7 +218,9 @@ def ppp():
             
             except:
                 print('Unable to scrape TMs')
-                if not os.path.exists(TMs):
+                if not os.path.exists(proteins):
+                    print('Cannot find list of accession names')
+                elif not os.path.exists(TMs):
                     print('Failed to create txt file of TM domains')
                 elif not os.path.exists(TM_csv):
                     print('Failed to create csv file of TM domains')

@@ -69,4 +69,4 @@ def scrape_TMs(proteins, writefile, csv):
 
       print(printstatement, file = f)
 
-scrape_TMs('all_accessions.txt', 'TM.txt', 'TM.csv')
+#scrape_TMs('all_accessions.txt', 'TM.txt', 'TM.csv')

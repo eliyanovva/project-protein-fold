@@ -1,13 +1,13 @@
 #This script creates the protein matrix and ligand matrix to train and test the Random Forest Algorithm
 
 #Imports
-import SmileKmer
+import RF.SmileKmer as SmileKmer
 import numpy as np
-import ReadingFasta
-import labels
-import Globals
-import Filtering
-import Duplicates
+import RF.ReadingFasta as ReadingFasta
+import RF.Globals as Globals
+import RF.labels as labels
+import RF.Filtering as Filtering
+import RF.Duplicates as Duplicates
 
 #Additional coding help from:
 #https://numpy.org/doc/stable/reference/generated/numpy.repeat.html
@@ -16,9 +16,9 @@ import Duplicates
 #https://www.geeksforgeeks.org/python-dictionary-values/
 #https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html
 
-TM_location = "../data_files/TMdomains/TM.csv"
+"""TM_location = "../data_files/TMdomains/TM.csv"
 Di_location = "../data_files/3DiSequences/fullset_ss.fasta"
-smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
+smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"""""
 
 def develop_matrices(smile_location, TM_location, Di_location):
     #filter_strength = variable to set strength of the kmer filter
@@ -249,5 +249,5 @@ def develop_matrices(smile_location, TM_location, Di_location):
     'Di3_seqs':Di_seqvar_TM3, 'Di5_seqs':Di_seqvar_TM5, 'Di6_seqs':Di_seqvar_TM6, 'Di7_seqs':Di_seqvar_TM7,
     'lig_counts':lig_counts_filter}
 
-result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
-                        "../data_files/3DiSequences/fullset_ss.fasta")
+#result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
+                       # "../data_files/3DiSequences/fullset_ss.fasta")

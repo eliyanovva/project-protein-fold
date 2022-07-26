@@ -1,13 +1,14 @@
 # This script generates dictionaries of logFC, FDR, and classification with protein/ligand pairs as keys
 
 import pandas as pd
-import Globals
+import RF.Globals as Globals
 
 # Generate lists of proteins and ligands
-TM_location = "../data_files/TMdomains/TM.csv"
-smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
+"""TM_location = "../data_files/TMdomains/TM.csv"
+smile_location = "../Ligands_withSMILE/ligand_SMILES.csv
+
 acc_ids = Globals.initialize_protein_list(TM_location)
-ligands = Globals.initialize_ligand_list(smile_location)
+ligands = Globals.initialize_ligand_list(smile_location)"""
 
 def labels(ligand_folder):
     """
