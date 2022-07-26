@@ -8,10 +8,23 @@ import numpy as np
 MAIN_PACKAGE_DIR = os.path.abspath(os.curdir)    
 sys.path.append(MAIN_PACKAGE_DIR)
 
-from graph_cnn.data_prep import data_generator
-from cli_arguments import ModelingParser
-from graph_cnn.model import GraphCNN
-from graph_cnn.run_model import runModel, runGNN
+try:
+    from graph_cnn.data_prep import data_generator
+except:
+    pass
+try:
+    from cli_arguments import ModelingParser
+except:
+    pass
+try:
+    from graph_cnn.model import GraphCNN
+except:
+    pass
+try:
+    from graph_cnn.run_model import runModel, runGNN
+except:
+    pass
+
 from data_files.TMdomains.UniprotScrape import scrape_TMs
 from RF.CombineLigandsProteins import develop_matrices
 
@@ -19,7 +32,11 @@ try:
     from graph_cnn.hp_model import optimizeHyperparameters
 except:
     pass
-import config
+
+try:
+    import config
+except:
+    pass
 
 #Create temporary folders to house user-input necessary files
 def createTemporaryDirectories():
@@ -92,7 +109,7 @@ def make_accession_list(proteins, protein_structure_folder):
                 for p_file in protein_files:
                     if p_file.endswith('.pdb'):
                         printline = p_file.replace('AF-', '')
-                        printline = printline.replace('-F1-model_v2.pdb')
+                        printline = printline.replace('-F1-model_v2.pdb', '')
                         print(printline, f)
 
 def ppp():    
@@ -174,8 +191,12 @@ def ppp():
         print('RF CLI is not implemented yet!')
 
         if args.rf_mode == 'eval_pairs':
-            createRFDirectories()
+            try:
+                createRFDirectories()
+            except:
+                print('Failed to make temporary directories')
             protein_structure_folder='input_protein_pdb'
+            Di_fasta = 'foldseek/outputDb_ss.fasta'
             protein_sequence_folder='input_protein_fasta'
             ligand_folder='input_ligand_smiles'
             ligand_csv = 'input_ligand_smiles/smiles.csv'
@@ -183,7 +204,13 @@ def ppp():
             TMs = 'temp_TMs/TM.txt'
             TM_csv = 'temp_TMs/TM.csv'
 
-            make_accession_list(proteins, protein_structure_folder)
+            try:
+                make_accession_list(proteins, protein_structure_folder)
+                print("Made list of accessions")
+            except:
+                print('Failed to create list of protein accessions')
+                if not os.path.exists(protein_structure_folder):
+                    print('Please input pdb files into a folder in your working directory called input_protein_pdb')
 
             try:
                 scrape_TMs(proteins, TMs, TM_csv)
@@ -191,20 +218,25 @@ def ppp():
             
             except:
                 print('Unable to scrape TMs')
-
-            try:
-                convert_to_3di(Di_fasta) #TODO: Create the function to make a fasta file with all of the 3Di sequences
-                log.info('Created 3Di sequences')
-                
-            except: 
-                print("Please download foldseek from https://github.com/steineggerlab/foldseek")
+                if not os.path.exists(proteins):
+                    print('Cannot find list of accession names')
+                elif not os.path.exists(TMs):
+                    print('Failed to create txt file of TM domains')
+                elif not os.path.exists(TM_csv):
+                    print('Failed to create csv file of TM domains')
 
             try:
                 develop_matrices(ligand_csv, TM_csv, Di_fasta)
             
             except:
-                print("Sequences could not be categorized")
+                print('Unable to create input matrices')
 
+                if not os.path.exists(ligand_csv):
+                    print('Please upload a csv of ligand smiles into the file path: "input_ligand_smiles/smiles.csv" with format Ligands,SMILE')
+                
+                elif not os.path.exists(Di_fasta):
+                    print("Please download foldseek from https://github.com/steineggerlab/foldseek")
+                    print("Create a database of 3Di sequences for each protein by following the directions in the HowToConvertTo3Di.txt document")
 
             finally:
                 removeRFDirectories()
