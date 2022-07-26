@@ -21,6 +21,18 @@ Di_location = "../data_files/3DiSequences/fullset_ss.fasta"
 smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"""""
 
 def develop_matrices(smile_location, TM_location, Di_location):
+    """
+    This function creates a feature matrix of kmer frequencies for the experimental protein-ligand pairs,
+    and their corresponding vector of classification labels.
+
+    Args:
+        smile_location (str): file path to data table of ligands and their SMILE formulas
+        TM_location (str): file path to data table of proteins and their sequences for TMs 3,5,6 and 7
+        Di_location (str): file path to fasta of proteins and their 3di sequences
+
+    Returns:
+
+    """
     #filter_strength = variable to set strength of the kmer filter
     #use 'None' to select no filter
     #use 'All' to only select kmers that occur exclusively in positive or negative pairs

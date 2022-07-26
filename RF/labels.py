@@ -4,18 +4,18 @@ import pandas as pd
 import RF.Globals as Globals
 
 # Generate lists of proteins and ligands
-"""TM_location = "../data_files/TMdomains/TM.csv"
-smile_location = "../Ligands_withSMILE/ligand_SMILES.csv
+TM_location = "../data_files/TMdomains/TM.csv"
+smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
 
 acc_ids = Globals.initialize_protein_list(TM_location)
-ligands = Globals.initialize_ligand_list(smile_location)"""
+ligands = Globals.initialize_ligand_list(smile_location)
 
 def labels(ligand_folder):
     """
     This function extracts the experimental logFC and FDR values for the protein-ligand pairs.
 
     Args:
-        ligand_folder (str): path file to folder of binding experiment datafiles
+        ligand_folder (str): file path to folder of binding experiment datafiles
 
     Returns:
         logFC_byID (dict): dictionary mapping a protein-ligand pair to its logFC value
