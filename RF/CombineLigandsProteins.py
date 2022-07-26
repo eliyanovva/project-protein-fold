@@ -1,13 +1,13 @@
 #This script creates the protein matrix and ligand matrix to train and test the Random Forest Algorithm
 
 #Imports
-import RF.SmileKmer as SmileKmer
+import SmileKmer as SmileKmer
 import numpy as np
-import RF.ReadingFasta as ReadingFasta
-import RF.Globals as Globals
-import RF.labels as labels
-import RF.Filtering as Filtering
-import RF.Duplicates as Duplicates
+import ReadingFasta as ReadingFasta
+import Globals as Globals
+import labels as labels
+import Filtering as Filtering
+import Duplicates as Duplicates
 
 #Additional coding help from:
 #https://numpy.org/doc/stable/reference/generated/numpy.repeat.html
@@ -259,5 +259,5 @@ def develop_matrices(smile_location, TM_location, Di_location):
     'Di3_seqs':Di_seqvar_TM3, 'Di5_seqs':Di_seqvar_TM5, 'Di6_seqs':Di_seqvar_TM6, 'Di7_seqs':Di_seqvar_TM7,
     'lig_counts':lig_counts_filter}
 
-#result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
-                       # "../data_files/3DiSequences/fullset_ss.fasta")
+result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
+                        "../data_files/3DiSequences/fullset_ss.fasta")

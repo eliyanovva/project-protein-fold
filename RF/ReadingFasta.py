@@ -18,8 +18,14 @@ def make_seqvar_TMS(TM_dict, TM_num, k):
         seqvar (dict): dictionary mapping a protein id to a frequency dictionary
             ex: seqvar[id]: key = (str) kmer, value = (int) freq. of kmer in id
     """
+
     seqvar = {}
     feat = set()
+
+    # We create a kmer frequency dictionary for all protein ids.
+    # A kmer is a substring of length k.
+    # Each frequency dictionary is based on the input sequences
+    # for a single type of transmembrane domain (TM).
 
     for id in TM_dict:
         seq = TM_dict[id][TM_num]
@@ -39,18 +45,21 @@ def featurize(seq,k,feat):
     Returns:
         freq_dict (dict): dictionary mapping a (str) kmer to the (int) freq. of kmer in seq
     """
+
     freq_dict = {}
+
+    # We iterate through all of the characters in seq to form substrings.
+    # Each substring of length k is designated as a kmer.
+    # New kmers are added to feat.
+    # For each kmer k that is formed, the frequency of k in freq_dict is updated.
 
     for i in range(0, len(seq) - k + 1):
         kmer = ""
-        #form the kmer
         for j in range(k):
             kmer += seq[i + j]
-        #update frequency of the kmer in dict
-        if kmer not in dict:
+        feat.add(kmer)
+        if kmer not in freq_dict:
             freq_dict[kmer] = 0
-            #add new kmers to feat
-            feat.add(kmer)
         freq_dict[kmer] += 1
 
     return freq_dict
@@ -72,19 +81,22 @@ def makematrix(seqvar, feat, mat, unique_l, counts):
         mat (list) = matrix of frequency values
             ex: mat[i][j] = freq. of kmer j in protein i
     """
+
+    # We create a row of frequency values for every protein from the dict counts.
+    # To do so, for each protein, we extract the protein's frequency of every kmer from feat.
+    # If a feat kmer isn't found in the protein, the frequency value is initialized as 0.
+    # We add the frequency row to the matrix. The row is replicated once for each unique ligand
+    # that the protein interacts with.
+
     for id in counts:
         newseq = []
         for kmer in feat:
-            #For kmers not found in the protein, populate the matrix with zeros
-            if kmer not in seqvar[id]:
+            if kmer not in seqvar[id]:          # Check if kmer can't be found in the sequence
                 seqvar[id][kmer] = 0
-            #Add the frequency value of the kmer
             newseq.append(seqvar[id].get(kmer))
 
-        # Add a frequency array for each protein
         for lig in counts[id]:
-            # Add an array for each unique ligand the protein can pair with
-            if unique_l.count(lig) != 0:
+            if unique_l.count(lig) != 0:        #Check that the ligand is unique
                 mat.append(np.array(newseq))
     return mat
 
