@@ -10,7 +10,9 @@ smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
 acc_ids = Globals.initialize_protein_list(TM_location)
 ligands = Globals.initialize_ligand_list(smile_location, [])
 
-def labels(ligand_folder):
+def labels(ligand_folder, TM_location, smile_location, ):
+    acc_ids = Globals.initialize_protein_list(TM_location)
+    ligands = Globals.initialize_ligand_list(smile_location)
     """
     This function extracts the experimental logFC and FDR values for the protein-ligand pairs.
 
@@ -31,7 +33,7 @@ def labels(ligand_folder):
         logFC_byID[id] = {}
         FDR_byID[id] = {}
 
-    fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
+    fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number') #TODO: figure out how this can be edited for cli
 
     # Read each csv file for the corresponding ligand
     for lig in ligands:
@@ -60,7 +62,9 @@ def extract_new_combos(FDR_byID, proteins, ligands):
     return new_combos
 
 # Create a classification dictionary with protein-ligand pair keys and bind (1) or not bind (0) as values
-def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
+def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list, TM_location, smile_location):
+    acc_ids = Globals.initialize_protein_list(TM_location)
+    ligands = Globals.initialize_ligand_list(smile_location)
     """
     This function classifies protein-ligand pairs as to whether or not they bind with each other.
 

@@ -203,10 +203,11 @@ def ppp():
             proteins = 'temp_TMs/accessions.txt'
             TMs = 'temp_TMs/TM.txt'
             TM_csv = 'temp_TMs/TM.csv'
+            experimental_results = 'input_results'
 
             try:
                 make_accession_list(proteins, protein_structure_folder)
-                print("Made list of accessions")
+                log.info("Made list of accessions")
             except:
                 print('Failed to create list of protein accessions')
                 if not os.path.exists(protein_structure_folder):
@@ -226,7 +227,8 @@ def ppp():
                     print('Failed to create csv file of TM domains')
 
             try:
-                develop_matrices(ligand_csv, TM_csv, Di_fasta)
+                develop_matrices(ligand_csv, TM_csv, Di_fasta, experimental_results)
+                log.info('Created input matrices')
             
             except:
                 print('Unable to create input matrices')
@@ -237,8 +239,12 @@ def ppp():
                 elif not os.path.exists(Di_fasta):
                     print("Please download foldseek from https://github.com/steineggerlab/foldseek")
                     print("Create a database of 3Di sequences for each protein by following the directions in the HowToConvertTo3Di.txt document")
+                
+                elif not os.path.exists(experimental_results):
+                    print("Please input csv files titled by each of the ligands containing data on ensembl_gene_id, logFC, and FDR for each protein")
 
             finally:
                 removeRFDirectories()
+                log.info('Removed temporary directories')
 
 ppp()
