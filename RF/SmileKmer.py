@@ -8,32 +8,24 @@ import numpy as np
 #https://www.w3schools.com/python/ref_list_sort.asp
 #https://www.geeksforgeeks.org/python-convert-set-into-a-list/
 
+def ligand_kmer_count(ligand_dict, k, Ligands):
+    """
+    This functions creates a dictionary of the frequency counts for all kmers
+    Args:
+        ligand_dict (dict): key = (string) ligand, value = (string) SMILE formula
+        k (int): desired kmer length
+        ligands (list): ligands to use in the matrix
 
-#Input Variables:
-#ligand_dict ~ key: odorant / ligand name, value = SMILE formula
-#k: int, length of the ligand k-mers
-#num_proteins: int, number of proteins in the dataset
-#smile: string, SMILE formula for a given ligand
-#ligands: list of ligands
+    Returns:
+        total_kmers (list): sorted list of kmers found in every ligand from Ligands
+        ligand_counts (dict): key = (string) ligand,
+            value = (dict) key = (string) kmer, value = (int) freq. of kmer in ligand
+    """
 
-#initializes the global variable ligmat to be a matrix of ligand features
-def importmatrix(ligand_dict, k, num_proteins):
-    global ligmat
-    ligmat = ligand_matrix(ligand_dict, k, num_proteins)
-
-#initializes a matrix of ligand features
-def ligand_matrix(ligand_dict, k, ligands):
-    ligand_counts, lig_features = ligand_kmer_count(ligand_dict, k, ligands)
-
-    return lig_features, ligand_counts
-
-#create a dictionary of the frequency counts for all kmers
-#key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
-def ligand_kmer_count(ligand_dict, k, ligands):
     ligand_counts = {}
-    total_kmers = list(find_total_kmers(ligand_dict, k, ligands))      #list of kmers found in ALL the ligands
+    total_kmers = list(find_total_kmers(ligand_dict, k, Ligands))
     total_kmers.sort()
-    for lig in ligands:
+    for lig in Ligands:
         lig_dict = {}                                   #freq. dict of ALL kmers for a given ligand
         #ensures that the ligand has a freq. measure for all kmers, even kmers that weren't
         #found in the ligand; leads to easier formatting for the final matrix
@@ -43,23 +35,39 @@ def ligand_kmer_count(ligand_dict, k, ligands):
         for kmer in freq_dict:
             lig_dict[kmer] = freq_dict[kmer]            #if the kmer occured in the ligand, lig_dict is updated accordingly
         ligand_counts[lig] = lig_dict
-    return ligand_counts, total_kmers
+    return total_kmers, ligand_counts
 
-#creates a list of all kmers that can be found in the ligands
-def find_total_kmers(ligand_dict, k, ligands):
-    kmers = []
+def find_total_kmers(ligand_dict, k, Ligands):
+    """
+    This function creates a set of all kmers found from every ligand in Ligands
+    Args:
+        ligand_dict (dict): key = (string) ligand, value = (string) SMILE formula
+        k (int): desired kmer length
+        Ligands (list): ligands to use in the matrix
+
+    Returns:
+        total_kmers (set): set of kmers found from every ligand in Ligands
+    """
+    total_kmers = set()
     # iterates thru all ligands
-    for lig in ligands:
+    for lig in Ligands:
         k_list = smile_list(ligand_dict[lig], k)    #list of kmers that can be found in a given ligand
         #creates a unique list of the kmers that can be found in all the ligands
         for kmer in k_list:
-            if kmers.count(kmer) == 0:
-                kmers.append(kmer)
-    return kmers
+            if kmer not in total_kmers:
+                total_kmers.add(kmer)
+    return total_kmers
 
-#creates a frequency dictionary based on a ligand's SMILE formula
-#key: kmer, value: frequency of the kmer in the ligand
 def smile_dict(smile, k):
+    """
+    This function creates a frequency dictionary of kmers found within smile
+    Args:
+        smile (string): SMILE formula
+        k (int): desired kmer length
+
+    Returns:
+        kmer_dict (dictionary): key = (string) kmer, value = (int) freq. of kmer in smile
+    """
     kmer_dict = {}              #stores freq. counts for kmers found in the ligand
     letters = form_letters(smile)
     # iterate thru all possible kmers
@@ -76,6 +84,15 @@ def smile_dict(smile, k):
 
 #creates a list of all kmers found in a given ligand's SMILE formula
 def smile_list(smile, k):
+    """
+    This function creates a list of all kmers found within smile
+    Args:
+        smile (string): SMILE formula
+        k (int): desired kmer length
+
+    Returns:
+        smile_list (list): list of all kmers found within smile
+    """
     kmer_list = []              #stores all kmers found in ligand
     letters = form_letters(smile)
     #iterate thru all possible kmers
@@ -88,8 +105,7 @@ def smile_list(smile, k):
             kmer_list.append(kmer)
             
     return kmer_list
-        
-#Paritions a SMILE formula into a list of 'letters'
+
 #Each 'letter' is a substring of the SMILE, and can contain more than 1 character
 #Each 'letter' will count as a single character in regards to making the kmers
 
@@ -107,6 +123,14 @@ def smile_list(smile, k):
 #   -all atoms within a side chain
 
 def form_letters(smile):
+    """
+    This function paritions smile into a list of 'letters' to be used while forming kmers
+    Args:
+        smile (string): SMILE formula
+
+    Returns:
+        letters (list): list of partioned substrings ('letters') from smile
+    """
     letters = []  # list that stores the sectioned off 'letters' of the str smile
     for i in range(0, len(smile)):
         letters.append(0)

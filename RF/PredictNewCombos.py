@@ -1,13 +1,11 @@
 #Script creates new pairings out of the unused pairings (logFC > 0.1) to test the model on
 
 import numpy as np
-import Duplicates
 import CombineLigandsProteins
 import Globals
 import labels
 import ReadingFasta
-import SmileKmer
-import random
+
 
 #Additional coding help from:
 #https://www.w3schools.com/python/ref_list_sort.asp

@@ -5,6 +5,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
+from sklearn.metrics import log_loss
 
 def train(features, labels, BALANCE):
     #define features and labels
@@ -25,8 +26,14 @@ def train(features, labels, BALANCE):
     #Train the model
     clf.fit(X_train,y_train)
 
+    print(len(X_train))
+    print(len(X_test))
+    print()
+
     #Form predictions
     y_pred=clf.predict_proba(X_test)[:,1]
+    print(y_pred)
+    log_loss = metrics.log_loss(y_test, y_pred)
     precision, recall, thresholds = metrics.precision_recall_curve(y_test, y_pred)
 
     acc = metrics.roc_auc_score(y_test, y_pred)
@@ -44,7 +51,7 @@ def train(features, labels, BALANCE):
 
     TN, FN, TP, FP = matthew_counts(y_test, y_pred)
 
-    return acc,rec,bac,precision,mat,TN, FN, TP, FP
+    return acc,rec,bac,mat,TN, FN, TP, FP, log_loss
 
 #Examine TP and TN rates
 def matthew_counts(y_test, y_pred):

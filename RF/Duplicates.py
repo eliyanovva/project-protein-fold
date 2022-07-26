@@ -9,19 +9,26 @@
 #https://www.geeksforgeeks.org/python-dictionary-values/
 #https://www.w3schools.com/python/ref_dictionary_keys.asp
 
-#remove_protein: returns a list of proteins with unique frequencies
-
-#AA_seqvar: list of Amino Acid (AA) kmer freq. dictionaries for TMs 3, 5, 6, and 7
-#       AA_seqvar[i]: key = protein id, value = dict (key: kmer, value: freq. of AA kmer in protein for TM[i])
-#AA_feat: list of lists of all AA kmers for TMs 3, 5, 6, and 7, respectively
-#       AA_feat[i]: list of AA kmers in TM[i], post-filtering
-#Di_seqvar: list of 3di kmer freq. dictionaries for TMs 3, 5, 6, and 7
-#       Di_seqvar[i]: key = protein id, value = dict (key: kmer, value: freq. of 3di kmer in protein for TM[i])
-#Di_feat: list of lists of all 3di kmers for TMs 3, 5, 6, and 7, respectively
-#       Di_feat[i]: list of 3di kmers in TM[i], post-filtering
-#pairs_by_prot: key = protein id, value = # of pairs involving the protein
-#all_ids: list of all protein ids used as keys in AA_seqvar and Di_seqvar
 def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, all_ids):
+    """
+    This function returns a list of proteins with unique frequencies
+    Args:
+        AA_seqvar (list): list of Amino Acid kmer frequency dictionaries for TMs 3, 5, 6, and 7
+            AA_seqvar[i] (dict): key = (string) id,
+                value = (dict) key = (string) kmer, value = (int) freq. of kmer in TM[i] of id
+        AA_feat (list): list of Amino Acid kmer lists for TMs 3, 5, 6, and 7
+            AA_feat[i] (list): list of AA kmers in TM[i], post-filtering
+        Di_seqvar (list): list of 3di kmer frequency dictionaries for TMs 3, 5, 6, and 7
+            Di_seqvar[i] (dict): key = (string) id,
+                value = (dict) key = (string) kmer, value = (int) freq. of kmer in TM[i] of id
+        Di_feat (list): list of 3di kmer lists for TMs 3, 5, 6, and 7, respectively
+            Di_feat[i]: list of 3di kmers in TM[i], post-filtering
+        pairs_by_prot (dict): key (string) = id, value (int) = # of protein-ligand pairs with id as the protein
+        all_ids (list): list of all protein ids used as keys in AA_seqvar and Di_seqvar
+
+    Returns:
+        unique_proteins (list): list of proteins that are associated with unique kmer frequencies
+    """
     unique_seqs = {}
     # key: AA and 3di kmer frequencies (formatted as string), value: protein with those frequencies
     # will only store unique kmer frequencies as keys
@@ -71,14 +78,20 @@ def remove_proteins(AA_seqvar, AA_feat, Di_seqvar, Di_feat, pairs_by_prot, all_i
                     unique_seqs[freq_str] = id
 
         unique_proteins = list(unique_seqs.values())
-        # list of proteins that are associated with the unique kmer frequencies
+
         return unique_proteins
 
-#remove_ligands: returns a list of ligands with unique frequencies
-
-#ligand_counts: key: ligand, value: dict (key: kmer, value: freq. of kmer in the ligand)
-#total_by_lig: key: ligand, value: # of pairs the involve the ligand
 def remove_ligands(ligand_counts, total_by_lig):
+    """
+    This function returns a list of ligands with unique frequencies
+    Args:
+        ligand_counts (dict): key = (string) ligand,
+            value = (dict) key = (string) kmer, value = (int) freq. of kmer in ligand
+        total_by_lig (dict): key = (string) lig, value = (int) # of protein-ligand pairs with lig as the ligand
+
+    Returns:
+        unique_ligands: list of ligands that are associated with unique kmer frequencies
+    """
     unique_seqs = {}
     #key: kmer frequencies (formatted as string), value: ligand with those frequencies
     #will only store unique kmer frequencies as keys
@@ -103,6 +116,5 @@ def remove_ligands(ligand_counts, total_by_lig):
                 unique_seqs[freq_str] = lig
 
     unique_ligands = list(unique_seqs.values())
-    #set of proteins that are associated with the unique kmer frequencies
 
     return unique_ligands
