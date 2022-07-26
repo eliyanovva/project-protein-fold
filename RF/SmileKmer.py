@@ -10,16 +10,16 @@ import numpy as np
 
 def ligand_kmer_count(ligand_dict, k, Ligands):
     """
-    This functions creates a dictionary of the frequency counts for all kmers
+    This functions creates a dictionary of the frequency counts for all kmers.
     Args:
-        ligand_dict (dict): key = (string) ligand, value = (string) SMILE formula
+        ligand_dict (dict): dictionary mapping a (str) ligand to its (str) SMILE formula
         k (int): desired kmer length
         ligands (list): ligands to use in the matrix
 
     Returns:
         total_kmers (list): sorted list of kmers found in every ligand from Ligands
-        ligand_counts (dict): key = (string) ligand,
-            value = (dict) key = (string) kmer, value = (int) freq. of kmer in ligand
+        ligand_counts (dict): dictionary mapping a (str) ligand to a frequency dictionary
+            ex: ligand_counts[lig]: key = (str) kmer, value = (int) freq. of kmer in lig
     """
 
     ligand_counts = {}
@@ -39,9 +39,9 @@ def ligand_kmer_count(ligand_dict, k, Ligands):
 
 def find_total_kmers(ligand_dict, k, Ligands):
     """
-    This function creates a set of all kmers found from every ligand in Ligands
+    This function creates a set of all kmers found from every ligand in Ligands.
     Args:
-        ligand_dict (dict): key = (string) ligand, value = (string) SMILE formula
+        ligand_dict (dict): dictionary mapping a (str) ligand to its (str) SMILE formula
         k (int): desired kmer length
         Ligands (list): ligands to use in the matrix
 
@@ -85,7 +85,7 @@ def smile_dict(smile, k):
 #creates a list of all kmers found in a given ligand's SMILE formula
 def smile_list(smile, k):
     """
-    This function creates a list of all kmers found within smile
+    This function creates a list of all kmers found within smile.
     Args:
         smile (string): SMILE formula
         k (int): desired kmer length
@@ -124,9 +124,9 @@ def smile_list(smile, k):
 
 def form_letters(smile):
     """
-    This function paritions smile into a list of 'letters' to be used while forming kmers
+    This function partitions smile into a list of 'letters' to be used while forming kmers.
     Args:
-        smile (string): SMILE formula
+        smile (str): SMILE formula
 
     Returns:
         letters (list): list of partioned substrings ('letters') from smile
