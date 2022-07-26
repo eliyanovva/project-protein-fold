@@ -47,9 +47,10 @@ def develop_matrices(smile_location, TM_location, Di_location):
     lig_filter_strength = 'All'
 
     #Create classification dictionary
-    acc_ids = Globals.initialize_protein_list(TM_location)
+    proteins = Globals.initialize_protein_list(TM_location)
     logFC, FDR = labels.labels('../olfr_de/')
-    classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, acc_ids)
+    classified, pos_counts, neg_counts,\
+    pos_dict, neg_dict, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, proteins)
 
     total_pos = 0
     total_neg = 0
@@ -159,7 +160,7 @@ def develop_matrices(smile_location, TM_location, Di_location):
     ligands_from_unip.sort()
 
     #Import dictionary matching ligands to SMILES String
-    ligand_dict = Globals.initialize_ligand_dict(smile_location)
+    ligand_dict = Globals.initialize_ligand_dict(smile_location, [])
     #Create ligands matrix
     ligand_features, ligand_counts = SmileKmer.ligand_kmer_count(ligand_dict, 5, ligands_from_unip)
 

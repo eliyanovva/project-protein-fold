@@ -8,7 +8,7 @@ TM_location = "../data_files/TMdomains/TM.csv"
 smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
 
 acc_ids = Globals.initialize_protein_list(TM_location)
-ligands = Globals.initialize_ligand_list(smile_location)
+ligands = Globals.initialize_ligand_list(smile_location, [])
 
 def labels(ligand_folder):
     """
@@ -41,10 +41,9 @@ def labels(ligand_folder):
         for id in acc_ids:
             ensem_id = fas_df.loc[id]['ensembl_gene_id']  # The ENSEMBLE id corresponding to the accession number
 
-            logFC_byID[id][lig] = (curr_df.loc[ensem_id]['logFC'])  # Find logFC for the ligand-protein pair
-            FDR_byID[id][lig] = (curr_df.loc[ensem_id]['FDR'])  # Find FDR for the ligand-protein pair
+            logFC_byID[id][lig] = (curr_df.loc[ensem_id]['logFC'])
+            FDR_byID[id][lig] = (curr_df.loc[ensem_id]['FDR'])
 
-    # Return dictionaries with protein-ligand pair keys and logFC and FDR values
     return logFC_byID, FDR_byID
 
 def extract_new_combos(FDR_byID, proteins, ligands):
@@ -55,6 +54,7 @@ def extract_new_combos(FDR_byID, proteins, ligands):
         for lig in ligands:
             FDR = FDR_byID[id][lig]
             if (FDR > .1) & (FDR <= .4):
+                print(id + " " + lig)
                 new_combos[id].append(lig)
                 i += 1
     return new_combos

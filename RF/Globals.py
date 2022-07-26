@@ -14,7 +14,7 @@ import pandas as pd
 #https://www.geeksforgeeks.org/how-to-read-from-a-file-in-python/
 #https://www.w3schools.com/python/ref_string_replace.asp
 
-def initialize_ligand_dict(smile_location):
+def initialize_ligand_dict(smile_location, atoms):
     """
     This function creates a dictionary mapping ligands to their SMILE formulas.
 
@@ -26,14 +26,24 @@ def initialize_ligand_dict(smile_location):
     """
     ligand_dict = {}
     df = pd.read_csv(smile_location)
-    files = initialize_ligand_list(smile_location)
+    ligands = df['Ligands'].tolist()
     smiles = df['SMILE'].tolist()
-    for i in range(len(files)):
-        ligand_dict[files[i]] = smiles[i]
+
+    if len(atoms) == 0:
+        for i in range(len(ligands)):
+            ligand_dict[ligands[i]] = smiles[i]
+    else:
+        for i in range(len(ligands)):
+            true = 0
+            for atom in atoms:
+                if smiles[i].count(atom) > 0:
+                    true += 1
+            if true == len(atoms):
+                ligand_dict[ligands[i]] = smiles[i]
 
     return ligand_dict
 
-def initialize_ligand_list(smile_location):
+def initialize_ligand_list(smile_location, atoms):
     """
     This function creates a list of every ligand that has a SMILE formula.
     The current set of SMILE formulas cannot distinguish chirality
@@ -44,9 +54,8 @@ def initialize_ligand_list(smile_location):
     Returns:
         ligands (list): list of every ligand that has a SMILE formula.
     """
-    df = pd.read_csv(smile_location)
-    ligands = df['Ligands'].tolist()
 
+    ligands = list(initialize_ligand_dict(smile_location, atoms).keys())
     return ligands
 
 def initialize_protein_list(TM_location):
@@ -184,3 +193,5 @@ def categorize(AA_dict):
             categorize_TMs.append(TM)
         categorize_dict[id] = categorize_TMs
     return categorize_dict
+
+print(initialize_ligand_list("../Ligands_withSMILE/ligand_SMILES.csv", ['S']))
