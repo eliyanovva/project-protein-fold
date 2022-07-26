@@ -8,12 +8,30 @@ import numpy as np
 MAIN_PACKAGE_DIR = os.path.abspath(os.curdir)    
 sys.path.append(MAIN_PACKAGE_DIR)
 
-from graph_cnn.data_prep import data_generator
-from cli_arguments import ModelingParser
-from graph_cnn.model import GraphCNN
-from graph_cnn.run_model import runModel, runGNN
-from data_files.TMdomains.UniprotScrape import scrape_TMs
-from RF.CombineLigandsProteins import develop_matrices
+try:
+    from graph_cnn.data_prep import data_generator
+except:
+    pass
+try:
+    from cli_arguments import ModelingParser
+except:
+    pass
+try:
+    from graph_cnn.model import GraphCNN
+except:
+    pass
+try:
+    from graph_cnn.run_model import runModel, runGNN
+except:
+    pass
+try:
+    from data_files.TMdomains.UniprotScrape import scrape_TMs
+except:
+    pass
+try:
+    from RF.CombineLigandsProteins import develop_matrices
+except:
+    pass
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
@@ -96,7 +114,7 @@ def make_accession_list(proteins, protein_structure_folder):
                 for p_file in protein_files:
                     if p_file.endswith('.pdb'):
                         printline = p_file.replace('AF-', '')
-                        printline = printline.replace('-F1-model_v2.pdb')
+                        printline = printline.replace('-F1-model_v2.pdb', '')
                         print(printline, f)
 
 def ppp():    
@@ -178,7 +196,10 @@ def ppp():
         print('RF CLI is not implemented yet!')
 
         if args.rf_mode == 'eval_pairs':
-            createRFDirectories()
+            try:
+                createRFDirectories()
+            except:
+                print('Failed to make temporary directories')
             protein_structure_folder='input_protein_pdb'
             Di_fasta = 'foldseek/outputDb_ss.fasta'
             protein_sequence_folder='input_protein_fasta'
@@ -190,8 +211,11 @@ def ppp():
 
             try:
                 make_accession_list(proteins, protein_structure_folder)
+                print("Made list of accessions")
             except:
                 print('Failed to create list of protein accessions')
+                if not os.path.exists(protein_structure_folder):
+                    print('Please input pdb files into a folder in your working directory called input_protein_pdb')
 
             try:
                 scrape_TMs(proteins, TMs, TM_csv)
