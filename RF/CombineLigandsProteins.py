@@ -20,7 +20,7 @@ import RF.Duplicates as Duplicates
 Di_location = "../data_files/3DiSequences/fullset_ss.fasta"
 smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"""""
 
-def develop_matrices(smile_location, TM_location, Di_location, experimental_results):
+def develop_matrices(smile_location, TM_location, Di_location, experimental_results, accession_to_ensemble):
     #filter_strength = variable to set strength of the kmer filter
     #use 'None' to select no filter
     #use 'All' to only select kmers that occur exclusively in positive or negative pairs
@@ -36,7 +36,7 @@ def develop_matrices(smile_location, TM_location, Di_location, experimental_resu
 
     #Create classification dictionary
     acc_ids = Globals.initialize_protein_list(TM_location)
-    logFC, FDR = labels.labels(experimental_results, TM_location, smile_location) 
+    logFC, FDR = labels.labels(experimental_results, TM_location, smile_location, accession_to_ensemble) 
     classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, acc_ids, TM_location, smile_location)
 
     total_pos = 0

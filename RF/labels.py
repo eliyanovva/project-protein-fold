@@ -10,7 +10,7 @@ smile_location = "../Ligands_withSMILE/ligand_SMILES.csv
 acc_ids = Globals.initialize_protein_list(TM_location)
 ligands = Globals.initialize_ligand_list(smile_location)"""
 
-def labels(ligand_folder, TM_location, smile_location, ):
+def labels(ligand_folder, TM_location, smile_location, accession_to_ensemble):
     acc_ids = Globals.initialize_protein_list(TM_location)
     ligands = Globals.initialize_ligand_list(smile_location)
     """
@@ -33,7 +33,7 @@ def labels(ligand_folder, TM_location, smile_location, ):
         logFC_byID[id] = {}
         FDR_byID[id] = {}
 
-    fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number') #TODO: figure out how this can be edited for cli
+    fas_df = pd.read_csv(accession_to_ensemble, index_col='accession number') #TODO: figure out how this can be edited for cli
 
     # Read each csv file for the corresponding ligand
     for lig in ligands:

@@ -204,6 +204,7 @@ def ppp():
             TMs = 'temp_TMs/TM.txt'
             TM_csv = 'temp_TMs/TM.csv'
             experimental_results = 'input_results'
+            accession_to_ensemble = 'ensemble_to_accession.csv'
 
             try:
                 make_accession_list(proteins, protein_structure_folder)
@@ -227,7 +228,7 @@ def ppp():
                     print('Failed to create csv file of TM domains')
 
             try:
-                develop_matrices(ligand_csv, TM_csv, Di_fasta, experimental_results)
+                develop_matrices(ligand_csv, TM_csv, Di_fasta, experimental_results, accession_to_ensemble)
                 log.info('Created input matrices')
             
             except:
@@ -242,6 +243,9 @@ def ppp():
                 
                 elif not os.path.exists(experimental_results):
                     print("Please input csv files titled by each of the ligands containing data on ensembl_gene_id, logFC, and FDR for each protein")
+
+                elif not os.path.exists(accession_to_ensemble):
+                    print("Please input a file mapping ensemble id to accession id named ensemble_to_accession.csv")
 
             finally:
                 removeRFDirectories()
