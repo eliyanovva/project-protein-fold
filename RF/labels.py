@@ -81,7 +81,7 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
             ex: If the protein id only binds with the ligands L1, L2, and L3, then pos_counts[id] = [L1, L2, L3]
         neg_dict (dict): dictionary mapping a protein id to the list of ligands that id does not bind with
             ex: If the protein id doesn't bind with the ligands L1 and L4, then neg_counts[id] = [L1, L4]
-        proteins_toconsider (list): sorted list of proteins that have at least 1 positive or negative interaction with a ligand
+        proteins_toconsider (list): sorted list of proteins that have at least 1 positive or negative pair
     """
     classified = {}
     pos_counts = {}

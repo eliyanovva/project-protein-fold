@@ -20,7 +20,7 @@ def ligand_kmer_count(ligand_dict, k, Ligands):
     Returns:
         total_kmers (list): sorted list of kmers found in every ligand from Ligands
         ligand_counts (dict): dictionary mapping a (str) ligand to a frequency dictionary
-            ex: ligand_counts[lig]: key = (str) kmer, value = (int) freq. of kmer in lig
+            ex: ligand_counts[lig][kmer] = (int) freq. of kmer in lig
     """
 
     ligand_counts = {}
