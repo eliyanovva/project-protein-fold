@@ -19,7 +19,11 @@ try:
     from graph_cnn.hp_model import optimizeHyperparameters
 except:
     pass
-import config
+
+try:
+    import config
+except:
+    pass
 
 #Create temporary folders to house user-input necessary files
 def createTemporaryDirectories():
@@ -176,6 +180,7 @@ def ppp():
         if args.rf_mode == 'eval_pairs':
             createRFDirectories()
             protein_structure_folder='input_protein_pdb'
+            Di_fasta = 'foldseek/outputDb_ss.fasta'
             protein_sequence_folder='input_protein_fasta'
             ligand_folder='input_ligand_smiles'
             ligand_csv = 'input_ligand_smiles/smiles.csv'
@@ -183,7 +188,10 @@ def ppp():
             TMs = 'temp_TMs/TM.txt'
             TM_csv = 'temp_TMs/TM.csv'
 
-            make_accession_list(proteins, protein_structure_folder)
+            try:
+                make_accession_list(proteins, protein_structure_folder)
+            except:
+                print('Failed to create list of protein accessions')
 
             try:
                 scrape_TMs(proteins, TMs, TM_csv)
@@ -191,20 +199,23 @@ def ppp():
             
             except:
                 print('Unable to scrape TMs')
-
-            try:
-                convert_to_3di(Di_fasta) #TODO: Create the function to make a fasta file with all of the 3Di sequences
-                log.info('Created 3Di sequences')
-                
-            except: 
-                print("Please download foldseek from https://github.com/steineggerlab/foldseek")
+                if not os.path.exists(TMs):
+                    print('Failed to create txt file of TM domains')
+                elif not os.path.exists(TM_csv):
+                    print('Failed to create csv file of TM domains')
 
             try:
                 develop_matrices(ligand_csv, TM_csv, Di_fasta)
             
             except:
-                print("Sequences could not be categorized")
+                print('Unable to create input matrices')
 
+                if not os.path.exists(ligand_csv):
+                    print('Please upload a csv of ligand smiles into the file path: "input_ligand_smiles/smiles.csv" with format Ligands,SMILE')
+                
+                elif not os.path.exists(Di_fasta):
+                    print("Please download foldseek from https://github.com/steineggerlab/foldseek")
+                    print("Create a database of 3Di sequences for each protein by following the directions in the HowToConvertTo3Di.txt document")
 
             finally:
                 removeRFDirectories()

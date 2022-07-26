@@ -1,0 +1,11 @@
+Instructions for how to convert from pdb files to 3Di sequences:
+
+1) Change current directory to foldseek
+2) Call the following command: foldseek createdb <folder containing your pdb files> <name of the files you output>
+*For the purposes of this document we will call the folder containing pdb files "pdbfolder" and the name of the output files "outputDb"
+*Make sure your pdbfolder is in the foldseek folder
+*After step two, you should see a bunch of outputDb files in the foldseek folder
+3) mv outputDb tmp
+4) cp outputDb_ss outputDb
+5) foldseek convert2fasta outputDb outputDb_ss.fasta
+*Your 3Di database is now under the file name "outputDb_ss.fasta"
