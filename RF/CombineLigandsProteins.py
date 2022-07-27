@@ -38,7 +38,6 @@ def develop_matrices(smile_location, TM_location, Di_location, experimental_resu
     acc_ids = Globals.initialize_protein_list(TM_location)
     logFC, FDR = labels.labels(experimental_results, TM_location, smile_location, accession_to_ensemble) 
     classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, acc_ids, TM_location, smile_location)
-    print('pass')
     total_pos = 0
     total_neg = 0
     for id in pos_counts:
