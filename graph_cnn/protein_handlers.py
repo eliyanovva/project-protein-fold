@@ -1,8 +1,7 @@
-import tensorflow as tf
 import numpy as np
 import logging as log
 import os
-import abc
+import re
 
 import config
 
@@ -13,9 +12,14 @@ class ProteinAdjacencyData(DataHandlers):
     
     def loadDataSingleMatrix(self, label_name):
         # the protein name should be from the train/test X data.
+        mylist = os.listdir(self.folder)
+        r = re.compile(".*"+ label_name + ".*npy")
+        adjacency_matrix_filename = list(filter(r.match, mylist))[0]
+        
         protein_adjacency_matrix = np.load(
-            os.path.join(self.folder, label_name + '_adj_mat.npy')
+            os.path.join(self.folder, adjacency_matrix_filename)
         )
+
         return protein_adjacency_matrix
 
 
@@ -23,10 +27,15 @@ class ProteinFeatureData(DataHandlers):
 
     def loadDataSingleMatrix(self, label_name):
         # the protein name should be from the train/test X data.
+        mylist = os.listdir(self.folder)
+        r = re.compile(".*"+ label_name + ".*npy")
+        feature_matrix_filename = list(filter(r.match, mylist))[0]
+        
         protein_feature_matrix = np.load(
             os.path.join(
                 self.folder,
-                label_name + '_feat_mat.npy')
+                feature_matrix_filename)
         )
+
         return protein_feature_matrix
 

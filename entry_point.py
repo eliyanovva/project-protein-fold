@@ -12,11 +12,11 @@ from graph_cnn.data_prep import data_generator
 from cli_arguments import ModelingParser
 from graph_cnn.model import GraphCNN
 from graph_cnn.run_model import runModel, runGNN
-from data_files.TMdomains.UniprotScrape import scrape_TMs
-from RF.CombineLigandsProteins import develop_matrices
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
+    from data_files.TMdomains.UniprotScrape import scrape_TMs
+    from RF.CombineLigandsProteins import develop_matrices
 except:
     pass
 import config
@@ -210,3 +210,6 @@ def ppp():
                 removeRFDirectories()
 
 ppp()
+
+#data_generator.generateLigandMatrices()
+#data_generator.generateProteinMatrices()
