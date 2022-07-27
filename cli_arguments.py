@@ -29,7 +29,6 @@ class ModelingParser(argparse.ArgumentParser):
         self.add_argument(
             '--optimizer',
             help = 'Sets the optimizer.',
-            type = string
         )
 
         self.add_argument(
