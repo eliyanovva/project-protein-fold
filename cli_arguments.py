@@ -27,6 +27,12 @@ class ModelingParser(argparse.ArgumentParser):
         )
 
         self.add_argument(
+            '--fiting_batch_size',
+            help = 'Sets the batch size for model fitting.',
+            type = int
+        )
+
+        self.add_argument(
             '--optimizer',
             help = 'Sets the optimizer.',
         )
