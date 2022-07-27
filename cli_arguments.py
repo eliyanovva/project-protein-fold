@@ -1,6 +1,7 @@
 """This module contains the Argument Parser object with the expected arguments for modeling.
 """
 import argparse
+import string
 
 class ModelingParser(argparse.ArgumentParser):
     """This class specifies the Argument Parser which requests for the needed flags
@@ -18,11 +19,48 @@ class ModelingParser(argparse.ArgumentParser):
         self.add_argument(
             '--gnn_cl', help = 'Runs the GNN as a binary classificator instead of a regressor.', action = 'store_true'
         )
+
         self.add_argument(
             '--batch_size',
             help = 'Sets the size of the dataset to be used.',
             type = int
         )
+
+        self.add_argument(
+            '--fitting_batch_size',
+            help = 'Sets the batch size for model fitting.',
+            type = int
+        )
+
+        self.add_argument(
+            '--optimizer',
+            help = 'Sets the optimizer.',
+        )
+
+        self.add_argument(
+            '--dropout',
+            help = 'Sets the size of the dropout.',
+            type = float
+        )
+
+        self.add_argument(
+            '--test_train_split',
+            help = 'Sets the size of the test train split.',
+            type = float
+        )
+
+        self.add_argument(
+            '--validation_split',
+            help = 'Sets the validation split.',
+            type = float
+        )
+
+        self.add_argument(
+            '--learning_rate',
+            help = 'Sets the learning rate. Adjusts depending on optimizer.',
+            type = float
+        )
+
         #self.add_argument(
         #    '--time',
         #    help = 'Sets the time to wait after the shape is completed in seconds,\
@@ -57,6 +95,4 @@ class ModelingParser(argparse.ArgumentParser):
         self.add_argument(
             '--rf_mode',
             help = 'Choose between "run", "eval_pairs", "eval_ligands", "eval_proteins". The program defaults to the "run" mode.'
-        )
-
-        
+        )        

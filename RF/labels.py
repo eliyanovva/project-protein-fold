@@ -12,7 +12,9 @@ ligands = Globals.initialize_ligand_list(smile_location)"""
 
 def labels(ligand_folder, TM_location, smile_location, accession_to_ensemble):
     acc_ids = Globals.initialize_protein_list(TM_location)
+    
     ligands = Globals.initialize_ligand_list(smile_location)
+    
     """
     This function extracts the experimental logFC and FDR values for the protein-ligand pairs.
 
@@ -32,18 +34,19 @@ def labels(ligand_folder, TM_location, smile_location, accession_to_ensemble):
     for id in acc_ids:
         logFC_byID[id] = {}
         FDR_byID[id] = {}
-    print('pass')
+    
     fas_df = pd.read_csv(accession_to_ensemble, index_col='accession number') #TODO: figure out how this can be edited for cli
     # Read each csv file for the corresponding ligand
+    
     for lig in ligands:
+        
         file_name = ligand_folder + '/' + lig
         curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
-        for id in acc_ids:
-            ensem_id = fas_df.loc[id]['ensembl_gene_id']  # The ENSEMBLE id corresponding to the accession number
-
-            logFC_byID[id][lig] = (curr_df.loc[ensem_id]['logFC'])  # Find logFC for the ligand-protein pair
-            FDR_byID[id][lig] = (curr_df.loc[ensem_id]['FDR'])  # Find FDR for the ligand-protein pair
-
+        for id in acc_ids: #TODO: A6NM03 is the problem
+                ensem_id = fas_df.loc[id]['ensembl_gene_id']  # The ENSEMBLE id corresponding to the accession number
+                logFC_byID[id][lig] = (curr_df.loc[ensem_id]['logFC'])  # Find logFC for the ligand-protein pair
+                FDR_byID[id][lig] = (curr_df.loc[ensem_id]['FDR'])  # Find FDR for the ligand-protein pair
+    
     # Return dictionaries with protein-ligand pair keys and logFC and FDR values
     return logFC_byID, FDR_byID
 

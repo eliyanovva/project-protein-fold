@@ -6,13 +6,10 @@ greater than 1 means that the protein and ligand are likely to bind.
 import logging as log
 import os
 from contextlib import redirect_stdout
-from operator import mod
 
 import config
-import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 
 from graph_cnn.ligand_handlers import LigandAdjacencyData, LigandFeatureData
@@ -219,8 +216,6 @@ class GraphCNN:
         
         x = tf.keras.layers.Conv1D(filters=1024, kernel_size=5, activation='relu')(prot_adj_in)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
-        #x = tf.keras.layers.Conv1D(filters=1024, kernel_size=3, activation='relu')(x)
-        #x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Conv1D(filters=512, kernel_size=3, activation='relu')(x)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Conv1D(filters=256, kernel_size=3, activation='relu')(x)
@@ -255,13 +250,11 @@ class GraphCNN:
         out = tf.keras.layers.Dense(1024, activation="relu")(combined)
         out = tf.keras.layers.Dense(512, activation="relu")(out)
         out = tf.keras.layers.Dense(64, activation="relu")(out)
-        #out_regression = tf.keras.layers.Dense(1, activation="linear")(out)
-        #FIXME: Add the classification layers
         out_classification = tf.keras.layers.Dense(1, activation='sigmoid')(out)
         
         model = tf.keras.Model(
             inputs=[x.input, y.input, z.input, z1.input],
-            outputs= out_classification#, out_classification]
+            outputs= out_classification
         )
         
         with open('results.txt', 'a') as res_log:
@@ -273,9 +266,11 @@ class GraphCNN:
             optimizer=hp_optimizer,
             loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
             metrics=[tf.keras.metrics.AUC(),
-                tf.keras.metrics.Accuracy(),
+                tf.keras.metrics.BinaryAccuracy(),
                 tf.keras.metrics.FalseNegatives(),
                 tf.keras.metrics.FalsePositives(),
+                tf.keras.metrics.TruePositives(),
+                tf.keras.metrics.TrueNegatives()
                 ]
         )
         return model

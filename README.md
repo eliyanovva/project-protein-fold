@@ -1,7 +1,8 @@
 # project-protein-fold
 The repository contains three different machine learning models which predict olfactory protein - ligand binding without docking them first. The models included are a Random Forest Model, a Convolutional Neural Network, and a Graph Convolutional Neural Network. All models were trained with data from wet lab experiments performed by the [Matsunami Lab](https://mgm.duke.edu/matsunami-lab) at Duke University. 
 
-![Olfr875new](https://user-images.githubusercontent.com/77795920/181049903-86f86fda-2ccd-4411-a8bc-33132467d74c.gif)
+
+https://user-images.githubusercontent.com/77795920/181356910-98c6a2b1-53e1-4a01-bd44-2685e93a39dd.mp4
 
 
 ## ProteinFoldRF

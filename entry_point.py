@@ -30,6 +30,8 @@ from RF.CombineLigandsProteins import develop_matrices
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
+    from data_files.TMdomains.UniprotScrape import scrape_TMs
+    from RF.CombineLigandsProteins import develop_matrices
 except:
     pass
 
@@ -122,10 +124,49 @@ def ppp():
     else:
         batch_size = -1
 
+    if args.fitting_batch_size:
+        fitting_batch_size = args.fitting_batch_size
+    else:
+        fitting_batch_size = 64
+    
+    if args.optimizer:
+        optimizer = args.optimizer
+    else:
+        optimizer = 'adam'
+
+    if args.learning_rate:
+        learning_rate = args.learning_rate
+    else:
+        learning_rate = 0.001
+
+    if args.dropout:
+        dropout = args.dropout
+    else:
+        dropout = 0.2
+
+    if args.test_train_split:
+        test_train_split = args.test_train_split
+    else:
+        test_train_split = 0.15
+
+    if args.validation_split:
+        validation_split = args.validation_split
+    else:
+        validation_split = 0.15
+    
+    hparams = {
+        config.HP_OPTIMIZER: optimizer,
+            config.HP_LEARNINGRATE: learning_rate,
+            config.HP_BATCH_SIZE: fitting_batch_size,
+            config.HP_DROPOUT: dropout,
+            config.HP_TEST_TRAIN_SPLIT: test_train_split,
+            config.HP_VALIDATION_SPLIT: validation_split,
+        }
+
     if args.model == 'gnn':
         classification = args.gnn_cl == True
         if args.gnn_mode == 'hptuning':
-            optimizeHyperparameters()
+            optimizeHyperparameters(hparams)
         
         elif args.gnn_mode == 'eval_tuple':
             X = generateLabelsList()
@@ -252,3 +293,6 @@ def ppp():
                 log.info('Removed temporary directories')"""
 
 ppp()
+
+#data_generator.generateLigandMatrices()
+#data_generator.generateProteinMatrices()
