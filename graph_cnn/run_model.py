@@ -48,10 +48,22 @@ def createCallbacks():
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
             monitor = 'val_loss',
+            min_delta=0.05,
             patience = 0,
             restore_best_weights = True,
             mode = 'min',
-        )
+        ),
+        tf.keras.callbacks.TensorBoard(
+            log_dir='logs/tensorboard',
+            histogram_freq=0,
+            write_graph=True,
+            write_images=False,
+            write_steps_per_second=False,
+            update_freq='epoch',
+            profile_batch=0,
+            embeddings_freq=0,
+            embeddings_metadata=None,
+        ),
     ]
 
     return callbacks
