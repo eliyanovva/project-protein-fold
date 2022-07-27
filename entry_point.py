@@ -121,6 +121,11 @@ def ppp():
         batch_size = args.batch_size
     else:
         batch_size = -1
+
+    if args.fitting_batch_size:
+        fitting_batch_size = args.fitting_batch_size
+    else:
+        fitting_batch_size = 64
     
     if args.optimizer:
         optimizer = args.optimizer
@@ -150,7 +155,7 @@ def ppp():
     hparams = {
         config.HP_OPTIMIZER: optimizer,
             config.HP_LEARNINGRATE: learning_rate,
-            config.HP_BATCH_SIZE: batch_size,
+            config.HP_BATCH_SIZE: fitting_batch_size,
             config.HP_DROPOUT: dropout,
             config.HP_TEST_TRAIN_SPLIT: test_train_split,
             config.HP_VALIDATION_SPLIT: validation_split,
