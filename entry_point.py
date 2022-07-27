@@ -105,12 +105,12 @@ def savePredictions(label_list, results):
 
 def make_accession_list(proteins, protein_structure_folder):
     with open(proteins, 'w') as f:
-                protein_files = os.listdir(protein_structure_folder)
-                for p_file in protein_files:
-                    if p_file.endswith('.pdb'):
-                        printline = p_file.replace('AF-', '')
-                        printline = printline.replace('-F1-model_v2.pdb', '')
-                        print(printline, f)
+        protein_files = os.listdir(protein_structure_folder)
+        for p_file in protein_files:
+            if p_file.endswith('.pdb'):
+                printline = p_file.replace('AF-', '')
+                printline = printline.replace('-F1-model_v2.pdb', '')
+                print(printline, file = f)
 
 def ppp():    
     parser = ModelingParser()

@@ -32,7 +32,7 @@ def labels(ligand_folder, TM_location, smile_location, accession_to_ensemble):
     for id in acc_ids:
         logFC_byID[id] = {}
         FDR_byID[id] = {}
-
+    print('pass')
     fas_df = pd.read_csv(accession_to_ensemble, index_col='accession number') #TODO: figure out how this can be edited for cli
     # Read each csv file for the corresponding ligand
     for lig in ligands:

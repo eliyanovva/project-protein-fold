@@ -38,7 +38,7 @@ def develop_matrices(smile_location, TM_location, Di_location, experimental_resu
     acc_ids = Globals.initialize_protein_list(TM_location)
     logFC, FDR = labels.labels(experimental_results, TM_location, smile_location, accession_to_ensemble) 
     classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, acc_ids, TM_location, smile_location)
-    
+    print('pass')
     total_pos = 0
     total_neg = 0
     for id in pos_counts:
@@ -71,7 +71,6 @@ def develop_matrices(smile_location, TM_location, Di_location, experimental_resu
     
     #Create dict of AA sequences only with proteins from pos or neg pairs
     AA_dict = Globals.initialize_AA_dict(proteins_toconsider, TM_location)
-    print(AA_dict)
     #TODO: Fix problem that TM.csv is somehow empty
 
     #Create AA output for TMs 3,5,6,7
@@ -111,7 +110,7 @@ def develop_matrices(smile_location, TM_location, Di_location, experimental_resu
         Di_filter_TM5, feat6 = Filtering.richness_prot_imbalance(Di_features_TM5, Di_seqvar_TM5, pos_counts, neg_counts, "TM5", prot_filter_strength)
         Di_filter_TM6, feat7 = Filtering.richness_prot_imbalance(Di_features_TM6, Di_seqvar_TM6, pos_counts, neg_counts, "TM6", prot_filter_strength)
         Di_filter_TM7, feat8 = Filtering.richness_prot_imbalance(Di_features_TM7, Di_seqvar_TM7, pos_counts, neg_counts, "TM7", prot_filter_strength)
-    
+
     AA_seqvar = [AA_seqvar_TM3, AA_seqvar_TM5, AA_seqvar_TM6, AA_seqvar_TM7]
     AA_feat = [AA_filter_TM3, AA_filter_TM5, AA_filter_TM6, AA_filter_TM7]
     Di_seqvar = [Di_seqvar_TM3, Di_seqvar_TM5, Di_seqvar_TM6, Di_seqvar_TM7]
@@ -230,9 +229,7 @@ def develop_matrices(smile_location, TM_location, Di_location, experimental_resu
     pos_array = np.repeat(1, int(pos_total))
     neg_array = np.repeat(0, int(neg_total))
     logFCmat = np.concatenate((pos_array, neg_array), axis=0)
-                                                            #All                            #None
-    print('Pos Observations: ' + str(pos_total))    #FDR<.1: 221, FDR<.15: 113 | FDR<.1: 545, FDR<.15: 579
-    print('Neg Observations: ' + str(neg_total))    #FDR<.1: 52, FDR<.15: 140  | FDR<.1: 236, FDR<.15: 490
+  
 
     feat1.extend(feat2)
     feat1.extend(feat3)
