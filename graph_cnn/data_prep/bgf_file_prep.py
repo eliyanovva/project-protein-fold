@@ -33,8 +33,6 @@ class BGFDataFile:
 
 
     def getFeatureMatrix(self, target_folder=config.PROTEIN_FEATURE_PATH):
-        # current number of features - 5: 
-        # atom type, max covalent bonds, number of lone pairs, atomic charge, alphafold score
         log.info('Initiated creation of BGF Feature matrix for protein ' + self.protein_name)
         feature_matrix = np.zeros((self.atom_count, config.PROTEIN_FEATURES_COUNT), dtype='float')
         confidence_scores = self.__getConfidenceScores()
@@ -59,36 +57,21 @@ class BGFDataFile:
         features_arr = np.zeros((config.PROTEIN_FEATURES_COUNT - 2))
         features_arr[0] = normalize(atom.atomicmass, 32.065)
         features_arr[1] = normalize(atom.exactmass, 31.972071)
-        #features_arr[2] = atom.formalcharge
         features_arr[2] = normalize(atom.heavydegree, 4.0)
         features_arr[3] = normalize(atom.heterodegree, 3.0)
         features_arr[4] = normalize(atom.hyb, 3.0)
         # FIXME: create a classification index which is based on where in the protein can we find the atom
         features_arr[5] = normalize(atom.idx, 3500.0)
-        #features_arr[7] = atom.isotope
         features_arr[6] = normalize(atom.partialcharge, 0.6, -0.6)
-        #features_arr[9] = atom.spin
-        #FIXME: EXTRACT TYPE FROM ELSEWHERE
-        #features_arr[10] = x.type
         features_arr[7] = normalize(atom.degree, 4.0)
         return features_arr
 
 
     def __setProteinName(self):
-        #left_index = self.bgf_filename.rfind('/AF-') + 4
-        #right_index = self.bgf_filename.find('-F1')
-        #print("***********", left_index, right_index, self.bgf_filename)
-        #FIXME: Temporary fix for naming convention; fix naming conventions and make them 
-        # independent of the training set.
-        #if left_index == 3 and right_index == -1:
-        left_index = self.bgf_filename.rfind('/')
+        left_index = max(self.bgf_filename.rfind('/'), self.bgf_filename.rfind('\\'))
         right_index = self.bgf_filename.rfind('.')
-
-        #print("***********", left_index, right_index)
-        
         self.protein_name = self.bgf_filename[max(0, left_index + 1) : right_index]  
-        #print('*(*(*(*(* PROTEIN NAEM', self.protein_name)
-
+        
 
     def __getSizes(self):
         """This function generates the count of atoms and the count of bonds in the bgf file.
@@ -106,18 +89,6 @@ class BGFDataFile:
                     self.atom_count += 1
                 elif line.startswith('CONECT'):
                     self.bond_count += 1
-
-
-    def __getDataFromHetAtmLine(self, data_line):
-        data_line = data_line.strip().split()
-        data_line = [
-            int(data_line[1]), # atom count
-            (config.ATOM_DICT[data_line[2][0]]), # atom type
-            int(data_line[-3]), # max number of covalent bonds
-            int(data_line[-2]), # number of lone pairs
-            float(data_line[-1])  # atomic charge
-        ]
-        return data_line
 
 
     def __getDataFromConectOrderLines(self, data_lines):

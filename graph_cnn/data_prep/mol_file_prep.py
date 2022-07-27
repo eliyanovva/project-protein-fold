@@ -53,7 +53,7 @@ class MolDataFile:
 
 
     def __setCompoundName(self):
-        right_index = self.mol_filename.rfind('/')
+        right_index = max(self.mol_filename.rfind('/'), self.mol_filename.rfind('\\'))
         left_index = self.mol_filename.find('.')
         self.compound_name = self.mol_filename[right_index + 1 : left_index]
 
