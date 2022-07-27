@@ -54,19 +54,15 @@ def scrape_TMs(proteins, writefile, csv):
     lines = f.readlines()
 
   with open(csv, 'w') as f:
-      printstatement = 'protein,TM3,s3,e3,TM5,s5,e5,TM6,s6,e6,TM7,s7,e7'
-      for line in lines:
-          if line[0] == '>':
-              print('stop')
-              print(printstatement)
-              print(printstatement, file = f)
-              print('start')
-              line = line.replace('>', '')
-              printstatement = line.replace('\n', '')
-              print(printstatement)
-          else:
-              printstatement += ',' + line.replace('\n', '')
+    printstatement = 'protein,TM3,s3,e3,TM5,s5,e5,TM6,s6,e6,TM7,s7,e7'
+    for line in lines:
+      if line[0] == '>':
+        print(printstatement, file = f)
+        line = line.replace('>', '')
+        printstatement = line.replace('\n', '')
+      else:
+        printstatement += ',' + line.replace('\n', '')
 
-      print(printstatement, file = f)
+    print(printstatement, file = f)
 
-scrape_TMs('all_accessions.txt', 'TM.txt', 'TM.csv')
+#scrape_TMs('all_accessions.txt', 'TM.txt', 'TM.csv')

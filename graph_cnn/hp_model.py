@@ -1,6 +1,5 @@
 import sys
 from contextlib import redirect_stdout
-sys.path.append('../')
 import time
 import logging as log
 
@@ -192,23 +191,30 @@ def hpRunModel(run_dir, hparams, params):
     tf.summary.scalar(config.METRIC_ACCURACY, accuracy, step=1)
 
 
-def optimizeHyperparameters():
-    session_num = 0
-
-    for optimizer in config.HP_OPTIMIZER.domain.values:
-    #    for batch_size in config.HP_BATCH_SIZE.domain.values:
-    #        for dropout in config.HP_DROPOUT.domain.values:
-        hparams = {
-            config.HP_OPTIMIZER: optimizer,
+def optimizeHyperparameters(hparams = {
+        config.HP_OPTIMIZER: 'adam',
             config.HP_LEARNINGRATE: 0.001,
             config.HP_BATCH_SIZE: 64,
-            config.HP_DROPOUT: 0.15,
+            config.HP_DROPOUT: 0.2,
             config.HP_TEST_TRAIN_SPLIT: 0.15,
             config.HP_VALIDATION_SPLIT: 0.15,
-        }
-        run_name = "run-%d" % session_num
-        print('--- Starting trial: %s' % run_name)
-        parameters = {h.name: hparams[h] for h in hparams}
-        print(parameters)
-        hpRunModel('logs/hparam_tuning/' + run_name, hparams, parameters)
-        session_num += 1
+        }):
+    session_num = 0
+
+    #for optimizer in config.HP_OPTIMIZER.domain.values:
+    #    for batch_size in config.HP_BATCH_SIZE.domain.values:
+    #        for dropout in config.HP_DROPOUT.domain.values:
+    #hparams = {
+    #    config.HP_OPTIMIZER: 'adamax',
+    #        config.HP_LEARNINGRATE: 0.001,
+    #        config.HP_BATCH_SIZE: 256,
+    #        config.HP_DROPOUT: 0.2,
+    #        config.HP_TEST_TRAIN_SPLIT: 0.15,
+    #        config.HP_VALIDATION_SPLIT: 0.15,
+    #    }
+    run_name = "run-%d" % session_num
+    print('--- Starting trial: %s' % run_name)
+    parameters = {h.name: hparams[h] for h in hparams}
+    print(parameters)
+    hpRunModel('logs/hparam_tuning/' + run_name, hparams, parameters)
+    session_num += 1

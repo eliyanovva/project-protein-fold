@@ -9,21 +9,38 @@
 
 def richness_prot_imbalance(kmers, seqvar, pos_counts, neg_counts, domain, richness_level):
     """
-    This function returns a list of protein kmers from a given TM domain that meet the filtering requirements.
+    This function returns a list of protein kmers from a given TM domain with high distinction ability.
     It's meant to be used with an imbalanced dataset.
+
     Args:
         kmers (list): list of kmers found from all proteins in domain
-        seqvar (dict): key = (string) id,
-            value = (dict) key = (string) kmer, value = (int) freq. of kmer in id
-        pos_counts (dict): key = (string) id, value = (int) # of pos protein-ligand pairs with id as the protein
-        neg_counts (dict): key = (string) id, value = (int) # of neg protein-ligand pairs with id as the protein
+        seqvar (dict): dictionary mapping a protein id to a frequency dictionary
+            ex: seqvar[id]: key = (str) kmer, value = (int) freq. of kmer in id
+        pos_counts (dict): dictionary mapping a protein id to the # of positive protein-ligand pairs with id as the protein
+            ex: If the protein id only binds with the ligands L1, L2, and L3, then pos_counts[id] = 3
+        neg_counts (dict): dictionary mapping a protein id to the # of negative protein-ligand pairs with id as the protein
+            ex: If the protein id doesn't bind with the ligands L1 and L4, then neg_counts[id] = 2
         domain (string): indicates which TM domain the proteins are from
-        richness_level (int or string): indicator of how strict the filter should be
+        richness_level: indicator of how strict the filter should be
 
     Returns:
-        ret (list): list of protein kmers from a given TM domain that meet the filtering requirements
-        ret2 (list): list of protein kmers from a given TM domain that meet the filtering requirements, annotated
-            with the domain they come from
+        ret (list): list of protein kmers from a given TM domain with high distinctive ability
+        ret2 (list): list of protein kmers from a given TM domain with high distinctive ability,
+            annotated with the domain they come from
+
+        Distinctive ability is based on richness, a measure of a kmer's frequency in positive v. negative pairs
+        Richness << 1 indicates higher frequency in negative pairs
+        Richness >> 1 indicates higher frequency in positive pairs
+        Kmers with of richness of ~1 (approx. equal frequency in positive and negative pairs) are removed
+
+        The formula for richness has been adapted to account for imbalances in the dataset.
+        Instead of calculating richness(kmer) as (freq. of kmer in positive pairs)
+                                                ----------------------------------  ,
+                                                 (freq. of kmer in negative pairs)
+
+        richness(kmer) is equivalent to (freq. of kmer in positive pairs) / (# of all kmers in positive pairs)
+                                        ----------------------------------------------------------------------
+                                        (freq. of kmer in negative pairs) / (# of all kmers in negative pairs)
     """
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs
@@ -56,13 +73,6 @@ def richness_prot_imbalance(kmers, seqvar, pos_counts, neg_counts, domain, richn
         neg_prop_by_kmer[kmer] = float(neg_counts_by_kmer[kmer]) / float(total_neg)
 
     richness = {}
-    #dict richness stores an adapted richness measure for all kmers
-    #richness measures whether a kmer was more frequent in positive or negative pairs
-    #richness << 1 indicates higher frequency in negative pairs
-    #richness >> 1 indicates higher frequency in positive pairs
-    # Will remove kmers with a richness ~1 (occur approx. equally in pos. and neg. pairs)
-    #the formula for richness has been adapted to account for imbalances in the dataset
-    #(ie, basing it off the proportion of a kmer in pos or neg pairs, instead of the raw frequency counts for the kmer)
 
     for kmer in kmers:
         if neg_counts_by_kmer[kmer] == 0:       #kmer only occurs in positive pairs
@@ -70,8 +80,8 @@ def richness_prot_imbalance(kmers, seqvar, pos_counts, neg_counts, domain, richn
         else:
             richness[kmer] = pos_prop_by_kmer[kmer] / neg_prop_by_kmer[kmer]
 
-    ret = []                #list of kmers that meet filtering conditions; to be used in final matrix
-    ret2 = []               #for importances list
+    ret = []
+    ret2 = []
 
     if richness_level == 'All':
         for kmer in kmers:
@@ -92,21 +102,33 @@ def richness_prot_imbalance(kmers, seqvar, pos_counts, neg_counts, domain, richn
 
 def richness_prot_balance(kmers, seqvar, pos_counts, neg_counts, domain, richness_level):
     """
-    This function returns a list of protein kmers from a given TM domain that meet the filtering requirements.
+    This function returns a list of protein kmers from a given TM domain with high distinction ability.
     It's meant to be used with an balanced dataset.
+
     Args:
         kmers (list): list of kmers found from all proteins in domain
-        seqvar (dict): key = (string) id,
-            value = (dict) key = (string) kmer, value = (int) freq. of kmer in id
-        pos_counts (dict): key = (string) id, value = (int) # of pos protein-ligand pairs with id as the protein
-        neg_counts (dict): key = (string) id, value = (int) # of neg protein-ligand pairs with id as the protein
+        seqvar (dict): dictionary mapping a protein id to a frequency dictionary
+            ex: seqvar[id]: key = (str) kmer, value = (int) freq. of kmer in id
+        pos_counts (dict): dictionary mapping a protein id to the # of positive protein-ligand pairs with id as the protein
+            ex: If the protein id only binds with the ligands L1, L2, and L3, then pos_counts[id] = 3
+        neg_counts (dict): dictionary mapping a protein id to the # of negative protein-ligand pairs with id as the protein
+            ex: If the protein id doesn't bind with the ligands L1 and L4, then neg_counts[id] = 2
         domain (string): indicates which TM domain the proteins are from
-        richness_level (int or string): indicator of how strict the filter should be
+        richness_level: indicator of how strict the filter should be
 
     Returns:
-        ret (list): list of protein kmers from a given TM domain that meet the filtering requirements
-        ret2 (list): list of protein kmers from a given TM domain that meet the filtering requirements, annotated
+        ret (list): list of protein kmers from a given TM domain with high distinctive ability
+        ret2 (list): list of protein kmers from a given TM domain with high distinctive ability, annotated
             with the domain they come from
+
+                Distinctive ability is based on richness, a measure of a kmer's frequency in positive v. negative pairs
+        Richness << 1 indicates higher frequency in negative pairs
+        Richness >> 1 indicates higher frequency in positive pairs
+        Kmers with of richness of ~1 (approx. equal frequency in positive and negative pairs) are removed
+
+        Richness(kmer) is calculated as (freq. of kmer in positive pairs)
+                                        ----------------------------------  ,
+                                        (freq. of kmer in negative paiirs)
     """
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs
@@ -126,13 +148,6 @@ def richness_prot_balance(kmers, seqvar, pos_counts, neg_counts, domain, richnes
             neg_counts_by_kmer[kmer] += neg_counts[id] * freq_dict[kmer]
 
     richness = {}
-    #dict richness stores an adapted richness measure for all kmers
-    #richness measures whether a kmer was more frequent in positive or negative pairs
-    #richness << 1 indicates higher frequency in negative pairs
-    #richness >> 1 indicates higher frequency in positive pairs
-    # Will remove kmers with a richness ~1 (occur approx. equally in pos. and neg. pairs)
-    #the formula for richness has been adapted to account for imbalances in the dataset
-    #(ie, basing it off the proportion of a kmer in pos or neg pairs, instead of the raw frequency counts for the kmer)
 
     for kmer in kmers:
         if neg_counts_by_kmer[kmer] == 0:       #kmer only occurs in positive pairs
@@ -140,8 +155,8 @@ def richness_prot_balance(kmers, seqvar, pos_counts, neg_counts, domain, richnes
         else:
             richness[kmer] = pos_counts_by_kmer[kmer] / neg_counts_by_kmer[kmer]
 
-    ret = []                #list of kmers that meet filtering conditions; to be used in final matrix
-    ret2 = []               #for importances list
+    ret = []
+    ret2 = []
 
     if richness_level == 'All':
         for kmer in kmers:
@@ -162,19 +177,38 @@ def richness_prot_balance(kmers, seqvar, pos_counts, neg_counts, domain, richnes
 
 def richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, richness_level, kmers):
     """
-    This function returns a list of ligand kmers that meet the filtering requirements.
+    This function returns a list of ligand kmers with high distinction ability.
     It's meant to be used with an imbalanced dataset.
+
     Args:
-        ligand_counts (dict): key = (string) ligand,
-            value = (dict) key = (string) kmer, value = (int) freq. of kmer in ligand
-        pos_by_lig (dict): key = (string) lig, value = (int) # of pos protein-ligand pairs with lig as the ligand
-        neg_by_lig (dict): key = (string) lig, value = (int) # of neg protein-ligand pairs with lig as the ligand
-        richness_level: richness_level (int or string): indicator of how strict the filter should be
+        ligand_counts (dict): dictionary mapping a (str) ligand to a frequency dictionary
+            ex: ligand_counts[lig][kmer] = (int) freq. of kmer in lig
+        pos_by_lig (dict): dictionary mapping a ligand 'lig' to the # of positive
+            protein-ligand pairs with lig as the ligand
+            ex: if a ligand 'lig' binds with the proteins P1 and P2, then pos_by_lig[lig] = 2
+        neg_by_lig (dict): dictionary mapping a ligand 'lig' to the # of negative
+            protein-ligand pairs with lig as the ligand
+            ex: if a ligand 'lig' does not bind with the protein P1, then neg_by_lig[lig] = 1
+        richness_level: indicator of how strict the filter should be
         kmers: list of kmers found from every ligand in ligand_counts
 
     Returns:
         ligand_counts (dict): updated version of the parameter ligand_counts; keys are kmers from kmers_success
-        kmers_success (list): list of ligand kmers that meet the filtering requirements
+        kmers_success (list): list of ligand kmers with high distinctive ability
+
+        Distinctive ability is based on richness, a measure of a kmer's frequency in positive v. negative pairs
+        Richness << 1 indicates higher frequency in negative pairs
+        Richness >> 1 indicates higher frequency in positive pairs
+        Kmers with of richness of ~1 (approx. equal frequency in positive and negative pairs) are removed
+
+        The formula for richness has been adapted to account for imbalances in the dataset.
+        Instead of calculating richness(kmer) as (freq. of kmer in positive pairs)
+                                                ----------------------------------  ,
+                                                 (freq. of kmer in negative pairs)
+
+        richness(kmer) is equivalent to (freq. of kmer in positive pairs) / (# of all kmers in positive pairs)
+                                        ----------------------------------------------------------------------
+                                        (freq. of kmer in negative pairs) / (# of all kmers in negative pairs)
     """
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs
@@ -243,20 +277,33 @@ def richness_lig_imbalance(ligand_counts, pos_by_lig, neg_by_lig, richness_level
 #Ligand filtering for balanced dataset
 def richness_lig_balance(ligand_counts, pos_by_lig, neg_by_lig, richness_level, kmers):
     """
-    This function returns a list of ligand kmers that meet the filtering requirements.
+    This function returns a list of ligand kmers with high distinction ability.
     It's meant to be used with an balanced dataset.
+
     Args:
-        ligand_counts (dict): key = (string) ligand,
-            value = (dict) key = (string) kmer, value = (int) freq. of kmer in ligand
-        pos_by_lig (dict): key = (string) lig, value = (int) # of pos protein-ligand pairs with lig as the ligand
-        neg_by_lig (dict): key = (string) lig, value = (int) # of neg protein-ligand pairs with lig as the ligand
-        richness_level: richness_level (int or string): indicator of how strict the filter should be
+        ligand_counts (dict): dictionary mapping a (str) ligand to a frequency dictionary
+            ex: ligand_counts[lig][kmer] = (int) freq. of kmer in lig
+        pos_by_lig (dict): dictionary mapping a ligand 'lig' to the # of positive
+            protein-ligand pairs with lig as the ligand
+            ex: if a ligand 'lig' binds with the proteins P1 and P2, then pos_by_lig[lig] = 2
+        neg_by_lig (dict): dictionary mapping a ligand 'lig' to the # of negative
+            protein-ligand pairs with lig as the ligand
+            ex: if a ligand 'lig' does not bind with the protein P1, then neg_by_lig[lig] = 1
+        richness_level: indicator of how strict the filter should be
         kmers: list of kmers found from every ligand in ligand_counts
 
     Returns:
         ligand_counts (dict): updated version of the parameter ligand_counts; keys are kmers from kmers_success
         kmers_success (list): list of ligand kmers that meet the filtering requirements
 
+                Distinctive ability is based on richness, a measure of a kmer's frequency in positive v. negative pairs
+        Richness << 1 indicates higher frequency in negative pairs
+        Richness >> 1 indicates higher frequency in positive pairs
+        Kmers with of richness of ~1 (approx. equal frequency in positive and negative pairs) are removed
+
+        Richness(kmer) is calculated as (freq. of kmer in positive pairs)
+                                        ----------------------------------  ,
+                                        (freq. of kmer in negative pairs)
     """
 
     pos_counts_by_kmer = {}             #key: kmer, value: freq. of kmer in pos. pairs

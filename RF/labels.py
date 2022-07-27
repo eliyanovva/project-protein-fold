@@ -1,25 +1,31 @@
 # This script generates dictionaries of logFC, FDR, and classification with protein/ligand pairs as keys
 
 import pandas as pd
-import Globals
+import RF.Globals as Globals
 
 # Generate lists of proteins and ligands
-TM_location = "../data_files/TMdomains/TM.csv"
-smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
-acc_ids = Globals.initialize_protein_list(TM_location)
-ligands = Globals.initialize_ligand_list(smile_location)
+"""TM_location = "../data_files/TMdomains/TM.csv"
+smile_location = "../Ligands_withSMILE/ligand_SMILES.csv
 
-def labels(ligand_folder):
+acc_ids = Globals.initialize_protein_list(TM_location)
+ligands = Globals.initialize_ligand_list(smile_location)"""
+
+def labels(ligand_folder, TM_location, smile_location, accession_to_ensemble):
+    acc_ids = Globals.initialize_protein_list(TM_location)
+    
+    ligands = Globals.initialize_ligand_list(smile_location)
+    
     """
-    This function extracts the experimental logFC and FDR values for the protein-ligand pairs
+    This function extracts the experimental logFC and FDR values for the protein-ligand pairs.
+
     Args:
-        ligand_folder (string): path file to folder of binding experiment datafiles
+        ligand_folder (str): path file to folder of binding experiment datafiles
 
     Returns:
-        logFC_byID (dict): key = (string) id,
-            value = (dict) key = (string) lig, value = (int) logFC value of the id-lig pair
-        FDR_byID (dict): key = (string) id,
-            value = (dict) key = (string) lig, value = (int) FDR value of the id-lig pair
+        logFC_byID (dict): dictionary mapping a protein-ligand pair to its logFC value
+            ex: logFC_byID[id][lig] = logFC of the protein-ligand pair of id-lig
+        FDR_byID (dict): dictionary mapping a protein-ligand pair to its FDR value
+            ex: logFC_byID[id][lig] = FDR of the protein-ligand pair of id-lig
     """
     # Initialize variables
     logFC_byID = {}
@@ -28,20 +34,19 @@ def labels(ligand_folder):
     for id in acc_ids:
         logFC_byID[id] = {}
         FDR_byID[id] = {}
-
-    fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number')
-
+    
+    fas_df = pd.read_csv(accession_to_ensemble, index_col='accession number') #TODO: figure out how this can be edited for cli
     # Read each csv file for the corresponding ligand
+    
     for lig in ligands:
-        file_name = ligand_folder + lig
+        
+        file_name = ligand_folder + '/' + lig
         curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
-
-        for id in acc_ids:
-            ensem_id = fas_df.loc[id]['ensembl_gene_id']  # The ENSEMBLE id corresponding to the accession number
-
-            logFC_byID[id][lig] = (curr_df.loc[ensem_id]['logFC'])  # Find logFC for the ligand-protein pair
-            FDR_byID[id][lig] = (curr_df.loc[ensem_id]['FDR'])  # Find FDR for the ligand-protein pair
-
+        for id in acc_ids: #TODO: A6NM03 is the problem
+                ensem_id = fas_df.loc[id]['ensembl_gene_id']  # The ENSEMBLE id corresponding to the accession number
+                logFC_byID[id][lig] = (curr_df.loc[ensem_id]['logFC'])  # Find logFC for the ligand-protein pair
+                FDR_byID[id][lig] = (curr_df.loc[ensem_id]['FDR'])  # Find FDR for the ligand-protein pair
+    
     # Return dictionaries with protein-ligand pair keys and logFC and FDR values
     return logFC_byID, FDR_byID
 
@@ -58,26 +63,31 @@ def extract_new_combos(FDR_byID, proteins, ligands):
     return new_combos
 
 # Create a classification dictionary with protein-ligand pair keys and bind (1) or not bind (0) as values
-def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list):
+def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list, TM_location, smile_location):
+    acc_ids = Globals.initialize_protein_list(TM_location)
+    ligands = Globals.initialize_ligand_list(smile_location)
     """
-    This function classifies protein-ligand pairs as to whether or not they bind with each other
+    This function classifies protein-ligand pairs as to whether or not they bind with each other.
+
     Args:
-        logFC_byID (dict): key = (string) id,
-            value = (dict) key = (string) lig, value = (int) logFC value of the id-lig pair
-        FDR_byID (dict): key = (string) id,
-            value = (dict) key = (string) lig, value = (int) FDR value of the id-lig pair
-        protein_list (list): list of proteins to be used in the protein-ligand pairs
+        logFC_byID (dict): dictionary mapping a protein-ligand pair to its logFC value
+            ex: logFC_byID[id][lig] = logFC of the protein-ligand pair of id-lig
+        FDR_byID (dict): dictionary mapping a protein-ligand pair to its FDR value
+            ex: logFC_byID[id][lig] = FDR of the protein-ligand pair of id-lig
+        protein_list (list): proteins from all experimental protein-ligand pairs
 
     Returns:
-        classified (dict): key = (string) id,
-            value = (dict) key = (string) lig, value = (int) {1 if id and lig bind, 0 if they do not}
-        pos_counts (dict): key = (string) id, value = (int) # of positive protein-ligand pairs with id as the protein
-        neg_counts (dict): key = (string) id, value = (int) # of positive protein-ligand pairs with id as the protein
-        pos_dict (dict): key = (string) id, value = (list) list of ligands that id binds with
-        neg_dict (dict): key = (string) id, value = (list) list of ligands that id does not bind with
-        proteins_toconsider (list): sorted list of proteins that have at least 1 positive or negative interaction
-            with a ligand
-
+        classified (dict): dictionary mapping a protein-ligand to their classification
+            ex: classified[id][lig] = {1 if id and lig bind, 0 if they do not}
+        pos_counts (dict): dictionary mapping a protein id to the # of positive protein-ligand pairs with id as the protein
+            ex: If the protein id only binds with the ligands L1, L2, and L3, then pos_counts[id] = 3
+        neg_counts (dict): dictionary mapping a protein id to the # of negative protein-ligand pairs with id as the protein
+            ex: If the protein id doesn't bind with the ligands L1 and L4, then neg_counts[id] = 2
+        pos_dict (dict): dictionary mapping a protein id to the list of ligands that id binds with
+            ex: If the protein id only binds with the ligands L1, L2, and L3, then pos_counts[id] = [L1, L2, L3]
+        neg_dict (dict): dictionary mapping a protein id to the list of ligands that id does not bind with
+            ex: If the protein id doesn't bind with the ligands L1 and L4, then neg_counts[id] = [L1, L4]
+        proteins_toconsider (list): sorted list of proteins that have at least 1 positive or negative pair
     """
     classified = {}
     pos_counts = {}

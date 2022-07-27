@@ -3,6 +3,7 @@
 import math as m
 import matplotlib.pyplot as plt
 
+
 #Sum the Mean Impurity Decrease for each category: ligand, sequence, structure and TM3, TM5, TM6, TM7
 with open('../important_features.txt') as f: 
     lines = f.readlines()
@@ -32,9 +33,11 @@ print(domains)
 #Plot relative importance of ligand features, protein sequence, and protein structure
 fig,ax = plt.subplots()
 plt.bar(list(values.keys()), list(values.values()))
-ax.set_title("Feature Importance by Type")
-plt.ylabel('Mean Decrease in Impurity')
-fig.savefig('Relative_Feature_Importance.tiff', dpi = 400)
+plt.xticks(size = 16)
+plt.yticks(size = 12)
+fig.suptitle("Feature Importance by Type", fontsize = 20)
+plt.ylabel('Mean Decrease in Impurity', fontsize = 16)
+fig.savefig('Relative_Feature_Importance.jpg', dpi = 400)
 
 #Plot relative importance of the TM domains
 fig2, ax2 = plt.subplots()

@@ -1,9 +1,10 @@
 import sys
 import os
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(os.path.dirname(CURRENT_DIR)))
 
-import config
+try:
+    import config
+except:
+    pass
 import subprocess
 from graph_cnn.data_prep.bgf_file_prep import BGFDataFile
 from graph_cnn.data_prep.mol_file_prep import MolDataFile

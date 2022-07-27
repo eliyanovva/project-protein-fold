@@ -41,7 +41,6 @@ def initialize_protein_list(TM_location):
 
 def initialize_AA_dict(proteins, TM_csv):
     df = pd.read_csv(TM_csv)
-
     TMs_by_id = {}
     num_rows = df.shape[0]
     for i in range(num_rows):
