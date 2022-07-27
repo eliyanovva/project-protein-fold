@@ -43,7 +43,6 @@ def labels(ligand_folder, TM_location, smile_location, accession_to_ensemble):
         file_name = ligand_folder + '/' + lig
         curr_df = pd.read_csv(file_name, index_col='ensembl_gene_id')
         for id in acc_ids: #TODO: A6NM03 is the problem
-                print(id)
                 ensem_id = fas_df.loc[id]['ensembl_gene_id']  # The ENSEMBLE id corresponding to the accession number
                 logFC_byID[id][lig] = (curr_df.loc[ensem_id]['logFC'])  # Find logFC for the ligand-protein pair
                 FDR_byID[id][lig] = (curr_df.loc[ensem_id]['FDR'])  # Find FDR for the ligand-protein pair
