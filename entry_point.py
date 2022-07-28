@@ -153,17 +153,23 @@ def ppp():
         validation_split = args.validation_split
     else:
         validation_split = 0.15
+
+    if args.callbacks:
+        callbacks = args.callbacks
+    else:
+        callbacks = True
     
     hparams = {
         config.HP_OPTIMIZER: optimizer,
-            config.HP_LEARNINGRATE: learning_rate,
-            config.HP_BATCH_SIZE: fitting_batch_size,
-            config.HP_DROPOUT: dropout,
-            config.HP_TEST_TRAIN_SPLIT: test_train_split,
-            config.HP_VALIDATION_SPLIT: validation_split,
-        }
-
-    if args.model == 'gnn':
+        config.HP_LEARNINGRATE: learning_rate,
+        config.HP_BATCH_SIZE: fitting_batch_size,
+        config.HP_DROPOUT: dropout,
+        config.HP_TEST_TRAIN_SPLIT: test_train_split,
+        config.HP_VALIDATION_SPLIT: validation_split,
+        'callbacks': callbacks
+    }
+    
+    if  (args.gnn_mode) or (args.model == 'gnn'):
         classification = args.gnn_cl == True
         if args.gnn_mode == 'hptuning':
             optimizeHyperparameters(hparams)
@@ -228,7 +234,7 @@ def ppp():
     elif args.model == 'cnn':
         print('CNN CLI is not implemented yet!')
     
-    elif args.model == 'rf':
+    elif (args.rf_mode) or (args.model == 'rf'):
         print('RF CLI is not implemented yet!')
 
         if args.rf_mode == 'eval_pairs':
@@ -291,6 +297,9 @@ def ppp():
             """finally:
                 removeRFDirectories()
                 log.info('Removed temporary directories')"""
+        
+    else:
+        print('error: the following arguments are missing: model')
 
 ppp()
 
