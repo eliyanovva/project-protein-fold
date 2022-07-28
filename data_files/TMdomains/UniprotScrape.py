@@ -44,7 +44,7 @@ def scrape_TMs(proteins, writefile, csv):
       for accession in TM_dict:
         if len(accession["features"]) > 6:
           print(('>' + accession['accession']), file=f)
-          print((accession['sequence'][int(accession["features"][2]['begin'])-6:int(accession["features"][2]['end'])+5]+','+str(int(accession["features"][2]['begin'])-5)+','+str(int(accession["features"][2]['end'])+5)), file=f)
+          print((accession['sequence'][int(accession["features"][2]['begin'])-6:int(accession["features"][2]['end'])+20]+','+str(int(accession["features"][2]['begin'])-5)+','+str(int(accession["features"][2]['end'])+20)), file=f)
           print((accession['sequence'][int(accession["features"][4]['begin'])-6:int(accession["features"][4]['end'])+5]+','+str(int(accession["features"][4]['begin'])-5)+','+str(int(accession["features"][4]['end'])+5)), file=f)
           print((accession['sequence'][int(accession["features"][5]['begin'])-6:int(accession["features"][5]['end'])+5]+','+str(int(accession["features"][5]['begin'])-5)+','+str(int(accession["features"][5]['end'])+5)), file=f)
           print((accession['sequence'][int(accession["features"][6]['begin'])-6:int(accession["features"][6]['end'])+5]+','+str(int(accession["features"][6]['begin'])-5)+','+str(int(accession["features"][6]['end'])+5)), file=f)
@@ -65,4 +65,4 @@ def scrape_TMs(proteins, writefile, csv):
 
     print(printstatement, file = f)
 
-#scrape_TMs('all_accessions.txt', 'TM.txt', 'TM.csv')
+scrape_TMs('all_accessions.txt', 'TM2.txt', 'TM2.csv')
