@@ -35,6 +35,17 @@ class hp_GraphCNN(GraphCNN):
         config.HP_VALIDATION_SPLIT: 0.15,
         config.HP_TEST_TRAIN_SPLIT: 0.15,
         }):
+        """This function conatins the main model architecture. It initializes the data Tensors
+        to be used for training the model, then creates and compiles the model. The real data is
+        NOT accessed by this function.
+
+        Args:
+            hp_optimizer (str, optional): The optimizer to be used for the model.
+            Defaults to 'adagrad'.
+
+        Returns:
+            tf.keras.Model: The neural network model.
+        """
                 
         prot_adj_in = tf.keras.layers.Input(
             shape=(config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_ADJACENCY_MAT_SIZE),
@@ -58,8 +69,10 @@ class hp_GraphCNN(GraphCNN):
 
         dlayer = tf.keras.layers.Dropout(hparams[config.HP_DROPOUT])
 
-        x = tf.keras.layers.Conv1D(filters=1024, kernel_size=3, activation='relu')(prot_adj_in)
+        x = tf.keras.layers.Conv1D(filters=1024, kernel_size=5, activation='relu')(prot_adj_in)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        #x = tf.keras.layers.Conv1D(filters=1024, kernel_size=3, activation='relu')(x)
+        #x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Conv1D(filters=512, kernel_size=3, activation='relu')(x)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Conv1D(filters=256, kernel_size=3, activation='relu')(x)
@@ -71,12 +84,17 @@ class hp_GraphCNN(GraphCNN):
         x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
         
         y = tf.keras.layers.Flatten()(prot_feat_in)
+        y = tf.keras.layers.Dense(1024, activation="relu")(y)
         y = tf.keras.layers.Dense(512, activation="relu")(y)
         y = dlayer(inputs=y, training=True)
         y = tf.keras.layers.Dense(64, activation="relu")(y)
         y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
 
-        z = tf.keras.layers.Flatten()(ligand_adj_in)
+        z = tf.keras.layers.Conv1D(filters=64, kernel_size=3, activation='relu')(ligand_adj_in)
+        z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)
+        z = tf.keras.layers.Conv1D(filters=32, kernel_size=3, activation='relu')(z)
+        z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)        
+        z = tf.keras.layers.Flatten()(z)
         z = tf.keras.layers.Dense(64, activation="relu")(z)
         z = dlayer(inputs=z, training=True)
         z = tf.keras.layers.Dense(16, activation="relu")(z)
@@ -94,12 +112,10 @@ class hp_GraphCNN(GraphCNN):
         out = tf.keras.layers.Dense(512, activation="relu")(out)
         out = tf.keras.layers.Dense(64, activation="relu")(out)
         out_regression = tf.keras.layers.Dense(1, activation="linear")(out)
-        #FIXME: Add the classification layers
-        #out_classification = tf.keras.layers.Dense(1, activation='softmax')(out)
         
         model = tf.keras.Model(
             inputs=[x.input, y.input, z.input, z1.input],
-            outputs= out_regression#, out_classification]
+            outputs= out_regression
         )
         
         with open('results.txt', 'a') as res_log:
@@ -112,6 +128,106 @@ class hp_GraphCNN(GraphCNN):
             loss=tf.keras.losses.MeanSquaredError(),
             metrics=[tf.keras.metrics.LogCoshError(),
                 tf.keras.metrics.RootMeanSquaredError(),
+                ]
+        )
+        return model
+
+    def classificationModel(self, hparams):
+        """This function conatins the main model architecture. It initializes the data Tensors
+        to be used for training the model, then creates and compiles the model. The real data is
+        NOT accessed by this function.
+
+        Args:
+            hp_optimizer (str, optional): The optimizer to be used for the model.
+            Defaults to 'adagrad'.
+
+        Returns:
+            tf.keras.Model: The neural network model.
+        """
+        
+        prot_adj_in = tf.keras.layers.Input(
+            shape=(config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_ADJACENCY_MAT_SIZE),
+            name='Protein-Adjacency-Matrix'
+        )
+        
+        prot_feat_in = tf.keras.layers.Input(
+            shape=(config.PROTEIN_ADJACENCY_MAT_SIZE, config.PROTEIN_FEATURES_COUNT),
+            name='Protein-Feature-Matrix'
+        )
+
+        ligand_adj_in = tf.keras.layers.Input(
+            shape=(config.LIGAND_ADJACENCY_MAT_SIZE, config.LIGAND_ADJACENCY_MAT_SIZE),
+            name='Ligand-Adjacency-Matrix'
+        )
+
+        ligand_feat_in = tf.keras.layers.Input(
+            shape=(config.LIGAND_ADJACENCY_MAT_SIZE, config.LIGAND_FEATURES_COUNT),
+            name='Ligand-Feature-Matrix'
+        )
+
+        dlayer = tf.keras.layers.Dropout(hparams[config.HP_DROPOUT])
+        
+        x = tf.keras.layers.Conv1D(filters=1024, kernel_size=5, activation='relu')(prot_adj_in)
+        x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.Conv1D(filters=512, kernel_size=3, activation='relu')(x)
+        x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.Conv1D(filters=256, kernel_size=3, activation='relu')(x)
+        x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
+        x = tf.keras.layers.Flatten()(x)
+        x = tf.keras.layers.Dense(1024, activation="relu")(x)
+        x = dlayer(inputs=x, training=True)
+        x = tf.keras.layers.Dense(512, activation="relu")(x)
+        x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
+        
+        y = tf.keras.layers.Flatten()(prot_feat_in)
+        y = tf.keras.layers.Dense(1024, activation="relu")(y)
+        y = tf.keras.layers.Dense(512, activation="relu")(y)
+        y = dlayer(inputs=y, training=True)
+        y = tf.keras.layers.Dense(64, activation="relu")(y)
+        y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
+
+        z = tf.keras.layers.Conv1D(filters=64, kernel_size=3, activation='relu')(ligand_adj_in)
+        z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)
+        z = tf.keras.layers.Conv1D(filters=32, kernel_size=3, activation='relu')(z)
+        z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)        
+        z = tf.keras.layers.Flatten()(z)
+        z = tf.keras.layers.Dense(64, activation="relu")(z)
+        z = dlayer(inputs=z, training=True)
+        z = tf.keras.layers.Dense(16, activation="relu")(z)
+        z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
+        
+        z1 = tf.keras.layers.Flatten()(ligand_feat_in)
+        z1 = tf.keras.layers.Dense(256, activation="relu")(z1)
+        z1 = dlayer(inputs=z1, training=True)
+        z1 = tf.keras.layers.Dense(64, activation="relu")(z1)
+        z1 = tf.keras.Model(inputs=ligand_feat_in, outputs=z1)
+
+        combined = tf.keras.layers.concatenate([x.output, y.output, z.output, z1.output])
+        
+        out = tf.keras.layers.Dense(1024, activation="relu")(combined)
+        out = tf.keras.layers.Dense(512, activation="relu")(out)
+        out = tf.keras.layers.Dense(64, activation="relu")(out)
+        out_classification = tf.keras.layers.Dense(1, activation='sigmoid')(out)
+        
+        model = tf.keras.Model(
+            inputs=[x.input, y.input, z.input, z1.input],
+            outputs= out_classification
+        )
+        
+        with open('results.txt', 'a') as res_log:
+            with redirect_stdout(res_log):
+                model.summary()
+            res_log.write('\n')
+
+        model.compile(
+            optimizer=hparams[config.HP_OPTIMIZER],
+            loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+            metrics=[tf.keras.metrics.AUC(),
+                tf.keras.metrics.BinaryAccuracy(),
+                tf.keras.metrics.FalseNegatives(),
+                tf.keras.metrics.FalsePositives(),
+                tf.keras.metrics.TruePositives(),
+                tf.keras.metrics.TrueNegatives()
                 ]
         )
         return model
@@ -171,7 +287,7 @@ def hpBuildModel(params, hparams={
     #explanation = eli5.explain_weights(estimator)
     with open('hp_results.txt', 'a') as res_log:
         results = model.evaluate(X_test, y_test, verbose=True)
-        res_log.write('trial for '.join(params) + '\n')
+        res_log.write('trial for '.join(item for item in params.items()) + '\n')
         res_log.write(' '.join([str(r) for r in results]) + ' \n')
         res_log.write('Timing Benchmarks:\n')
         res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
@@ -217,10 +333,52 @@ def optimizeHyperparameters(hparams = {
     #        config.HP_TEST_TRAIN_SPLIT: 0.15,
     #        config.HP_VALIDATION_SPLIT: 0.15,
     #    }
+
+    temp_hparams = {}
+    for key, value in hparams.items():
+     # removing non-optimizable hparams from dictionary
+        if type(key) == type(config.HP_BATCH_SIZE):
+            temp_hparams[key] = value
+
+    tuning_optimizers(hparams)
+
     run_name = "run-%d" % session_num
     print('--- Starting trial: %s' % run_name)
-    length = len(hparams) - 1
-    parameters = {h.name: hparams[h] for h in length}
+    parameters = {h.name: hparams[h] for h in temp_hparams}
     print(parameters)
     hpRunModel('logs/hparam_tuning/' + run_name, hparams, parameters)
     session_num += 1
+
+
+def tuning_optimizers(hparams):
+    if hparams[config.HP_OPTIMIZER] == 'adagrad':
+        hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.Adagrad(
+            learning_rate=hparams[config.HP_LEARNINGRATE],
+            initial_accumulator_value=0.1,
+            epsilon=1e-07,
+            name='Adagrad',
+        )
+    elif hparams[config.HP_OPTIMIZER] == 'adam':
+        hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.Adam(
+            learning_rate=hparams[config.HP_LEARNINGRATE],
+            beta_1=0.9,
+            beta_2=0.999,
+            epsilon=1e-07,
+            amsgrad=False,
+            name='Adam',
+        )
+    elif hparams[config.HP_OPTIMIZER] == 'adamax':
+        hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.Adamax(
+            learning_rate=hparams[config.HP_LEARNINGRATE],
+            beta_1=0.9,
+            beta_2=0.999,
+            epsilon=1e-07,
+            name='Adamax',
+        )
+    elif hparams[config.HP_OPTIMIZER] == 'sgd':
+        hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.SGD(
+            learning_rate=hparams[config.HP_LEARNINGRATE],
+            momentum=0.0,
+            nesterov=False,
+            name='SGD',
+        )

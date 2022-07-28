@@ -116,6 +116,7 @@ class GraphCNN:
             name='Ligand-Feature-Matrix'
         )
 
+        dlayer = tf.keras.layers.Dropout(0.2)
         
         x = tf.keras.layers.Conv1D(filters=1024, kernel_size=5, activation='relu')(prot_adj_in)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
@@ -127,12 +128,14 @@ class GraphCNN:
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Flatten()(x)
         x = tf.keras.layers.Dense(1024, activation="relu")(x)
+        x = dlayer(inputs=x, training=True)
         x = tf.keras.layers.Dense(512, activation="relu")(x)
         x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
         
         y = tf.keras.layers.Flatten()(prot_feat_in)
         y = tf.keras.layers.Dense(1024, activation="relu")(y)
         y = tf.keras.layers.Dense(512, activation="relu")(y)
+        y = dlayer(inputs=y, training=True)
         y = tf.keras.layers.Dense(64, activation="relu")(y)
         y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
 
@@ -142,11 +145,13 @@ class GraphCNN:
         z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)        
         z = tf.keras.layers.Flatten()(z)
         z = tf.keras.layers.Dense(64, activation="relu")(z)
+        z = dlayer(inputs=z, training=True)
         z = tf.keras.layers.Dense(16, activation="relu")(z)
         z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
         
         z1 = tf.keras.layers.Flatten()(ligand_feat_in)
         z1 = tf.keras.layers.Dense(256, activation="relu")(z1)
+        z1 = dlayer(inputs=z1, training=True)
         z1 = tf.keras.layers.Dense(64, activation="relu")(z1)
         z1 = tf.keras.Model(inputs=ligand_feat_in, outputs=z1)
 
@@ -156,12 +161,10 @@ class GraphCNN:
         out = tf.keras.layers.Dense(512, activation="relu")(out)
         out = tf.keras.layers.Dense(64, activation="relu")(out)
         out_regression = tf.keras.layers.Dense(1, activation="linear")(out)
-        #FIXME: Add the classification layers
-        #out_classification = tf.keras.layers.Dense(1, activation='softmax')(out)
         
         model = tf.keras.Model(
             inputs=[x.input, y.input, z.input, z1.input],
-            outputs= out_regression#, out_classification]
+            outputs= out_regression
         )
         
         with open('results.txt', 'a') as res_log:
@@ -213,6 +216,7 @@ class GraphCNN:
             name='Ligand-Feature-Matrix'
         )
 
+        dlayer = tf.keras.layers.Dropout(0.2)
         
         x = tf.keras.layers.Conv1D(filters=1024, kernel_size=5, activation='relu')(prot_adj_in)
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
@@ -222,12 +226,14 @@ class GraphCNN:
         x = tf.keras.layers.MaxPooling1D(pool_size=(2))(x)
         x = tf.keras.layers.Flatten()(x)
         x = tf.keras.layers.Dense(1024, activation="relu")(x)
+        x = dlayer(inputs=x, training=True)
         x = tf.keras.layers.Dense(512, activation="relu")(x)
         x = tf.keras.Model(inputs=prot_adj_in, outputs=x)
         
         y = tf.keras.layers.Flatten()(prot_feat_in)
         y = tf.keras.layers.Dense(1024, activation="relu")(y)
         y = tf.keras.layers.Dense(512, activation="relu")(y)
+        y = dlayer(inputs=y, training=True)
         y = tf.keras.layers.Dense(64, activation="relu")(y)
         y = tf.keras.Model(inputs=prot_feat_in, outputs=y)
 
@@ -237,11 +243,13 @@ class GraphCNN:
         z = tf.keras.layers.MaxPooling1D(pool_size=(2))(z)        
         z = tf.keras.layers.Flatten()(z)
         z = tf.keras.layers.Dense(64, activation="relu")(z)
+        z = dlayer(inputs=z, training=True)
         z = tf.keras.layers.Dense(16, activation="relu")(z)
         z = tf.keras.Model(inputs=ligand_adj_in, outputs=z)
         
         z1 = tf.keras.layers.Flatten()(ligand_feat_in)
         z1 = tf.keras.layers.Dense(256, activation="relu")(z1)
+        z1 = dlayer(inputs=z1, training=True)
         z1 = tf.keras.layers.Dense(64, activation="relu")(z1)
         z1 = tf.keras.Model(inputs=ligand_feat_in, outputs=z1)
 
@@ -264,7 +272,7 @@ class GraphCNN:
 
         model.compile(
             optimizer=hp_optimizer,
-            loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+            loss=tf.keras.losses.BinaryCrossentropy(),
             metrics=[tf.keras.metrics.AUC(),
                 tf.keras.metrics.BinaryAccuracy(),
                 tf.keras.metrics.FalseNegatives(),
