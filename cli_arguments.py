@@ -2,6 +2,7 @@
 """
 import argparse
 import string
+from xmlrpc.client import boolean
 
 class ModelingParser(argparse.ArgumentParser):
     """This class specifies the Argument Parser which requests for the needed flags
@@ -61,6 +62,12 @@ class ModelingParser(argparse.ArgumentParser):
             type = float
         )
 
+        self.add_argument(
+            '--callbacks',
+            help = 'Determines whether callbacks will be used.',
+            type = bool
+        )
+
         #self.add_argument(
         #    '--time',
         #    help = 'Sets the time to wait after the shape is completed in seconds,\
@@ -68,8 +75,8 @@ class ModelingParser(argparse.ArgumentParser):
         #    type = int
         #)
         self.add_argument(
-            'model',
-            help = 'Specifies the type of model to be used. Choose between "cnn", "gnn", or "rf".'
+            '--model',
+            help = 'Specifies the type of model to be used. Choose between "cnn", "gnn", or "rf". If rf_mode or gnn_mode is declared this argument is unnecessary.'
         )
 
         # run - splits the set into training/testing, and runs the model on that

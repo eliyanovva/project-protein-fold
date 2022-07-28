@@ -61,7 +61,7 @@ class DataHandlers(ABC):
         Raises:
             NotImplementedError: Raised if the method is not implemented in the child class.
         """
-        raise NotImplementedError("Must override methodB")
+        raise NotImplementedError("Must override method")
 
 
     def __fillMatrix(self):
