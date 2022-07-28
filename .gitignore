@@ -9,6 +9,7 @@
 
 # ALl npy files
 *.npy
+*.bgf
 
 # All python cache files
 *.pyc

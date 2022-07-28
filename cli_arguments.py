@@ -1,6 +1,8 @@
 """This module contains the Argument Parser object with the expected arguments for modeling.
 """
 import argparse
+import string
+from xmlrpc.client import boolean
 
 class ModelingParser(argparse.ArgumentParser):
     """This class specifies the Argument Parser which requests for the needed flags
@@ -18,11 +20,54 @@ class ModelingParser(argparse.ArgumentParser):
         self.add_argument(
             '--gnn_cl', help = 'Runs the GNN as a binary classificator instead of a regressor.', action = 'store_true'
         )
+
         self.add_argument(
             '--batch_size',
             help = 'Sets the size of the dataset to be used.',
             type = int
         )
+
+        self.add_argument(
+            '--fitting_batch_size',
+            help = 'Sets the batch size for model fitting.',
+            type = int
+        )
+
+        self.add_argument(
+            '--optimizer',
+            help = 'Sets the optimizer. Choose between "sgd", "adam", "adagrad", and "adamax".',
+        )
+
+        self.add_argument(
+            '--dropout',
+            help = 'Sets the size of the dropout.',
+            type = float
+        )
+
+        self.add_argument(
+            '--test_train_split',
+            help = 'Sets the size of the test train split.',
+            type = float
+        )
+
+        self.add_argument(
+            '--validation_split',
+            help = 'Sets the validation split.',
+            type = float
+        )
+
+        self.add_argument(
+            '--learning_rate',
+            help = 'Sets the learning rate. Cannot adjust if optimizer is not declared.',
+            type = float
+        )
+
+        self.add_argument(
+            '--callbacks',
+            help = 'Determines whether callbacks will be used.',
+            type = bool
+        )
+
         #self.add_argument(
         #    '--time',
         #    help = 'Sets the time to wait after the shape is completed in seconds,\
@@ -30,8 +75,8 @@ class ModelingParser(argparse.ArgumentParser):
         #    type = int
         #)
         self.add_argument(
-            'model',
-            help = 'Specifies the type of model to be used. Choose between "cnn", "gnn", or "rf".'
+            '--model',
+            help = 'Specifies the type of model to be used. Choose between "cnn", "gnn", or "rf". If rf_mode or gnn_mode is declared this argument is unnecessary.'
         )
 
         # run - splits the set into training/testing, and runs the model on that
@@ -57,6 +102,4 @@ class ModelingParser(argparse.ArgumentParser):
         self.add_argument(
             '--rf_mode',
             help = 'Choose between "run", "eval_pairs", "eval_ligands", "eval_proteins". The program defaults to the "run" mode.'
-        )
-
-        
+        )        

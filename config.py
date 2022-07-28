@@ -21,8 +21,8 @@ logging.basicConfig(
 
 PROTEIN_ADJACENCY_MAT_SIZE = 3000
 LIGAND_ADJACENCY_MAT_SIZE = 70
-PROTEIN_FEATURES_COUNT = 10#13
-LIGAND_FEATURES_COUNT = 9#12
+PROTEIN_FEATURES_COUNT = 10
+LIGAND_FEATURES_COUNT = 9
 ATOM_DICT = {'C':0, 'O':1, 'N':2, 'S':3, 'H':4}
 
 #absolute path for a file
@@ -56,9 +56,9 @@ MATRIX_FOLDERS = [
 PVALUE_THRESHOLD = 0.05
 # TODO: explain data file naming conventions somewhere
 
-HP_BATCH_SIZE = hp.HParam('batch_size', hp.Discrete([16, 32, 64, 128, 256, 512]))
-HP_DROPOUT = hp.HParam('dropout', hp.Discrete([0.0, 0.05, 0.1, 0.15, 0.2]))
-HP_OPTIMIZER = hp.HParam('optimizer', hp.Discrete(['adam', 'sgd', 'adagrad']))
+HP_BATCH_SIZE = hp.HParam('batch_size', hp.Discrete([64, 128, 256, 512]))
+HP_DROPOUT = hp.HParam('dropout', hp.Discrete([0.15, 0.2, 0.25]))
+HP_OPTIMIZER = hp.HParam('optimizer', hp.Discrete(['adam', 'adamax']))
 HP_LOSS = hp.HParam('loss', hp.Discrete(['MeanSquaredLogarithmicError', 'MeanAbsoluteError', 'MeanSquaredError']))
 HP_LEARNINGRATE = hp.HParam('learning_rate', hp.Discrete([0.001, 0.0001, 0.00001]))
 HP_VALIDATION_SPLIT = hp.HParam('validation_split', hp.Discrete([0.1, 0.15, 0.2]))

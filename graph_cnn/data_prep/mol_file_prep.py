@@ -2,8 +2,6 @@ import sys
 import logging as log
 import math
 import os
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(os.path.dirname(CURRENT_DIR)))
 
 import numpy as np
 from openbabel import pybel
@@ -53,7 +51,7 @@ class MolDataFile:
 
 
     def __setCompoundName(self):
-        right_index = self.mol_filename.rfind('/')
+        right_index = max(self.mol_filename.rfind('/'), self.mol_filename.rfind('\\'))
         left_index = self.mol_filename.find('.')
         self.compound_name = self.mol_filename[right_index + 1 : left_index]
 

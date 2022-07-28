@@ -4,9 +4,8 @@ from graph_cnn.model import GraphCNN
 import config
 import logging as log
 import numpy as np
-import matplotlib.pyplot as plt
 import tensorflow as tf
-import visuals
+#import visuals
 
 def convertYClassification(y):
     new_y = np.zeros(len(y), dtype=bool)
@@ -15,43 +14,26 @@ def convertYClassification(y):
     return tf.convert_to_tensor(new_y, dtype=bool)
 
 
-def createPlot(mod_history):
-    #plot the loss curve: test vs training
-    fig, ax1 = plt.subplots(1, figsize=(15, 5))
-
-    ax1.plot(mod_history.history["loss"])
-    ax1.plot(mod_history.history["val_loss"])
-    ax1.legend(["train", "test"], loc="upper right")
-    ax1.set_xlabel("Epochs")
-    ax1.set_ylabel("Loss")
-
-    plt.savefig('visuals/loss_graph.png')
-    plt.close()
-
-
-def createScatterPlot(mod_history):
-    # Plot the results
-    loss = mod_history.history['loss']
-    val_loss = mod_history.history['val_loss']
-    epochs = range(len(loss))
-
-    plt.scatter(epochs[1:], loss[1:], c='red', label='Training MSE')
-    plt.scatter(epochs[1:], val_loss[1:], c='blue', label='Validation MSE')
-    plt.title('Training accuracy')
-    plt.legend(loc=0)
-
-    plt.savefig('visuals/training_accuracy.png')
-    plt.close()
-
-
 def createCallbacks():
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
-            monitor = 'val_loss',
+            monitor = 'loss',#was val_loss before
+            min_delta=0.05,
             patience = 0,
             restore_best_weights = True,
             mode = 'min',
-        )
+        ),
+        tf.keras.callbacks.TensorBoard(
+            log_dir='logs/tensorboard',
+            histogram_freq=0,
+            write_graph=True,
+            write_images=False,
+            write_steps_per_second=False,
+            update_freq='epoch',
+            profile_batch=0,
+            embeddings_freq=0,
+            embeddings_metadata=None,
+        ),
     ]
 
     return callbacks

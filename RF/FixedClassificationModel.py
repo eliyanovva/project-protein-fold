@@ -26,13 +26,8 @@ def train(features, labels, BALANCE):
     #Train the model
     clf.fit(X_train,y_train)
 
-    print(len(X_train))
-    print(len(X_test))
-    print()
-
     #Form predictions
     y_pred=clf.predict_proba(X_test)[:,1]
-    print(y_pred)
     log_loss = metrics.log_loss(y_test, y_pred)
     precision, recall, thresholds = metrics.precision_recall_curve(y_test, y_pred)
 
@@ -44,14 +39,13 @@ def train(features, labels, BALANCE):
 
     y_pred=clf.predict(X_test)
 
-    mat = (metrics.matthews_corrcoef(y_test, y_pred))
     bac = metrics.balanced_accuracy_score(y_test, y_pred)
 
     #print('Balanced Accuracy Score: ' + str(bac))
 
     TN, FN, TP, FP = matthew_counts(y_test, y_pred)
 
-    return acc,rec,bac,mat,TN, FN, TP, FP, log_loss
+    return acc,rec,bac,TN, FN, TP, FP, log_loss
 
 #Examine TP and TN rates
 def matthew_counts(y_test, y_pred):

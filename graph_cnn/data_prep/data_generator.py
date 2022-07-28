@@ -1,7 +1,5 @@
 import sys
 import os
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(os.path.dirname(CURRENT_DIR)))
 
 try:
     import config
@@ -12,12 +10,15 @@ from graph_cnn.data_prep.bgf_file_prep import BGFDataFile
 from graph_cnn.data_prep.mol_file_prep import MolDataFile
 
 def createBGFfile(pdb_protein_path, bgf_directory):
-    protein_name = pdb_protein_path[max(pdb_protein_path.rfind('/') + 1, 0) : pdb_protein_path.rfind('.')]
+    protein_name = pdb_protein_path[max(
+        pdb_protein_path.rfind('/') + 1,
+        pdb_protein_path.rfind('\\') + 1,
+        0) : pdb_protein_path.rfind('.')]
     subprocess.run(
         ["obabel " + pdb_protein_path + " -O " + os.path.join(bgf_directory, protein_name  + ".bgf")],
         shell=True
     )
-
+    print('BGF DIRECTORY',  protein_name + ".bgf")
     return os.path.join(bgf_directory, protein_name + ".bgf")
 
 def generateProteinMatrices(

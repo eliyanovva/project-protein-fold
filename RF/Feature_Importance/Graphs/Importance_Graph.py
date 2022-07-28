@@ -37,7 +37,7 @@ plt.xticks(size = 16)
 plt.yticks(size = 12)
 fig.suptitle("Feature Importance by Type", fontsize = 20)
 plt.ylabel('Mean Decrease in Impurity', fontsize = 16)
-fig.savefig('Relative_Feature_Importance.tiff', dpi = 400)
+fig.savefig('Relative_Feature_Importance.jpg', dpi = 400)
 
 #Plot relative importance of the TM domains
 fig2, ax2 = plt.subplots()

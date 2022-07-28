@@ -27,9 +27,12 @@ except:
 
 from data_files.TMdomains.UniprotScrape import scrape_TMs
 from RF.CombineLigandsProteins import develop_matrices
+from RF.FixedClassificationModel import train
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
+    from data_files.TMdomains.UniprotScrape import scrape_TMs
+    from RF.CombineLigandsProteins import develop_matrices
 except:
     pass
 
@@ -105,12 +108,12 @@ def savePredictions(label_list, results):
 
 def make_accession_list(proteins, protein_structure_folder):
     with open(proteins, 'w') as f:
-                protein_files = os.listdir(protein_structure_folder)
-                for p_file in protein_files:
-                    if p_file.endswith('.pdb'):
-                        printline = p_file.replace('AF-', '')
-                        printline = printline.replace('-F1-model_v2.pdb', '')
-                        print(printline, f)
+        protein_files = os.listdir(protein_structure_folder)
+        for p_file in protein_files:
+            if p_file.endswith('.pdb'):
+                printline = p_file.replace('AF-', '')
+                printline = printline.replace('-F1-model_v2.pdb', '')
+                print(printline, file = f)
 
 def ppp():    
     parser = ModelingParser()
@@ -122,10 +125,55 @@ def ppp():
     else:
         batch_size = -1
 
-    if args.model == 'gnn':
+    if args.fitting_batch_size:
+        fitting_batch_size = args.fitting_batch_size
+    else:
+        fitting_batch_size = 64
+    
+    if args.optimizer:
+        optimizer = args.optimizer
+    else:
+        optimizer = 'adam'
+
+    if args.learning_rate:
+        learning_rate = args.learning_rate
+    else:
+        learning_rate = 0.001
+
+    if args.dropout:
+        dropout = args.dropout
+    else:
+        dropout = 0.2
+
+    if args.test_train_split:
+        test_train_split = args.test_train_split
+    else:
+        test_train_split = 0.15
+
+    if args.validation_split:
+        validation_split = args.validation_split
+    else:
+        validation_split = 0.15
+
+    if args.callbacks:
+        callbacks = args.callbacks
+    else:
+        callbacks = True
+    
+    hparams = {
+        config.HP_OPTIMIZER: optimizer,
+        config.HP_LEARNINGRATE: learning_rate,
+        config.HP_BATCH_SIZE: fitting_batch_size,
+        config.HP_DROPOUT: dropout,
+        config.HP_TEST_TRAIN_SPLIT: test_train_split,
+        config.HP_VALIDATION_SPLIT: validation_split,
+        'callbacks': callbacks
+    }
+    
+    if  (args.gnn_mode) or (args.model == 'gnn'):
         classification = args.gnn_cl == True
         if args.gnn_mode == 'hptuning':
-            optimizeHyperparameters()
+            optimizeHyperparameters(hparams)
         
         elif args.gnn_mode == 'eval_tuple':
             X = generateLabelsList()
@@ -187,10 +235,13 @@ def ppp():
     elif args.model == 'cnn':
         print('CNN CLI is not implemented yet!')
     
-    elif args.model == 'rf':
+    elif (args.rf_mode) or (args.model == 'rf'):
         print('RF CLI is not implemented yet!')
 
         if args.rf_mode == 'eval_pairs':
+            print('eval_pairs not implemented')
+
+        else:
             try:
                 createRFDirectories()
             except:
@@ -204,6 +255,7 @@ def ppp():
             TMs = 'temp_TMs/TM.txt'
             TM_csv = 'temp_TMs/TM.csv'
             experimental_results = 'input_results'
+            accession_to_ensemble = 'ensemble_to_accession.csv'
 
             try:
                 make_accession_list(proteins, protein_structure_folder)
@@ -227,7 +279,7 @@ def ppp():
                     print('Failed to create csv file of TM domains')
 
             try:
-                develop_matrices(ligand_csv, TM_csv, Di_fasta, experimental_results)
+                result = develop_matrices(ligand_csv, TM_csv, Di_fasta, experimental_results, accession_to_ensemble)
                 log.info('Created input matrices')
             
             except:
@@ -243,8 +295,31 @@ def ppp():
                 elif not os.path.exists(experimental_results):
                     print("Please input csv files titled by each of the ligands containing data on ensembl_gene_id, logFC, and FDR for each protein")
 
+                elif not os.path.exists(accession_to_ensemble):
+                    print("Please input a file mapping ensemble id to accession id named ensemble_to_accession.csv")
+            
+            try:
+                acc, rec, bac, TN, FN, TP, FP, log_loss = train(result['X'], result['Y'], False)
+                print('ROC-AUC')
+                print(acc)
+                print('Precision-Recall AUC')
+                print(rec)
+                print('Balanced Accuracy')
+                print(bac)
+                print('Binary Cross Entropy')
+                print(log_loss)
+
+            except:
+                print("There was an error in training or testing the model")
+
             finally:
                 removeRFDirectories()
                 log.info('Removed temporary directories')
+        
+    else:
+        print('error: the following arguments are missing: model')
 
 ppp()
+
+#data_generator.generateLigandMatrices()
+#data_generator.generateProteinMatrices()
