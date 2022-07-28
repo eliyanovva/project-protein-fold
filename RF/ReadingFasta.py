@@ -47,7 +47,7 @@ def featurize(seq,k,feat):
         for j in range(k):
             kmer += seq[i + j]
         #update frequency of the kmer in dict
-        if kmer not in dict:
+        if kmer not in freq_dict:
             freq_dict[kmer] = 0
             #add new kmers to feat
             feat.add(kmer)

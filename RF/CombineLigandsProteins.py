@@ -67,7 +67,7 @@ def develop_matrices(smile_location, TM_location, Di_location, experimental_resu
         pairs_by_prot[id] += pos_counts[id]
     for id in neg_counts:
         pairs_by_prot[id] += neg_counts[id]
-    print('pass')
+    
     #Create dict of AA sequences only with proteins from pos or neg pairs
     AA_dict = Globals.initialize_AA_dict(proteins_toconsider, TM_location)
     #TODO: Fix problem that TM.csv is somehow empty
@@ -77,6 +77,7 @@ def develop_matrices(smile_location, TM_location, Di_location, experimental_resu
     AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5)
     AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5)
     AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5)
+    
     
     #Filter the AA kmers for TMs 3,5,6,7
     if BALANCED == True:
