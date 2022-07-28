@@ -123,6 +123,7 @@ def hpBuildModel(params, hparams={
         config.HP_LEARNINGRATE: 0.001,
         config.HP_VALIDATION_SPLIT: 0.15,
         config.HP_TEST_TRAIN_SPLIT: 0.15,
+        'callbacks': True
         }):
     g = hp_GraphCNN()
     g.initialize()
@@ -139,7 +140,10 @@ def hpBuildModel(params, hparams={
     X_test, y_test = g.getTensors(X_test_labels, y_test_labels)
     end_test_data_load = time.time()
 
-    callbacks = run_model.createCallbacks()
+    if hparams['callbacks']:
+        callbacks = run_model.createCallbacks()
+    else:
+        callbacks = None
 
     start_model_fitting = time.time()
     model = g.hp_createModel(hparams)
@@ -193,12 +197,13 @@ def hpRunModel(run_dir, hparams, params):
 
 def optimizeHyperparameters(hparams = {
         config.HP_OPTIMIZER: 'adam',
-            config.HP_LEARNINGRATE: 0.001,
-            config.HP_BATCH_SIZE: 64,
-            config.HP_DROPOUT: 0.2,
-            config.HP_TEST_TRAIN_SPLIT: 0.15,
-            config.HP_VALIDATION_SPLIT: 0.15,
-        }):
+        config.HP_LEARNINGRATE: 0.001,
+        config.HP_BATCH_SIZE: 64,
+        config.HP_DROPOUT: 0.2,
+        config.HP_TEST_TRAIN_SPLIT: 0.15,
+        config.HP_VALIDATION_SPLIT: 0.15,
+        'callbacks': True
+    }):
     session_num = 0
 
     #for optimizer in config.HP_OPTIMIZER.domain.values:
@@ -214,7 +219,8 @@ def optimizeHyperparameters(hparams = {
     #    }
     run_name = "run-%d" % session_num
     print('--- Starting trial: %s' % run_name)
-    parameters = {h.name: hparams[h] for h in hparams}
+    length = len(hparams) - 1
+    parameters = {h.name: hparams[h] for h in length}
     print(parameters)
     hpRunModel('logs/hparam_tuning/' + run_name, hparams, parameters)
     session_num += 1
