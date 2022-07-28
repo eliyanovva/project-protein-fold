@@ -35,7 +35,7 @@ class ModelingParser(argparse.ArgumentParser):
 
         self.add_argument(
             '--optimizer',
-            help = 'Sets the optimizer.',
+            help = 'Sets the optimizer. Choose between "sgd", "adam", "adagrad", and "adamax".',
         )
 
         self.add_argument(
@@ -58,7 +58,7 @@ class ModelingParser(argparse.ArgumentParser):
 
         self.add_argument(
             '--learning_rate',
-            help = 'Sets the learning rate. Adjusts depending on optimizer.',
+            help = 'Sets the learning rate. Cannot adjust if optimizer is not declared.',
             type = float
         )
 
