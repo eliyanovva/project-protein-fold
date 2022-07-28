@@ -291,7 +291,7 @@ def hpBuildModel(params, hparams={
     #explanation = eli5.explain_weights(estimator)
     with open('hp_results.txt', 'a') as res_log:
         results = model.evaluate(X_test, y_test, verbose=True)
-        res_log.write('trial for '.join(item for item in params.items()) + '\n')
+        res_log.write('trial for '.join(str(item) for item in params.items()) + '\n')
         res_log.write(' '.join([str(r) for r in results]) + ' \n')
         res_log.write('Timing Benchmarks:\n')
         res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
