@@ -12,34 +12,52 @@ sys.path.append(MAIN_PACKAGE_DIR)
 try:
     from graph_cnn.data_prep import data_generator
 except:
+    log.debug('failed to import data_generator from graph_cnn.data_prep')
     pass
 try:
     from cli_arguments import ModelingParser
 except:
+    log.debug('failed to import ModelingParser from cli_arguments')
     pass
 try:
     from graph_cnn.model import GraphCNN
 except:
+    log.debug('failed to import GraphCNN from graph_cnn.model')
     pass
 try:
     from graph_cnn.run_model import runModel, runGNN
 except:
+    log.debug('failed to import runModel and runGNN from graph_cnn.run_model')
     pass
 
-from data_files.TMdomains.UniprotScrape import scrape_TMs
-from RF.CombineLigandsProteins import develop_matrices, features_matrix
-from RF.FixedClassificationModel import train
+try:
+    from data_files.TMdomains.UniprotScrape import scrape_TMs
+except:
+    log.debug('failed to import scrape_TMs from data_files.TMdomains.UniprotScrape')
+    pass
+
+try:
+    from RF.CombineLigandsProteins import develop_matrices, features_matrix
+except:
+    log.debug('failed to import develop_matrices and features_matrix from RF.CombineLigandsProteins')
+    pass
+
+try:
+    from RF.FixedClassificationModel import train
+except:
+    log.debug('failed to import train from RF.FixedClassificationModel')
+    pass
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
-    from data_files.TMdomains.UniprotScrape import scrape_TMs
-    from RF.CombineLigandsProteins import develop_matrices
 except:
+    log.debug('failed to import optimizeHyperparameters from graph_cnn.hp_model')
     pass
 
 try:
     import config
 except:
+    log.debug('failed to import config')
     pass
 
 #Create temporary folders to house user-input necessary files
