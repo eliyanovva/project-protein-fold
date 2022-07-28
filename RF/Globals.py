@@ -196,4 +196,3 @@ def categorize(AA_dict):
         categorize_dict[id] = categorize_TMs
     return categorize_dict
 
-print(initialize_ligand_list("../Ligands_withSMILE/ligand_SMILES.csv", ['S']))

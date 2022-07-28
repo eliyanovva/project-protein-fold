@@ -20,7 +20,7 @@ import RF.Duplicates as Duplicates
 Di_location = "../data_files/3DiSequences/fullset_ss.fasta"
 smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"""""
 
-def develop_matrices(smile_location, TM_location, Di_location):
+def develop_matrices(smile_location, TM_location, Di_location, experimental_results, accession_to_ensemble):
     """
     This function creates a feature matrix of kmer frequencies for the experimental protein-ligand pairs,
     and their corresponding vector of classification labels.
@@ -47,12 +47,9 @@ def develop_matrices(smile_location, TM_location, Di_location):
     lig_filter_strength = 'All'
 
     #Create classification dictionary
-    proteins = Globals.initialize_protein_list(TM_location)
-    logFC, FDR = labels.labels('../olfr_de/',"../data_files/TMdomains/TM.csv",
-                               "../Ligands_withSMILE/ligand_SMILES.csv",'../data_files/uniprot_ensemble.csv')
-    classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = \
-        labels.classified_logFC_FDR(logFC, FDR, proteins, smile_location)
-
+    acc_ids = Globals.initialize_protein_list(TM_location)
+    logFC, FDR = labels.labels(experimental_results, TM_location, smile_location, accession_to_ensemble) 
+    classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, acc_ids, TM_location, smile_location)
     total_pos = 0
     total_neg = 0
     for id in pos_counts:
@@ -285,9 +282,9 @@ def features_matrix(smile_location, TM_location, Di_location, accession_to_ensem
     Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 5)
     
     #Import dictionary matching ligands to SMILES String
-    ligand_dict = Globals.initialize_ligand_dict(smile_location)
+    ligand_dict = Globals.initialize_ligand_dict(smile_location, [])
     #Create ligands list
-    ligands = Globals.initialize_ligand_list(smile_location)
+    ligands = Globals.initialize_ligand_list(smile_location, [])
     #Create ligand kmers
     ligand_features, ligand_counts = SmileKmer.ligand_kmer_count(ligand_dict, 5, ligands)
     #Make Ligand Matrix
