@@ -1,5 +1,8 @@
 #This script creates functions to import lists of ligands and proteins and match ligands with SMILES strings
 
+#Methodology for categorization is based on 'String-Based Models for Predicting RNA-Protein Interaction',
+#https://dl.acm.org/doi/10.1145/3107411.3107508
+
 #Imports
 import pandas as pd
 
@@ -11,36 +14,82 @@ import pandas as pd
 #https://www.geeksforgeeks.org/how-to-read-from-a-file-in-python/
 #https://www.w3schools.com/python/ref_string_replace.asp
 
+def initialize_ligand_dict(smile_location, atoms):
+    """
+    This function creates a dictionary mapping ligands to their SMILE formulas.
 
-#Function to create a dictionary of ligands matched to SMILES strings
-def initialize_ligand_dict(smile_location):
+    Args:
+        smile_location (str): file path to data table of ligands and their SMILE formulas
+        atoms (list): atoms we want to be present in all SMILE formulas
+
+    Returns:
+        ligand_dict (dict): dictionary mapping a ligand to its SMILE formula
+    """
     ligand_dict = {}
     df = pd.read_csv(smile_location)
-    files = initialize_ligand_list(smile_location)
+    ligands = df['Ligands'].tolist()
     smiles = df['SMILE'].tolist()
-    for i in range(len(files)):
-        ligand_dict[files[i]] = smiles[i]
+
+    if len(atoms) == 0:
+        for i in range(len(ligands)):
+            ligand_dict[ligands[i]] = smiles[i]
+    else:
+        for i in range(len(ligands)):
+            true = 0
+            for atom in atoms:
+                if smiles[i].count(atom) > 0:
+                    true += 1
+            if true == len(atoms):
+                ligand_dict[ligands[i]] = smiles[i]
 
     return ligand_dict
 
-#List of filenames for ligands that we have matched SMILES strings to
-#Cannot distinguish chirality
-def initialize_ligand_list(smile_location):
-    df = pd.read_csv(smile_location)
-    ligands = df['Ligands'].tolist()
+def initialize_ligand_list(smile_location, atoms):
+    """
+    This function creates a list of every ligand that has a SMILE formula.
+    The current set of SMILE formulas cannot distinguish chirality
 
+    Args:
+        smile_location (str): file path to data table of ligands and their SMILE formulas
+        atoms (list): atoms we want to be present in all SMILE formulas
+
+    Returns:
+        ligands (list): list of every ligand that has a SMILE formula.
+    """
+
+    ligands = list(initialize_ligand_dict(smile_location, atoms).keys())
     return ligands
 
-#Function to create list of protein accessions
 def initialize_protein_list(TM_location):
+    """
+    This function returns a list of proteins that have sequence data for TMs 3,5,6, and 7.
+
+    Args:
+        TM_location (str): file path to data table of proteins and their sequences for TMs 3,5,6 and 7
+
+    Returns:
+        protein_list (list): list of proteins that have sequence data for TMs 3,5,6, and 7
+    """
     df = pd.read_csv(TM_location)
-    protein_list = list(df.iloc[:, 0])
+    proteins = list(df.iloc[:, 0])
 
-    return protein_list
+    return proteins
 
 
-def initialize_AA_dict(proteins, TM_csv):
-    df = pd.read_csv(TM_csv)
+def initialize_AA_dict(proteins, TM_location):
+    """
+    This function returns a dictionary mapping protein ids to the amino acid sequences for TMs 3,5,6, and 7.
+
+    Args:
+        proteins (list): list of proteins to extract TM data for
+        TM_location (str): file path to data table of proteins and their data for TMs 3,5,6 and 7
+
+    Returns:
+        AA_dict (dict): dictionary mapping a protein id to a list of amino acid sequences for TMs 3,5,6, and 7
+            ex: AA_dict[id] = [AA seq for id's TM3, AA seq for id's TM5, AA seq for id's TM6, AA seq for id's TM7]
+    """
+    df = pd.read_csv(TM_location)
+
     TMs_by_id = {}
     num_rows = df.shape[0]
     for i in range(num_rows):
@@ -49,10 +98,25 @@ def initialize_AA_dict(proteins, TM_csv):
             TMs = [str(df.at[i, 'TM3']), str(df.at[i, 'TM5']), str(df.at[i, 'TM6']), str(df.at[i, 'TM7'])]
             TMs_by_id[id] = TMs
 
-    return categorize(TMs_by_id)
+    AA_dict = categorize(TMs_by_id)
 
-def initialize_indices(proteins, TM_csv):
-    df = pd.read_csv(TM_csv)
+    return AA_dict
+
+def initialize_indices(proteins, TM_location):
+    """
+    This function returns a dictionary mapping protein ids to the start/stop indices for TMs 3,5,6, and 7.
+
+    Args:
+        proteins (list): list of proteins to extract TM data for
+        TM_location (str): file path to data table of proteins and their data for TMs 3,5,6 and 7
+
+    Returns:
+        TM_indices (dict): dictionary mapping a protein id to the start/stop indices for TMs 3,5,6, and 7
+            ex: TM_indices[id] = [start index of id's TM3, stop index of id's TM3, start index of id's TM5,
+                                    stop index of id's TM5, start index of id's TM6, stop index of id's TM6,
+                                    start index of id's TM7, stop index of id's TM7]
+    """
+    df = pd.read_csv(TM_location)
 
     TM_indices = {}
     num_rows = df.shape[0]
@@ -65,8 +129,20 @@ def initialize_indices(proteins, TM_csv):
 
     return TM_indices
 
-def initialize_3Di_dict(p_list, TM_location, Di_location):
-    TM_indices = initialize_indices(p_list, TM_location)
+def initialize_3Di_dict(proteins, TM_location, Di_location):
+    """
+    This function returns a dictionary mapping protein ids to the 3di sequences for TMs 3,5,6, and 7.
+
+    Args:
+        proteins (list): list of proteins to extract TM data for
+        TM_location (str): file path to data table of proteins and their data for TMs 3,5,6 and 7
+        Di_location (str): file path to fasta of proteins and their 3di sequences
+
+    Returns:
+        Di_TMs (dict): dictionary mapping protein ids to the 3di sequences for TMs 3,5,6, and 7.
+            ex: Di_TMs[id] = [3di seq for id's TM3, 3di seq for id's TM5, 3di seq for id's TM6, 3di seq for id's TM7]
+    """
+    TM_indices = initialize_indices(proteins, TM_location)
     Di_dict = {}
     Di = open(Di_location, "r")
     lines = Di.readlines()
@@ -92,11 +168,23 @@ def initialize_3Di_dict(p_list, TM_location, Di_location):
 
     return Di_TMs
 
-def categorize(TM_dict):
+def categorize(AA_dict):
+    """
+    This function categorizes the amino acid sequences in AA_dict.
+
+    Args:
+        AA_dict (dict): dictionary mapping a protein id to a list of amino acid sequences for TMs 3,5,6, and 7
+            ex: AA_dict[id] = [AA seq for id's TM3, AA seq for id's TM5, AA seq for id's TM6, AA seq for id's TM7]
+
+    Returns:
+        Updates the AA sequences stored in AA_dict.
+        For each sequence in AA_dict[id], the amino acids are categorized based on their
+            dipole moments and side chain volumes.
+    """
     categorize_dict = {}
-    for id in TM_dict:
+    for id in AA_dict:
         categorize_TMs = []
-        for TM in TM_dict[id]:
+        for TM in AA_dict[id]:
             TM = TM.replace('A', 'a').replace('G', 'a').replace('V', 'a')
             TM = TM.replace('I', 'b').replace('L', 'b').replace('F', 'b').replace('P', 'b')
             TM = TM.replace('Y', 'c').replace('M', 'c').replace('T', 'c').replace('S', 'c')
@@ -107,3 +195,5 @@ def categorize(TM_dict):
             categorize_TMs.append(TM)
         categorize_dict[id] = categorize_TMs
     return categorize_dict
+
+print(initialize_ligand_list("../Ligands_withSMILE/ligand_SMILES.csv", ['S']))
