@@ -278,7 +278,39 @@ def features_matrix(smile_location, TM_location, Di_location, accession_to_ensem
     ligand_dict = Globals.initialize_ligand_dict(smile_location)
     #Create ligands list
     ligands = Globals.initialize_ligand_list(smile_location)
-    #Create ligands matrix
+    #Create ligand kmers
     ligand_features, ligand_counts = SmileKmer.ligand_kmer_count(ligand_dict, 5, ligands)
+    #Make Ligand Matrix
+    lig_mat = []
+    for protein in proteins_toconsider:
+        for ligand in ligands:
+            newseq = []
+            for kmer in ligand_features:
+                if kmer not in ligand_counts[ligand]:
+                    ligand_counts[ligand][kmer]= 0
+                newseq.append(ligand_counts[ligand].get(kmer))
+        lig_mat.append(np.array(newseq))
+    print(lig_mat)
 
+    #Make protein matrices
     AA_mat_TM3 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM3, AA_features_TM3, len(ligands))
+    AA_mat_TM5 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM5, AA_features_TM5, len(ligands))
+    AA_mat_TM6 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM6, AA_features_TM6, len(ligands))
+    AA_mat_TM7 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM7, AA_features_TM7, len(ligands))
+
+    AA_matrix = np.concatenate((np.array(AA_mat_TM3, dtype = np.uint8), np.array(AA_mat_TM5, dtype = np.uint8),
+                                np.array(AA_mat_TM6, dtype = np.uint8), np.array(AA_mat_TM7, dtype = np.uint8)) , axis = 1)
+
+    Di_mat_TM3 = ReadingFasta.make_unfiltered_matrix(Di_seqvar_TM3, Di_features_TM3, len(ligands))
+    Di_mat_TM5 = ReadingFasta.make_unfiltered_matrix(Di_seqvar_TM5, Di_features_TM5, len(ligands))
+    Di_mat_TM6 = ReadingFasta.make_unfiltered_matrix(Di_seqvar_TM6, Di_features_TM6, len(ligands))
+    Di_mat_TM7 = ReadingFasta.make_unfiltered_matrix(Di_seqvar_TM7, Di_features_TM7, len(ligands))
+
+    Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_mat_TM5, dtype = np.uint8),
+                                np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
+
+    #Concatenate AA and 3Di matrices
+    intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
+    
+    #Concatenate protein and ligand matrices
+    final_matrix = np.concatenate((intermed_matrix, np.array(lig_mat, dtype = np.uint8)), axis = 1)
