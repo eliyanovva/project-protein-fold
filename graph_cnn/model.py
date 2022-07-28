@@ -264,7 +264,7 @@ class GraphCNN:
 
         model.compile(
             optimizer=hp_optimizer,
-            loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+            loss=tf.keras.losses.BinaryCrossentropy(),
             metrics=[tf.keras.metrics.AUC(),
                 tf.keras.metrics.BinaryAccuracy(),
                 tf.keras.metrics.FalseNegatives(),
