@@ -18,53 +18,55 @@ class ModelingParser(argparse.ArgumentParser):
         """Adds the expected arguments to the parser class.
         """
         self.add_argument(
-            '--gnn_cl', help = 'Runs the GNN as a binary classificator instead of a regressor.', action = 'store_true'
+            '--gnn_cl',
+            help = 'Runs the GNN as a binary classificator instead of a regressor.',
+            action = 'store_true'
         )
 
         self.add_argument(
             '--batch_size',
-            help = 'Sets the size of the dataset to be used.',
+            help = 'Sets the size of the dataset to be used. Defaults to full dataset',
             type = int
         )
 
         self.add_argument(
             '--fitting_batch_size',
-            help = 'Sets the batch size for model fitting.',
+            help = 'Sets the batch size for model fitting. Defaults to 64.',
             type = int
         )
 
         self.add_argument(
             '--optimizer',
-            help = 'Sets the optimizer. Choose between "sgd", "adam", "adagrad", and "adamax".',
+            help = 'Sets the optimizer. Choose between "sgd", "adam", "adagrad", and "adamax". Defaults to "adam".',
         )
 
         self.add_argument(
             '--dropout',
-            help = 'Sets the size of the dropout.',
+            help = 'Sets the size of the dropout. Defaults to 0.2.',
             type = float
         )
 
         self.add_argument(
             '--test_train_split',
-            help = 'Sets the size of the test train split.',
+            help = 'Sets the size of the test train split. Defaults to 0.15.',
             type = float
         )
 
         self.add_argument(
             '--validation_split',
-            help = 'Sets the validation split.',
+            help = 'Sets the validation split. Defaults to 0.15.',
             type = float
         )
 
         self.add_argument(
             '--learning_rate',
-            help = 'Sets the learning rate. Cannot adjust if optimizer is not declared.',
+            help = 'Sets the learning rate. Cannot adjust if optimizer is not declared. Defaults to 0.001.',
             type = float
         )
 
         self.add_argument(
             '--callbacks',
-            help = 'Determines whether callbacks will be used.',
+            help = 'Determines whether callbacks will be used. Defaults to True.',
             type = bool
         )
 
@@ -86,7 +88,7 @@ class ModelingParser(argparse.ArgumentParser):
         # eval_ligand - takes a ligand and evaluates its binding coefficient with all available proteins.
         self.add_argument(
             '--gnn_mode',
-            help = 'Choose between "run", "hptuning", "eval_tuple", "eval_ligand", "eval_protein". The program defaults to the "run" mode.'
+            help = 'Choose between "run", "hptuning", "eval_tuple", "eval_ligand", "eval_protein". Defaults to the "run" mode.'
         )
 
         self.add_argument(

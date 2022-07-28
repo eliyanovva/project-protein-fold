@@ -123,6 +123,8 @@ class hp_GraphCNN(GraphCNN):
                 model.summary()
             res_log.write('\n')
 
+        tuning_optimizers(hparams)
+
         model.compile(
             optimizer= hparams[config.HP_OPTIMIZER],
             loss=tf.keras.losses.MeanSquaredError(),
@@ -218,6 +220,8 @@ class hp_GraphCNN(GraphCNN):
             with redirect_stdout(res_log):
                 model.summary()
             res_log.write('\n')
+        
+        tuning_optimizers(hparams)
 
         model.compile(
             optimizer=hparams[config.HP_OPTIMIZER],
@@ -339,8 +343,6 @@ def optimizeHyperparameters(hparams = {
      # removing non-optimizable hparams from dictionary
         if type(key) == type(config.HP_BATCH_SIZE):
             temp_hparams[key] = value
-
-    tuning_optimizers(hparams)
 
     run_name = "run-%d" % session_num
     print('--- Starting trial: %s' % run_name)
