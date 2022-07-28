@@ -320,3 +320,5 @@ def features_matrix(smile_location, TM_location, Di_location, accession_to_ensem
     
     #Concatenate protein and ligand matrices
     final_matrix = np.concatenate((intermed_matrix, np.array(lig_mat, dtype = np.uint8)), axis = 1)
+
+    return final_matrix, list(AA_seqvar_TM3.keys()), ligands 

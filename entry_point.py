@@ -277,7 +277,7 @@ def ppp():
                 elif not os.path.exists(TM_csv):
                     print('Failed to create csv file of TM domains')
             try:
-                features_matrix(ligand_csv, TM_csv, Di_fasta, accession_to_ensemble)
+                features, proteins, ligands = features_matrix(ligand_csv, TM_csv, Di_fasta, accession_to_ensemble)
                 log.info('Created feature matrix')
             except:
                 print('Unable to create feature matrix')
@@ -291,7 +291,27 @@ def ppp():
                 
                 elif not os.path.exists(accession_to_ensemble):
                     print("Please input a file mapping ensemble id to accession id named ensemble_to_accession.csv")
+            try:
+                result = develop_matrices('Ligands_withSMILE/ligand_SMILEs.csv', "data_files/TMdomains/TM.csv",
+                       "data_files/3DiSequences/fullset_ss.fasta", "olfr_de", "data_files/uniprot_ensemble.csv")
+                log.info('Developed training matrices')
+            except:
+                print('Unable to develop training matrices')
             
+            try: 
+                acc, rec, bac, TN, FN, TP, FP, log_loss, clf = train(result['X'], result['Y'], False)
+                log.info('Trained model')
+            except:
+                print('Unable to train model')
+            
+            try:
+                y_pred=clf.predict_proba(features)[:,1]
+                print(proteins)
+                print(ligands)
+                print(y_pred)
+                log.info('Formed predictions')
+            except:
+                print('Unable to form predictions')
             finally:
                 removeRFDirectories()
                 log.info('Removed temporary directories')
@@ -344,7 +364,7 @@ def ppp():
                     print("Please input a file mapping ensemble id to accession id named ensemble_to_accession.csv")
             
             try:
-                acc, rec, bac, TN, FN, TP, FP, log_loss = train(result['X'], result['Y'], False)
+                acc, rec, bac, TN, FN, TP, FP, log_loss, clf = train(result['X'], result['Y'], False)
                 print('ROC-AUC')
                 print(acc)
                 print('Precision-Recall AUC')
