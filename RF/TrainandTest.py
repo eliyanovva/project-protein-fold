@@ -121,7 +121,7 @@ a_FP = 0
 loss = 0
 for i in range(50):
     print("run " + str(i))
-    acc, rec, bac, TN, FN, TP, FP, log_loss = FixedClassificationModel.train(testX, testY, BALANCE)
+    acc, rec, bac, TN, FN, TP, FP, log_loss, clf = FixedClassificationModel.train(testX, testY, BALANCE)
     accuracy += acc
     recall += rec
     BAC += bac

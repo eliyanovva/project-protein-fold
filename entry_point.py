@@ -1,3 +1,4 @@
+from distutils import dir_util
 import os
 import shutil
 import sys
@@ -11,34 +12,52 @@ sys.path.append(MAIN_PACKAGE_DIR)
 try:
     from graph_cnn.data_prep import data_generator
 except:
+    log.debug('failed to import data_generator from graph_cnn.data_prep')
     pass
 try:
     from cli_arguments import ModelingParser
 except:
+    log.debug('failed to import ModelingParser from cli_arguments')
     pass
 try:
     from graph_cnn.model import GraphCNN
 except:
+    log.debug('failed to import GraphCNN from graph_cnn.model')
     pass
 try:
     from graph_cnn.run_model import runModel, runGNN
 except:
+    log.debug('failed to import runModel and runGNN from graph_cnn.run_model')
     pass
 
-from data_files.TMdomains.UniprotScrape import scrape_TMs
-from RF.CombineLigandsProteins import develop_matrices
-from RF.FixedClassificationModel import train
+try:
+    from data_files.TMdomains.UniprotScrape import scrape_TMs
+except:
+    log.debug('failed to import scrape_TMs from data_files.TMdomains.UniprotScrape')
+    pass
+
+try:
+    from RF.CombineLigandsProteins import develop_matrices, features_matrix
+except:
+    log.debug('failed to import develop_matrices and features_matrix from RF.CombineLigandsProteins')
+    pass
+
+try:
+    from RF.FixedClassificationModel import train
+except:
+    log.debug('failed to import train from RF.FixedClassificationModel')
+    pass
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
-    from data_files.TMdomains.UniprotScrape import scrape_TMs
-    from RF.CombineLigandsProteins import develop_matrices
 except:
+    log.debug('failed to import optimizeHyperparameters from graph_cnn.hp_model')
     pass
 
 try:
     import config
 except:
+    log.debug('failed to import config')
     pass
 
 #Create temporary folders to house user-input necessary files
@@ -237,25 +256,89 @@ def ppp():
     
     elif (args.rf_mode) or (args.model == 'rf'):
         print('RF CLI is not implemented yet!')
+        protein_structure_folder='input_protein_pdb'
+        Di_fasta = 'foldseek/outputDb_ss.fasta'
+        protein_sequence_folder='input_protein_fasta'
+        ligand_folder='input_ligand_smiles'
+        ligand_csv = 'input_ligand_smiles/smiles.csv'
+        proteins = 'temp_TMs/accessions.txt'
+        TMs = 'temp_TMs/TM.txt'
+        TM_csv = 'temp_TMs/TM.csv'
+        experimental_results = 'input_results'
+        accession_to_ensemble = 'ensemble_to_accession.csv'
 
         if args.rf_mode == 'eval_pairs':
             print('eval_pairs not implemented')
+            try:
+                createRFDirectories()
+            except:
+                print('Failed to make temporary directories')
+
+            try:
+                make_accession_list(proteins, protein_structure_folder)
+                log.info("Made list of accessions")
+            except:
+                print('Failed to create list of protein accessions')
+                if not os.path.exists(protein_structure_folder):
+                    print('Please input pdb files into a folder in your working directory called input_protein_pdb')
+
+            try:
+                scrape_TMs(proteins, TMs, TM_csv)
+                log.info('Scraped TMs')
+            
+            except:
+                print('Unable to scrape TMs')
+                if not os.path.exists(proteins):
+                    print('Cannot find list of accession names')
+                elif not os.path.exists(TMs):
+                    print('Failed to create txt file of TM domains')
+                elif not os.path.exists(TM_csv):
+                    print('Failed to create csv file of TM domains')
+            try:
+                features, proteins, ligands = features_matrix(ligand_csv, TM_csv, Di_fasta, accession_to_ensemble)
+                log.info('Created feature matrix')
+            except:
+                print('Unable to create feature matrix')
+
+                if not os.path.exists(ligand_csv):
+                    print('Please upload a csv of ligand smiles into the file path: "input_ligand_smiles/smiles.csv" with format Ligands,SMILE')
+                
+                elif not os.path.exists(Di_fasta):
+                    print("Please download foldseek from https://github.com/steineggerlab/foldseek")
+                    print("Create a database of 3Di sequences for each protein by following the directions in the HowToConvertTo3Di.txt document")
+                
+                elif not os.path.exists(accession_to_ensemble):
+                    print("Please input a file mapping ensemble id to accession id named ensemble_to_accession.csv")
+            try:
+                result = develop_matrices('Ligands_withSMILE/ligand_SMILEs.csv', "data_files/TMdomains/TM.csv",
+                       "data_files/3DiSequences/fullset_ss.fasta", "olfr_de", "data_files/uniprot_ensemble.csv")
+                log.info('Developed training matrices')
+            except:
+                print('Unable to develop training matrices')
+            
+            try: 
+                acc, rec, bac, TN, FN, TP, FP, log_loss, clf = train(result['X'], result['Y'], False)
+                log.info('Trained model')
+            except:
+                print('Unable to train model')
+            
+            try:
+                y_pred=clf.predict_proba(features)[:,1]
+                print(proteins)
+                print(ligands)
+                print(y_pred)
+                log.info('Formed predictions')
+            except:
+                print('Unable to form predictions')
+            finally:
+                removeRFDirectories()
+                log.info('Removed temporary directories')
 
         else:
             try:
                 createRFDirectories()
             except:
                 print('Failed to make temporary directories')
-            protein_structure_folder='input_protein_pdb'
-            Di_fasta = 'foldseek/outputDb_ss.fasta'
-            protein_sequence_folder='input_protein_fasta'
-            ligand_folder='input_ligand_smiles'
-            ligand_csv = 'input_ligand_smiles/smiles.csv'
-            proteins = 'temp_TMs/accessions.txt'
-            TMs = 'temp_TMs/TM.txt'
-            TM_csv = 'temp_TMs/TM.csv'
-            experimental_results = 'input_results'
-            accession_to_ensemble = 'ensemble_to_accession.csv'
 
             try:
                 make_accession_list(proteins, protein_structure_folder)
@@ -299,7 +382,7 @@ def ppp():
                     print("Please input a file mapping ensemble id to accession id named ensemble_to_accession.csv")
             
             try:
-                acc, rec, bac, TN, FN, TP, FP, log_loss = train(result['X'], result['Y'], False)
+                acc, rec, bac, TN, FN, TP, FP, log_loss, clf = train(result['X'], result['Y'], False)
                 print('ROC-AUC')
                 print(acc)
                 print('Precision-Recall AUC')

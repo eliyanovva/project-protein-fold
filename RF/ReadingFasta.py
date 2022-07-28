@@ -116,3 +116,16 @@ def make_combomatrix(seqvar, feat, mat, new_combos):
             mat.append(np.array(newseq))
     return mat
 
+def make_unfiltered_matrix(seqvar, feat, num_ligands):
+    mat = []
+    for id in list(seqvar.keys()):
+        newseq = []
+        for kmer in feat:
+            if kmer not in seqvar[id]:
+                seqvar[id][kmer]= 0
+            newseq.append(seqvar[id].get(kmer))
+
+        for i in range(num_ligands):
+            mat.append(np.array(newseq))
+    
+    return mat

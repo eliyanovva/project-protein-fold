@@ -45,7 +45,7 @@ def train(features, labels, BALANCE):
 
     TN, FN, TP, FP = matthew_counts(y_test, y_pred)
 
-    return acc,rec,bac,TN, FN, TP, FP, log_loss
+    return acc,rec,bac,TN, FN, TP, FP, log_loss, clf
 
 #Examine TP and TN rates
 def matthew_counts(y_test, y_pred):

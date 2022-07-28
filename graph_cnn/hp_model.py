@@ -123,6 +123,8 @@ class hp_GraphCNN(GraphCNN):
                 model.summary()
             res_log.write('\n')
 
+        tuning_optimizers(hparams)
+
         model.compile(
             optimizer= hparams[config.HP_OPTIMIZER],
             loss=tf.keras.losses.MeanSquaredError(),
@@ -218,6 +220,8 @@ class hp_GraphCNN(GraphCNN):
             with redirect_stdout(res_log):
                 model.summary()
             res_log.write('\n')
+        
+        tuning_optimizers(hparams)
 
         model.compile(
             optimizer=hparams[config.HP_OPTIMIZER],
@@ -287,7 +291,7 @@ def hpBuildModel(params, hparams={
     #explanation = eli5.explain_weights(estimator)
     with open('hp_results.txt', 'a') as res_log:
         results = model.evaluate(X_test, y_test, verbose=True)
-        res_log.write('trial for '.join(item for item in params.items()) + '\n')
+        res_log.write('trial for '.join(str(item) for item in params.items()) + '\n')
         res_log.write(' '.join([str(r) for r in results]) + ' \n')
         res_log.write('Timing Benchmarks:\n')
         res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
@@ -339,8 +343,6 @@ def optimizeHyperparameters(hparams = {
      # removing non-optimizable hparams from dictionary
         if type(key) == type(config.HP_BATCH_SIZE):
             temp_hparams[key] = value
-
-    tuning_optimizers(hparams)
 
     run_name = "run-%d" % session_num
     print('--- Starting trial: %s' % run_name)

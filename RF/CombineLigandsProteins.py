@@ -1,13 +1,13 @@
 #This script creates the protein matrix and ligand matrix to train and test the Random Forest Algorithm
 
 #Imports
-import SmileKmer as SmileKmer
+import RF.SmileKmer as SmileKmer
 import numpy as np
-import ReadingFasta as ReadingFasta
-import Globals as Globals
-import labels as labels
-import Filtering as Filtering
-import Duplicates as Duplicates
+import RF.ReadingFasta as ReadingFasta
+import RF.Globals as Globals
+import RF.labels as labels
+import RF.Filtering as Filtering
+import RF.Duplicates as Duplicates
 
 #Additional coding help from:
 #https://numpy.org/doc/stable/reference/generated/numpy.repeat.html
@@ -20,7 +20,7 @@ import Duplicates as Duplicates
 Di_location = "../data_files/3DiSequences/fullset_ss.fasta"
 smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"""""
 
-def develop_matrices(smile_location, TM_location, Di_location):
+def develop_matrices(smile_location, TM_location, Di_location, experimental_results, accession_to_ensemble):
     """
     This function creates a feature matrix of kmer frequencies for the experimental protein-ligand pairs,
     and their corresponding vector of classification labels.
@@ -47,12 +47,9 @@ def develop_matrices(smile_location, TM_location, Di_location):
     lig_filter_strength = 'All'
 
     #Create classification dictionary
-    proteins = Globals.initialize_protein_list(TM_location)
-    logFC, FDR = labels.labels('../olfr_de/',"../data_files/TMdomains/TM.csv",
-                               "../Ligands_withSMILE/ligand_SMILES.csv",'../data_files/uniprot_ensemble.csv')
-    classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = \
-        labels.classified_logFC_FDR(logFC, FDR, proteins, smile_location)
-
+    acc_ids = Globals.initialize_protein_list(TM_location)
+    logFC, FDR = labels.labels(experimental_results, TM_location, smile_location, accession_to_ensemble) 
+    classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, acc_ids, TM_location, smile_location)
     total_pos = 0
     total_neg = 0
     for id in pos_counts:
@@ -258,5 +255,70 @@ def develop_matrices(smile_location, TM_location, Di_location):
     'Di3_seqs':Di_seqvar_TM3, 'Di5_seqs':Di_seqvar_TM5, 'Di6_seqs':Di_seqvar_TM6, 'Di7_seqs':Di_seqvar_TM7,
     'lig_counts':lig_counts_filter}
 
-result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
-                        "../data_files/3DiSequences/fullset_ss.fasta")
+#result = develop_matrices('../Ligands_withSMILE/ligand_SMILEs.csv', "../data_files/TMdomains/TM.csv",
+                       # "../data_files/3DiSequences/fullset_ss.fasta")
+
+#The following function creates a features matrix without requiring the experimental data
+def features_matrix(smile_location, TM_location, Di_location, accession_to_ensemble):
+    #NO FILTERING
+
+    #List of proteins
+    proteins_toconsider = Globals.initialize_protein_list(TM_location)
+    
+    #Dictionary of protein and TM to sequence
+    AA_dict = Globals.initialize_AA_dict(proteins_toconsider, TM_location)
+    #Make AA output for TMs 3,5,6,7
+    AA_seqvar_TM3, AA_features_TM3 = ReadingFasta.make_seqvar_TMS(AA_dict, 0, 5)
+    AA_seqvar_TM5, AA_features_TM5 = ReadingFasta.make_seqvar_TMS(AA_dict, 1, 5)
+    AA_seqvar_TM6, AA_features_TM6 = ReadingFasta.make_seqvar_TMS(AA_dict, 2, 5)
+    AA_seqvar_TM7, AA_features_TM7 = ReadingFasta.make_seqvar_TMS(AA_dict, 3, 5)
+
+    #Create dict of 3Di sequences 
+    Di_dict = Globals.initialize_3Di_dict(proteins_toconsider, TM_location, Di_location)
+    #Create 3Di output for TMs 3,5,6,7
+    Di_seqvar_TM3, Di_features_TM3 = ReadingFasta.make_seqvar_TMS(Di_dict, 0, 5)
+    Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5)
+    Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5)
+    Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 5)
+    
+    #Import dictionary matching ligands to SMILES String
+    ligand_dict = Globals.initialize_ligand_dict(smile_location, [])
+    #Create ligands list
+    ligands = Globals.initialize_ligand_list(smile_location, [])
+    #Create ligand kmers
+    ligand_features, ligand_counts = SmileKmer.ligand_kmer_count(ligand_dict, 5, ligands)
+    #Make Ligand Matrix
+    lig_mat = []
+    for protein in proteins_toconsider:
+        for ligand in ligands:
+            newseq = []
+            for kmer in ligand_features:
+                if kmer not in ligand_counts[ligand]:
+                    ligand_counts[ligand][kmer]= 0
+                newseq.append(ligand_counts[ligand].get(kmer))
+            lig_mat.append(np.array(newseq))
+
+    #Make protein matrices
+    AA_mat_TM3 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM3, AA_features_TM3, len(ligands))
+    AA_mat_TM5 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM5, AA_features_TM5, len(ligands))
+    AA_mat_TM6 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM6, AA_features_TM6, len(ligands))
+    AA_mat_TM7 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM7, AA_features_TM7, len(ligands))
+
+    AA_matrix = np.concatenate((np.array(AA_mat_TM3, dtype = np.uint8), np.array(AA_mat_TM5, dtype = np.uint8),
+                                np.array(AA_mat_TM6, dtype = np.uint8), np.array(AA_mat_TM7, dtype = np.uint8)) , axis = 1)
+
+    Di_mat_TM3 = ReadingFasta.make_unfiltered_matrix(Di_seqvar_TM3, Di_features_TM3, len(ligands))
+    Di_mat_TM5 = ReadingFasta.make_unfiltered_matrix(Di_seqvar_TM5, Di_features_TM5, len(ligands))
+    Di_mat_TM6 = ReadingFasta.make_unfiltered_matrix(Di_seqvar_TM6, Di_features_TM6, len(ligands))
+    Di_mat_TM7 = ReadingFasta.make_unfiltered_matrix(Di_seqvar_TM7, Di_features_TM7, len(ligands))
+
+    Di_matrix = np.concatenate((np.array(Di_mat_TM3, dtype = np.uint8), np.array(Di_mat_TM5, dtype = np.uint8),
+                                np.array(Di_mat_TM6, dtype = np.uint8), np.array(Di_mat_TM7, dtype = np.uint8)) , axis = 1)
+
+    #Concatenate AA and 3Di matrices
+    intermed_matrix = np.concatenate((np.array(AA_matrix, dtype = np.uint8), np.array(Di_matrix, dtype = np.uint8)) , axis = 1)
+    
+    #Concatenate protein and ligand matrices
+    final_matrix = np.concatenate((intermed_matrix, np.array(lig_mat, dtype = np.uint8)), axis = 1)
+
+    return final_matrix, list(AA_seqvar_TM3.keys()), ligands 
