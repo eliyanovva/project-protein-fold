@@ -123,8 +123,9 @@ def smile_list(smile, k):
 #   -atoms in the backbone
 #   -atoms within an aromatic ring
 #   -any bond that isn't a single bond
-#   -all atoms within a set of brackets
-#   -all atoms within a side chain
+#   -all atoms within a side chain,
+#   -all atoms enclosed within a set of brackets ([])
+#
 
 def form_letters(smile):
     """

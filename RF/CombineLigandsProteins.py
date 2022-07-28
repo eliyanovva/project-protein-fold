@@ -48,9 +48,10 @@ def develop_matrices(smile_location, TM_location, Di_location):
 
     #Create classification dictionary
     proteins = Globals.initialize_protein_list(TM_location)
-    logFC, FDR = labels.labels('../olfr_de/')
-    classified, pos_counts, neg_counts,\
-    pos_dict, neg_dict, proteins_toconsider = labels.classified_logFC_FDR(logFC, FDR, proteins)
+    logFC, FDR = labels.labels('../olfr_de/',"../data_files/TMdomains/TM.csv",
+                               "../Ligands_withSMILE/ligand_SMILES.csv",'../data_files/uniprot_ensemble.csv')
+    classified, pos_counts, neg_counts, pos_dict, neg_dict, proteins_toconsider = \
+        labels.classified_logFC_FDR(logFC, FDR, proteins, smile_location)
 
     total_pos = 0
     total_neg = 0
@@ -64,14 +65,11 @@ def develop_matrices(smile_location, TM_location, Di_location):
     #BALANCED = True => balanced dataset
     #BALANCED = False => imbalanced dataset
     #affects the training algorithm and filtering protocol used
-    """
+
     if (total_pos / total_neg > 1.5) | (total_pos / total_neg > 1.5):
         BALANCED = False
     else:
         BALANCED = True
-    """
-
-    BALANCED = False        #hardcoded for now; can uncomment the lines above
 
     pairs_by_prot = {}      #key = protein id, value = # of pairs involving the protein
 

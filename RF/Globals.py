@@ -20,6 +20,7 @@ def initialize_ligand_dict(smile_location, atoms):
 
     Args:
         smile_location (str): file path to data table of ligands and their SMILE formulas
+        atoms (list): atoms we want to be present in all SMILE formulas
 
     Returns:
         ligand_dict (dict): dictionary mapping a ligand to its SMILE formula
@@ -50,6 +51,7 @@ def initialize_ligand_list(smile_location, atoms):
 
     Args:
         smile_location (str): file path to data table of ligands and their SMILE formulas
+        atoms (list): atoms we want to be present in all SMILE formulas
 
     Returns:
         ligands (list): list of every ligand that has a SMILE formula.

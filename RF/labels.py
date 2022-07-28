@@ -6,13 +6,14 @@ import Globals as Globals
 # Generate lists of proteins and ligands
 TM_location = "../data_files/TMdomains/TM.csv"
 smile_location = "../Ligands_withSMILE/ligand_SMILES.csv"
+ensemble_location = '../data_files/uniprot_ensemble.csv'
 
 acc_ids = Globals.initialize_protein_list(TM_location)
 ligands = Globals.initialize_ligand_list(smile_location, [])
 
-def labels(ligand_folder, TM_location, smile_location, ):
+def labels(ligand_folder, TM_location, smile_location, ensemble_location):
     acc_ids = Globals.initialize_protein_list(TM_location)
-    ligands = Globals.initialize_ligand_list(smile_location)
+    ligands = Globals.initialize_ligand_list(smile_location,[])
     """
     This function extracts the experimental logFC and FDR values for the protein-ligand pairs.
 
@@ -33,7 +34,7 @@ def labels(ligand_folder, TM_location, smile_location, ):
         logFC_byID[id] = {}
         FDR_byID[id] = {}
 
-    fas_df = pd.read_csv('uniprot_ensemble.csv', index_col='accession number') #TODO: figure out how this can be edited for cli
+    fas_df = pd.read_csv(ensemble_location, index_col='accession number') #TODO: figure out how this can be edited for cli
 
     # Read each csv file for the corresponding ligand
     for lig in ligands:
@@ -62,9 +63,7 @@ def extract_new_combos(FDR_byID, proteins, ligands):
     return new_combos
 
 # Create a classification dictionary with protein-ligand pair keys and bind (1) or not bind (0) as values
-def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list, TM_location, smile_location):
-    acc_ids = Globals.initialize_protein_list(TM_location)
-    ligands = Globals.initialize_ligand_list(smile_location)
+def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list, smile_location):
     """
     This function classifies protein-ligand pairs as to whether or not they bind with each other.
 
@@ -88,6 +87,7 @@ def classified_logFC_FDR(logFC_byID, FDR_byID, protein_list, TM_location, smile_
             ex: If the protein id doesn't bind with the ligands L1 and L4, then neg_counts[id] = [L1, L4]
         proteins_toconsider (list): sorted list of proteins that have at least 1 positive or negative pair
     """
+    ligands = Globals.initialize_ligand_list(smile_location, [])
     classified = {}
     pos_counts = {}
     neg_counts = {}

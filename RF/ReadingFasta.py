@@ -94,10 +94,10 @@ def makematrix(seqvar, feat, mat, unique_l, counts):
             if kmer not in seqvar[id]:          # Check if kmer can't be found in the sequence
                 seqvar[id][kmer] = 0
             newseq.append(seqvar[id].get(kmer))
-
         for lig in counts[id]:
             if unique_l.count(lig) != 0:        #Check that the ligand is unique
                 mat.append(np.array(newseq))
+
     return mat
 
 def make_combomatrix(seqvar, feat, mat, new_combos):

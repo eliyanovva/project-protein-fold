@@ -153,7 +153,7 @@ def richness_prot_balance(kmers, seqvar, pos_counts, neg_counts, domain, richnes
         if neg_counts_by_kmer[kmer] == 0:       #kmer only occurs in positive pairs
             richness[kmer] = 10000
         else:
-            richness[kmer] = pos_counts_by_kmer[kmer] / neg_counts_by_kmer[kmer]
+            richness[kmer] = (pos_counts_by_kmer[kmer] + 1) / (neg_counts_by_kmer[kmer] + 1)
 
     ret = []
     ret2 = []
@@ -328,7 +328,7 @@ def richness_lig_balance(ligand_counts, pos_by_lig, neg_by_lig, richness_level, 
         if neg_counts_by_kmer[kmer] == 0:       #kmer only occurs in positive pairs
             richness[kmer] = 10000
         else:
-            richness[kmer] = pos_counts_by_kmer[kmer] / neg_counts_by_kmer[kmer]
+            richness[kmer] = (pos_counts_by_kmer[kmer] + 1) / (neg_counts_by_kmer[kmer] + 1)
 
     kmers_success = []          #list of kmers that meet the filtering requirements
     kmers_failed = []           #list of kmers that don't meet the filtering requirements
