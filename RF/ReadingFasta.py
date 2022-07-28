@@ -104,3 +104,7 @@ def make_combomatrix(seqvar, feat, mat, new_combos):
             mat.append(np.array(newseq))
     return mat
 
+def make_unfiltered_matrix(seqvar, feat, num_ligands):
+    print(seqvar)
+    print(feat)
+    print(num_ligands)

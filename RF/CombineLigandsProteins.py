@@ -273,13 +273,12 @@ def features_matrix(smile_location, TM_location, Di_location, accession_to_ensem
     Di_seqvar_TM5, Di_features_TM5 = ReadingFasta.make_seqvar_TMS(Di_dict, 1, 5)
     Di_seqvar_TM6, Di_features_TM6 = ReadingFasta.make_seqvar_TMS(Di_dict, 2, 5)
     Di_seqvar_TM7, Di_features_TM7 = ReadingFasta.make_seqvar_TMS(Di_dict, 3, 5)
-
+    
     #Import dictionary matching ligands to SMILES String
     ligand_dict = Globals.initialize_ligand_dict(smile_location)
+    #Create ligands list
+    ligands = Globals.initialize_ligand_list(smile_location)
     #Create ligands matrix
-    ligand_features, ligand_counts = SmileKmer.ligand_kmer_count(ligand_dict, 5, Globals.initialize_ligand_list)
+    ligand_features, ligand_counts = SmileKmer.ligand_kmer_count(ligand_dict, 5, ligands)
 
-    AA_mat_TM3 = ReadingFasta.makematrix(AA_seqvar_TM3, AA_features_TM3, [], unique_ligands, neg_dict)
-    AA_mat_TM5 = ReadingFasta.makematrix(AA_seqvar_TM5, AA_features_TM5, [], unique_ligands, neg_dict)
-    AA_mat_TM6 = ReadingFasta.makematrix(AA_seqvar_TM6, AA_features_TM6, [], unique_ligands, neg_dict)
-    AA_mat_TM7 = ReadingFasta.makematrix(AA_seqvar_TM7, AA_features_TM7, [], unique_ligands, neg_dict)
+    AA_mat_TM3 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM3, AA_features_TM3, len(ligands))
