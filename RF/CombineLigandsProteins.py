@@ -289,8 +289,7 @@ def features_matrix(smile_location, TM_location, Di_location, accession_to_ensem
                 if kmer not in ligand_counts[ligand]:
                     ligand_counts[ligand][kmer]= 0
                 newseq.append(ligand_counts[ligand].get(kmer))
-        lig_mat.append(np.array(newseq))
-    print(lig_mat)
+            lig_mat.append(np.array(newseq))
 
     #Make protein matrices
     AA_mat_TM3 = ReadingFasta.make_unfiltered_matrix(AA_seqvar_TM3, AA_features_TM3, len(ligands))
