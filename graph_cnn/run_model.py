@@ -17,7 +17,7 @@ def convertYClassification(y):
 def createCallbacks():
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
-            monitor = 'val_loss',
+            monitor = 'loss',#was val_loss before
             min_delta=0.05,
             patience = 0,
             restore_best_weights = True,

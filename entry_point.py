@@ -27,6 +27,7 @@ except:
 
 from data_files.TMdomains.UniprotScrape import scrape_TMs
 from RF.CombineLigandsProteins import develop_matrices
+from RF.FixedClassificationModel import train
 
 try:
     from graph_cnn.hp_model import optimizeHyperparameters
@@ -153,17 +154,23 @@ def ppp():
         validation_split = args.validation_split
     else:
         validation_split = 0.15
+
+    if args.callbacks:
+        callbacks = args.callbacks
+    else:
+        callbacks = True
     
     hparams = {
         config.HP_OPTIMIZER: optimizer,
-            config.HP_LEARNINGRATE: learning_rate,
-            config.HP_BATCH_SIZE: fitting_batch_size,
-            config.HP_DROPOUT: dropout,
-            config.HP_TEST_TRAIN_SPLIT: test_train_split,
-            config.HP_VALIDATION_SPLIT: validation_split,
-        }
-
-    if args.model == 'gnn':
+        config.HP_LEARNINGRATE: learning_rate,
+        config.HP_BATCH_SIZE: fitting_batch_size,
+        config.HP_DROPOUT: dropout,
+        config.HP_TEST_TRAIN_SPLIT: test_train_split,
+        config.HP_VALIDATION_SPLIT: validation_split,
+        'callbacks': callbacks
+    }
+    
+    if  (args.gnn_mode) or (args.model == 'gnn'):
         classification = args.gnn_cl == True
         if args.gnn_mode == 'hptuning':
             optimizeHyperparameters(hparams)
@@ -228,10 +235,13 @@ def ppp():
     elif args.model == 'cnn':
         print('CNN CLI is not implemented yet!')
     
-    elif args.model == 'rf':
+    elif (args.rf_mode) or (args.model == 'rf'):
         print('RF CLI is not implemented yet!')
 
         if args.rf_mode == 'eval_pairs':
+            print('eval_pairs not implemented')
+
+        else:
             try:
                 createRFDirectories()
             except:
@@ -269,7 +279,7 @@ def ppp():
                     print('Failed to create csv file of TM domains')
 
             try:
-                develop_matrices(ligand_csv, TM_csv, Di_fasta, experimental_results, accession_to_ensemble)
+                result = develop_matrices(ligand_csv, TM_csv, Di_fasta, experimental_results, accession_to_ensemble)
                 log.info('Created input matrices')
             
             except:
@@ -287,10 +297,27 @@ def ppp():
 
                 elif not os.path.exists(accession_to_ensemble):
                     print("Please input a file mapping ensemble id to accession id named ensemble_to_accession.csv")
+            
+            try:
+                acc, rec, bac, TN, FN, TP, FP, log_loss = train(result['X'], result['Y'], False)
+                print('ROC-AUC')
+                print(acc)
+                print('Precision-Recall AUC')
+                print(rec)
+                print('Balanced Accuracy')
+                print(bac)
+                print('Binary Cross Entropy')
+                print(log_loss)
 
-            """finally:
+            except:
+                print("There was an error in training or testing the model")
+
+            finally:
                 removeRFDirectories()
-                log.info('Removed temporary directories')"""
+                log.info('Removed temporary directories')
+        
+    else:
+        print('error: the following arguments are missing: model')
 
 ppp()
 

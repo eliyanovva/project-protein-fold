@@ -2,6 +2,7 @@
 """
 import argparse
 import string
+from xmlrpc.client import boolean
 
 class ModelingParser(argparse.ArgumentParser):
     """This class specifies the Argument Parser which requests for the needed flags
@@ -34,7 +35,7 @@ class ModelingParser(argparse.ArgumentParser):
 
         self.add_argument(
             '--optimizer',
-            help = 'Sets the optimizer.',
+            help = 'Sets the optimizer. Choose between "sgd", "adam", "adagrad", and "adamax".',
         )
 
         self.add_argument(
@@ -57,8 +58,14 @@ class ModelingParser(argparse.ArgumentParser):
 
         self.add_argument(
             '--learning_rate',
-            help = 'Sets the learning rate. Adjusts depending on optimizer.',
+            help = 'Sets the learning rate. Cannot adjust if optimizer is not declared.',
             type = float
+        )
+
+        self.add_argument(
+            '--callbacks',
+            help = 'Determines whether callbacks will be used.',
+            type = bool
         )
 
         #self.add_argument(
@@ -68,8 +75,8 @@ class ModelingParser(argparse.ArgumentParser):
         #    type = int
         #)
         self.add_argument(
-            'model',
-            help = 'Specifies the type of model to be used. Choose between "cnn", "gnn", or "rf".'
+            '--model',
+            help = 'Specifies the type of model to be used. Choose between "cnn", "gnn", or "rf". If rf_mode or gnn_mode is declared this argument is unnecessary.'
         )
 
         # run - splits the set into training/testing, and runs the model on that
