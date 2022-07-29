@@ -28,10 +28,10 @@ with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
 class hp_GraphCNN(GraphCNN):
     
     def hp_createModel(self, hparams={
-        #config.HP_OPTIMIZER: 'adagrad',
-        #config.HP_BATCH_SIZE: 32,
-        #config.HP_DROPOUT: 0.15,
-        #config.HP_LEARNINGRATE: 0.001,
+        config.HP_OPTIMIZER: 'adam',
+        config.HP_BATCH_SIZE: 64,
+        config.HP_DROPOUT: 0.2,
+        config.HP_LEARNINGRATE: 0.001,
         config.HP_VALIDATION_SPLIT: 0.15,
         config.HP_TEST_TRAIN_SPLIT: 0.15,
         }):
@@ -40,8 +40,9 @@ class hp_GraphCNN(GraphCNN):
         NOT accessed by this function.
 
         Args:
-            hp_optimizer (str, optional): The optimizer to be used for the model.
-            Defaults to 'adagrad'.
+            hparams (dict, optional): A dictionary of the hyperparameters to be used for the model.
+            Optimizer defaults to "adam". Batch size defaults to 64. Dropout defaults to 0.2. Learning
+            rate defaults to 0.001. Validation split defaults to 0.15. Test train split defaults to 0.15
 
         Returns:
             tf.keras.Model: The neural network model.
@@ -134,14 +135,22 @@ class hp_GraphCNN(GraphCNN):
         )
         return model
 
-    def classificationModel(self, hparams):
+    def classificationModel(self, hparams={
+        config.HP_OPTIMIZER: 'adam',
+        config.HP_BATCH_SIZE: 64,
+        config.HP_DROPOUT: 0.2,
+        config.HP_LEARNINGRATE: 0.001,
+        config.HP_VALIDATION_SPLIT: 0.15,
+        config.HP_TEST_TRAIN_SPLIT: 0.15,
+        }):
         """This function conatins the main model architecture. It initializes the data Tensors
         to be used for training the model, then creates and compiles the model. The real data is
         NOT accessed by this function.
 
         Args:
-            hp_optimizer (str, optional): The optimizer to be used for the model.
-            Defaults to 'adagrad'.
+            hparams (dict, optional): A dictionary of the hyperparameters to be used for the model.
+            Optimizer defaults to "adam". Batch size defaults to 64. Dropout defaults to 0.2. Learning
+            rate defaults to 0.001. Validation split defaults to 0.15. Test train split defaults to 0.15
 
         Returns:
             tf.keras.Model: The neural network model.
@@ -237,9 +246,9 @@ class hp_GraphCNN(GraphCNN):
         return model
 
 def hpBuildModel(params, hparams={
-        config.HP_OPTIMIZER: 'adagrad',
-        config.HP_BATCH_SIZE: 32,
-        config.HP_DROPOUT: 0.15,
+        config.HP_OPTIMIZER: 'adam',
+        config.HP_BATCH_SIZE: 64,
+        config.HP_DROPOUT: 0.2,
         config.HP_LEARNINGRATE: 0.001,
         config.HP_VALIDATION_SPLIT: 0.15,
         config.HP_TEST_TRAIN_SPLIT: 0.15,
@@ -288,16 +297,12 @@ def hpBuildModel(params, hparams={
     ]
 
     log.info('model evaluation started')
-    #explanation = eli5.explain_weights(estimator)
     with open('hp_results.txt', 'a') as res_log:
         results = model.evaluate(X_test, y_test, verbose=True)
         res_log.write('trial for '.join(str(item) for item in params.items()) + '\n')
         res_log.write(' '.join([str(r) for r in results]) + ' \n')
         res_log.write('Timing Benchmarks:\n')
         res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
-        #text = eli5.format_as_text(explanation, show_feature_values=True)
-        #res_log.write('Format Explanation:\n')
-        #res_log.write(' '.join([str(r) for r in text]) + '\n')
 
 
     print(results)
