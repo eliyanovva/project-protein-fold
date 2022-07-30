@@ -234,7 +234,9 @@ class hp_GraphCNN(GraphCNN):
 
         model.compile(
             optimizer=hparams[config.HP_OPTIMIZER],
-            loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+            loss=tf.keras.losses.BinaryCrossentropy(),
+            #what is from_logits - not used in main model file
+            #perhaps logits is a filetype?
             metrics=[tf.keras.metrics.AUC(),
                 tf.keras.metrics.BinaryAccuracy(),
                 tf.keras.metrics.FalseNegatives(),
