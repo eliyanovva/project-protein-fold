@@ -135,7 +135,7 @@ class hp_GraphCNN(GraphCNN):
         )
         return model
 
-    def classificationModel(self, hparams={
+    def hp_classificationModel(self, hparams={
         config.HP_OPTIMIZER: 'adam',
         config.HP_BATCH_SIZE: 64,
         config.HP_DROPOUT: 0.2,
@@ -143,7 +143,7 @@ class hp_GraphCNN(GraphCNN):
         config.HP_VALIDATION_SPLIT: 0.15,
         config.HP_TEST_TRAIN_SPLIT: 0.15,
         }):
-        """This function conatins the main model architecture. It initializes the data Tensors
+        """This function contains the main model architecture. It initializes the data Tensors
         to be used for training the model, then creates and compiles the model. The real data is
         NOT accessed by this function.
 
@@ -245,7 +245,7 @@ class hp_GraphCNN(GraphCNN):
         )
         return model
 
-def hpBuildModel(params, hparams={
+def hpBuildModel(classification, params, hparams={
         config.HP_OPTIMIZER: 'adam',
         config.HP_BATCH_SIZE: 64,
         config.HP_DROPOUT: 0.2,
@@ -275,7 +275,10 @@ def hpBuildModel(params, hparams={
         callbacks = None
 
     start_model_fitting = time.time()
-    model = g.hp_createModel(hparams)
+    if classification:
+        model = g.hp_classificationModel(hparams)
+    else:
+        model = g.hp_createModel(hparams)
     log.info('model fitting started')
     mod_history = model.fit(X_train,
         y_train,
@@ -313,14 +316,14 @@ def hpBuildModel(params, hparams={
     #returns loss value
 
 
-def hpRunModel(run_dir, hparams, params):
+def hpRunModel(run_dir, classification, hparams, params):
   with tf.summary.create_file_writer(run_dir).as_default():
     hp.hparams(hparams)  # record the values used in this trial
-    accuracy = hpBuildModel(params, hparams)
+    accuracy = hpBuildModel(classification, params, hparams)
     tf.summary.scalar(config.METRIC_ACCURACY, accuracy, step=1)
 
 
-def optimizeHyperparameters(hparams = {
+def optimizeHyperparameters(classification, hparams = {
         config.HP_OPTIMIZER: 'adam',
         config.HP_LEARNINGRATE: 0.001,
         config.HP_BATCH_SIZE: 64,
@@ -353,7 +356,7 @@ def optimizeHyperparameters(hparams = {
     print('--- Starting trial: %s' % run_name)
     parameters = {h.name: hparams[h] for h in temp_hparams}
     print(parameters)
-    hpRunModel('logs/hparam_tuning/' + run_name, hparams, parameters)
+    hpRunModel('logs/hparam_tuning/' + run_name, classification, hparams, parameters)
     session_num += 1
 
 
@@ -364,15 +367,6 @@ def tuning_optimizers(hparams):
             initial_accumulator_value=0.1,
             epsilon=1e-07,
             name='Adagrad',
-        )
-    elif hparams[config.HP_OPTIMIZER] == 'adam':
-        hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.Adam(
-            learning_rate=hparams[config.HP_LEARNINGRATE],
-            beta_1=0.9,
-            beta_2=0.999,
-            epsilon=1e-07,
-            amsgrad=False,
-            name='Adam',
         )
     elif hparams[config.HP_OPTIMIZER] == 'adamax':
         hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.Adamax(
@@ -388,4 +382,13 @@ def tuning_optimizers(hparams):
             momentum=0.0,
             nesterov=False,
             name='SGD',
+        )
+    else:
+        hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.Adam(
+            learning_rate=hparams[config.HP_LEARNINGRATE],
+            beta_1=0.9,
+            beta_2=0.999,
+            epsilon=1e-07,
+            amsgrad=False,
+            name='Adam',
         )
