@@ -60,7 +60,7 @@ class ModelingParser(argparse.ArgumentParser):
 
         self.add_argument(
             '--learning_rate',
-            help = 'Sets the learning rate. Cannot adjust if optimizer is not declared. Defaults to 0.001.',
+            help = 'Sets the learning rate. Defaults to 0.001.',
             type = float
         )
 
