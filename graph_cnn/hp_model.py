@@ -28,10 +28,10 @@ with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
 class hp_GraphCNN(GraphCNN):
     
     def hp_createModel(self, hparams={
-        #config.HP_OPTIMIZER: 'adagrad',
-        #config.HP_BATCH_SIZE: 32,
-        #config.HP_DROPOUT: 0.15,
-        #config.HP_LEARNINGRATE: 0.001,
+        config.HP_OPTIMIZER: 'adam',
+        config.HP_BATCH_SIZE: 64,
+        config.HP_DROPOUT: 0.2,
+        config.HP_LEARNINGRATE: 0.001,
         config.HP_VALIDATION_SPLIT: 0.15,
         config.HP_TEST_TRAIN_SPLIT: 0.15,
         }):
@@ -40,8 +40,9 @@ class hp_GraphCNN(GraphCNN):
         NOT accessed by this function.
 
         Args:
-            hp_optimizer (str, optional): The optimizer to be used for the model.
-            Defaults to 'adagrad'.
+            hparams (dict, optional): A dictionary of the hyperparameters to be used for the model.
+            Optimizer defaults to "adam". Batch size defaults to 64. Dropout defaults to 0.2. Learning
+            rate defaults to 0.001. Validation split defaults to 0.15. Test train split defaults to 0.15
 
         Returns:
             tf.keras.Model: The neural network model.
@@ -134,14 +135,22 @@ class hp_GraphCNN(GraphCNN):
         )
         return model
 
-    def classificationModel(self, hparams):
-        """This function conatins the main model architecture. It initializes the data Tensors
+    def hp_classificationModel(self, hparams={
+        config.HP_OPTIMIZER: 'adam',
+        config.HP_BATCH_SIZE: 64,
+        config.HP_DROPOUT: 0.2,
+        config.HP_LEARNINGRATE: 0.001,
+        config.HP_VALIDATION_SPLIT: 0.15,
+        config.HP_TEST_TRAIN_SPLIT: 0.15,
+        }):
+        """This function contains the main model architecture. It initializes the data Tensors
         to be used for training the model, then creates and compiles the model. The real data is
         NOT accessed by this function.
 
         Args:
-            hp_optimizer (str, optional): The optimizer to be used for the model.
-            Defaults to 'adagrad'.
+            hparams (dict, optional): A dictionary of the hyperparameters to be used for the model.
+            Optimizer defaults to "adam". Batch size defaults to 64. Dropout defaults to 0.2. Learning
+            rate defaults to 0.001. Validation split defaults to 0.15. Test train split defaults to 0.15
 
         Returns:
             tf.keras.Model: The neural network model.
@@ -225,7 +234,9 @@ class hp_GraphCNN(GraphCNN):
 
         model.compile(
             optimizer=hparams[config.HP_OPTIMIZER],
-            loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+            loss=tf.keras.losses.BinaryCrossentropy(),
+            #what is from_logits - not used in main model file
+            #perhaps logits is a filetype?
             metrics=[tf.keras.metrics.AUC(),
                 tf.keras.metrics.BinaryAccuracy(),
                 tf.keras.metrics.FalseNegatives(),
@@ -236,10 +247,10 @@ class hp_GraphCNN(GraphCNN):
         )
         return model
 
-def hpBuildModel(params, hparams={
-        config.HP_OPTIMIZER: 'adagrad',
-        config.HP_BATCH_SIZE: 32,
-        config.HP_DROPOUT: 0.15,
+def hpBuildModel(classification, params, hparams={
+        config.HP_OPTIMIZER: 'adam',
+        config.HP_BATCH_SIZE: 64,
+        config.HP_DROPOUT: 0.2,
         config.HP_LEARNINGRATE: 0.001,
         config.HP_VALIDATION_SPLIT: 0.15,
         config.HP_TEST_TRAIN_SPLIT: 0.15,
@@ -266,7 +277,10 @@ def hpBuildModel(params, hparams={
         callbacks = None
 
     start_model_fitting = time.time()
-    model = g.hp_createModel(hparams)
+    if classification:
+        model = g.hp_classificationModel(hparams)
+    else:
+        model = g.hp_createModel(hparams)
     log.info('model fitting started')
     mod_history = model.fit(X_train,
         y_train,
@@ -288,16 +302,12 @@ def hpBuildModel(params, hparams={
     ]
 
     log.info('model evaluation started')
-    #explanation = eli5.explain_weights(estimator)
     with open('hp_results.txt', 'a') as res_log:
         results = model.evaluate(X_test, y_test, verbose=True)
         res_log.write('trial for '.join(str(item) for item in params.items()) + '\n')
         res_log.write(' '.join([str(r) for r in results]) + ' \n')
         res_log.write('Timing Benchmarks:\n')
         res_log.write(' '.join([str(r) for r in timing_measures]) + '\n')
-        #text = eli5.format_as_text(explanation, show_feature_values=True)
-        #res_log.write('Format Explanation:\n')
-        #res_log.write(' '.join([str(r) for r in text]) + '\n')
 
 
     print(results)
@@ -308,14 +318,14 @@ def hpBuildModel(params, hparams={
     #returns loss value
 
 
-def hpRunModel(run_dir, hparams, params):
+def hpRunModel(run_dir, classification, hparams, params):
   with tf.summary.create_file_writer(run_dir).as_default():
     hp.hparams(hparams)  # record the values used in this trial
-    accuracy = hpBuildModel(params, hparams)
+    accuracy = hpBuildModel(classification, params, hparams)
     tf.summary.scalar(config.METRIC_ACCURACY, accuracy, step=1)
 
 
-def optimizeHyperparameters(hparams = {
+def optimizeHyperparameters(classification, hparams = {
         config.HP_OPTIMIZER: 'adam',
         config.HP_LEARNINGRATE: 0.001,
         config.HP_BATCH_SIZE: 64,
@@ -348,7 +358,7 @@ def optimizeHyperparameters(hparams = {
     print('--- Starting trial: %s' % run_name)
     parameters = {h.name: hparams[h] for h in temp_hparams}
     print(parameters)
-    hpRunModel('logs/hparam_tuning/' + run_name, hparams, parameters)
+    hpRunModel('logs/hparam_tuning/' + run_name, classification, hparams, parameters)
     session_num += 1
 
 
@@ -359,15 +369,6 @@ def tuning_optimizers(hparams):
             initial_accumulator_value=0.1,
             epsilon=1e-07,
             name='Adagrad',
-        )
-    elif hparams[config.HP_OPTIMIZER] == 'adam':
-        hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.Adam(
-            learning_rate=hparams[config.HP_LEARNINGRATE],
-            beta_1=0.9,
-            beta_2=0.999,
-            epsilon=1e-07,
-            amsgrad=False,
-            name='Adam',
         )
     elif hparams[config.HP_OPTIMIZER] == 'adamax':
         hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.Adamax(
@@ -383,4 +384,13 @@ def tuning_optimizers(hparams):
             momentum=0.0,
             nesterov=False,
             name='SGD',
+        )
+    else:
+        hparams[config.HP_OPTIMIZER] = tf.keras.optimizers.Adam(
+            learning_rate=hparams[config.HP_LEARNINGRATE],
+            beta_1=0.9,
+            beta_2=0.999,
+            epsilon=1e-07,
+            amsgrad=False,
+            name='Adam',
         )

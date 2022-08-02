@@ -192,7 +192,7 @@ def ppp():
     if  (args.gnn_mode) or (args.model == 'gnn'):
         classification = args.gnn_cl == True
         if args.gnn_mode == 'hptuning':
-            optimizeHyperparameters(hparams)
+            optimizeHyperparameters(classification, hparams)
         
         elif args.gnn_mode == 'eval_tuple':
             X = generateLabelsList()

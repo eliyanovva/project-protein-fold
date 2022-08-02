@@ -93,7 +93,7 @@ class BGFDataFile:
 
     def __getDataFromConectOrderLines(self, data_lines):
         """
-        Collects bond data from CONECT-ORDER paor of lines in a bgf file.
+        Collects bond data from CONECT-ORDER pair of lines in a bgf file.
 
         Args:
             data_lines (List[str]): a CONECT line and a ORDER line.
